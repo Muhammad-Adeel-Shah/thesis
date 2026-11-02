@@ -1,0 +1,16 @@
+{
+  "mode": "check",
+  "ok": true,
+  "problems": [],
+  "held_out_ids": 400,
+  "held_out_rows_found": {
+    "p1_pairs_manifest.csv": 0,
+    "p2_splits.csv": 0,
+    "manifests/p1_reals_manifest_t_real.csv": 0,
+    "local copy": 0
+  },
+  "oi_train_rows": {
+    "oi_reals": 3600,
+    "oi_pair_rows": 43200
+  }
+}

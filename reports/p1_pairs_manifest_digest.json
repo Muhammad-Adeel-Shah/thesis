@@ -1,0 +1,164 @@
+{
+  "generated_at_utc": "2026-09-29T07:33:06Z",
+  "why": "p1_pairs_manifest.csv is 11.3 MB and CLAUDE.md section 2 forbids committing a file over 10 MB, so the manifest itself stays in kaggle_raw/p1_build_reports.zip. This file is the tracked reference B0 verifies the Kaggle copy against: same bytes, same rows, same members, same precisions.",
+  "source_archive": "p1_build_reports.zip",
+  "expected_total_pair_rows": 49200,
+  "expected_rows_per_member": 4100,
+  "manifests": {
+    "p1_pairs_manifest.csv": {
+      "sha256": "b19b7f5acee49d8848658b5b78b6398d9a1511ae72e688fc81379705aa99c65c",
+      "bytes": 11326285,
+      "rows": 49200,
+      "members": [
+        "dcae",
+        "flux",
+        "flux2_klein",
+        "movq_k22",
+        "qwen_image",
+        "realesrgan_x4",
+        "sd15",
+        "sd21",
+        "sd35",
+        "sd_ft_ema",
+        "sdxl",
+        "sdxl_fp16fix"
+      ],
+      "precision": {
+        "fp16": 36900,
+        "fp32": 12300
+      }
+    },
+    "p1_pairs_manifest_dcae.csv": {
+      "sha256": "2d28b374be1334f7d1bb7e32e4cd95d65a54c64386c9f8190182101da0518aac",
+      "bytes": 900927,
+      "rows": 4100,
+      "members": [
+        "dcae"
+      ],
+      "precision": {
+        "fp16": 4100
+      }
+    },
+    "p1_pairs_manifest_flux.csv": {
+      "sha256": "909f42a0d62614b9ab4272baf2c42a16248618e5c9d552e99a1fb3e201b83088",
+      "bytes": 889630,
+      "rows": 4100,
+      "members": [
+        "flux"
+      ],
+      "precision": {
+        "fp16": 4100
+      }
+    },
+    "p1_pairs_manifest_flux2_klein.csv": {
+      "sha256": "ab0082738b2774e50b5d1f5760c6383372eb95cd2fecb1e6eae42d84741ff369",
+      "bytes": 1024036,
+      "rows": 4100,
+      "members": [
+        "flux2_klein"
+      ],
+      "precision": {
+        "fp16": 4100
+      }
+    },
+    "p1_pairs_manifest_movq_k22.csv": {
+      "sha256": "0286341cd5ee05a03db79fa5deefbd9974ecf66cebaa2119c616846d2fba0ff1",
+      "bytes": 941052,
+      "rows": 4100,
+      "members": [
+        "movq_k22"
+      ],
+      "precision": {
+        "fp32": 4100
+      }
+    },
+    "p1_pairs_manifest_qwen_image.csv": {
+      "sha256": "6e43341ed19ab6ef163f33790cf59650105fe4a4db105000d12cb94eaed21de5",
+      "bytes": 996956,
+      "rows": 4100,
+      "members": [
+        "qwen_image"
+      ],
+      "precision": {
+        "fp16": 4100
+      }
+    },
+    "p1_pairs_manifest_realesrgan_x4.csv": {
+      "sha256": "c8296e985f21445535c4c5a6af4eeca212470993e35ced32951eec7b4d1b0d83",
+      "bytes": 995427,
+      "rows": 4100,
+      "members": [
+        "realesrgan_x4"
+      ],
+      "precision": {
+        "fp32": 4100
+      }
+    },
+    "p1_pairs_manifest_sd15.csv": {
+      "sha256": "6820099f96e3a72a418b733d6e470f340d2bf0093c093fdd25a8f138e3beeff2",
+      "bytes": 904669,
+      "rows": 4100,
+      "members": [
+        "sd15"
+      ],
+      "precision": {
+        "fp16": 4100
+      }
+    },
+    "p1_pairs_manifest_sd21.csv": {
+      "sha256": "b12c7f97bea92309786738a759fc3ef02117ce131f0b096a2559a6da220ff14d",
+      "bytes": 904250,
+      "rows": 4100,
+      "members": [
+        "sd21"
+      ],
+      "precision": {
+        "fp16": 4100
+      }
+    },
+    "p1_pairs_manifest_sd35.csv": {
+      "sha256": "ff16c0e63b67ea81496be78410dfe17f049793d6985026317f71553e37b532b3",
+      "bytes": 890296,
+      "rows": 4100,
+      "members": [
+        "sd35"
+      ],
+      "precision": {
+        "fp16": 4100
+      }
+    },
+    "p1_pairs_manifest_sd_ft_ema.csv": {
+      "sha256": "7d5357823a2e90943e90b7f16f01b1a5f70b0ac9314853e701990f21de405b50",
+      "bytes": 965966,
+      "rows": 4100,
+      "members": [
+        "sd_ft_ema"
+      ],
+      "precision": {
+        "fp16": 4100
+      }
+    },
+    "p1_pairs_manifest_sdxl.csv": {
+      "sha256": "c204039cd41b3c18376c0265275ee9691a5fbdac3062280be0142873aa23500b",
+      "bytes": 908078,
+      "rows": 4100,
+      "members": [
+        "sdxl"
+      ],
+      "precision": {
+        "fp32": 4100
+      }
+    },
+    "p1_pairs_manifest_sdxl_fp16fix.csv": {
+      "sha256": "bb771a4609c595d3e62e2cbb15480f7ccda67dd5c4b8ccd4c27c8bdeb157f156",
+      "bytes": 1006582,
+      "rows": 4100,
+      "members": [
+        "sdxl_fp16fix"
+      ],
+      "precision": {
+        "fp16": 4100
+      }
+    }
+  }
+}

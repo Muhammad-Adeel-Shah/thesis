@@ -1,0 +1,32 @@
+{
+  "bundle": "/kaggle/input/datasets/adeelshah29/dbp-p2-s3-partial",
+  "image_list_rows": 18614,
+  "image_list_digest": "522115667bc498b745cf6a562a8d5b0e1a17cc491dcfda9f71cc97ef60788010",
+  "members_valid": [
+    "dcae",
+    "flux",
+    "flux2_klein",
+    "sd15",
+    "sd21",
+    "sd35",
+    "sd_ft_ema",
+    "sdxl",
+    "sdxl_fp16fix"
+  ],
+  "members_invalid": [],
+  "expected_members": 9,
+  "copied": {
+    "probe": {
+      "copied": 18,
+      "identical": 0
+    },
+    "s1": {
+      "copied": 3,
+      "identical": 0
+    },
+    "reports": {
+      "copied": 8,
+      "identical": 0
+    }
+  }
+}

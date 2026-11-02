@@ -1,0 +1,11 @@
+$ /usr/bin/python3 -u /kaggle/working/Implementation/thesis_dbp/scripts/p2_s2_infer.py --protocol s2b_deg_p35 --seed 0 --root /kaggle/working/p1 --device cuda --out-dir /kaggle/working/Implementation/thesis_dbp/outputs/p3/s2 --reports-dir /kaggle/working/Implementation/thesis_dbp/reports --panel-root /kaggle/input/notebooks/muhammadadeelshah/dbp-p3-dev-panel/dev_panel --list panel=/kaggle/working/Implementation/thesis_dbp/reports/p3_tune_lists/p3_tune_panel_rows.csv --list val=/kaggle/working/Implementation/thesis_dbp/reports/p3_tune_lists/p3_tune_val_reals.csv --batch=32 --runs-config=configs/p3_runs.yaml
+2026-10-21 23:36:45 INFO    p2_s2_infer | HF_TOKEN present: True
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2845.43it/s]
+2026-10-21 23:36:53 INFO    p2_s2_infer | s2b_deg_p35_seed0: selected model from /kaggle/working/Implementation/thesis_dbp/outputs/p3/s2/s2b_deg_p35_seed0, crop 320
+2026-10-21 23:37:31 INFO    p2_s2_infer |   panel 1600/6717
+2026-10-21 23:39:09 INFO    p2_s2_infer |   panel 3200/6717
+2026-10-21 23:39:36 INFO    p2_s2_infer |   panel 4800/6717
+2026-10-21 23:40:01 INFO    p2_s2_infer |   panel 6400/6717
+2026-10-21 23:40:05 INFO    p2_s2_infer | panel: 6717 row(s) in 192.4 s (0.0286 s/image) -> panel.csv
+2026-10-21 23:40:14 INFO    p2_s2_infer | val: 491 row(s) in 9.1 s (0.0186 s/image) -> val.csv
+2026-10-21 23:40:14 INFO    p2_s2_infer | wrote p2_s2_scores_s2b_deg_p35_seed0.json

@@ -1,0 +1,1960 @@
+{
+  "set_id": "e4_wildrf_test",
+  "root": "/tmp/wildrf/WildRF",
+  "globs": {
+    "real": [
+      "test/*/0_real/*"
+    ],
+    "fake": [
+      "test/*/1_fake/*"
+    ]
+  },
+  "fields": {
+    "platform": 1
+  },
+  "n": 2503,
+  "subsample": {
+    "applied": false
+  },
+  "by_label": {
+    "fake": 1252,
+    "real": 1251
+  },
+  "compression_table": {
+    "fake": {
+      "n": 1252,
+      "jpeg": 757,
+      "non_jpeg": 495,
+      "formats": {
+        "JPEG": 757,
+        "PNG": 495
+      },
+      "subsampling": {
+        "4:2:0": 709,
+        "4:4:4": 47,
+        "not-jpeg": 495,
+        "unknown(-1)": 1
+      },
+      "quality_min": 60,
+      "quality_median": 84,
+      "quality_max": 100
+    },
+    "real": {
+      "n": 1251,
+      "jpeg": 1223,
+      "non_jpeg": 28,
+      "formats": {
+        "JPEG": 1223,
+        "PNG": 28
+      },
+      "subsampling": {
+        "4:2:0": 1185,
+        "4:2:2": 3,
+        "4:4:4": 33,
+        "not-jpeg": 28,
+        "unknown(-1)": 2
+      },
+      "quality_min": 22,
+      "quality_median": 75,
+      "quality_max": 100
+    }
+  },
+  "compression_table_markdown": "| label | n | JPEG | never compressed | formats | quality min/median/max | subsampling |\n|---|---|---|---|---|---|---|\n| fake | 1252 | 757 | 495 | JPEG 757, PNG 495 | 60/84/100 | 4:2:0 709, 4:4:4 47, not-jpeg 495, unknown(-1) 1 |\n| real | 1251 | 1223 | 28 | JPEG 1223, PNG 28 | 22/75/100 | 4:2:0 1185, 4:2:2 3, 4:4:4 33, not-jpeg 28, unknown(-1) 2 |",
+  "compression_confounded": true,
+  "compression_verdict": "CONFOUNDED; never-compressed share: fake 39.5% vs real 2.2% (spread 37.3%)",
+  "parameter_separability": {
+    "threshold_lift": 0.05,
+    "pooled": {
+      "subsampling": {
+        "parameter": "subsampling",
+        "n": 2503,
+        "accuracy": 0.69197,
+        "baseline": 0.5002,
+        "lift": 0.19177,
+        "separable": true,
+        "reason": "subsampling alone scores 69.20% against a 50.02% majority-class baseline (lift +19.18%)",
+        "values": {
+          "4:2:0": {
+            "real": 1185,
+            "fake": 709
+          },
+          "4:2:2": {
+            "real": 3
+          },
+          "4:4:4": {
+            "real": 33,
+            "fake": 47
+          },
+          "not-jpeg": {
+            "real": 28,
+            "fake": 495
+          },
+          "unknown(-1)": {
+            "real": 2,
+            "fake": 1
+          }
+        }
+      },
+      "jpeg_quality": {
+        "parameter": "jpeg_quality",
+        "n": 2503,
+        "accuracy": 0.754295,
+        "baseline": 0.5002,
+        "lift": 0.254095,
+        "separable": true,
+        "reason": "jpeg_quality alone scores 75.43% against a 50.02% majority-class baseline (lift +25.41%)",
+        "values": {
+          "100": {
+            "fake": 27,
+            "real": 13
+          },
+          "22": {
+            "real": 1
+          },
+          "45": {
+            "real": 1
+          },
+          "50": {
+            "real": 1
+          },
+          "58": {
+            "real": 1
+          },
+          "60": {
+            "fake": 1
+          },
+          "62": {
+            "real": 1
+          },
+          "64": {
+            "real": 1
+          },
+          "65": {
+            "real": 16,
+            "fake": 2
+          },
+          "66": {
+            "fake": 1
+          },
+          "67": {
+            "real": 5
+          },
+          "69": {
+            "real": 31,
+            "fake": 28
+          },
+          "70": {
+            "real": 34,
+            "fake": 1
+          },
+          "71": {
+            "real": 6,
+            "fake": 1
+          },
+          "72": {
+            "real": 3
+          },
+          "73": {
+            "real": 3
+          },
+          "74": {
+            "real": 1
+          },
+          "75": {
+            "real": 560,
+            "fake": 216
+          },
+          "76": {
+            "real": 1
+          },
+          "77": {
+            "real": 4
+          },
+          "78": {
+            "real": 2,
+            "fake": 1
+          },
+          "79": {
+            "real": 31,
+            "fake": 66
+          },
+          "80": {
+            "real": 72,
+            "fake": 17
+          },
+          "81": {
+            "real": 4
+          },
+          "82": {
+            "real": 4,
+            "fake": 1
+          },
+          "83": {
+            "real": 3,
+            "fake": 1
+          },
+          "84": {
+            "real": 166,
+            "fake": 59
+          },
+          "85": {
+            "real": 149,
+            "fake": 191
+          },
+          "86": {
+            "real": 2,
+            "fake": 2
+          },
+          "87": {
+            "real": 3,
+            "fake": 9
+          },
+          "88": {
+            "fake": 3,
+            "real": 16
+          },
+          "89": {
+            "real": 6,
+            "fake": 3
+          },
+          "90": {
+            "real": 22,
+            "fake": 11
+          },
+          "91": {
+            "real": 2,
+            "fake": 12
+          },
+          "92": {
+            "real": 17,
+            "fake": 55
+          },
+          "94": {
+            "real": 13,
+            "fake": 6
+          },
+          "95": {
+            "real": 14,
+            "fake": 31
+          },
+          "96": {
+            "real": 6,
+            "fake": 1
+          },
+          "97": {
+            "real": 3
+          },
+          "99": {
+            "fake": 11,
+            "real": 5
+          },
+          "None": {
+            "real": 28,
+            "fake": 495
+          }
+        }
+      }
+    },
+    "by_field": {
+      "platform": {
+        "subsampling": {
+          "by_stratum": {
+            "facebook": {
+              "parameter": "subsampling",
+              "n": 1411,
+              "accuracy": 0.886605,
+              "baseline": 0.886605,
+              "lift": 0.0,
+              "separable": false,
+              "reason": "subsampling alone scores 88.66% against a 88.66% majority-class baseline (lift +0.00%)",
+              "values": {
+                "4:2:0": {
+                  "fake": 134,
+                  "real": 1185
+                },
+                "4:2:2": {
+                  "real": 3
+                },
+                "4:4:4": {
+                  "fake": 26,
+                  "real": 33
+                },
+                "not-jpeg": {
+                  "real": 28
+                },
+                "unknown(-1)": {
+                  "real": 2
+                }
+              }
+            },
+            "reddit": {
+              "parameter": "subsampling",
+              "n": 2001,
+              "accuracy": 0.851074,
+              "baseline": 0.625187,
+              "lift": 0.225887,
+              "separable": true,
+              "reason": "subsampling alone scores 85.11% against a 62.52% majority-class baseline (lift +22.59%)",
+              "values": {
+                "4:2:0": {
+                  "fake": 258,
+                  "real": 1185
+                },
+                "4:2:2": {
+                  "real": 3
+                },
+                "4:4:4": {
+                  "fake": 12,
+                  "real": 33
+                },
+                "not-jpeg": {
+                  "fake": 480,
+                  "real": 28
+                },
+                "unknown(-1)": {
+                  "real": 2
+                }
+              }
+            },
+            "twitter": {
+              "parameter": "subsampling",
+              "n": 1593,
+              "accuracy": 0.785311,
+              "baseline": 0.785311,
+              "lift": 0.0,
+              "separable": false,
+              "reason": "subsampling alone scores 78.53% against a 78.53% majority-class baseline (lift +0.00%)",
+              "values": {
+                "4:2:0": {
+                  "fake": 317,
+                  "real": 1185
+                },
+                "4:2:2": {
+                  "real": 3
+                },
+                "4:4:4": {
+                  "fake": 9,
+                  "real": 33
+                },
+                "not-jpeg": {
+                  "fake": 15,
+                  "real": 28
+                },
+                "unknown(-1)": {
+                  "fake": 1,
+                  "real": 2
+                }
+              }
+            }
+          },
+          "separable_strata": [
+            "reddit"
+          ]
+        },
+        "jpeg_quality": {
+          "by_stratum": {
+            "facebook": {
+              "parameter": "jpeg_quality",
+              "n": 1411,
+              "accuracy": 0.920624,
+              "baseline": 0.886605,
+              "lift": 0.034018,
+              "separable": false,
+              "reason": "jpeg_quality alone scores 92.06% against a 88.66% majority-class baseline (lift +3.40%)",
+              "values": {
+                "100": {
+                  "fake": 10,
+                  "real": 13
+                },
+                "22": {
+                  "real": 1
+                },
+                "45": {
+                  "real": 1
+                },
+                "50": {
+                  "real": 1
+                },
+                "58": {
+                  "real": 1
+                },
+                "62": {
+                  "real": 1
+                },
+                "64": {
+                  "real": 1
+                },
+                "65": {
+                  "real": 16
+                },
+                "67": {
+                  "real": 5
+                },
+                "69": {
+                  "fake": 28,
+                  "real": 31
+                },
+                "70": {
+                  "real": 34
+                },
+                "71": {
+                  "fake": 1,
+                  "real": 6
+                },
+                "72": {
+                  "real": 3
+                },
+                "73": {
+                  "real": 3
+                },
+                "74": {
+                  "real": 1
+                },
+                "75": {
+                  "real": 560
+                },
+                "76": {
+                  "real": 1
+                },
+                "77": {
+                  "real": 4
+                },
+                "78": {
+                  "real": 2
+                },
+                "79": {
+                  "fake": 40,
+                  "real": 31
+                },
+                "80": {
+                  "fake": 7,
+                  "real": 72
+                },
+                "81": {
+                  "real": 4
+                },
+                "82": {
+                  "real": 4
+                },
+                "83": {
+                  "real": 3
+                },
+                "84": {
+                  "real": 166
+                },
+                "85": {
+                  "fake": 1,
+                  "real": 149
+                },
+                "86": {
+                  "real": 2
+                },
+                "87": {
+                  "real": 3
+                },
+                "88": {
+                  "fake": 2,
+                  "real": 16
+                },
+                "89": {
+                  "fake": 3,
+                  "real": 6
+                },
+                "90": {
+                  "fake": 7,
+                  "real": 22
+                },
+                "91": {
+                  "fake": 10,
+                  "real": 2
+                },
+                "92": {
+                  "fake": 48,
+                  "real": 17
+                },
+                "94": {
+                  "real": 13
+                },
+                "95": {
+                  "fake": 3,
+                  "real": 14
+                },
+                "96": {
+                  "real": 6
+                },
+                "97": {
+                  "real": 3
+                },
+                "99": {
+                  "real": 5
+                },
+                "None": {
+                  "real": 28
+                }
+              }
+            },
+            "reddit": {
+              "parameter": "jpeg_quality",
+              "n": 2001,
+              "accuracy": 0.853073,
+              "baseline": 0.625187,
+              "lift": 0.227886,
+              "separable": true,
+              "reason": "jpeg_quality alone scores 85.31% against a 62.52% majority-class baseline (lift +22.79%)",
+              "values": {
+                "100": {
+                  "fake": 13,
+                  "real": 13
+                },
+                "22": {
+                  "real": 1
+                },
+                "45": {
+                  "real": 1
+                },
+                "50": {
+                  "real": 1
+                },
+                "58": {
+                  "real": 1
+                },
+                "62": {
+                  "real": 1
+                },
+                "64": {
+                  "real": 1
+                },
+                "65": {
+                  "fake": 2,
+                  "real": 16
+                },
+                "67": {
+                  "real": 5
+                },
+                "69": {
+                  "real": 31
+                },
+                "70": {
+                  "fake": 1,
+                  "real": 34
+                },
+                "71": {
+                  "real": 6
+                },
+                "72": {
+                  "real": 3
+                },
+                "73": {
+                  "real": 3
+                },
+                "74": {
+                  "real": 1
+                },
+                "75": {
+                  "fake": 205,
+                  "real": 560
+                },
+                "76": {
+                  "real": 1
+                },
+                "77": {
+                  "real": 4
+                },
+                "78": {
+                  "real": 2
+                },
+                "79": {
+                  "fake": 4,
+                  "real": 31
+                },
+                "80": {
+                  "fake": 1,
+                  "real": 72
+                },
+                "81": {
+                  "real": 4
+                },
+                "82": {
+                  "real": 4
+                },
+                "83": {
+                  "real": 3
+                },
+                "84": {
+                  "fake": 1,
+                  "real": 166
+                },
+                "85": {
+                  "fake": 9,
+                  "real": 149
+                },
+                "86": {
+                  "fake": 2,
+                  "real": 2
+                },
+                "87": {
+                  "fake": 5,
+                  "real": 3
+                },
+                "88": {
+                  "real": 16
+                },
+                "89": {
+                  "real": 6
+                },
+                "90": {
+                  "fake": 3,
+                  "real": 22
+                },
+                "91": {
+                  "fake": 1,
+                  "real": 2
+                },
+                "92": {
+                  "fake": 6,
+                  "real": 17
+                },
+                "94": {
+                  "fake": 2,
+                  "real": 13
+                },
+                "95": {
+                  "fake": 8,
+                  "real": 14
+                },
+                "96": {
+                  "real": 6
+                },
+                "97": {
+                  "real": 3
+                },
+                "99": {
+                  "fake": 7,
+                  "real": 5
+                },
+                "None": {
+                  "fake": 480,
+                  "real": 28
+                }
+              }
+            },
+            "twitter": {
+              "parameter": "jpeg_quality",
+              "n": 1593,
+              "accuracy": 0.811048,
+              "baseline": 0.785311,
+              "lift": 0.025738,
+              "separable": false,
+              "reason": "jpeg_quality alone scores 81.10% against a 78.53% majority-class baseline (lift +2.57%)",
+              "values": {
+                "100": {
+                  "fake": 4,
+                  "real": 13
+                },
+                "22": {
+                  "real": 1
+                },
+                "45": {
+                  "real": 1
+                },
+                "50": {
+                  "real": 1
+                },
+                "58": {
+                  "real": 1
+                },
+                "60": {
+                  "fake": 1
+                },
+                "62": {
+                  "real": 1
+                },
+                "64": {
+                  "real": 1
+                },
+                "65": {
+                  "real": 16
+                },
+                "66": {
+                  "fake": 1
+                },
+                "67": {
+                  "real": 5
+                },
+                "69": {
+                  "real": 31
+                },
+                "70": {
+                  "real": 34
+                },
+                "71": {
+                  "real": 6
+                },
+                "72": {
+                  "real": 3
+                },
+                "73": {
+                  "real": 3
+                },
+                "74": {
+                  "real": 1
+                },
+                "75": {
+                  "fake": 11,
+                  "real": 560
+                },
+                "76": {
+                  "real": 1
+                },
+                "77": {
+                  "real": 4
+                },
+                "78": {
+                  "fake": 1,
+                  "real": 2
+                },
+                "79": {
+                  "fake": 22,
+                  "real": 31
+                },
+                "80": {
+                  "fake": 9,
+                  "real": 72
+                },
+                "81": {
+                  "real": 4
+                },
+                "82": {
+                  "fake": 1,
+                  "real": 4
+                },
+                "83": {
+                  "fake": 1,
+                  "real": 3
+                },
+                "84": {
+                  "fake": 58,
+                  "real": 166
+                },
+                "85": {
+                  "fake": 181,
+                  "real": 149
+                },
+                "86": {
+                  "real": 2
+                },
+                "87": {
+                  "fake": 4,
+                  "real": 3
+                },
+                "88": {
+                  "fake": 1,
+                  "real": 16
+                },
+                "89": {
+                  "real": 6
+                },
+                "90": {
+                  "fake": 1,
+                  "real": 22
+                },
+                "91": {
+                  "fake": 1,
+                  "real": 2
+                },
+                "92": {
+                  "fake": 1,
+                  "real": 17
+                },
+                "94": {
+                  "fake": 4,
+                  "real": 13
+                },
+                "95": {
+                  "fake": 20,
+                  "real": 14
+                },
+                "96": {
+                  "fake": 1,
+                  "real": 6
+                },
+                "97": {
+                  "real": 3
+                },
+                "99": {
+                  "fake": 4,
+                  "real": 5
+                },
+                "None": {
+                  "fake": 15,
+                  "real": 28
+                }
+              }
+            }
+          },
+          "separable_strata": [
+            "reddit"
+          ]
+        }
+      }
+    },
+    "separable": true,
+    "offenders": [
+      "pooled/subsampling",
+      "pooled/jpeg_quality",
+      "platform=reddit/subsampling",
+      "platform=reddit/jpeg_quality"
+    ]
+  },
+  "near_duplicate_groups_within_set": [
+    [
+      "018a175b2382a0c1",
+      "31bc7665aa57c03c"
+    ],
+    [
+      "01a397378b92e49c",
+      "b1bbd99de3fc10ef"
+    ],
+    [
+      "03124f71b4b0daa9",
+      "f7a6bd68b4fe5433"
+    ],
+    [
+      "04bb2688f0caf0af",
+      "701e6865d495af97"
+    ],
+    [
+      "06c92b56327b28b8",
+      "3932e4fbde2539ff"
+    ],
+    [
+      "074c8bdddb58e266",
+      "8f94a4dd918adae6"
+    ],
+    [
+      "0779afd01ff572b8",
+      "2704fca83158994a"
+    ],
+    [
+      "089997438a6503f7",
+      "8f23cceb516d2d8a"
+    ],
+    [
+      "09fefcd8691191f8",
+      "cc081c439f073916"
+    ],
+    [
+      "0b2f8bacc7c943c8",
+      "d26de257952e4481"
+    ],
+    [
+      "0bc914ce19d559ce",
+      "d0443e586e3380aa"
+    ],
+    [
+      "0c02d5cc53c0a789",
+      "3a76997a80d35571"
+    ],
+    [
+      "0fcacb1fa039c06d",
+      "aa5475da4c18bdbf"
+    ],
+    [
+      "10012fed4b31ef9a",
+      "a0b92ee2c4d02cda"
+    ],
+    [
+      "14e7ca1ac52dc457",
+      "9bda44dc99d44617"
+    ],
+    [
+      "15524ecda6ff8865",
+      "9506a212b8fe5427"
+    ],
+    [
+      "15bb6f911c7d33de",
+      "174c03c9db2084dc"
+    ],
+    [
+      "16669dca4d6738f2",
+      "17c63af20c427ad8"
+    ],
+    [
+      "17a1f29f31f5a83d",
+      "34792e8213570ac0"
+    ],
+    [
+      "19aed635dddc7dc8",
+      "4eaee2b6363ddea1"
+    ],
+    [
+      "1a882779c6f31bc1",
+      "860d258e260fce41"
+    ],
+    [
+      "22249ac94872189b",
+      "25cb9b9a14864860"
+    ],
+    [
+      "23cb203aad84aa64",
+      "adc5540ba23af464"
+    ],
+    [
+      "280d5709b44ddc79",
+      "d31b502989507c49"
+    ],
+    [
+      "2aeb1bed18ef0e6e",
+      "eb2c4ce173ea22a2"
+    ],
+    [
+      "30ccbb2c966bbe8c",
+      "7add85cb1a0cf6f8"
+    ],
+    [
+      "33c20163ef0ad518",
+      "ae8e4b2d7781247c"
+    ],
+    [
+      "3658f4897bb98e36",
+      "86e0cfba10832f7a"
+    ],
+    [
+      "36b55e7ee735950c",
+      "504dadc3c8d63772"
+    ],
+    [
+      "3972e7de59f82f13",
+      "4ac4057749d2548f"
+    ],
+    [
+      "3a0fa61d1d124dbc",
+      "5fb0664d217ca6e4"
+    ],
+    [
+      "3b21563b27d1d6d5",
+      "a03f2147dbb26aed"
+    ],
+    [
+      "3c7f385bbfc56e33",
+      "ae4304d69e32b375"
+    ],
+    [
+      "3f505d04a882d0bd",
+      "d4fc057cdb52b67e"
+    ],
+    [
+      "41747684b5d57482",
+      "50cfe1ef736342ca"
+    ],
+    [
+      "41caab4e86ce1ab5",
+      "dbf92722acf05f83"
+    ],
+    [
+      "466686221589f6cc",
+      "492da59fe438221e"
+    ],
+    [
+      "471fa4fd77402144",
+      "537b195f54eca8c1"
+    ],
+    [
+      "495d35ebe0dfbbce",
+      "9f8b983cf0f6737a"
+    ],
+    [
+      "4be66476d40149bf",
+      "e84ae368098c55ab"
+    ],
+    [
+      "4d3cbb7b37eea185",
+      "9bffb154ac4497ac"
+    ],
+    [
+      "53bdacabe2e9dfe4",
+      "773e363484e47a4e"
+    ],
+    [
+      "5438db8f24d448ea",
+      "bb33f3e7020e7757"
+    ],
+    [
+      "579779eba5707c06",
+      "6a667958291ba6b8"
+    ],
+    [
+      "59b28bbb2de1360b",
+      "708cf41d1fae473e"
+    ],
+    [
+      "5a0c1835f14b907b",
+      "68ef520692520e55"
+    ],
+    [
+      "5f768905029708a5",
+      "8765597d75a6e8ab"
+    ],
+    [
+      "6877aaf0ba1a18d5",
+      "a9bd19e0682f8cbf"
+    ],
+    [
+      "687de2f0e56bcd76",
+      "b951ed6a81a1f25e"
+    ],
+    [
+      "6ca46dab5f402d55",
+      "b862cf6ef16838e1"
+    ],
+    [
+      "6ead9c6dd5962e88",
+      "9e77fdf58185047a"
+    ],
+    [
+      "75d41f283d1a17e6",
+      "f51878fc7c99c1d7"
+    ],
+    [
+      "7995dcb8ad40d024",
+      "cd43200a438f93c1"
+    ],
+    [
+      "7a4ec3c67896af16",
+      "a68bb1a3e4f6b413"
+    ],
+    [
+      "7de8752f17c82713",
+      "c8a82a6165b3532e"
+    ],
+    [
+      "7f2e2e3faa18b4ad",
+      "afad04e79d211bdf"
+    ],
+    [
+      "817a8db402314d92",
+      "84bff19404da9f60"
+    ],
+    [
+      "82b9ffce7ebe1691",
+      "b9d83d834c4f928c"
+    ],
+    [
+      "8507c623dd8c7381",
+      "f7ff9fa51c016848"
+    ],
+    [
+      "859f0dbdf098fe2c",
+      "d3bb193a564c1b31"
+    ],
+    [
+      "87d640089fbe489f",
+      "9e78b14ba85ccdcd"
+    ],
+    [
+      "89b175521bd1507b",
+      "cae9b11b4707beb5"
+    ],
+    [
+      "98b7af1227a81234",
+      "d64bc8d6b4c1bf22"
+    ],
+    [
+      "9a7c1712d40ddd35",
+      "9dde28414938603b"
+    ],
+    [
+      "a1beb4f9b3cc0f29",
+      "bafb663bbc561cd5"
+    ],
+    [
+      "ae4b394019f413cb",
+      "b5721a4e0423f79b"
+    ],
+    [
+      "b0dcb4091e4d4edb",
+      "d2f85bb965dee941"
+    ],
+    [
+      "b0e9c188d3bb38f2",
+      "f92850acc95d975c"
+    ],
+    [
+      "b33098b1c25d71b5",
+      "fe08ec5b16327bdc"
+    ],
+    [
+      "ba14ae496069684e",
+      "daf188b0fc0a755c"
+    ],
+    [
+      "c38e6b502f10b787",
+      "f37c6134888506e4"
+    ],
+    [
+      "ce9c155822882094",
+      "dbac655a483e4620"
+    ],
+    [
+      "d2c0026f75050b59",
+      "fef332d809fc4118"
+    ],
+    [
+      "dd172327eb316fa8",
+      "f54f4c5dba6356a4"
+    ],
+    [
+      "e7458de8abdb9c43",
+      "ef7e6827923dacc1"
+    ],
+    [
+      "eb873db6996557be",
+      "f4da9ce9e508d644"
+    ],
+    [
+      "f25b8db664bebe76",
+      "feafa2cbe08a1890"
+    ]
+  ],
+  "manifest": "p1_eval_e4_wildrf_test_manifest.csv",
+  "manifest_sha256": "e887238b46be99bb29f1b9d1317e48ff503c2d5f4d5c7b16c21477e63ae03809",
+  "jpeg_matched_view": {
+    "reencoded": 495,
+    "reference_excluded_unmappable_subsampling": 2,
+    "left_in_place": 2008,
+    "reference_size": 1221,
+    "reference_quality_range": [
+      22,
+      100
+    ],
+    "reference_subsampling": [
+      "4:2:0",
+      "4:2:2",
+      "4:4:4"
+    ],
+    "sampling": "joint (quality, subsampling) pair drawn from one observed real",
+    "salt": "e4_wildrf_test",
+    "seed_rule": "blake2b(salt + ':' + image_id), 8 bytes",
+    "script": "p1_build_eval.py",
+    "manifest": "p1_eval_e4_wildrf_test_jpeg_matched_manifest.csv",
+    "manifest_sha256": "a508573f66237aac227e1f685c63f9ea1a2852b4d959abfde7d01a60e57a3d55",
+    "compression_table": {
+      "fake": {
+        "n": 1252,
+        "jpeg": 1252,
+        "non_jpeg": 0,
+        "formats": {
+          "JPEG": 1252
+        },
+        "subsampling": {
+          "4:2:0": 1186,
+          "4:2:2": 1,
+          "4:4:4": 64,
+          "unknown(-1)": 1
+        },
+        "quality_min": 45,
+        "quality_median": 80,
+        "quality_max": 100
+      },
+      "real": {
+        "n": 1251,
+        "jpeg": 1223,
+        "non_jpeg": 28,
+        "formats": {
+          "JPEG": 1223,
+          "PNG": 28
+        },
+        "subsampling": {
+          "4:2:0": 1185,
+          "4:2:2": 3,
+          "4:4:4": 33,
+          "not-jpeg": 28,
+          "unknown(-1)": 2
+        },
+        "quality_min": 22,
+        "quality_median": 75,
+        "quality_max": 100
+      }
+    },
+    "compression_table_markdown": "| label | n | JPEG | never compressed | formats | quality min/median/max | subsampling |\n|---|---|---|---|---|---|---|\n| fake | 1252 | 1252 | 0 | JPEG 1252 | 45/80/100 | 4:2:0 1186, 4:2:2 1, 4:4:4 64, unknown(-1) 1 |\n| real | 1251 | 1223 | 28 | JPEG 1223, PNG 28 | 22/75/100 | 4:2:0 1185, 4:2:2 3, 4:4:4 33, not-jpeg 28, unknown(-1) 2 |",
+    "compression_confounded": false,
+    "compression_verdict": "not confounded; never-compressed share: real 2.2% vs fake 0.0% (spread 2.2%)",
+    "parameter_separability": {
+      "threshold_lift": 0.05,
+      "pooled": {
+        "subsampling": {
+          "parameter": "subsampling",
+          "n": 2503,
+          "accuracy": 0.512585,
+          "baseline": 0.5002,
+          "lift": 0.012385,
+          "separable": false,
+          "reason": "subsampling alone scores 51.26% against a 50.02% majority-class baseline (lift +1.24%)",
+          "values": {
+            "4:2:0": {
+              "real": 1185,
+              "fake": 1186
+            },
+            "4:2:2": {
+              "real": 3,
+              "fake": 1
+            },
+            "4:4:4": {
+              "real": 33,
+              "fake": 64
+            },
+            "not-jpeg": {
+              "real": 28
+            },
+            "unknown(-1)": {
+              "real": 2,
+              "fake": 1
+            }
+          }
+        },
+        "jpeg_quality": {
+          "parameter": "jpeg_quality",
+          "n": 2503,
+          "accuracy": 0.614063,
+          "baseline": 0.5002,
+          "lift": 0.113863,
+          "separable": true,
+          "reason": "jpeg_quality alone scores 61.41% against a 50.02% majority-class baseline (lift +11.39%)",
+          "values": {
+            "100": {
+              "fake": 37,
+              "real": 13
+            },
+            "22": {
+              "real": 1
+            },
+            "45": {
+              "fake": 1,
+              "real": 1
+            },
+            "50": {
+              "real": 1
+            },
+            "58": {
+              "real": 1
+            },
+            "60": {
+              "fake": 1
+            },
+            "62": {
+              "real": 1,
+              "fake": 1
+            },
+            "64": {
+              "real": 1
+            },
+            "65": {
+              "real": 16,
+              "fake": 6
+            },
+            "66": {
+              "fake": 1
+            },
+            "67": {
+              "real": 5
+            },
+            "69": {
+              "real": 31,
+              "fake": 45
+            },
+            "70": {
+              "real": 34,
+              "fake": 18
+            },
+            "71": {
+              "real": 6,
+              "fake": 3
+            },
+            "72": {
+              "real": 3,
+              "fake": 1
+            },
+            "73": {
+              "real": 3
+            },
+            "74": {
+              "real": 1,
+              "fake": 1
+            },
+            "75": {
+              "real": 560,
+              "fake": 420
+            },
+            "76": {
+              "real": 1
+            },
+            "77": {
+              "real": 4,
+              "fake": 5
+            },
+            "78": {
+              "real": 2,
+              "fake": 1
+            },
+            "79": {
+              "real": 31,
+              "fake": 87
+            },
+            "80": {
+              "real": 72,
+              "fake": 53
+            },
+            "81": {
+              "real": 4,
+              "fake": 1
+            },
+            "82": {
+              "real": 4,
+              "fake": 5
+            },
+            "83": {
+              "real": 3,
+              "fake": 3
+            },
+            "84": {
+              "real": 166,
+              "fake": 132
+            },
+            "85": {
+              "real": 149,
+              "fake": 242
+            },
+            "86": {
+              "real": 2,
+              "fake": 4
+            },
+            "87": {
+              "real": 3,
+              "fake": 10
+            },
+            "88": {
+              "fake": 13,
+              "real": 16
+            },
+            "89": {
+              "real": 6,
+              "fake": 5
+            },
+            "90": {
+              "real": 22,
+              "fake": 18
+            },
+            "91": {
+              "real": 2,
+              "fake": 12
+            },
+            "92": {
+              "real": 17,
+              "fake": 60
+            },
+            "94": {
+              "real": 13,
+              "fake": 9
+            },
+            "95": {
+              "real": 14,
+              "fake": 37
+            },
+            "96": {
+              "real": 6,
+              "fake": 3
+            },
+            "97": {
+              "real": 3,
+              "fake": 2
+            },
+            "99": {
+              "fake": 15,
+              "real": 5
+            },
+            "None": {
+              "real": 28
+            }
+          }
+        }
+      },
+      "by_field": {
+        "platform": {
+          "subsampling": {
+            "by_stratum": {
+              "facebook": {
+                "parameter": "subsampling",
+                "n": 1411,
+                "accuracy": 0.886605,
+                "baseline": 0.886605,
+                "lift": 0.0,
+                "separable": false,
+                "reason": "subsampling alone scores 88.66% against a 88.66% majority-class baseline (lift +0.00%)",
+                "values": {
+                  "4:2:0": {
+                    "fake": 134,
+                    "real": 1185
+                  },
+                  "4:2:2": {
+                    "real": 3
+                  },
+                  "4:4:4": {
+                    "fake": 26,
+                    "real": 33
+                  },
+                  "not-jpeg": {
+                    "real": 28
+                  },
+                  "unknown(-1)": {
+                    "real": 2
+                  }
+                }
+              },
+              "reddit": {
+                "parameter": "subsampling",
+                "n": 2001,
+                "accuracy": 0.625187,
+                "baseline": 0.625187,
+                "lift": 0.0,
+                "separable": false,
+                "reason": "subsampling alone scores 62.52% against a 62.52% majority-class baseline (lift +0.00%)",
+                "values": {
+                  "4:2:0": {
+                    "fake": 720,
+                    "real": 1185
+                  },
+                  "4:2:2": {
+                    "fake": 1,
+                    "real": 3
+                  },
+                  "4:4:4": {
+                    "fake": 29,
+                    "real": 33
+                  },
+                  "not-jpeg": {
+                    "real": 28
+                  },
+                  "unknown(-1)": {
+                    "real": 2
+                  }
+                }
+              },
+              "twitter": {
+                "parameter": "subsampling",
+                "n": 1593,
+                "accuracy": 0.785311,
+                "baseline": 0.785311,
+                "lift": 0.0,
+                "separable": false,
+                "reason": "subsampling alone scores 78.53% against a 78.53% majority-class baseline (lift +0.00%)",
+                "values": {
+                  "4:2:0": {
+                    "fake": 332,
+                    "real": 1185
+                  },
+                  "4:2:2": {
+                    "real": 3
+                  },
+                  "4:4:4": {
+                    "fake": 9,
+                    "real": 33
+                  },
+                  "not-jpeg": {
+                    "real": 28
+                  },
+                  "unknown(-1)": {
+                    "fake": 1,
+                    "real": 2
+                  }
+                }
+              }
+            },
+            "separable_strata": []
+          },
+          "jpeg_quality": {
+            "by_stratum": {
+              "facebook": {
+                "parameter": "jpeg_quality",
+                "n": 1411,
+                "accuracy": 0.920624,
+                "baseline": 0.886605,
+                "lift": 0.034018,
+                "separable": false,
+                "reason": "jpeg_quality alone scores 92.06% against a 88.66% majority-class baseline (lift +3.40%)",
+                "values": {
+                  "100": {
+                    "fake": 10,
+                    "real": 13
+                  },
+                  "22": {
+                    "real": 1
+                  },
+                  "45": {
+                    "real": 1
+                  },
+                  "50": {
+                    "real": 1
+                  },
+                  "58": {
+                    "real": 1
+                  },
+                  "62": {
+                    "real": 1
+                  },
+                  "64": {
+                    "real": 1
+                  },
+                  "65": {
+                    "real": 16
+                  },
+                  "67": {
+                    "real": 5
+                  },
+                  "69": {
+                    "fake": 28,
+                    "real": 31
+                  },
+                  "70": {
+                    "real": 34
+                  },
+                  "71": {
+                    "fake": 1,
+                    "real": 6
+                  },
+                  "72": {
+                    "real": 3
+                  },
+                  "73": {
+                    "real": 3
+                  },
+                  "74": {
+                    "real": 1
+                  },
+                  "75": {
+                    "real": 560
+                  },
+                  "76": {
+                    "real": 1
+                  },
+                  "77": {
+                    "real": 4
+                  },
+                  "78": {
+                    "real": 2
+                  },
+                  "79": {
+                    "fake": 40,
+                    "real": 31
+                  },
+                  "80": {
+                    "fake": 7,
+                    "real": 72
+                  },
+                  "81": {
+                    "real": 4
+                  },
+                  "82": {
+                    "real": 4
+                  },
+                  "83": {
+                    "real": 3
+                  },
+                  "84": {
+                    "real": 166
+                  },
+                  "85": {
+                    "fake": 1,
+                    "real": 149
+                  },
+                  "86": {
+                    "real": 2
+                  },
+                  "87": {
+                    "real": 3
+                  },
+                  "88": {
+                    "fake": 2,
+                    "real": 16
+                  },
+                  "89": {
+                    "fake": 3,
+                    "real": 6
+                  },
+                  "90": {
+                    "fake": 7,
+                    "real": 22
+                  },
+                  "91": {
+                    "fake": 10,
+                    "real": 2
+                  },
+                  "92": {
+                    "fake": 48,
+                    "real": 17
+                  },
+                  "94": {
+                    "real": 13
+                  },
+                  "95": {
+                    "fake": 3,
+                    "real": 14
+                  },
+                  "96": {
+                    "real": 6
+                  },
+                  "97": {
+                    "real": 3
+                  },
+                  "99": {
+                    "real": 5
+                  },
+                  "None": {
+                    "real": 28
+                  }
+                }
+              },
+              "reddit": {
+                "parameter": "jpeg_quality",
+                "n": 2001,
+                "accuracy": 0.636182,
+                "baseline": 0.625187,
+                "lift": 0.010995,
+                "separable": false,
+                "reason": "jpeg_quality alone scores 63.62% against a 62.52% majority-class baseline (lift +1.10%)",
+                "values": {
+                  "100": {
+                    "fake": 23,
+                    "real": 13
+                  },
+                  "22": {
+                    "real": 1
+                  },
+                  "45": {
+                    "fake": 1,
+                    "real": 1
+                  },
+                  "50": {
+                    "real": 1
+                  },
+                  "58": {
+                    "real": 1
+                  },
+                  "62": {
+                    "fake": 1,
+                    "real": 1
+                  },
+                  "64": {
+                    "real": 1
+                  },
+                  "65": {
+                    "fake": 6,
+                    "real": 16
+                  },
+                  "67": {
+                    "real": 5
+                  },
+                  "69": {
+                    "fake": 16,
+                    "real": 31
+                  },
+                  "70": {
+                    "fake": 18,
+                    "real": 34
+                  },
+                  "71": {
+                    "fake": 2,
+                    "real": 6
+                  },
+                  "72": {
+                    "fake": 1,
+                    "real": 3
+                  },
+                  "73": {
+                    "real": 3
+                  },
+                  "74": {
+                    "fake": 1,
+                    "real": 1
+                  },
+                  "75": {
+                    "fake": 401,
+                    "real": 560
+                  },
+                  "76": {
+                    "real": 1
+                  },
+                  "77": {
+                    "fake": 5,
+                    "real": 4
+                  },
+                  "78": {
+                    "real": 2
+                  },
+                  "79": {
+                    "fake": 24,
+                    "real": 31
+                  },
+                  "80": {
+                    "fake": 37,
+                    "real": 72
+                  },
+                  "81": {
+                    "fake": 1,
+                    "real": 4
+                  },
+                  "82": {
+                    "fake": 4,
+                    "real": 4
+                  },
+                  "83": {
+                    "fake": 2,
+                    "real": 3
+                  },
+                  "84": {
+                    "fake": 72,
+                    "real": 166
+                  },
+                  "85": {
+                    "fake": 59,
+                    "real": 149
+                  },
+                  "86": {
+                    "fake": 4,
+                    "real": 2
+                  },
+                  "87": {
+                    "fake": 6,
+                    "real": 3
+                  },
+                  "88": {
+                    "fake": 10,
+                    "real": 16
+                  },
+                  "89": {
+                    "fake": 2,
+                    "real": 6
+                  },
+                  "90": {
+                    "fake": 10,
+                    "real": 22
+                  },
+                  "91": {
+                    "fake": 1,
+                    "real": 2
+                  },
+                  "92": {
+                    "fake": 10,
+                    "real": 17
+                  },
+                  "94": {
+                    "fake": 4,
+                    "real": 13
+                  },
+                  "95": {
+                    "fake": 14,
+                    "real": 14
+                  },
+                  "96": {
+                    "fake": 2,
+                    "real": 6
+                  },
+                  "97": {
+                    "fake": 2,
+                    "real": 3
+                  },
+                  "99": {
+                    "fake": 11,
+                    "real": 5
+                  },
+                  "None": {
+                    "real": 28
+                  }
+                }
+              },
+              "twitter": {
+                "parameter": "jpeg_quality",
+                "n": 1593,
+                "accuracy": 0.811676,
+                "baseline": 0.785311,
+                "lift": 0.026365,
+                "separable": false,
+                "reason": "jpeg_quality alone scores 81.17% against a 78.53% majority-class baseline (lift +2.64%)",
+                "values": {
+                  "100": {
+                    "fake": 4,
+                    "real": 13
+                  },
+                  "22": {
+                    "real": 1
+                  },
+                  "45": {
+                    "real": 1
+                  },
+                  "50": {
+                    "real": 1
+                  },
+                  "58": {
+                    "real": 1
+                  },
+                  "60": {
+                    "fake": 1
+                  },
+                  "62": {
+                    "real": 1
+                  },
+                  "64": {
+                    "real": 1
+                  },
+                  "65": {
+                    "real": 16
+                  },
+                  "66": {
+                    "fake": 1
+                  },
+                  "67": {
+                    "real": 5
+                  },
+                  "69": {
+                    "fake": 1,
+                    "real": 31
+                  },
+                  "70": {
+                    "real": 34
+                  },
+                  "71": {
+                    "real": 6
+                  },
+                  "72": {
+                    "real": 3
+                  },
+                  "73": {
+                    "real": 3
+                  },
+                  "74": {
+                    "real": 1
+                  },
+                  "75": {
+                    "fake": 19,
+                    "real": 560
+                  },
+                  "76": {
+                    "real": 1
+                  },
+                  "77": {
+                    "real": 4
+                  },
+                  "78": {
+                    "fake": 1,
+                    "real": 2
+                  },
+                  "79": {
+                    "fake": 23,
+                    "real": 31
+                  },
+                  "80": {
+                    "fake": 9,
+                    "real": 72
+                  },
+                  "81": {
+                    "real": 4
+                  },
+                  "82": {
+                    "fake": 1,
+                    "real": 4
+                  },
+                  "83": {
+                    "fake": 1,
+                    "real": 3
+                  },
+                  "84": {
+                    "fake": 60,
+                    "real": 166
+                  },
+                  "85": {
+                    "fake": 182,
+                    "real": 149
+                  },
+                  "86": {
+                    "real": 2
+                  },
+                  "87": {
+                    "fake": 4,
+                    "real": 3
+                  },
+                  "88": {
+                    "fake": 1,
+                    "real": 16
+                  },
+                  "89": {
+                    "real": 6
+                  },
+                  "90": {
+                    "fake": 1,
+                    "real": 22
+                  },
+                  "91": {
+                    "fake": 1,
+                    "real": 2
+                  },
+                  "92": {
+                    "fake": 2,
+                    "real": 17
+                  },
+                  "94": {
+                    "fake": 5,
+                    "real": 13
+                  },
+                  "95": {
+                    "fake": 20,
+                    "real": 14
+                  },
+                  "96": {
+                    "fake": 1,
+                    "real": 6
+                  },
+                  "97": {
+                    "real": 3
+                  },
+                  "99": {
+                    "fake": 4,
+                    "real": 5
+                  },
+                  "None": {
+                    "real": 28
+                  }
+                }
+              }
+            },
+            "separable_strata": []
+          }
+        }
+      },
+      "separable": true,
+      "offenders": [
+        "pooled/jpeg_quality"
+      ]
+    }
+  },
+  "by_platform": {
+    "facebook": 320,
+    "reddit": 1500,
+    "twitter": 683
+  },
+  "leakage": {
+    "threshold_bits": 6,
+    "against": {
+      "p1_reals_manifest_t_real.csv": {
+        "status": "CLEAN",
+        "n_training": 2500,
+        "n_evaluation": 2503,
+        "matches": []
+      },
+      "p1_reals_manifest_t_ctrl.csv": {
+        "status": "CLEAN",
+        "n_training": 1600,
+        "n_evaluation": 2503,
+        "matches": []
+      }
+    }
+  }
+}

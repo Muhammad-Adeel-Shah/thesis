@@ -1,0 +1,205 @@
+{
+  "decision": "D-046",
+  "seed": 2026,
+  "train_fraction": 0.8,
+  "grouped_by": "source_image_id",
+  "stratified_by": "COCO supercategory, rarest present",
+  "generations_follow": "the caption's COCO image, not source_real_id",
+  "rows": 55788,
+  "by_set": {
+    "gen_matched": {
+      "train": 1988,
+      "val": 500
+    },
+    "pair_dcae": {
+      "train": 3279,
+      "val": 821
+    },
+    "pair_flux": {
+      "train": 3279,
+      "val": 821
+    },
+    "pair_flux2_klein": {
+      "train": 3279,
+      "val": 821
+    },
+    "pair_movq_k22": {
+      "train": 3279,
+      "val": 821
+    },
+    "pair_qwen_image": {
+      "train": 3279,
+      "val": 821
+    },
+    "pair_realesrgan_x4": {
+      "train": 3279,
+      "val": 821
+    },
+    "pair_sd15": {
+      "train": 3279,
+      "val": 821
+    },
+    "pair_sd21": {
+      "train": 3279,
+      "val": 821
+    },
+    "pair_sd35": {
+      "train": 3279,
+      "val": 821
+    },
+    "pair_sd_ft_ema": {
+      "train": 3279,
+      "val": 821
+    },
+    "pair_sdxl": {
+      "train": 3279,
+      "val": 821
+    },
+    "pair_sdxl_fp16fix": {
+      "train": 3279,
+      "val": 821
+    },
+    "t_ctrl": {
+      "val": 312,
+      "train": 1288
+    },
+    "t_real": {
+      "train": 1991,
+      "val": 509
+    }
+  },
+  "split": {
+    "seed": 2026,
+    "train_fraction": 0.8,
+    "groups": 3718,
+    "totals": {
+      "train": 2974,
+      "val": 744
+    },
+    "by_stratum": {
+      "accessory": {
+        "train": 211,
+        "val": 53
+      },
+      "animal": {
+        "train": 342,
+        "val": 86
+      },
+      "appliance": {
+        "train": 133,
+        "val": 33
+      },
+      "electronic": {
+        "train": 226,
+        "val": 57
+      },
+      "food": {
+        "train": 257,
+        "val": 64
+      },
+      "furniture": {
+        "train": 47,
+        "val": 12
+      },
+      "indoor": {
+        "train": 205,
+        "val": 51
+      },
+      "kitchen": {
+        "train": 46,
+        "val": 11
+      },
+      "none": {
+        "train": 666,
+        "val": 166
+      },
+      "outdoor": {
+        "train": 230,
+        "val": 58
+      },
+      "person": {
+        "train": 7,
+        "val": 2
+      },
+      "sports": {
+        "train": 369,
+        "val": 92
+      },
+      "vehicle": {
+        "train": 235,
+        "val": 59
+      }
+    }
+  },
+  "orphan_generations": 418,
+  "no_category_stratum": 832,
+  "leakage": {
+    "content_key": "content_id",
+    "distinct_content": 3718,
+    "crossing": [],
+    "counts": {
+      "t_real": {
+        "train": 1991,
+        "val": 509
+      },
+      "t_ctrl": {
+        "train": 1288,
+        "val": 312
+      },
+      "gen_matched": {
+        "train": 1988,
+        "val": 500
+      },
+      "pair_dcae": {
+        "train": 3279,
+        "val": 821
+      },
+      "pair_flux": {
+        "train": 3279,
+        "val": 821
+      },
+      "pair_flux2_klein": {
+        "train": 3279,
+        "val": 821
+      },
+      "pair_movq_k22": {
+        "train": 3279,
+        "val": 821
+      },
+      "pair_qwen_image": {
+        "train": 3279,
+        "val": 821
+      },
+      "pair_realesrgan_x4": {
+        "train": 3279,
+        "val": 821
+      },
+      "pair_sd15": {
+        "train": 3279,
+        "val": 821
+      },
+      "pair_sd21": {
+        "train": 3279,
+        "val": 821
+      },
+      "pair_sd35": {
+        "train": 3279,
+        "val": 821
+      },
+      "pair_sd_ft_ema": {
+        "train": 3279,
+        "val": 821
+      },
+      "pair_sdxl": {
+        "train": 3279,
+        "val": 821
+      },
+      "pair_sdxl_fp16fix": {
+        "train": 3279,
+        "val": 821
+      }
+    }
+  },
+  "manifest": "p2_splits.csv",
+  "manifest_sha256": "cc6c3e65f5b0f5a7b966c772fedbac46871006d12a2c82e58ffa17be30cdf10d"
+}

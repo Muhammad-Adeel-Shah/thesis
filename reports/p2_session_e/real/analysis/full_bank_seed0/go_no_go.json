@@ -1,0 +1,301 @@
+{
+  "run_id": "full_bank_seed0",
+  "protocol": "full_bank",
+  "seed": 0,
+  "synthetic": false,
+  "criterion": "Amendment 2: GO if F-mean(A2) minus the maximum over the five single heads is >= 2.0 points on M1 or M2 and the 95% paired bootstrap CI excludes 0",
+  "preregistration_sha256": "792a5f659e6fdd199a8efba27043cd76ddbffdcdd79d8806f7df0c9098e4eb98",
+  "scores_sha256": "03b4d07cb677750953c25818c5c19b039e83cb6dc3cd63ae3912277c6ac3aef4",
+  "heads_report_sha256": "2113492bf568f6560cfc4b88effd3ad3b2d3073aeaefb79d70f3b156b377f858",
+  "gate_slices_m1": [
+    "e3_matched/GPT-Image2-fake",
+    "e3_matched/Nano-Banana2-fake",
+    "e4_wildrf_matched",
+    "e5_chameleon_pipeline",
+    "e8_evalgen/Flux",
+    "e8_evalgen/GoT",
+    "e8_evalgen/Infinity",
+    "e8_evalgen/NOVA",
+    "e8_evalgen/OmniGen"
+  ],
+  "gate_slices_m2": [
+    "e3_matched/GPT-Image2-fake",
+    "e3_matched/Nano-Banana2-fake",
+    "e4_wildrf_matched",
+    "e5_chameleon_pipeline"
+  ],
+  "bootstrap": {
+    "resamples": 1000,
+    "seed": 2026,
+    "scheme": "fakes within slice, reals within view pool, luma rows with their parent; same draw for every stream"
+  },
+  "governing": {
+    "M1": {
+      "fusion": "f_mean_rz",
+      "fusion_macro": 0.9532591540627734,
+      "best_single_macro": 0.8913506995723794,
+      "best_single": {
+        "max_over": [
+          "s1",
+          "s2",
+          "s3_lr",
+          "s3_set",
+          "aeroblade"
+        ],
+        "max_on_data": "s2",
+        "max_share_in_replicates": {
+          "s2": 1.0
+        }
+      },
+      "difference_points": 6.190845449039395,
+      "ci_points": [
+        5.411152665297837,
+        6.941074848244622
+      ],
+      "ci_excludes_zero": true,
+      "passes": true
+    },
+    "M2": {
+      "fusion": "f_mean_rz",
+      "fusion_macro": 0.7313607558039805,
+      "best_single_macro": 0.773995232473454,
+      "best_single": {
+        "max_over": [
+          "s1",
+          "s2",
+          "s3_lr",
+          "s3_set",
+          "aeroblade"
+        ],
+        "max_on_data": "s2",
+        "max_share_in_replicates": {
+          "s2": 1.0
+        }
+      },
+      "difference_points": -4.263447666947351,
+      "ci_points": [
+        -5.932254976046488,
+        -2.629676773685756
+      ],
+      "ci_excludes_zero": true,
+      "passes": false
+    },
+    "passes_on": [
+      "M1"
+    ],
+    "verdict": "GO",
+    "m1_m2_disagree_in_sign": true
+  },
+  "analysis_a": {
+    "M1": {
+      "fusion": "f_stack",
+      "fusion_macro": 0.9291117844946049,
+      "best_single_macro": 0.8913506995723794,
+      "best_single": {
+        "fixed": "s2"
+      },
+      "difference_points": 3.7761084922225407,
+      "ci_points": [
+        3.007402623172018,
+        4.579546888184003
+      ],
+      "ci_excludes_zero": true,
+      "passes": true
+    },
+    "M2": {
+      "fusion": "f_stack",
+      "fusion_macro": 0.7454508274990961,
+      "best_single_macro": 0.773995232473454,
+      "best_single": {
+        "fixed": "s2"
+      },
+      "difference_points": -2.854440497435795,
+      "ci_points": [
+        -4.58620492903843,
+        -1.1372365644203066
+      ],
+      "ci_excludes_zero": true,
+      "passes": false
+    },
+    "passes_on": [
+      "M1"
+    ],
+    "verdict": "GO",
+    "m1_m2_disagree_in_sign": true,
+    "best_single_fixed_on_validation": "s2",
+    "validation_auc": {
+      "s1": 0.8983748560908817,
+      "s2": 0.9975719343140074,
+      "s3_lr": 0.9726798745881804,
+      "s3_set": 0.984350516048313,
+      "aeroblade": 0.7247310434743879
+    },
+    "validation_ties": [
+      "s2"
+    ],
+    "role": "SECONDARY (Amendment 2): reported unchanged, no gate role"
+  },
+  "macro_per_stream": {
+    "s1": {
+      "M1": {
+        "point": 0.777442386813778,
+        "lo": 0.7655624485552963,
+        "hi": 0.7878880140257782,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 77.7442386813778
+      },
+      "M2": {
+        "point": 0.6146484386386218,
+        "lo": 0.5969476818644666,
+        "hi": 0.6326889916822162,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 61.464843863862185
+      }
+    },
+    "s2": {
+      "M1": {
+        "point": 0.8913506995723794,
+        "lo": 0.8842062961986588,
+        "hi": 0.898809389117077,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 89.13506995723795
+      },
+      "M2": {
+        "point": 0.773995232473454,
+        "lo": 0.7607391911321741,
+        "hi": 0.7878087658261663,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 77.3995232473454
+      }
+    },
+    "s3_lr": {
+      "M1": {
+        "point": 0.7052486514219951,
+        "lo": 0.6909604937274233,
+        "hi": 0.718735817009768,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 70.52486514219952
+      },
+      "M2": {
+        "point": 0.637919336170047,
+        "lo": 0.6180536080095096,
+        "hi": 0.656586202465345,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 63.7919336170047
+      }
+    },
+    "s3_set": {
+      "M1": {
+        "point": 0.7282373610674104,
+        "lo": 0.7157216020826385,
+        "hi": 0.7393633567726221,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 72.82373610674104
+      },
+      "M2": {
+        "point": 0.6044742695224795,
+        "lo": 0.5843761767700036,
+        "hi": 0.6220860306168923,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 60.44742695224795
+      }
+    },
+    "aeroblade": {
+      "M1": {
+        "point": 0.7158207206211253,
+        "lo": 0.700582555887208,
+        "hi": 0.7306371775877312,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 71.58207206211253
+      },
+      "M2": {
+        "point": 0.595015585881147,
+        "lo": 0.5735837202236649,
+        "hi": 0.6144672650248255,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 59.5015585881147
+      }
+    },
+    "f_mean_rz": {
+      "M1": {
+        "point": 0.9532591540627734,
+        "lo": 0.948003016650966,
+        "hi": 0.9586012150509085,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 95.32591540627735
+      },
+      "M2": {
+        "point": 0.7313607558039805,
+        "lo": 0.7151687446034513,
+        "hi": 0.7469624464480383,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 73.13607558039806
+      }
+    },
+    "f_mean": {
+      "M1": {
+        "point": 0.9352084436872818,
+        "lo": 0.9291009740281213,
+        "hi": 0.9411954965195396,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 93.52084436872818
+      },
+      "M2": {
+        "point": 0.7268661648594236,
+        "lo": 0.7089683216456215,
+        "hi": 0.7435217239128534,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 72.68661648594235
+      }
+    },
+    "f_stack": {
+      "M1": {
+        "point": 0.9291117844946049,
+        "lo": 0.9232396932955509,
+        "hi": 0.9352203903073092,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 92.91117844946048
+      },
+      "M2": {
+        "point": 0.7454508274990961,
+        "lo": 0.7291012020411686,
+        "hi": 0.7606886845779814,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 74.54508274990961
+      }
+    }
+  },
+  "note": "A NO-GO is a result: the thesis then studies the best single stream plus calibration for deployment. The criterion was fixed before any panel score was produced; it is reported unchanged either way."
+}

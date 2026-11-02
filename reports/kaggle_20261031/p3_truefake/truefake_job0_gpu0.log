@@ -1,0 +1,4 @@
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2336.35it/s]
+2026-10-31 11:26:44 INFO    p3_truefake_score | s2b_seed0 truefake: 15999 rows in 435.6 s (0.0272 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2245.67it/s]
+2026-10-31 11:34:02 INFO    p3_truefake_score | s2d_p35_seed0 truefake: 15999 rows in 436.7 s (0.0273 s/image)

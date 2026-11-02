@@ -1,0 +1,81 @@
+{
+  "mode": "train+score",
+  "outcome": "COMPLETE",
+  "devices": [
+    "0",
+    "1"
+  ],
+  "deadline_hours": 9.5,
+  "wall_hours": 2.9834,
+  "device_hours": 5.7917,
+  "runs": [
+    {
+      "run_id": "p_a_sd1_seed0",
+      "protocol": "p_a_sd1",
+      "seed": 0,
+      "state": "complete",
+      "device": "0",
+      "train_rc": 0,
+      "infer_rc": 0,
+      "started": 1791157422.0749753,
+      "finished": 1791162972.1098278,
+      "hours": 1.5417,
+      "logs": [
+        "s2_p_a_sd1_seed0_gpu0_infer.log",
+        "s2_p_a_sd1_seed0_gpu0_train.log"
+      ],
+      "note": "no report or no score summary; nothing to restore"
+    },
+    {
+      "run_id": "p_a_sd1_seed1",
+      "protocol": "p_a_sd1",
+      "seed": 1,
+      "state": "complete",
+      "device": "1",
+      "train_rc": 0,
+      "infer_rc": 0,
+      "started": 1791157422.075345,
+      "finished": 1791162822.1078725,
+      "hours": 1.5,
+      "logs": [
+        "s2_p_a_sd1_seed1_gpu1_infer.log",
+        "s2_p_a_sd1_seed1_gpu1_train.log"
+      ],
+      "note": "no report or no score summary; nothing to restore"
+    },
+    {
+      "run_id": "4ch_only_seed0",
+      "protocol": "4ch_only",
+      "seed": 0,
+      "state": "complete",
+      "device": "1",
+      "train_rc": 0,
+      "infer_rc": 0,
+      "started": 1791162822.1083188,
+      "finished": 1791167532.1393595,
+      "hours": 1.3083,
+      "logs": [
+        "s2_4ch_only_seed0_gpu1_infer.log",
+        "s2_4ch_only_seed0_gpu1_train.log"
+      ],
+      "note": "no report or no score summary; nothing to restore"
+    },
+    {
+      "run_id": "full_bank_seed0",
+      "protocol": "full_bank",
+      "seed": 0,
+      "state": "complete",
+      "device": "0",
+      "train_rc": 0,
+      "infer_rc": 0,
+      "started": 1791162972.110205,
+      "finished": 1791168162.1423318,
+      "hours": 1.4417,
+      "logs": [
+        "s2_full_bank_seed0_gpu0_infer.log",
+        "s2_full_bank_seed0_gpu0_train.log"
+      ],
+      "note": "no report or no score summary; nothing to restore"
+    }
+  ]
+}

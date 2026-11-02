@@ -1,0 +1,16 @@
+{
+  "device": "cuda",
+  "crops": [
+    384
+  ],
+  "batches": [
+    1,
+    2,
+    4
+  ],
+  "warmups_discarded": 3,
+  "timed_repeats": 5,
+  "statistic": "median",
+  "backbones": null,
+  "generation": null
+}

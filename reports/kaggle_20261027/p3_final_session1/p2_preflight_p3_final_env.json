@@ -1,0 +1,27 @@
+{
+  "stage": "p3_final_env",
+  "passed": true,
+  "checks": [
+    {
+      "name": "gpu count",
+      "ok": true,
+      "detail": "2 CUDA device(s) ['Tesla T4', 'Tesla T4']",
+      "seconds": 1.77,
+      "data": {}
+    },
+    {
+      "name": "hf token",
+      "ok": true,
+      "detail": "HF_TOKEN present: true",
+      "seconds": 0.41,
+      "data": {}
+    },
+    {
+      "name": "imports",
+      "ok": true,
+      "detail": "peft 0.20.0, transformers 5.16.1, safetensors 0.8.0, huggingface_hub 1.29.0, PIL 13.0.0",
+      "seconds": 5.77,
+      "data": {}
+    }
+  ]
+}

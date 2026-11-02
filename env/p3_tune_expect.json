@@ -1,0 +1,96 @@
+{
+  "stage": "p3_tune (degradation tuning: S2-B s0 dev scoring + two S2-B+deg candidates, one per T4)",
+  "imports": [
+    "peft",
+    "transformers",
+    "safetensors",
+    "huggingface_hub",
+    "PIL"
+  ],
+  "gpus": 2,
+  "hf_token": true,
+  "corpus": {
+    "reals": 4100,
+    "generated": 2488,
+    "pairs": 49200
+  },
+  "gen_matched": 2488,
+  "inputs": {
+    "p1_pairs_manifest.csv": {
+      "sha256": "b19b7f5acee49d8848658b5b78b6398d9a1511ae72e688fc81379705aa99c65c",
+      "rows": 49200
+    },
+    "p2_splits.csv": {
+      "sha256": "cc6c3e65f5b0f5a7b966c772fedbac46871006d12a2c82e58ffa17be30cdf10d",
+      "rows": 55788
+    },
+    "p2_splits_summary.json": {
+      "sha256": "be25a948b2926fe883791426509769afd7c85bf2bdbfb4ef9cbe3d79ddda5953"
+    },
+    "p1_gen_manifest.csv": {
+      "sha256": "c86935d39177ba0982b6ff12b129cce872c3e388281406535473a579a217635a",
+      "rows": 2488
+    },
+    "p2_panel_images.csv": {
+      "sha256": "d92ed4771a1981a32403c5db1771b46304f6a2c100d52c4a9ae9ddb6c27595be",
+      "rows": 11775
+    },
+    "p2_s1_images.csv": {
+      "sha256": "f8a9b6c30d763c9e057cb276b67e061e7ea0bc2088e3edebad5f97f80a0c6e12",
+      "rows": 33909
+    }
+  },
+  "resolve": [
+    "p3_tune_panel_rows.csv",
+    "p3_tune_val_reals.csv"
+  ],
+  "runs": [
+    "s2b_deg_p70:0",
+    "s2b_deg_p35:0"
+  ],
+  "base_stop_at": 5000,
+  "devices": "0,1",
+  "lists": {
+    "panel": [
+      "p3_tune_panel_rows.csv",
+      null
+    ],
+    "val": [
+      "p3_tune_val_reals.csv",
+      null
+    ]
+  },
+  "train_args": [
+    "--runs-config=configs/p3_runs.yaml",
+    "--fixed-steps=6000",
+    "--stop-at=5000",
+    "--heldout-every=500",
+    "--checkpoint-every=500",
+    "--val-pairs=512"
+  ],
+  "infer_args": [
+    "--batch=32",
+    "--runs-config=configs/p3_runs.yaml"
+  ],
+  "smoke_steps": 2,
+  "smoke_deadline_hours": 0.75,
+  "base_smoke_deadline_hours": 0.25,
+  "base_score_deadline_hours": 4.0,
+  "deadline_hours": 9.5,
+  "poll_seconds": 30,
+  "expected": {
+    "wall_hours": "about 2-10.5 (ESTIMATED)",
+    "quota_hours": "about 2-10.5 (wall time is billed, I-042)",
+    "basis": "Only the rows the committed rule reads are scored (user, 2026-10-21): 6,717 dev panel rows + 491 val reals = 7,208 per model. Scoring: 0.0235-0.0641 s/image MEASURED in P2 (2026-10-05, same lists) when reads were fast; plus a first-read cost per image INFERRED from training-log intervals of 0 (session 1), 0.06 (session 2), 0.13-0.15 (session 3) and 0.68-0.97 s (session 4) -- so S2-B s0's scoring before training, 0.05-1.9 h. Training: 5,000 steps x 0.77-3.52 s/step (MEASURED train-loop range, sessions 1-4) = 1.1-4.9 h, plus the degradation's per-batch cost (planned +25%, measured by this session's smoke). The two candidates' scoring runs in parallel after training: 0.05-1.9 h (low if the files are still cached from the S2-B scoring). Setup and smoke about 0.5 h (session 4: smoke 0.425 h MEASURED)."
+  },
+  "derived_lists": {
+    "p3_tune_panel_rows.csv": {
+      "rows": 6717,
+      "sha256": "c4614dbb2a90d8cc75f3efe98d986147d405589b6350e553eb7957c3b88d5104"
+    },
+    "p3_tune_val_reals.csv": {
+      "rows": 491,
+      "sha256": "cf6dda478e8c369fe24cb0c15a4b953a71438f37da2ec3e48020729f387f90ba"
+    }
+  }
+}

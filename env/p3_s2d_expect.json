@@ -1,0 +1,71 @@
+{
+  "stage": "p3_s2d (S2-D seeds 0 and 1 + S2-B+reals: COCO + Open Images train reals pooled by real, two per session, one per T4)",
+  "imports": [
+    "peft",
+    "transformers",
+    "safetensors",
+    "huggingface_hub",
+    "PIL"
+  ],
+  "gpus": 2,
+  "hf_token": true,
+  "corpus": {
+    "reals": 4100,
+    "generated": 2488,
+    "pairs": 49200
+  },
+  "gen_matched": 2488,
+  "inputs": {
+    "p1_pairs_manifest.csv": {
+      "sha256": "b19b7f5acee49d8848658b5b78b6398d9a1511ae72e688fc81379705aa99c65c",
+      "rows": 49200
+    },
+    "p2_splits.csv": {
+      "sha256": "cc6c3e65f5b0f5a7b966c772fedbac46871006d12a2c82e58ffa17be30cdf10d",
+      "rows": 55788
+    },
+    "p2_splits_summary.json": {
+      "sha256": "be25a948b2926fe883791426509769afd7c85bf2bdbfb4ef9cbe3d79ddda5953"
+    },
+    "p1_gen_manifest.csv": {
+      "sha256": "c86935d39177ba0982b6ff12b129cce872c3e388281406535473a579a217635a",
+      "rows": 2488
+    }
+  },
+  "nstar": "reports/p3_nstar.json",
+  "nstar_sha256": "de30996d05bc0e4fb0408808cc9d4b97b27132d125298d09c991623a6c9ab678",
+  "oi": {
+    "reals_manifest": "reports/kaggle_20261017/p3_open_images/p3_open_images_manifest.csv",
+    "reals_manifest_sha256": "37bfc7db545798b043c0eb908f7911d7d9e10fc2fc1622b22006c2354f1b34e2",
+    "pairs_digest": "reports/kaggle_20261018/p3_oi_pairs/p3_oi_pairs_manifest_digest.json",
+    "pairs_digest_sha256": "0eda8b9b905b281077d82ad6f82582585d67e2d70f440aa3eaaaae6495158202",
+    "train_reals": 3600,
+    "held_out_reals": 400,
+    "hash_workers": 32
+  },
+  "choice": "reports/p3_degradation_choice.json",
+  "queue_template": [
+    "s2d:0",
+    "s2b_reals:0",
+    "s2d:1"
+  ],
+  "runs_per_session": 2,
+  "devices": "0,1",
+  "train_args": [
+    "--runs-config=configs/p3_runs.yaml",
+    "--fixed-steps=6000",
+    "--stop-at=5000",
+    "--heldout-every=500",
+    "--checkpoint-every=500",
+    "--val-pairs=512"
+  ],
+  "smoke_steps": 2,
+  "smoke_deadline_hours": 0.75,
+  "deadline_hours": 9.5,
+  "poll_seconds": 30,
+  "expected": {
+    "per_session_wall_hours": "about 4-7 (ESTIMATED); session 2 trains one run",
+    "quota": "Kaggle bills session wall time (I-042 closed 2026-10-17): 1 quota hour per session hour",
+    "basis": "training 5,000 steps at 1.3-3.5 s/step, the MEASURED train-loop range of sessions 3-4 on T4 x2, where first reads from /kaggle/input dominated (session 4 entry) = 1.8-4.9 h, plus the degradation's per-batch cost (S2-D only; MEASURED by the tuning session, not yet run); verifying the 46,800 Open Images train files, 32 threads, about 0.2-0.5 h (ESTIMATED, NOT-MEASURED); setup and smoke about 0.5 h (session 4: smoke 0.425 h MEASURED)."
+  }
+}

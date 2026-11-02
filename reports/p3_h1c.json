@@ -1,0 +1,156 @@
+{
+  "what": "H1-c: LOLO-f minus BANK-1 on lineage f's held-out validation reconstructions, folds 2-8 (pre-registration section 6.1)",
+  "nstar": {
+    "path": "F:/thesis-2/Implementation/thesis_dbp/reports/p3_nstar.json",
+    "sha256": "b24b160ef34324928367bc4acb1318ef54fb9c37ab025abfc83e70d61ac64174",
+    "n_star": 5000
+  },
+  "inputs": {
+    "bank_1": {
+      "file": "bank_1_seed0_step_05000.csv",
+      "sha256": "300e58d602ec96d262fc4fc1f5387f5b3c4c15072229d05012877913df4ec033",
+      "snapshot_sha256": "e4e8210a3f19b5f7244485ad4d20d488af1d4e2b189e8fa76ba13fd5533bb93a"
+    },
+    "lolo_f2": {
+      "file": "lolo_f2_seed0_step_05000.csv",
+      "step": 5000,
+      "sha256": "1af6a0cd310a5d42c0fc73763b3dc3285894d41969ba855313281e253bfa982a",
+      "snapshot_sha256": "eaddfae7b85cdabb6dcb41f66739d2428ff0166bad91242bb14b00480355bc9c"
+    },
+    "lolo_f3": {
+      "file": "lolo_f3_seed0_step_05000.csv",
+      "step": 5000,
+      "sha256": "b1eb56a3a9052f87a1f9e5474430d6b56d362a2735f770807d50c30a4100060b",
+      "snapshot_sha256": "cad1f6fc2f76d4521f062b3bc9a6f08f972439df6c514854052b375ea0c79685"
+    },
+    "lolo_f4": {
+      "file": "lolo_f4_seed0_step_05000.csv",
+      "step": 5000,
+      "sha256": "1404aa2f6ffb01f2b0409181fdbdc6b55187e0d4a8edbc1bb1ae6f4bbf83767d",
+      "snapshot_sha256": "ffcf62d068d19123c0466260f86699fc32a0dc2bfd71c18cda308088d0a0e46d"
+    },
+    "lolo_f5": {
+      "file": "lolo_f5_seed0_step_05000.csv",
+      "step": 5000,
+      "sha256": "5a4f2a5a84f5e8edd413659a5cfc4d318b6f5eb172e072abf9ac122ae6ce028c",
+      "snapshot_sha256": "8a410f10daf6170e2f24a3af8bdde1dcaa34b28c288bd1a9fe3ac9ceb17822a6"
+    },
+    "lolo_f6": {
+      "file": "lolo_f6_seed0_step_04500.csv",
+      "step": 4500,
+      "sha256": "56a0dbb554c43b10e65487251afd86f9330c5858fcb875f6c1116d39e8074ff8",
+      "snapshot_sha256": "117e2a980699f08151f427692e3dbeac4e9a918dfc87347e2e2d59b9a9daaeaa"
+    },
+    "lolo_f7": {
+      "file": "lolo_f7_seed0_step_05000.csv",
+      "step": 5000,
+      "sha256": "c88842153f8ccb378dc30d6bf684443bbf155d5fd69b7582a696285726345118",
+      "snapshot_sha256": "8a27ee16a51b4bd576296b31c2046de785b880648574fe029261c2e45c5b0961"
+    },
+    "lolo_f8": {
+      "file": "lolo_f8_seed0_step_05000.csv",
+      "step": 5000,
+      "sha256": "449a6ac842a95032ba419c833150ce471b208a3174e0b1983ae831e3ec78940c",
+      "snapshot_sha256": "077bae610edbcc36ddb7893bf8bfe8b73c29fc6fe080a6f0480ce4d1ac71deca"
+    }
+  },
+  "folds": [
+    {
+      "fold": 2,
+      "members": [
+        "sdxl",
+        "sdxl_fp16fix"
+      ],
+      "lolo_auc": 0.99827,
+      "bank_1_auc": 0.95515,
+      "difference": 0.04313,
+      "reals": 491,
+      "reconstructions": 982
+    },
+    {
+      "fold": 3,
+      "members": [
+        "flux",
+        "sd35"
+      ],
+      "lolo_auc": 0.98798,
+      "bank_1_auc": 0.90451,
+      "difference": 0.08347,
+      "reals": 491,
+      "reconstructions": 982
+    },
+    {
+      "fold": 4,
+      "members": [
+        "dcae"
+      ],
+      "lolo_auc": 0.9934,
+      "bank_1_auc": 0.99347,
+      "difference": -7e-05,
+      "reals": 491,
+      "reconstructions": 491
+    },
+    {
+      "fold": 5,
+      "members": [
+        "realesrgan_x4"
+      ],
+      "lolo_auc": 0.99999,
+      "bank_1_auc": 0.99993,
+      "difference": 6e-05,
+      "reals": 491,
+      "reconstructions": 491
+    },
+    {
+      "fold": 6,
+      "members": [
+        "flux2_klein"
+      ],
+      "lolo_auc": 0.76551,
+      "bank_1_auc": 0.57907,
+      "difference": 0.18644,
+      "reals": 491,
+      "reconstructions": 491
+    },
+    {
+      "fold": 7,
+      "members": [
+        "qwen_image"
+      ],
+      "lolo_auc": 0.98586,
+      "bank_1_auc": 0.92615,
+      "difference": 0.05971,
+      "reals": 491,
+      "reconstructions": 491
+    },
+    {
+      "fold": 8,
+      "members": [
+        "movq_k22"
+      ],
+      "lolo_auc": 0.99938,
+      "bank_1_auc": 0.99881,
+      "difference": 0.00057,
+      "reals": 491,
+      "reconstructions": 491
+    }
+  ],
+  "mean_difference": 0.05333,
+  "ci": {
+    "lower": 0.04657340641882664,
+    "upper": 0.059980400037450345,
+    "level": 0.95,
+    "resamples": 2000,
+    "seed": 2026,
+    "percentiles": [
+      2.500000000000002,
+      97.5
+    ]
+  },
+  "criteria": {
+    "mean >= +2 points": true,
+    "95% CI excludes 0": true
+  },
+  "verdict": "PASS",
+  "resampled": "reals once per resample, shared by every fold and both models; each fold's reconstructions within the fold; the same draw for both models"
+}

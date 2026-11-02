@@ -1,0 +1,37 @@
+{
+  "run_id": "s2b_deg_p35_seed0",
+  "protocol": "s2b_deg_p35",
+  "seed": 0,
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "dry_run_random_init": false,
+  "crop": 320,
+  "crop_policy": "centre",
+  "score": "head logit",
+  "model": "selected at best validation AUC",
+  "best_step": null,
+  "best_val_auc": null,
+  "lora_sha256": "7658a77b36cae1b14015bda61d2bbbb1708b236e7e695641bcfe0ce1819118ee",
+  "head_sha256": "80fe4a481d1d7c5761f4b4c233f187226a40bb48e927a78d2905fe18c9215283",
+  "limit": null,
+  "lists": {
+    "panel": {
+      "source": "p3_tune_panel_rows.csv",
+      "view": null,
+      "rows": 6717,
+      "scores": "scores/panel.csv",
+      "sha256": "f4e524bed585075df520028f48c3fc775bd5699778d308893c2bf3cbafe82ad2",
+      "seconds": 192.4,
+      "seconds_per_image": 0.02864
+    },
+    "val": {
+      "source": "p3_tune_val_reals.csv",
+      "view": null,
+      "rows": 491,
+      "scores": "scores/val.csv",
+      "sha256": "a6397e01a5b8d154674ab6172a88c0d9e852d12cf5e2c963fd68fbde550cb72b",
+      "seconds": 9.1,
+      "seconds_per_image": 0.01862
+    }
+  }
+}

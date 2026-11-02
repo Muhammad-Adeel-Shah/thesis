@@ -1,0 +1,111 @@
+{
+  "what": "H1-a 97.5% bootstrap CI of G at the frozen N*(-f)",
+  "selection": {
+    "path": "F:/thesis-2/Implementation/thesis_dbp/reports/p3_nstar.json",
+    "sha256": "b24b160ef34324928367bc4acb1318ef54fb9c37ab025abfc83e70d61ac64174"
+  },
+  "scores": {
+    "1": {
+      "file": "lolo_f1_seed0_step_05000.csv",
+      "sha256": "79f99ac5e58771087babb677dce1544b020215095db680e557d8f0054838ec08",
+      "snapshot_sha256": "f8a3c5bf4eadff1cff5dd2dd906ed47ed6701e701b54106173d6d35af11ee5fa"
+    },
+    "2": {
+      "file": "lolo_f2_seed0_step_05000.csv",
+      "sha256": "1af6a0cd310a5d42c0fc73763b3dc3285894d41969ba855313281e253bfa982a",
+      "snapshot_sha256": "eaddfae7b85cdabb6dcb41f66739d2428ff0166bad91242bb14b00480355bc9c"
+    },
+    "3": {
+      "file": "lolo_f3_seed0_step_05000.csv",
+      "sha256": "b1eb56a3a9052f87a1f9e5474430d6b56d362a2735f770807d50c30a4100060b",
+      "snapshot_sha256": "cad1f6fc2f76d4521f062b3bc9a6f08f972439df6c514854052b375ea0c79685"
+    },
+    "4": {
+      "file": "lolo_f4_seed0_step_05000.csv",
+      "sha256": "1404aa2f6ffb01f2b0409181fdbdc6b55187e0d4a8edbc1bb1ae6f4bbf83767d",
+      "snapshot_sha256": "ffcf62d068d19123c0466260f86699fc32a0dc2bfd71c18cda308088d0a0e46d"
+    },
+    "5": {
+      "file": "lolo_f5_seed0_step_05000.csv",
+      "sha256": "5a4f2a5a84f5e8edd413659a5cfc4d318b6f5eb172e072abf9ac122ae6ce028c",
+      "snapshot_sha256": "8a410f10daf6170e2f24a3af8bdde1dcaa34b28c288bd1a9fe3ac9ceb17822a6"
+    },
+    "6": {
+      "file": "lolo_f6_seed0_step_04500.csv",
+      "sha256": "56a0dbb554c43b10e65487251afd86f9330c5858fcb875f6c1116d39e8074ff8",
+      "snapshot_sha256": "117e2a980699f08151f427692e3dbeac4e9a918dfc87347e2e2d59b9a9daaeaa"
+    },
+    "7": {
+      "file": "lolo_f7_seed0_step_05000.csv",
+      "sha256": "c88842153f8ccb378dc30d6bf684443bbf155d5fd69b7582a696285726345118",
+      "snapshot_sha256": "8a27ee16a51b4bd576296b31c2046de785b880648574fe029261c2e45c5b0961"
+    },
+    "8": {
+      "file": "lolo_f8_seed0_step_05000.csv",
+      "sha256": "449a6ac842a95032ba419c833150ce471b208a3174e0b1983ae831e3ec78940c",
+      "snapshot_sha256": "077bae610edbcc36ddb7893bf8bfe8b73c29fc6fe080a6f0480ce4d1ac71deca"
+    }
+  },
+  "resampled": "reals once per resample, shared by every fold; each fold's fakes within its own slice; folds and N*(-f) fixed",
+  "reproduction": {
+    "1": {
+      "reported": 0.99943,
+      "rescored": 0.9994338002580045,
+      "diff": 3.8002580045048973e-06
+    },
+    "2": {
+      "reported": 0.99827,
+      "rescored": 0.9982723648898089,
+      "diff": 2.364889808870174e-06
+    },
+    "3": {
+      "reported": 0.98798,
+      "rescored": 0.9879832919226318,
+      "diff": 3.291922631820654e-06
+    },
+    "4": {
+      "reported": 0.9934,
+      "rescored": 0.9933964103351156,
+      "diff": -3.5896648843403156e-06
+    },
+    "5": {
+      "reported": 0.99999,
+      "rescored": 0.9999875560496265,
+      "diff": -2.4439503735207424e-06
+    },
+    "6": {
+      "reported": 0.76551,
+      "rescored": 0.7655124211364646,
+      "diff": 2.4211364645365663e-06
+    },
+    "7": {
+      "reported": 0.98586,
+      "rescored": 0.9858636723756745,
+      "diff": 3.672375674557138e-06
+    },
+    "8": {
+      "reported": 0.99938,
+      "rescored": 0.9993778024813237,
+      "diff": -2.1975186763611987e-06
+    }
+  },
+  "G": 0.9662275,
+  "ci": {
+    "lower": 0.9612313306177869,
+    "upper": 0.9709480731450219,
+    "level": 0.975,
+    "resamples": 2000,
+    "seed": 2026,
+    "percentiles": [
+      1.250000000000001,
+      98.75
+    ]
+  },
+  "verdict": "PASS",
+  "criteria": {
+    "G >= 0.90": true,
+    "no fold below 0.75": true,
+    "CI lower bound >= 0.85": true
+  },
+  "folds_below_floor": []
+}

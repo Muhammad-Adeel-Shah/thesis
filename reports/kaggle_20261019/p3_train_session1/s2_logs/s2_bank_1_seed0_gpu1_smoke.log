@@ -1,0 +1,37 @@
+$ /usr/bin/python3 -u /kaggle/working/Implementation/thesis_dbp/scripts/p2_train_s2.py --protocol bank_1 --seed 0 --root /kaggle/working/p1 --pairs-manifest /kaggle/input/datasets/muhammadadeelshah/dbp-p2-s2-inputs/p1_pairs_manifest.csv --splits /kaggle/input/datasets/muhammadadeelshah/dbp-p2-s2-inputs/p2_splits.csv --device cuda --out-dir /tmp/dbp_p3_smoke/smoke_bank_1_seed0_gpu1 --reports-dir /tmp/dbp_p3_smoke/smoke_bank_1_seed0_gpu1 --smoke 2 --runs-config=configs/p3_runs.yaml --fixed-steps=6000 --stop-at=5000 --heldout-every=500 --checkpoint-every=500 --val-pairs=512
+2026-10-18 12:50:06 INFO    p2_train_s2 | run bank_1 (BANK-1 -- sd15 alone (one decoder, the prior-work setting))
+  excluded lineages : kl_4ch_sdxl, vq_movq_4ch, kl_16ch, kl_16ch_qwen, kl_32ch_flux2, dc_ae_f32, gan_sr
+  excluded members  : sd21, sd_ft_ema
+  trained on        : sd15
+  comparable to     : nothing published
+  evaluation crop   : 320 x1
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2122.16it/s]
+2026-10-18 12:50:16 INFO    p2_train_s2 | LoRA on ['k_proj', 'o_proj', 'q_proj', 'v_proj']: 589824 trainable of 86250240 (0.684%)
+2026-10-18 12:50:17 INFO    p2_train_s2 | D-039: 89 pair row(s) of flagged reals excluded
+2026-10-18 12:50:17 INFO    p2_train_s2 | diagnostic-only (t_ctrl): 1594 pair row(s) withheld from S2 training (B1)
+2026-10-18 12:50:17 INFO    p2_train_s2 | protocol data: 1926 train pair rows over 1926 reals, 491 val pair rows, 1988/500 gen_matched
+2026-10-18 12:50:17 INFO    p2_train_s2 | batch plan: {'pairs': 6, 'reals': 8, 'reconstruction_fakes': 6, 'gen_matched_fakes': 2}
+2026-10-18 12:50:17 INFO    p2_train_s2 | held-out lineage(s) ['kl_4ch_sdxl', 'vq_movq_4ch', 'kl_16ch', 'kl_16ch_qwen', 'kl_32ch_flux2', 'dc_ae_f32', 'gan_sr']: members ['dcae', 'flux', 'flux2_klein', 'movq_k22', 'qwen_image', 'realesrgan_x4', 'sd21', 'sd35', 'sd_ft_ema', 'sdxl', 'sdxl_fp16fix']; 4 validation reals, 44 reconstructions
+2026-10-18 12:50:17 INFO    p2_train_s2 | SMOKE: 2 step(s), then save, reload and compare
+/usr/local/lib/python3.13/dist-packages/torch/autograd/graph.py:869: UserWarning: Memory Efficient attention defaults to a non-deterministic algorithm. To explicitly enable determinism call torch.use_deterministic_algorithms(True, warn_only=False). (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/attention_backward.cu:900.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad4c0a4-70357bcd40e4e9e21d36abc9;a5102718-7014-45b8-bbd0-20119305b2c0)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/peft/utils/save_and_load.py:438: UserWarning: Could not find a config file in facebook/dinov3-vitb16-pretrain-lvd1689m - will assume that the vocabulary was not modified.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad4c0a4-692938f664f308ab342b91f7;6bc12e61-76e6-491b-b2ae-5ad830cec69f)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-18 12:50:44 INFO    p2_train_s2 | step     2  lr 3.333e-07  loss 0.7456  val AUC 0.5110  held-out AUC 0.51136 {'dcae': 0.5625, 'flux': 0.5625, 'flux2_klein': 0.375, 'movq_k22': 0.5625, 'qwen_image': 0.4375, 'realesrgan_x4': 0.6875, 'sd21': 0.5625, 'sd35': 0.5, 'sd_ft_ema': 0.5625, 'sdxl': 0.4375, 'sdxl_fp16fix': 0.375}
+2026-10-18 12:50:44 INFO    p2_train_s2 |   checkpoint at step 2 (0.00 GPU-h so far)
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad4c0a4-09490a3e69259bb20d9389e1;e3a11395-7fc6-47bb-85f6-2b913ca95371)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-18 12:50:44 INFO    p2_train_s2 | SMOKE PASSED: 2 step(s), checkpoint saved, reloaded and identical

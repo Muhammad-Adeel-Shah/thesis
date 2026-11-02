@@ -1,0 +1,272 @@
+{
+  "seed": 2026,
+  "draw_order": [
+    "e5_chameleon_pipeline",
+    "e7_dda_coco",
+    "e4_wildrf_matched",
+    "e3_matched",
+    "e8_evalgen"
+  ],
+  "references": {
+    "p2_panel:e3_matched": 1500,
+    "p2_panel:e4_wildrf_matched": 1500,
+    "p2_panel:e5_chameleon_pipeline": 4000,
+    "p2_panel:e7_dda_coco": 3500,
+    "p2_panel:e8_evalgen": 1250,
+    "t_real": 2500,
+    "t_ctrl": 1600,
+    "sd15_generations": 2488,
+    "gen_matched": 2488,
+    "bank_reconstructions": 49200
+  },
+  "dry_run_slots": false,
+  "views": {
+    "e5_chameleon_pipeline": {
+      "view": "e5_chameleon_pipeline",
+      "manifest_rows": 26033,
+      "p2_rows_excluded_from": 4000,
+      "slots": {
+        "fake": {
+          "label": "fake",
+          "role": "test",
+          "capacity": 2000,
+          "filled": 2000,
+          "shortfall": 0
+        },
+        "real-calibration": {
+          "label": "real",
+          "role": "calibration",
+          "capacity": 500,
+          "filled": 500,
+          "shortfall": 0
+        },
+        "real-test": {
+          "label": "real",
+          "role": "test",
+          "capacity": 2000,
+          "filled": 2000,
+          "shortfall": 0
+        }
+      },
+      "rejections": {
+        "duplicate of a Panel B row": 12,
+        "duplicate of a reference (phash: P2 panel)": 26,
+        "in the P2 panel (id)": 898,
+        "shorter side < 320 or unmeasured": 323,
+        "slot full": 20274
+      },
+      "rows": 4500
+    },
+    "e7_dda_coco": {
+      "view": "e7_dda_coco",
+      "manifest_rows": 34969,
+      "p2_rows_excluded_from": 3500,
+      "slots": {
+        "FLUX.1": {
+          "label": "fake",
+          "role": "test",
+          "capacity": 300,
+          "filled": 300,
+          "shortfall": 0
+        },
+        "sd-vae-ft-ema": {
+          "label": "fake",
+          "role": "test",
+          "capacity": 300,
+          "filled": 300,
+          "shortfall": 0
+        },
+        "sd-vae-ft-mse": {
+          "label": "fake",
+          "role": "test",
+          "capacity": 300,
+          "filled": 300,
+          "shortfall": 0
+        },
+        "sdxl-vae": {
+          "label": "fake",
+          "role": "test",
+          "capacity": 300,
+          "filled": 300,
+          "shortfall": 0
+        },
+        "stable-diffusion-2-1": {
+          "label": "fake",
+          "role": "test",
+          "capacity": 300,
+          "filled": 300,
+          "shortfall": 0
+        },
+        "stable-diffusion-3.5-large": {
+          "label": "fake",
+          "role": "test",
+          "capacity": 300,
+          "filled": 300,
+          "shortfall": 0
+        },
+        "real-calibration": {
+          "label": "real",
+          "role": "calibration",
+          "capacity": 100,
+          "filled": 100,
+          "shortfall": 0
+        },
+        "real-test": {
+          "label": "real",
+          "role": "test",
+          "capacity": 300,
+          "filled": 300,
+          "shortfall": 0
+        }
+      },
+      "rejections": {
+        "in the P2 panel (id)": 1098,
+        "shorter side < 320 or unmeasured": 114,
+        "slot full": 23650,
+        "source image already in Panel B": 3136,
+        "source image in the P2 panel": 4771
+      },
+      "rows": 2200
+    },
+    "e4_wildrf_matched": {
+      "view": "e4_wildrf_matched",
+      "manifest_rows": 2503,
+      "p2_rows_excluded_from": 1500,
+      "slots": {
+        "fake": {
+          "label": "fake",
+          "role": "test",
+          "capacity": null,
+          "filled": 465,
+          "shortfall": 0
+        },
+        "real-calibration": {
+          "label": "real",
+          "role": "calibration",
+          "capacity": 100,
+          "filled": 100,
+          "shortfall": 0
+        },
+        "real-test": {
+          "label": "real",
+          "role": "test",
+          "capacity": null,
+          "filled": 392,
+          "shortfall": 0
+        }
+      },
+      "rejections": {
+        "duplicate of a Panel B row": 11,
+        "duplicate of a reference (phash: P2 panel)": 14,
+        "duplicate of a reference (sha: P2 panel)": 18,
+        "in the P2 panel (id)": 1500,
+        "shorter side < 320 or unmeasured": 3
+      },
+      "rows": 957
+    },
+    "e3_matched": {
+      "view": "e3_matched",
+      "manifest_rows": 2178,
+      "p2_rows_excluded_from": 1500,
+      "slots": {
+        "GPT-Image2-fake": {
+          "label": "fake",
+          "role": "test",
+          "capacity": null,
+          "filled": 223,
+          "shortfall": 0
+        },
+        "Nano-Banana2-fake": {
+          "label": "fake",
+          "role": "test",
+          "capacity": null,
+          "filled": 104,
+          "shortfall": 0
+        },
+        "real-calibration": {
+          "label": "real",
+          "role": "calibration",
+          "capacity": 50,
+          "filled": 50,
+          "shortfall": 0
+        },
+        "real-test": {
+          "label": "real",
+          "role": "test",
+          "capacity": null,
+          "filled": 121,
+          "shortfall": 0
+        }
+      },
+      "rejections": {
+        "duplicate of a Panel B row": 20,
+        "duplicate of a reference (phash: P2 panel)": 144,
+        "in the P2 panel (id)": 1500,
+        "shorter side < 320 or unmeasured": 16
+      },
+      "rows": 498,
+      "e3_number_in_p2": {
+        "fake|GPT-Image2-fake|false": 19,
+        "fake|GPT-Image2-fake|true": 204,
+        "fake|Nano-Banana2-fake|false": 10,
+        "fake|Nano-Banana2-fake|true": 94,
+        "real|real|false": 16,
+        "real|real|true": 155
+      }
+    },
+    "e8_evalgen": {
+      "view": "e8_evalgen",
+      "manifest_rows": 5000,
+      "p2_rows_excluded_from": 1250,
+      "slots": {
+        "Flux": {
+          "label": "fake",
+          "role": "test",
+          "capacity": 250,
+          "filled": 250,
+          "shortfall": 0
+        },
+        "GoT": {
+          "label": "fake",
+          "role": "test",
+          "capacity": 250,
+          "filled": 250,
+          "shortfall": 0
+        },
+        "Infinity": {
+          "label": "fake",
+          "role": "test",
+          "capacity": 250,
+          "filled": 250,
+          "shortfall": 0
+        },
+        "NOVA": {
+          "label": "fake",
+          "role": "test",
+          "capacity": 250,
+          "filled": 250,
+          "shortfall": 0
+        },
+        "OmniGen": {
+          "label": "fake",
+          "role": "test",
+          "capacity": 250,
+          "filled": 250,
+          "shortfall": 0
+        }
+      },
+      "rejections": {
+        "duplicate of a Panel B row": 8,
+        "duplicate of a reference (phash: P2 panel)": 23,
+        "in the P2 panel (id)": 407,
+        "slot full": 3312
+      },
+      "rows": 1250
+    }
+  },
+  "rows": 9405,
+  "by_role": {
+    "test": 8655,
+    "calibration": 750
+  }
+}

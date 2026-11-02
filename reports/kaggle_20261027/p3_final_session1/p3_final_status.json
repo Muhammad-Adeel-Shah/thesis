@@ -1,0 +1,24 @@
+{
+  "outcome": "COMPLETE",
+  "failed_job": null,
+  "jobs": [
+    {
+      "index": 0,
+      "device": "0",
+      "members": "lolo_f1_seed0,lolo_f3_seed0,lolo_f5_seed0,lolo_f7_seed0,bank_1_seed0,bank_2_far_seed0,bank_4_far_seed0,bank_6_far_seed0,s2b_seed0,s2b_deg_p35_seed0,s2d_p35_seed0,full_bank_seed0",
+      "returncode": 0,
+      "log": "final_clean_job0_gpu0.log"
+    },
+    {
+      "index": 1,
+      "device": "1",
+      "members": "lolo_f2_seed0,lolo_f4_seed0,lolo_f6_seed0,lolo_f8_seed0,bank_2_near_seed0,bank_4_near_seed0,bank_6_near_seed0,bank_1l_seed0,s2b_seed1,s2b_reals_seed0,s2d_p35_seed1,p_a_sd1_seed0",
+      "returncode": 0,
+      "log": "final_clean_job1_gpu1.log"
+    }
+  ],
+  "members_done": [],
+  "deadline_hours": 7.0,
+  "wall_hours": 0.6833,
+  "device_hours": 1.3667
+}

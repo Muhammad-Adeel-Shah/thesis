@@ -1,0 +1,68 @@
+{
+  "shard": 0,
+  "num_shards": 2,
+  "device": "cuda:0",
+  "n_reals": 4100,
+  "members": [
+    {
+      "member": "sd15",
+      "lineage": "kl_4ch_sd1",
+      "precision": "fp16",
+      "written": 4100,
+      "already_done": 0,
+      "failures": [],
+      "manifest": "p1_pairs_manifest_sd15.csv",
+      "status": "OK"
+    },
+    {
+      "member": "sd_ft_ema",
+      "lineage": "kl_4ch_sd1",
+      "precision": "fp16",
+      "written": 4100,
+      "already_done": 0,
+      "failures": [],
+      "manifest": "p1_pairs_manifest_sd_ft_ema.csv",
+      "status": "OK"
+    },
+    {
+      "member": "sdxl_fp16fix",
+      "lineage": "kl_4ch_sdxl",
+      "precision": "fp16",
+      "written": 4100,
+      "already_done": 0,
+      "failures": [],
+      "manifest": "p1_pairs_manifest_sdxl_fp16fix.csv",
+      "status": "OK"
+    },
+    {
+      "member": "flux",
+      "lineage": "kl_16ch",
+      "precision": "fp16",
+      "written": 4100,
+      "already_done": 0,
+      "failures": [],
+      "manifest": "p1_pairs_manifest_flux.csv",
+      "status": "OK"
+    },
+    {
+      "member": "realesrgan_x4",
+      "lineage": "gan_sr",
+      "precision": "fp32",
+      "written": 4100,
+      "already_done": 0,
+      "failures": [],
+      "manifest": "p1_pairs_manifest_realesrgan_x4.csv",
+      "status": "OK"
+    },
+    {
+      "member": "qwen_image",
+      "lineage": "kl_16ch_qwen",
+      "precision": "fp16",
+      "written": 4100,
+      "already_done": 0,
+      "failures": [],
+      "manifest": "p1_pairs_manifest_qwen_image.csv",
+      "status": "OK"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "set_id": "g_sd15",
+  "generator": "SD1.5",
+  "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+  "revision": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+  "steps": 25,
+  "guidance_scale": 7.5,
+  "native_size": 512,
+  "crop": 384,
+  "requested": 2500,
+  "written_this_run": 2488,
+  "total_in_manifest": 2488,
+  "safety_checker": "enabled",
+  "safety_checker_flagged_and_discarded": 12,
+  "failures": [],
+  "near_duplicate_groups": [],
+  "manifest_sha256": "c86935d39177ba0982b6ff12b129cce872c3e388281406535473a579a217635a"
+}

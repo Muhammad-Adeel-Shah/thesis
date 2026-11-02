@@ -1,0 +1,36 @@
+{
+  "stage": "p3_dev_panel (the P2 development panel rebuilt on muhammadadeelshah)",
+  "imports": [
+    "huggingface_hub",
+    "PIL",
+    "numpy",
+    "scipy"
+  ],
+  "inputs": {
+    "p2_panel_images.csv": {
+      "sha256": "d92ed4771a1981a32403c5db1771b46304f6a2c100d52c4a9ae9ddb6c27595be",
+      "rows": 11775
+    },
+    "p1_pairs_manifest.csv": {
+      "sha256": "b19b7f5acee49d8848658b5b78b6398d9a1511ae72e688fc81379705aa99c65c",
+      "rows": 49200
+    }
+  },
+  "local": {},
+  "p2_panel_sets": null,
+  "summaries": null,
+  "label_check": true,
+  "corpus": {
+    "reals": 4100,
+    "pairs": 49200
+  },
+  "digest_all": "2e1c192024ec52e42c4e1761afa6fb2e37c0f7a6983f5ff75d1174305550b769",
+  "digest_scoreable": "bff608c3d8e00ea834532cd541849b4f21de803c8f8e27a55ca5e70424c51116",
+  "expected": {
+    "accelerator": "None (CPU); no GPU quota",
+    "wall_hours": "about 2.5-3 (ESTIMATED): the Panel B session's fetch and view rebuild (its own estimate 2.5 h, NOT-MEASURED) plus copying and re-hashing 12,150 files",
+    "downloads_gb": "about 19 (as the Panel B session: E8 EvalGEN 13.54 GiB + E7 DDA-COCO 4.01 GiB + E3, E4)",
+    "peak_tmp_disk_gb": "about 30 (as the Panel B session)",
+    "output_gb": "about 2.2-2.4 (ESTIMATED: 12,150 images x the MEASURED Panel B mean of 184,177 B/image = 1,732,167,236 B / 9,405; T-ctrl's 400 PNGs included); MEASURED by the session as panel_bytes"
+  }
+}

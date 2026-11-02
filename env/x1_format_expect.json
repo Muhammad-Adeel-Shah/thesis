@@ -1,0 +1,36 @@
+{
+  "stage": "x1_format_control",
+  "imports": [
+    "transformers",
+    "safetensors",
+    "huggingface_hub",
+    "PIL"
+  ],
+  "hf_token": true,
+  "corpus": {
+    "reals": 4100,
+    "generated": 2488,
+    "pairs": 49200
+  },
+  "gen_matched": 2488,
+  "gen_manifest": {
+    "name": "p1_gen_manifest.csv",
+    "sha256": "c86935d39177ba0982b6ff12b129cce872c3e388281406535473a579a217635a",
+    "rows": 2488
+  },
+  "images": "reports/p2_x1/x1_format_control_images.csv",
+  "images_rows": 14205,
+  "images_sha256": "889bc1290fd3c778ed7e8fb5ca325d816c634ae14f732ef74773b3e5283d660b",
+  "quality": 95,
+  "batch": 32,
+  "smoke_images": 2,
+  "expected": {
+    "extract_seconds_per_image_t4": 0.03012,
+    "extract_basis": "reports/kaggle_20261004/p2_s1_extract_panel.json (T4, batch 32)",
+    "extract_minutes_t4": 14.3,
+    "setup_hours": 0.52,
+    "setup_basis": "Session D: 3.50 h session minus 2.98 h queue (IMPLEMENTATION_LOG P2-D step 4)",
+    "total_wall_hours_t4": 0.76,
+    "cpu": "NOT-MEASURED: DINOv3-B has never been timed on a Kaggle CPU session"
+  }
+}

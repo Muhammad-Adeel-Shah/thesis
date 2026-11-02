@@ -1,0 +1,77 @@
+{
+  "mode": "smoke",
+  "outcome": "COMPLETE",
+  "devices": [
+    "0",
+    "1"
+  ],
+  "deadline_hours": 0.75,
+  "wall_hours": 0.075,
+  "device_hours": 0.15,
+  "runs": [
+    {
+      "run_id": "bank_2_near_seed0",
+      "protocol": "bank_2_near",
+      "seed": 0,
+      "state": "complete",
+      "device": "0",
+      "train_rc": 0,
+      "infer_rc": null,
+      "started": 1792442063.253842,
+      "finished": 1792442243.258628,
+      "hours": 0.05,
+      "logs": [
+        "s2_bank_2_near_seed0_gpu0_smoke.log"
+      ],
+      "note": ""
+    },
+    {
+      "run_id": "bank_2_near_seed0",
+      "protocol": "bank_2_near",
+      "seed": 0,
+      "state": "complete",
+      "device": "1",
+      "train_rc": 0,
+      "infer_rc": null,
+      "started": 1792442063.2544494,
+      "finished": 1792442243.2597194,
+      "hours": 0.05,
+      "logs": [
+        "s2_bank_2_near_seed0_gpu1_smoke.log"
+      ],
+      "note": ""
+    },
+    {
+      "run_id": "bank_2_far_seed0",
+      "protocol": "bank_2_far",
+      "seed": 0,
+      "state": "complete",
+      "device": "0",
+      "train_rc": 0,
+      "infer_rc": null,
+      "started": 1792442243.2593157,
+      "finished": 1792442333.2650123,
+      "hours": 0.025,
+      "logs": [
+        "s2_bank_2_far_seed0_gpu0_smoke.log"
+      ],
+      "note": ""
+    },
+    {
+      "run_id": "bank_2_far_seed0",
+      "protocol": "bank_2_far",
+      "seed": 0,
+      "state": "complete",
+      "device": "1",
+      "train_rc": 0,
+      "infer_rc": null,
+      "started": 1792442243.2602198,
+      "finished": 1792442333.2632587,
+      "hours": 0.025,
+      "logs": [
+        "s2_bank_2_far_seed0_gpu1_smoke.log"
+      ],
+      "note": ""
+    }
+  ]
+}

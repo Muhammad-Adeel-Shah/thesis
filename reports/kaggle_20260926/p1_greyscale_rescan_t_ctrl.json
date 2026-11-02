@@ -1,0 +1,83 @@
+{
+  "set_id": "t_ctrl",
+  "decision": "D-039: greyscale reals excluded by flag, nothing deleted",
+  "manifest": "p1_reals_manifest_t_ctrl.csv",
+  "tolerance": 2,
+  "rows_before": 1600,
+  "rows_excluded": 6,
+  "rows_after": 1594,
+  "counts": {
+    "scanned": 1600,
+    "greyscale": 6,
+    "single_channel_source": 0,
+    "rgb_equal": 6,
+    "unmappable_but_colour": 0
+  },
+  "excluded": [
+    {
+      "image_id": "a555e15ec1d0a8d6_c0",
+      "source_image_id": "a555e15ec1d0a8d6",
+      "source_relative_path": "0230.png",
+      "channel_spread": 0,
+      "subsampling": "not-jpeg",
+      "jpeg_quality": "",
+      "kind": "rgb_equal",
+      "excluded": true
+    },
+    {
+      "image_id": "a555e15ec1d0a8d6_c1",
+      "source_image_id": "a555e15ec1d0a8d6",
+      "source_relative_path": "0230.png",
+      "channel_spread": 0,
+      "subsampling": "not-jpeg",
+      "jpeg_quality": "",
+      "kind": "rgb_equal",
+      "excluded": true
+    },
+    {
+      "image_id": "c95077bc7303dbcd_c0",
+      "source_image_id": "c95077bc7303dbcd",
+      "source_relative_path": "0769.png",
+      "channel_spread": 0,
+      "subsampling": "not-jpeg",
+      "jpeg_quality": "",
+      "kind": "rgb_equal",
+      "excluded": true
+    },
+    {
+      "image_id": "c95077bc7303dbcd_c1",
+      "source_image_id": "c95077bc7303dbcd",
+      "source_relative_path": "0769.png",
+      "channel_spread": 0,
+      "subsampling": "not-jpeg",
+      "jpeg_quality": "",
+      "kind": "rgb_equal",
+      "excluded": true
+    },
+    {
+      "image_id": "70fb252eec3b8e31_c0",
+      "source_image_id": "70fb252eec3b8e31",
+      "source_relative_path": "0800.png",
+      "channel_spread": 0,
+      "subsampling": "not-jpeg",
+      "jpeg_quality": "",
+      "kind": "rgb_equal",
+      "excluded": true
+    },
+    {
+      "image_id": "70fb252eec3b8e31_c1",
+      "source_image_id": "70fb252eec3b8e31",
+      "source_relative_path": "0800.png",
+      "channel_spread": 0,
+      "subsampling": "not-jpeg",
+      "jpeg_quality": "",
+      "kind": "rgb_equal",
+      "excluded": true
+    }
+  ],
+  "reported_not_excluded": [],
+  "distinct_sources_excluded": 3,
+  "supercategory_effect": "NOT-RUN (no --instances given)",
+  "dry_run": false,
+  "manifest_sha256": "902c6d53bf649ef4c7fc81043d4a8f5a96894df68dcd76e8c3eb03dee3313485"
+}

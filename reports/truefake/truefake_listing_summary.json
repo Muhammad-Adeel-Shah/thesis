@@ -1,0 +1,176 @@
+{
+  "what": "TrueFake (Dell'Anna et al., IJCNN 2025): metadata only, no image downloaded",
+  "read_on": "2026-10-19",
+  "how": "Google Drive download links from the repository README; the virus-scan warning page of each link (file name and size); then HTTP Range reads of TrueFake.zip's ZIP64 end record and central directory only (the archive's index: names, sizes, offsets)",
+  "partitions_as_published": {
+    "main": {
+      "file": "TrueFake.zip",
+      "size": "647G"
+    },
+    "FLUX.1": {
+      "file": "PreSocial_Fake_FLUX.1.tar.gz",
+      "size": "49G"
+    },
+    "SD1.5": {
+      "file": "PreSocial_Fake_StableDiffusion1.5.tar.gz",
+      "size": "17G"
+    },
+    "SD2": {
+      "file": "PreSocial_Fake_StableDiffusion2.tar.gz",
+      "size": "38G"
+    },
+    "SD3": {
+      "file": "PreSocial_Fake_StableDiffusion3.tar.gz",
+      "size": "60G"
+    },
+    "SDXL": {
+      "file": "PreSocial_Fake_StableDiffusionXL.tar.gz",
+      "size": "55G"
+    },
+    "StyleGAN": {
+      "file": "PreSocial_Fake_StyleGAN.tar.gz",
+      "size": "60G"
+    },
+    "StyleGAN2": {
+      "file": "PreSocial_Fake_StyleGAN2.tar.gz",
+      "size": "49G"
+    },
+    "StyleGAN3": {
+      "file": "PreSocial_Fake_StyleGAN3.tar.gz",
+      "size": "52G"
+    },
+    "FFHQ": {
+      "file": "PreSocial_Real_FFHQ.tar.gz",
+      "size": "89G"
+    },
+    "FORLAB": {
+      "file": "PreSocial_Real_FORLAB.tar.gz",
+      "size": "153G"
+    },
+    "Facebook": {
+      "file": "Facebook.tar.gz",
+      "size": "3.9G"
+    },
+    "Telegram": {
+      "file": "Telegram.tar.gz",
+      "size": "6.1G"
+    },
+    "Twitter": {
+      "file": "Twitter.tar.gz",
+      "size": "14G"
+    }
+  },
+  "zip": {
+    "file": "TrueFake.zip",
+    "bytes": 694732361838,
+    "entries": 600876,
+    "files": 600719,
+    "central_directory_bytes": 123346958,
+    "central_directory_sha256": "869a102f65504dc25df759de4a51ae6931cecac7b255b0b5ad270dad2544dc0b"
+  },
+  "listing_csv": {
+    "path": "kaggle_raw/truefake_metadata/truefake_zip_listing.csv",
+    "sha256": "448001839df24333004a491ee12ecce6110e9f08c14cb843acfbb1cca5cc31d0",
+    "bytes": 50027561
+  },
+  "files_per_share_class_source": {
+    "Facebook/Fake/FLUX.1": 5000,
+    "Facebook/Fake/StableDiffusion1.5": 5000,
+    "Facebook/Fake/StableDiffusion2": 5000,
+    "Facebook/Fake/StableDiffusion3": 5000,
+    "Facebook/Fake/StableDiffusionXL": 5000,
+    "Facebook/Fake/StyleGAN": 5000,
+    "Facebook/Fake/StyleGAN2": 5000,
+    "Facebook/Fake/StyleGAN3": 5000,
+    "Facebook/Real/FFHQ": 10000,
+    "Facebook/Real/FORLAB": 10000,
+    "PreSocial/Fake/FLUX.1": 40000,
+    "PreSocial/Fake/StableDiffusion1.5": 40000,
+    "PreSocial/Fake/StableDiffusion2": 40000,
+    "PreSocial/Fake/StableDiffusion3": 40000,
+    "PreSocial/Fake/StableDiffusionXL": 40000,
+    "PreSocial/Fake/StyleGAN": 40000,
+    "PreSocial/Fake/StyleGAN2": 40000,
+    "PreSocial/Fake/StyleGAN3": 40000,
+    "PreSocial/Real/FFHQ": 70000,
+    "PreSocial/Real/FORLAB": 30719,
+    "Telegram/Fake/FLUX.1": 5000,
+    "Telegram/Fake/StableDiffusion1.5": 5000,
+    "Telegram/Fake/StableDiffusion2": 5000,
+    "Telegram/Fake/StableDiffusion3": 5000,
+    "Telegram/Fake/StableDiffusionXL": 5000,
+    "Telegram/Fake/StyleGAN": 5000,
+    "Telegram/Fake/StyleGAN2": 5000,
+    "Telegram/Fake/StyleGAN3": 5000,
+    "Telegram/Real/FFHQ": 10000,
+    "Telegram/Real/FORLAB": 10000,
+    "Twitter/Fake/FLUX.1": 5000,
+    "Twitter/Fake/StableDiffusion1.5": 5000,
+    "Twitter/Fake/StableDiffusion2": 5000,
+    "Twitter/Fake/StableDiffusion3": 5000,
+    "Twitter/Fake/StableDiffusionXL": 5000,
+    "Twitter/Fake/StyleGAN": 5000,
+    "Twitter/Fake/StyleGAN2": 5000,
+    "Twitter/Fake/StyleGAN3": 5000,
+    "Twitter/Real/FFHQ": 10000,
+    "Twitter/Real/FORLAB": 10000
+  },
+  "gib_per_share_class_source": {
+    "Facebook/Fake/FLUX.1": 0.299,
+    "Facebook/Fake/StableDiffusion1.5": 0.389,
+    "Facebook/Fake/StableDiffusion2": 0.449,
+    "Facebook/Fake/StableDiffusion3": 0.379,
+    "Facebook/Fake/StableDiffusionXL": 0.308,
+    "Facebook/Fake/StyleGAN": 0.237,
+    "Facebook/Fake/StyleGAN2": 0.262,
+    "Facebook/Fake/StyleGAN3": 0.22,
+    "Facebook/Real/FFHQ": 0.486,
+    "Facebook/Real/FORLAB": 0.884,
+    "PreSocial/Fake/FLUX.1": 49.391,
+    "PreSocial/Fake/StableDiffusion1.5": 16.729,
+    "PreSocial/Fake/StableDiffusion2": 37.668,
+    "PreSocial/Fake/StableDiffusion3": 59.791,
+    "PreSocial/Fake/StableDiffusionXL": 55.409,
+    "PreSocial/Fake/StyleGAN": 59.706,
+    "PreSocial/Fake/StyleGAN2": 49.446,
+    "PreSocial/Fake/StyleGAN3": 52.096,
+    "PreSocial/Real/FFHQ": 89.173,
+    "PreSocial/Real/FORLAB": 153.288,
+    "Telegram/Fake/FLUX.1": 0.495,
+    "Telegram/Fake/StableDiffusion1.5": 0.302,
+    "Telegram/Fake/StableDiffusion2": 0.661,
+    "Telegram/Fake/StableDiffusion3": 0.666,
+    "Telegram/Fake/StableDiffusionXL": 0.54,
+    "Telegram/Fake/StyleGAN": 0.505,
+    "Telegram/Fake/StyleGAN2": 0.471,
+    "Telegram/Fake/StyleGAN3": 0.456,
+    "Telegram/Real/FFHQ": 0.998,
+    "Telegram/Real/FORLAB": 0.971,
+    "Twitter/Fake/FLUX.1": 0.683,
+    "Twitter/Fake/StableDiffusion1.5": 2.09,
+    "Twitter/Fake/StableDiffusion2": 4.713,
+    "Twitter/Fake/StableDiffusion3": 0.912,
+    "Twitter/Fake/StableDiffusionXL": 0.734,
+    "Twitter/Fake/StyleGAN": 0.691,
+    "Twitter/Fake/StyleGAN2": 0.639,
+    "Twitter/Fake/StyleGAN3": 0.62,
+    "Twitter/Real/FFHQ": 1.352,
+    "Twitter/Real/FORLAB": 1.75
+  },
+  "shared_subset": {
+    "ids_on_all_three_platforms": 60000,
+    "one_to_one_with_presocial_by_path_stem": true,
+    "same_ids_on_facebook_telegram_twitter": true,
+    "post_share_format": "jpg (all)",
+    "pre_share_twin_format": {
+      "png": 50000,
+      "jpg": 10000
+    },
+    "gib_in_zip_all_four_versions": {
+      "Facebook": 3.914,
+      "Telegram": 6.065,
+      "Twitter": 14.184,
+      "PreSocial (twins of the shared ids)": 88.242
+    }
+  }
+}

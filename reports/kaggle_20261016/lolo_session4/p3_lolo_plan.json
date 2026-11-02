@@ -1,0 +1,30 @@
+{
+  "folds": [
+    "lolo_f1",
+    "lolo_f2",
+    "lolo_f3",
+    "lolo_f4",
+    "lolo_f5",
+    "lolo_f6",
+    "lolo_f7",
+    "lolo_f8"
+  ],
+  "complete": [
+    "lolo_f1",
+    "lolo_f2",
+    "lolo_f3",
+    "lolo_f4",
+    "lolo_f5",
+    "lolo_f6"
+  ],
+  "remaining": [
+    "lolo_f7",
+    "lolo_f8"
+  ],
+  "selected": [
+    "lolo_f7:0",
+    "lolo_f8:0"
+  ],
+  "all_complete": false,
+  "override": null
+}

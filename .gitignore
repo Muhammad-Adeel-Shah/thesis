@@ -1,0 +1,60 @@
+# ---------------------------------------------------------------------------
+# DBP thesis (24i-8017) -- ignore rules for the repository rooted at thesis_dbp/
+# Carried over from ../.gitignore (P0-B0 onward), paths made relative to this folder.
+# Append-only: do not remove entries, only add.
+# ---------------------------------------------------------------------------
+
+# Caches and run outputs (kept on F:, never committed). outputs/ keeps its placeholder.
+.cache/
+outputs/*
+!outputs/.gitkeep
+data/
+
+# Model weights / tensors -- NEVER commit (no file >10 MB, no weights).
+*.safetensors
+*.pth
+*.pt
+*.ckpt
+*.bin
+*.npz
+*.onnx
+*.h5
+
+# Archives: code zips and raw Kaggle results live in F:\thesis-2\kaggle_raw\.
+*.zip
+*.tar
+*.tar.gz
+
+# Secrets and credentials.
+.env
+kaggle.json
+
+# Python and tooling
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Generated into each code zip by scripts/build_code_zip.py; a tracked file cannot hold
+# its own commit hash.
+COMMIT.txt
+
+# P3 TrueFake per-image scores: private (aggregates only are committed); kept in kaggle_raw.
+reports/p3_truefake_scores/
+
+# The user's own drafts (papers, posters, LaTeX): kept on disk, never pushed.
+docs/Claude outputs/
+docs/report/archive/
+
+# Agent-harness state.
+.claude/
+
+# Editors, OS clutter, interrupted atomic writes.
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+*.tmp

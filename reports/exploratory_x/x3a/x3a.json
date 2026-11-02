@@ -1,0 +1,751 @@
+{
+  "label": "EXPLORATORY (post-verdict)",
+  "variants": {
+    "sd15 only": [
+      "sd15"
+    ],
+    "SD1 family": [
+      "sd15",
+      "sd21",
+      "sd_ft_ema"
+    ],
+    "all VAE members": [
+      "sd15",
+      "sd21",
+      "sd_ft_ema",
+      "sdxl",
+      "sdxl_fp16fix",
+      "sd35",
+      "flux",
+      "dcae",
+      "flux2_klein",
+      "qwen_image",
+      "movq_k22"
+    ]
+  },
+  "rows": [
+    {
+      "test": "val reals vs sd15 recon",
+      "variant": "sd15 only",
+      "n_fake": 105,
+      "n_real": 491,
+      "auc": "0.993 [0.987, 0.997]",
+      "ap": "0.971 [0.950, 0.987]",
+      "tpr_slice": "0.962 [0.924, 0.991]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs sd15 recon",
+      "variant": "SD1 family",
+      "n_fake": 105,
+      "n_real": 491,
+      "auc": "0.981 [0.971, 0.990]",
+      "ap": "0.918 [0.876, 0.957]",
+      "tpr_slice": "0.895 [0.800, 0.952]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs sd15 recon",
+      "variant": "all VAE members",
+      "n_fake": 105,
+      "n_real": 491,
+      "auc": "0.588 [0.529, 0.644]",
+      "ap": "0.226 [0.190, 0.289]",
+      "tpr_slice": "0.086 [0.029, 0.143]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs sd21 recon",
+      "variant": "sd15 only",
+      "n_fake": 100,
+      "n_real": 491,
+      "auc": "0.871 [0.835, 0.907]",
+      "ap": "0.598 [0.517, 0.695]",
+      "tpr_slice": "0.430 [0.310, 0.540]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs sd21 recon",
+      "variant": "SD1 family",
+      "n_fake": 100,
+      "n_real": 491,
+      "auc": "0.992 [0.986, 0.996]",
+      "ap": "0.963 [0.941, 0.984]",
+      "tpr_slice": "0.970 [0.890, 1.000]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs sd21 recon",
+      "variant": "all VAE members",
+      "n_fake": 100,
+      "n_real": 491,
+      "auc": "0.594 [0.535, 0.652]",
+      "ap": "0.218 [0.186, 0.278]",
+      "tpr_slice": "0.090 [0.020, 0.140]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs sd_ft_ema recon",
+      "variant": "sd15 only",
+      "n_fake": 110,
+      "n_real": 491,
+      "auc": "0.834 [0.796, 0.873]",
+      "ap": "0.529 [0.450, 0.631]",
+      "tpr_slice": "0.373 [0.236, 0.482]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs sd_ft_ema recon",
+      "variant": "SD1 family",
+      "n_fake": 110,
+      "n_real": 491,
+      "auc": "0.989 [0.983, 0.994]",
+      "ap": "0.950 [0.922, 0.976]",
+      "tpr_slice": "0.945 [0.845, 0.982]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs sd_ft_ema recon",
+      "variant": "all VAE members",
+      "n_fake": 110,
+      "n_real": 491,
+      "auc": "0.534 [0.476, 0.596]",
+      "ap": "0.212 [0.180, 0.272]",
+      "tpr_slice": "0.100 [0.027, 0.155]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs sdxl recon",
+      "variant": "sd15 only",
+      "n_fake": 130,
+      "n_real": 491,
+      "auc": "0.758 [0.712, 0.803]",
+      "ap": "0.456 [0.387, 0.544]",
+      "tpr_slice": "0.262 [0.138, 0.338]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs sdxl recon",
+      "variant": "SD1 family",
+      "n_fake": 130,
+      "n_real": 491,
+      "auc": "0.768 [0.723, 0.813]",
+      "ap": "0.475 [0.405, 0.560]",
+      "tpr_slice": "0.246 [0.123, 0.346]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs sdxl recon",
+      "variant": "all VAE members",
+      "n_fake": 130,
+      "n_real": 491,
+      "auc": "0.661 [0.606, 0.712]",
+      "ap": "0.338 [0.287, 0.414]",
+      "tpr_slice": "0.131 [0.062, 0.192]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs sdxl_fp16fix recon",
+      "variant": "sd15 only",
+      "n_fake": 123,
+      "n_real": 491,
+      "auc": "0.762 [0.713, 0.803]",
+      "ap": "0.440 [0.372, 0.525]",
+      "tpr_slice": "0.220 [0.138, 0.325]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs sdxl_fp16fix recon",
+      "variant": "SD1 family",
+      "n_fake": 123,
+      "n_real": 491,
+      "auc": "0.765 [0.717, 0.806]",
+      "ap": "0.454 [0.383, 0.540]",
+      "tpr_slice": "0.244 [0.130, 0.341]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs sdxl_fp16fix recon",
+      "variant": "all VAE members",
+      "n_fake": 123,
+      "n_real": 491,
+      "auc": "0.682 [0.629, 0.733]",
+      "ap": "0.342 [0.287, 0.419]",
+      "tpr_slice": "0.130 [0.073, 0.211]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs sd35 recon",
+      "variant": "sd15 only",
+      "n_fake": 112,
+      "n_real": 491,
+      "auc": "0.588 [0.526, 0.647]",
+      "ap": "0.257 [0.212, 0.325]",
+      "tpr_slice": "0.107 [0.045, 0.179]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs sd35 recon",
+      "variant": "SD1 family",
+      "n_fake": 112,
+      "n_real": 491,
+      "auc": "0.588 [0.529, 0.646]",
+      "ap": "0.258 [0.213, 0.328]",
+      "tpr_slice": "0.125 [0.036, 0.188]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs sd35 recon",
+      "variant": "all VAE members",
+      "n_fake": 112,
+      "n_real": 491,
+      "auc": "0.717 [0.659, 0.771]",
+      "ap": "0.455 [0.378, 0.547]",
+      "tpr_slice": "0.295 [0.179, 0.384]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs flux recon",
+      "variant": "sd15 only",
+      "n_fake": 111,
+      "n_real": 491,
+      "auc": "0.576 [0.518, 0.632]",
+      "ap": "0.220 [0.191, 0.269]",
+      "tpr_slice": "0.054 [0.009, 0.099]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs flux recon",
+      "variant": "SD1 family",
+      "n_fake": 111,
+      "n_real": 491,
+      "auc": "0.578 [0.520, 0.634]",
+      "ap": "0.221 [0.193, 0.268]",
+      "tpr_slice": "0.054 [0.009, 0.108]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs flux recon",
+      "variant": "all VAE members",
+      "n_fake": 111,
+      "n_real": 491,
+      "auc": "0.955 [0.932, 0.975]",
+      "ap": "0.887 [0.842, 0.928]",
+      "tpr_slice": "0.802 [0.703, 0.874]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs dcae recon",
+      "variant": "sd15 only",
+      "n_fake": 107,
+      "n_real": 491,
+      "auc": "0.686 [0.628, 0.740]",
+      "ap": "0.343 [0.280, 0.425]",
+      "tpr_slice": "0.159 [0.084, 0.225]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs dcae recon",
+      "variant": "SD1 family",
+      "n_fake": 107,
+      "n_real": 491,
+      "auc": "0.667 [0.607, 0.723]",
+      "ap": "0.324 [0.264, 0.406]",
+      "tpr_slice": "0.131 [0.056, 0.206]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs dcae recon",
+      "variant": "all VAE members",
+      "n_fake": 107,
+      "n_real": 491,
+      "auc": "0.503 [0.441, 0.567]",
+      "ap": "0.187 [0.163, 0.233]",
+      "tpr_slice": "0.047 [0.009, 0.093]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs realesrgan_x4 recon",
+      "variant": "sd15 only",
+      "n_fake": 129,
+      "n_real": 491,
+      "auc": "0.887 [0.852, 0.919]",
+      "ap": "0.738 [0.671, 0.803]",
+      "tpr_slice": "0.550 [0.426, 0.643]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs realesrgan_x4 recon",
+      "variant": "SD1 family",
+      "n_fake": 129,
+      "n_real": 491,
+      "auc": "0.879 [0.843, 0.912]",
+      "ap": "0.720 [0.650, 0.789]",
+      "tpr_slice": "0.535 [0.388, 0.620]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs realesrgan_x4 recon",
+      "variant": "all VAE members",
+      "n_fake": 129,
+      "n_real": 491,
+      "auc": "0.933 [0.912, 0.955]",
+      "ap": "0.806 [0.742, 0.878]",
+      "tpr_slice": "0.736 [0.581, 0.814]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs flux2_klein recon",
+      "variant": "sd15 only",
+      "n_fake": 123,
+      "n_real": 491,
+      "auc": "0.594 [0.537, 0.646]",
+      "ap": "0.289 [0.237, 0.355]",
+      "tpr_slice": "0.114 [0.057, 0.179]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs flux2_klein recon",
+      "variant": "SD1 family",
+      "n_fake": 123,
+      "n_real": 491,
+      "auc": "0.598 [0.541, 0.651]",
+      "ap": "0.294 [0.240, 0.358]",
+      "tpr_slice": "0.122 [0.057, 0.179]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs flux2_klein recon",
+      "variant": "all VAE members",
+      "n_fake": 123,
+      "n_real": 491,
+      "auc": "0.979 [0.967, 0.989]",
+      "ap": "0.941 [0.909, 0.966]",
+      "tpr_slice": "0.878 [0.805, 0.943]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs qwen_image recon",
+      "variant": "sd15 only",
+      "n_fake": 104,
+      "n_real": 491,
+      "auc": "0.615 [0.554, 0.677]",
+      "ap": "0.252 [0.210, 0.326]",
+      "tpr_slice": "0.106 [0.048, 0.183]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs qwen_image recon",
+      "variant": "SD1 family",
+      "n_fake": 104,
+      "n_real": 491,
+      "auc": "0.616 [0.558, 0.678]",
+      "ap": "0.254 [0.211, 0.326]",
+      "tpr_slice": "0.125 [0.038, 0.192]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs qwen_image recon",
+      "variant": "all VAE members",
+      "n_fake": 104,
+      "n_real": 491,
+      "auc": "0.839 [0.791, 0.885]",
+      "ap": "0.632 [0.545, 0.721]",
+      "tpr_slice": "0.442 [0.317, 0.548]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "val reals vs movq_k22 recon",
+      "variant": "sd15 only",
+      "n_fake": 129,
+      "n_real": 491,
+      "auc": "0.693 [0.640, 0.739]",
+      "ap": "0.363 [0.310, 0.435]",
+      "tpr_slice": "0.147 [0.062, 0.217]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs movq_k22 recon",
+      "variant": "SD1 family",
+      "n_fake": 129,
+      "n_real": 491,
+      "auc": "0.680 [0.626, 0.728]",
+      "ap": "0.352 [0.301, 0.425]",
+      "tpr_slice": "0.140 [0.054, 0.217]",
+      "decoder_in_variant": false
+    },
+    {
+      "test": "val reals vs movq_k22 recon",
+      "variant": "all VAE members",
+      "n_fake": 129,
+      "n_real": 491,
+      "auc": "0.601 [0.541, 0.655]",
+      "ap": "0.296 [0.249, 0.367]",
+      "tpr_slice": "0.147 [0.070, 0.209]",
+      "decoder_in_variant": true
+    },
+    {
+      "test": "e3_matched/GPT-Image2-fake",
+      "variant": "sd15 only",
+      "n_fake": 500,
+      "n_real": 477,
+      "auc": "0.562 [0.525, 0.595]",
+      "ap": "0.513 [0.490, 0.540]",
+      "tpr_slice": "0.000 [0.000, 0.000]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e3_matched/GPT-Image2-fake",
+      "variant": "SD1 family",
+      "n_fake": 500,
+      "n_real": 477,
+      "auc": "0.551 [0.514, 0.585]",
+      "ap": "0.507 [0.485, 0.534]",
+      "tpr_slice": "0.000 [0.000, 0.000]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e3_matched/GPT-Image2-fake",
+      "variant": "all VAE members",
+      "n_fake": 500,
+      "n_real": 477,
+      "auc": "0.623 [0.588, 0.658]",
+      "ap": "0.540 [0.516, 0.568]",
+      "tpr_slice": "0.000 [0.000, 0.000]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e3_matched/Nano-Banana2-fake",
+      "variant": "sd15 only",
+      "n_fake": 500,
+      "n_real": 477,
+      "auc": "0.596 [0.563, 0.629]",
+      "ap": "0.537 [0.513, 0.567]",
+      "tpr_slice": "0.018 [0.002, 0.038]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e3_matched/Nano-Banana2-fake",
+      "variant": "SD1 family",
+      "n_fake": 500,
+      "n_real": 477,
+      "auc": "0.588 [0.553, 0.622]",
+      "ap": "0.529 [0.506, 0.557]",
+      "tpr_slice": "0.002 [0.000, 0.008]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e3_matched/Nano-Banana2-fake",
+      "variant": "all VAE members",
+      "n_fake": 500,
+      "n_real": 477,
+      "auc": "0.599 [0.565, 0.635]",
+      "ap": "0.527 [0.504, 0.555]",
+      "tpr_slice": "0.002 [0.000, 0.006]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e4_wildrf_matched",
+      "variant": "sd15 only",
+      "n_fake": 749,
+      "n_real": 743,
+      "auc": "0.675 [0.647, 0.704]",
+      "ap": "0.666 [0.637, 0.699]",
+      "tpr_slice": "0.164 [0.131, 0.199]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e4_wildrf_matched",
+      "variant": "SD1 family",
+      "n_fake": 749,
+      "n_real": 743,
+      "auc": "0.661 [0.632, 0.689]",
+      "ap": "0.633 [0.603, 0.667]",
+      "tpr_slice": "0.116 [0.073, 0.156]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e4_wildrf_matched",
+      "variant": "all VAE members",
+      "n_fake": 749,
+      "n_real": 743,
+      "auc": "0.473 [0.442, 0.504]",
+      "ap": "0.473 [0.453, 0.499]",
+      "tpr_slice": "0.033 [0.017, 0.048]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e5_chameleon_pipeline",
+      "variant": "sd15 only",
+      "n_fake": 1884,
+      "n_real": 1864,
+      "auc": "0.664 [0.646, 0.682]",
+      "ap": "0.591 [0.574, 0.609]",
+      "tpr_slice": "0.029 [0.018, 0.047]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e5_chameleon_pipeline",
+      "variant": "SD1 family",
+      "n_fake": 1884,
+      "n_real": 1864,
+      "auc": "0.666 [0.648, 0.684]",
+      "ap": "0.584 [0.568, 0.602]",
+      "tpr_slice": "0.016 [0.009, 0.031]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e5_chameleon_pipeline",
+      "variant": "all VAE members",
+      "n_fake": 1884,
+      "n_real": 1864,
+      "auc": "0.685 [0.667, 0.702]",
+      "ap": "0.633 [0.614, 0.651]",
+      "tpr_slice": "0.092 [0.066, 0.119]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/FLUX.1",
+      "variant": "sd15 only",
+      "n_fake": 492,
+      "n_real": 486,
+      "auc": "0.551 [0.514, 0.586]",
+      "ap": "0.539 [0.509, 0.578]",
+      "tpr_slice": "0.057 [0.028, 0.089]",
+      "decoder_in_variant": "",
+      "note": "FLUX.1 standard: chroma shortcut"
+    },
+    {
+      "test": "e7_dda_coco/FLUX.1",
+      "variant": "SD1 family",
+      "n_fake": 492,
+      "n_real": 486,
+      "auc": "0.567 [0.530, 0.603]",
+      "ap": "0.549 [0.518, 0.590]",
+      "tpr_slice": "0.057 [0.030, 0.096]",
+      "decoder_in_variant": "",
+      "note": "FLUX.1 standard: chroma shortcut"
+    },
+    {
+      "test": "e7_dda_coco/FLUX.1",
+      "variant": "all VAE members",
+      "n_fake": 492,
+      "n_real": 486,
+      "auc": "0.763 [0.734, 0.794]",
+      "ap": "0.771 [0.742, 0.807]",
+      "tpr_slice": "0.287 [0.217, 0.386]",
+      "decoder_in_variant": "",
+      "note": "FLUX.1 standard: chroma shortcut"
+    },
+    {
+      "test": "e7_dda_coco/sd-vae-ft-ema",
+      "variant": "sd15 only",
+      "n_fake": 489,
+      "n_real": 486,
+      "auc": "0.756 [0.724, 0.785]",
+      "ap": "0.722 [0.685, 0.759]",
+      "tpr_slice": "0.149 [0.092, 0.231]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/sd-vae-ft-ema",
+      "variant": "SD1 family",
+      "n_fake": 489,
+      "n_real": 486,
+      "auc": "0.863 [0.841, 0.885]",
+      "ap": "0.866 [0.841, 0.890]",
+      "tpr_slice": "0.468 [0.391, 0.571]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/sd-vae-ft-ema",
+      "variant": "all VAE members",
+      "n_fake": 489,
+      "n_real": 486,
+      "auc": "0.488 [0.451, 0.523]",
+      "ap": "0.501 [0.473, 0.534]",
+      "tpr_slice": "0.053 [0.029, 0.090]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/sd-vae-ft-mse",
+      "variant": "sd15 only",
+      "n_fake": 481,
+      "n_real": 486,
+      "auc": "0.776 [0.748, 0.802]",
+      "ap": "0.743 [0.706, 0.783]",
+      "tpr_slice": "0.204 [0.121, 0.291]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/sd-vae-ft-mse",
+      "variant": "SD1 family",
+      "n_fake": 481,
+      "n_real": 486,
+      "auc": "0.886 [0.866, 0.905]",
+      "ap": "0.891 [0.868, 0.912]",
+      "tpr_slice": "0.563 [0.493, 0.653]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/sd-vae-ft-mse",
+      "variant": "all VAE members",
+      "n_fake": 481,
+      "n_real": 486,
+      "auc": "0.513 [0.477, 0.548]",
+      "ap": "0.513 [0.482, 0.549]",
+      "tpr_slice": "0.056 [0.025, 0.091]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/sdxl-vae",
+      "variant": "sd15 only",
+      "n_fake": 491,
+      "n_real": 486,
+      "auc": "0.696 [0.664, 0.729]",
+      "ap": "0.659 [0.625, 0.699]",
+      "tpr_slice": "0.098 [0.061, 0.157]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/sdxl-vae",
+      "variant": "SD1 family",
+      "n_fake": 491,
+      "n_real": 486,
+      "auc": "0.710 [0.678, 0.743]",
+      "ap": "0.672 [0.638, 0.714]",
+      "tpr_slice": "0.116 [0.071, 0.183]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/sdxl-vae",
+      "variant": "all VAE members",
+      "n_fake": 491,
+      "n_real": 486,
+      "auc": "0.560 [0.523, 0.594]",
+      "ap": "0.553 [0.524, 0.591]",
+      "tpr_slice": "0.071 [0.043, 0.120]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/stable-diffusion-2-1",
+      "variant": "sd15 only",
+      "n_fake": 482,
+      "n_real": 486,
+      "auc": "0.787 [0.757, 0.814]",
+      "ap": "0.753 [0.718, 0.790]",
+      "tpr_slice": "0.176 [0.112, 0.272]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/stable-diffusion-2-1",
+      "variant": "SD1 family",
+      "n_fake": 482,
+      "n_real": 486,
+      "auc": "0.895 [0.876, 0.914]",
+      "ap": "0.896 [0.875, 0.917]",
+      "tpr_slice": "0.548 [0.483, 0.631]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/stable-diffusion-2-1",
+      "variant": "all VAE members",
+      "n_fake": 482,
+      "n_real": 486,
+      "auc": "0.538 [0.502, 0.575]",
+      "ap": "0.532 [0.499, 0.568]",
+      "tpr_slice": "0.058 [0.035, 0.104]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/stable-diffusion-3.5-large",
+      "variant": "sd15 only",
+      "n_fake": 487,
+      "n_real": 486,
+      "auc": "0.563 [0.529, 0.599]",
+      "ap": "0.551 [0.520, 0.587]",
+      "tpr_slice": "0.060 [0.031, 0.097]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/stable-diffusion-3.5-large",
+      "variant": "SD1 family",
+      "n_fake": 487,
+      "n_real": 486,
+      "auc": "0.571 [0.536, 0.608]",
+      "ap": "0.557 [0.526, 0.595]",
+      "tpr_slice": "0.066 [0.039, 0.105]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco/stable-diffusion-3.5-large",
+      "variant": "all VAE members",
+      "n_fake": 487,
+      "n_real": 486,
+      "auc": "0.598 [0.562, 0.637]",
+      "ap": "0.595 [0.561, 0.637]",
+      "tpr_slice": "0.113 [0.070, 0.175]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco_luma/FLUX.1",
+      "variant": "sd15 only",
+      "n_fake": 492,
+      "n_real": 486,
+      "auc": "0.516 [0.480, 0.553]",
+      "ap": "0.517 [0.490, 0.553]",
+      "tpr_slice": "0.047 [0.028, 0.075]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco_luma/FLUX.1",
+      "variant": "SD1 family",
+      "n_fake": 492,
+      "n_real": 486,
+      "auc": "0.524 [0.488, 0.560]",
+      "ap": "0.520 [0.492, 0.557]",
+      "tpr_slice": "0.047 [0.028, 0.081]",
+      "decoder_in_variant": "",
+      "note": ""
+    },
+    {
+      "test": "e7_dda_coco_luma/FLUX.1",
+      "variant": "all VAE members",
+      "n_fake": 492,
+      "n_real": 486,
+      "auc": "0.635 [0.600, 0.669]",
+      "ap": "0.649 [0.614, 0.686]",
+      "tpr_slice": "0.148 [0.096, 0.207]",
+      "decoder_in_variant": "",
+      "note": ""
+    }
+  ]
+}

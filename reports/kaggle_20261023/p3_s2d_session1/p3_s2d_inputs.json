@@ -1,0 +1,131 @@
+{
+  "mode": "build",
+  "oi_reals_manifest": {
+    "path": "/kaggle/working/Implementation/thesis_dbp/reports/kaggle_20261017/p3_open_images/p3_open_images_manifest.csv",
+    "sha256": "37bfc7db545798b043c0eb908f7911d7d9e10fc2fc1622b22006c2354f1b34e2"
+  },
+  "oi_pairs_manifest": {
+    "path": "/kaggle/input/notebooks/adeelshah29/dbp-p3-reconstruct/Implementation/thesis_dbp/reports/p3_oi_pairs_manifest.csv",
+    "rows": 48000,
+    "content_sha256": "0a4e9a3cb428ecf17d161c9c51905c90bf816e266d69c42f3e10507399cd1dc4",
+    "rows_per_member": {
+      "dcae": 4000,
+      "flux": 4000,
+      "flux2_klein": 4000,
+      "movq_k22": 4000,
+      "qwen_image": 4000,
+      "realesrgan_x4": 4000,
+      "sd15": 4000,
+      "sd21": 4000,
+      "sd35": 4000,
+      "sd_ft_ema": 4000,
+      "sdxl": 4000,
+      "sdxl_fp16fix": 4000
+    }
+  },
+  "merged": {
+    "dir": "/tmp/dbp_s2d_inputs",
+    "sha256": {
+      "p1_pairs_manifest.csv": "e20ec0ecc72ecf87bf03bea059ecdc382e05daa9297927ccd388bb9e5fdf89d8",
+      "p2_splits.csv": "77401e33263c56260a8a86285e548c8236757435155eabfef1a751a7fb53691c",
+      "manifests/p1_reals_manifest_t_real.csv": "4ba81bf7cf9f745d73824fa3d672f098e32e436ef3d9dad6470d37d3eeb1534c",
+      "manifests/p1_reals_manifest_t_ctrl.csv": "2ca5d9ca5b4659722fe10e0791434925a76b714bfad9913c09c9083c0f9ca4ee",
+      "manifests/p1_gen_matched_manifest.csv": "7d5a6de3c527b696973a76f27e2ab8dbdbab295087191053a507e02411252a15"
+    },
+    "added": {
+      "oi_reals": 3600,
+      "oi_pair_rows": 43200,
+      "oi_split_rows": 46800
+    },
+    "held_out_excluded": {
+      "oi_reals": 400,
+      "oi_pair_rows": 4800
+    }
+  },
+  "tuning_result": {
+    "path": "/kaggle/working/Implementation/thesis_dbp/reports/p3_degradation_choice.json",
+    "sha256": "6cda015100912a99fc3ec8112d49aa06933a3eaddf1fe431a8f9b85a0755e8d5",
+    "chosen": "s2b_deg_p35_seed0",
+    "chosen_p": 0.35
+  },
+  "queue": [
+    "s2d_p35:0",
+    "s2b_reals:0",
+    "s2d_p35:1"
+  ],
+  "pools": {
+    "s2d_p35": {
+      "reals": 5526,
+      "coco_reals": 1926,
+      "oi_reals": 3600,
+      "oi_share_of_reals": 0.651466,
+      "train_pair_rows": 66312,
+      "oi_pair_rows": 43200,
+      "basis": "the trainer's TrainingData on the merged files; sampling is uniform by real, so this is the expected share of sampled reals"
+    },
+    "s2b_reals": {
+      "reals": 5526,
+      "coco_reals": 1926,
+      "oi_reals": 3600,
+      "oi_share_of_reals": 0.651466,
+      "train_pair_rows": 66312,
+      "oi_pair_rows": 43200,
+      "basis": "the trainer's TrainingData on the merged files; sampling is uniform by real, so this is the expected share of sampled reals"
+    }
+  },
+  "staged": {
+    "local_root": "/tmp/dbp_s2d_corpus",
+    "files": 80709,
+    "bytes": 18985165518,
+    "gb": 17.681,
+    "by_source": {
+      "gen_matched": {
+        "files": 2488,
+        "bytes": 204646150
+      },
+      "open_images": {
+        "files": 46800,
+        "bytes": 10460105487
+      },
+      "coco": {
+        "files": 31421,
+        "bytes": 8320413881
+      }
+    },
+    "workers": 32,
+    "free_gb_before": 1048.72,
+    "margin_gb": 2.0,
+    "memory_gb_before": {
+      "MemTotal": 31.35,
+      "MemAvailable": 28.89,
+      "Cached": 5.77
+    },
+    "stat_seconds": 12.6,
+    "n_missing": 0,
+    "missing": [],
+    "seconds": 248.0,
+    "files_per_s": 325.4,
+    "mb_per_s": 73.0,
+    "verified": 46800,
+    "already_local": 2488,
+    "n_sha256_mismatch": 0,
+    "sha256_mismatch": [],
+    "memory_gb_after": {
+      "MemTotal": 31.35,
+      "MemAvailable": 28.8,
+      "Cached": 26.66
+    },
+    "free_gb_after": 1031.07,
+    "ok": true,
+    "reason": ""
+  },
+  "files_verified": {
+    "files": 46800,
+    "expected": 46800,
+    "n_sha256_mismatch": 0,
+    "sha256_mismatch": [],
+    "n_missing": 0
+  },
+  "ok": true,
+  "problems": []
+}

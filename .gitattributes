@@ -1,0 +1,6 @@
+*.sh text eol=lf
+*.py text eol=lf
+reports/p3_heldout_scores/** -text
+reports/p3_final_scores/** -text
+reports/kaggle_20261027/p3_final_session1/p3_final_lists/** -text
+reports/kaggle_*/p3_truefake*/** -text

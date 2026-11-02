@@ -1,0 +1,149 @@
+{
+  "root": "/kaggle/working/p1",
+  "seed": 2026,
+  "decision": "D-048",
+  "d039_excluded": {
+    "reals": 89,
+    "pair_rows": 1068
+  },
+  "diagnostic_only": {
+    "sets": [
+      "t_ctrl"
+    ],
+    "rule": "P2 prompt B1: measured, never trained on",
+    "withheld_rows": 20722,
+    "withheld_reals": 1594,
+    "withheld_reconstructions": 19128
+  },
+  "luma": {
+    "list": "p2_panel_images_luma.csv",
+    "rows": 978,
+    "views": [
+      "e7_dda_coco_luma"
+    ],
+    "id_suffix": "__luma",
+    "why": "pre-registration section 8: the luma-only FLUX.1 number is the one that enters M1 and M2"
+  },
+  "s3_subset": {
+    "train_reals": 1000,
+    "train_reals_requested": 1000,
+    "train_fakes_per_protocol": {
+      "p_a_sd1": 1000,
+      "4ch_only": 1000,
+      "full_bank": 1000
+    },
+    "train_fakes_requested": 1000,
+    "train_fakes_distinct": 2861,
+    "val": 2000,
+    "val_cap": 2000,
+    "already_in_panel": 0
+  },
+  "t_ctrl_diagnostic_panel": {
+    "set_id": "t_ctrl_diagnostic",
+    "mode": "per_stratum",
+    "cap": 200,
+    "stratified_by": [
+      "label"
+    ],
+    "population": 20722,
+    "panel": 400,
+    "by_stratum": {
+      "fake": {
+        "available": 19128,
+        "taken": 200
+      },
+      "real": {
+        "available": 1594,
+        "taken": 200
+      }
+    }
+  },
+  "panel_files": [
+    "p2_panel_e3_matched.csv",
+    "p2_panel_e4_wildrf_matched.csv",
+    "p2_panel_e5_chameleon_pipeline.csv",
+    "p2_panel_e7_dda_coco.csv",
+    "p2_panel_e8_evalgen.csv",
+    "p2_panel_t_ctrl_diagnostic.csv"
+  ],
+  "panel_list": "p2_panel_images_frozen.csv",
+  "panels_absent": [],
+  "lists": [
+    {
+      "list": "p2_s1_images.csv",
+      "rows": 33909,
+      "by_view": {
+        "train": 27026,
+        "val": 6883
+      },
+      "by_label": {
+        "fake": 31492,
+        "real": 2417
+      },
+      "by_root": {
+        "corpus": 33909
+      },
+      "sha256": "f8a9b6c30d763c9e057cb276b67e061e7ea0bc2088e3edebad5f97f80a0c6e12"
+    },
+    {
+      "list": "p2_panel_images.csv",
+      "rows": 11775,
+      "by_view": {
+        "e3_matched": 1477,
+        "e4_wildrf_matched": 1492,
+        "e5_chameleon_pipeline": 3748,
+        "e7_dda_coco": 3408,
+        "e8_evalgen": 1250,
+        "t_ctrl_diagnostic": 400
+      },
+      "by_label": {
+        "fake": 8005,
+        "real": 3770
+      },
+      "by_root": {
+        "panel": 11775
+      },
+      "sha256": "d92ed4771a1981a32403c5db1771b46304f6a2c100d52c4a9ae9ddb6c27595be"
+    },
+    {
+      "list": "p2_probe_images.csv",
+      "rows": 18614,
+      "by_view": {
+        "e3_matched": 1477,
+        "e4_wildrf_matched": 1492,
+        "e5_chameleon_pipeline": 3748,
+        "e7_dda_coco": 3408,
+        "e7_dda_coco_luma": 978,
+        "e8_evalgen": 1250,
+        "t_ctrl_diagnostic": 400,
+        "train": 3861,
+        "val": 2000
+      },
+      "by_label": {
+        "fake": 12867,
+        "real": 5747
+      },
+      "by_root": {
+        "corpus": 5861,
+        "panel": 12753
+      },
+      "sha256": "98ce9d08b20a94a9f79fb34da0988a8ca7f58e0149d19c947e313fdb31cf7600"
+    },
+    {
+      "list": "p2_luma_images.csv",
+      "rows": 978,
+      "by_view": {
+        "e7_dda_coco_luma": 978
+      },
+      "by_label": {
+        "fake": 492,
+        "real": 486
+      },
+      "by_root": {
+        "panel": 978
+      },
+      "sha256": "230202b88c3948aa50f757e6a8e99012c0fc86739bfdb0eb50a2e945dd5088c8"
+    }
+  ],
+  "note": "p2_probe_images.csv is the S3 bill: every row costs twelve reconstructions plus twelve LPIPS forwards. The 9.63 GPU-h estimate assumed 18,150 rows."
+}

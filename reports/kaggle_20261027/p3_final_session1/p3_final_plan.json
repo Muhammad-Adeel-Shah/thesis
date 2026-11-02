@@ -1,0 +1,636 @@
+{
+  "what": "P3 final scoring plan (pre-registration sections 2, 5, 8)",
+  "section5": {
+    "degradation_choice": {
+      "path": "reports/p3_degradation_choice.json",
+      "sha256": "6cda015100912a99fc3ec8112d49aa06933a3eaddf1fe431a8f9b85a0755e8d5"
+    },
+    "nstar": {
+      "path": "reports/p3_nstar.json",
+      "sha256": "de30996d05bc0e4fb0408808cc9d4b97b27132d125298d09c991623a6c9ab678"
+    },
+    "oi_manifest": {
+      "path": "reports/kaggle_20261017/p3_open_images/p3_open_images_manifest.csv",
+      "sha256": "37bfc7db545798b043c0eb908f7911d7d9e10fc2fc1622b22006c2354f1b34e2"
+    },
+    "chosen": "s2b_deg_p35_seed0",
+    "chosen_p": 0.35,
+    "n_star": 5000,
+    "n_max": 6000,
+    "oi_split": {
+      "train": 3600,
+      "held_out": 400
+    },
+    "kshot_j": {
+      "10": [
+        1,
+        false
+      ],
+      "25": [
+        1,
+        false
+      ],
+      "50": [
+        1,
+        true
+      ],
+      "100": [
+        4,
+        true
+      ]
+    },
+    "nested": {
+      "1": 5000,
+      "2": 5000,
+      "3": 5000,
+      "4": 5000,
+      "5": 5000,
+      "6": 4500,
+      "7": 5000,
+      "8": 5000
+    }
+  },
+  "panel_b": {
+    "images": {
+      "path": "reports/kaggle_20261011/p3_panel_b_images.csv",
+      "sha256": "621626a626094a2e819eb71d1752c66264a63133e2de4c0fa2870003330c53d2"
+    },
+    "luma": {
+      "path": "reports/kaggle_20261011/p3_panel_b_luma.csv",
+      "sha256": "9faa69b2ec7963a2e1d66e70ae6d042a72bc3a2bfec6a6d23af40fe61298b717"
+    },
+    "rows": 9405,
+    "luma_rows": 700,
+    "digest": "267d9fde75d76a23640674fa2fff7e454de23971b8e296323ca4762507c2a551",
+    "luma_digest": "41445030ba224f29a8dbd8bc9a2524c10c0e3da902663ac36646d262f6335f62",
+    "test_digest": "af544cc12f37b4b0a31548c4f7e9682fde5da1c5f43adf99aee368344206f3e2",
+    "calibration_digest": "fd5fb95e50fe1ac48ac0d427fb07491e912fdbb45fa85f42d37739ab601694c2"
+  },
+  "models": {
+    "lolo_f1_seed0": {
+      "id": "lolo_f1_seed0",
+      "kind": "snapshot",
+      "protocol": "lolo_f1",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "lolo",
+      "weights": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f1_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f1_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f1_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "5721773fc2ddc68ca1afad40722f433bca7611183d0b3eb97c7af79bc9c14fb8",
+      "head_sha256": "fe31a30fa45705915c7d0be3f4397f6cc4047621553ff5b1c6de95714d704ade",
+      "snapshot_sha256": "f8a3c5bf4eadff1cff5dd2dd906ed47ed6701e701b54106173d6d35af11ee5fa",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "lolo_f2_seed0": {
+      "id": "lolo_f2_seed0",
+      "kind": "snapshot",
+      "protocol": "lolo_f2",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "lolo",
+      "weights": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f2_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f2_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f2_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "3da461e170af68bc6e58ebf6917a49bc72e5bb3021a8acf0209dc49ae9bf4c6b",
+      "head_sha256": "e9779f6f5ca1a8af55eef3192c9a9c86bf67ea715ab5cb3d092c6082ab9f6091",
+      "snapshot_sha256": "eaddfae7b85cdabb6dcb41f66739d2428ff0166bad91242bb14b00480355bc9c",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "lolo_f3_seed0": {
+      "id": "lolo_f3_seed0",
+      "kind": "snapshot",
+      "protocol": "lolo_f3",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "lolo",
+      "weights": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f3_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f3_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f3_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "16ee1be91a9fb874b2f0b1a0939784c728825e9a5a40dbd4cafacb50453681f0",
+      "head_sha256": "07e2c33227cf5cba0820fbcacc483a3785cb983a5cceb38b286f4a317d8cc32e",
+      "snapshot_sha256": "cad1f6fc2f76d4521f062b3bc9a6f08f972439df6c514854052b375ea0c79685",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "lolo_f4_seed0": {
+      "id": "lolo_f4_seed0",
+      "kind": "snapshot",
+      "protocol": "lolo_f4",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "lolo",
+      "weights": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f4_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f4_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f4_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "b8bcd31aff9ba05a098766ca8c728a65fc53b9372fb109d6eb9a33b8d1ba6b66",
+      "head_sha256": "8a1c974f6d166c066cdc28c14dc481336cd934c5ab99d1ab80cf5d1431aa4739",
+      "snapshot_sha256": "ffcf62d068d19123c0466260f86699fc32a0dc2bfd71c18cda308088d0a0e46d",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "lolo_f5_seed0": {
+      "id": "lolo_f5_seed0",
+      "kind": "snapshot",
+      "protocol": "lolo_f5",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "lolo",
+      "weights": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f5_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f5_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f5_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "cf5a6e9e3bbfc83b7e900133bb41a248ece6bfb0f54b3eba2c0374ef09fdbfea",
+      "head_sha256": "6bbcda964f24f8263275286c00170fac17a375b432687835fd4f282b7024afc6",
+      "snapshot_sha256": "8a410f10daf6170e2f24a3af8bdde1dcaa34b28c288bd1a9fe3ac9ceb17822a6",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "lolo_f6_seed0": {
+      "id": "lolo_f6_seed0",
+      "kind": "snapshot",
+      "protocol": "lolo_f6",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 4500,
+      "source": "lolo",
+      "weights": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f6_seed0/snapshots/step_04500",
+      "lora": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f6_seed0/snapshots/step_04500/lora",
+      "head": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f6_seed0/snapshots/step_04500/head.pt",
+      "lora_sha256": "90da4dc2acc67372259d9c8a11141e925e98271f2f5ff9a4a98afa0d80191e82",
+      "head_sha256": "b11a521bf690000052601282952ac16a8bb1716a4f897dc6c08706e374f0daae",
+      "snapshot_sha256": "117e2a980699f08151f427692e3dbeac4e9a918dfc87347e2e2d59b9a9daaeaa",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "lolo_f7_seed0": {
+      "id": "lolo_f7_seed0",
+      "kind": "snapshot",
+      "protocol": "lolo_f7",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "lolo",
+      "weights": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f7_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f7_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f7_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "4766bcf6f1607e9cf155e7ae83c35a8cfd1e4d7f5b9e9cdf240dbd0ebde25e92",
+      "head_sha256": "b350e97cda6b789c97cffd849073e36223507cbd7a0161606fc8d15cd35a104d",
+      "snapshot_sha256": "8a27ee16a51b4bd576296b31c2046de785b880648574fe029261c2e45c5b0961",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "lolo_f8_seed0": {
+      "id": "lolo_f8_seed0",
+      "kind": "snapshot",
+      "protocol": "lolo_f8",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "lolo",
+      "weights": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f8_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f8_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp/outputs/p3/s2/lolo_f8_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "1e345b175b51bed171e2241fc23ec34370cdbd6d0f98260c4ca2d762d1cd9008",
+      "head_sha256": "1a20e2ed8e6d50bace81b75c793c13f611ad549796ea4a0e2b024fd32ec5aaa4",
+      "snapshot_sha256": "077bae610edbcc36ddb7893bf8bfe8b73c29fc6fe080a6f0480ce4d1ac71deca",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "bank_1_seed0": {
+      "id": "bank_1_seed0",
+      "kind": "snapshot",
+      "protocol": "bank_1",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_1_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_1_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_1_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "fc0cd60e75d06ff2a19e3b2b3550cd46824f37d4a98f147a9ba01991e00125e6",
+      "head_sha256": "7c946c8840ecb81e438c492b82972a7f5908f484ee08a5d65faf8366e13536ff",
+      "snapshot_sha256": "e4e8210a3f19b5f7244485ad4d20d488af1d4e2b189e8fa76ba13fd5533bb93a",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "bank_2_near_seed0": {
+      "id": "bank_2_near_seed0",
+      "kind": "snapshot",
+      "protocol": "bank_2_near",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_2_near_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_2_near_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_2_near_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "53f8a43591be2fa8c2a397ce18fddc7694f4fb65d0db46c002d7cfe293bebf20",
+      "head_sha256": "3e63a1629199e7c91eeaecb33b95b4a145caeb9051235203501000f9f5ee1bf3",
+      "snapshot_sha256": "8358babee526ed4773c1fcba662df90e42499cea3813eea989387ce3d9e3c38f",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "bank_2_far_seed0": {
+      "id": "bank_2_far_seed0",
+      "kind": "snapshot",
+      "protocol": "bank_2_far",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_2_far_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_2_far_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_2_far_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "7f3c1cc2c0045fe53d73bc3522a50016c412e78ec494c10bd8686d96a98e3ac4",
+      "head_sha256": "8078e0267f64c85c56381e613234cb54673145c8dd0c1bdd586a4175ba22b70b",
+      "snapshot_sha256": "1443953b52bb7e81c4cb304cb5db12c2016152e9eb369ac0a35fb0830e4094b1",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "bank_4_near_seed0": {
+      "id": "bank_4_near_seed0",
+      "kind": "snapshot",
+      "protocol": "bank_4_near",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_4_near_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_4_near_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_4_near_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "bc22f96385a2b503ace4fc77d5274b6d5d3fedc1e556470203bb2435572aa1a4",
+      "head_sha256": "38b89bc232ac326a7783103f70c695dda5295b6a37cad4d1d78bed9cbbc5aa14",
+      "snapshot_sha256": "fcce08aca0d0e644e838e19d5f2bd0e7a1c3e4d4514c6064239874839e7f55d6",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "bank_4_far_seed0": {
+      "id": "bank_4_far_seed0",
+      "kind": "snapshot",
+      "protocol": "bank_4_far",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_4_far_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_4_far_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_4_far_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "9b1b81f9f7a13fa5b640de16786ff63288db27a506a0e949f90e3116efcc47cf",
+      "head_sha256": "ac3d820274dc716420dffc5caa78fde5c587d561d7b4aa8c5403ae27226f53cc",
+      "snapshot_sha256": "6831d3773587a464adad0ef65448509c3c948fa20cb2e917eeeadef81307b4a8",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "bank_6_near_seed0": {
+      "id": "bank_6_near_seed0",
+      "kind": "snapshot",
+      "protocol": "bank_6_near",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_6_near_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_6_near_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_6_near_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "ac72dbe2a465b959daaf032937c1b0f3bda1169852efaf89166e074e49be3076",
+      "head_sha256": "8bb023792f4928683d3c99fb736637767d18b96b6c7178a453144aec1d14f572",
+      "snapshot_sha256": "8ce750b47691063833474700d922111c36c0f8aca35f17a9dc3ea2199d9cb453",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "bank_6_far_seed0": {
+      "id": "bank_6_far_seed0",
+      "kind": "snapshot",
+      "protocol": "bank_6_far",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_6_far_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_6_far_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_6_far_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "39dc9fc97d49415b648170351634ea7bd1e7efb4be8353189c77e811ef3ecf83",
+      "head_sha256": "381f302a15b058c224057692a680cb33f177843d5f17df16ecb840df779a7fa9",
+      "snapshot_sha256": "244488700a133c8ce00608c525a09b2250a001aa83b7b66a54b1d79482618308",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "bank_1l_seed0": {
+      "id": "bank_1l_seed0",
+      "kind": "snapshot",
+      "protocol": "bank_1l",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_1l_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_1l_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/bank_1l_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "dc6b1cf24a1c24a5724ee1c702821800e8a9c1456581cfde96244f3ec9390cf8",
+      "head_sha256": "79d60ab7d93c6b6c2f062a1e2c7d266e7a056cc8c7a55e334a9bc98bc83148a3",
+      "snapshot_sha256": "d0b9dd760a72924b74a3ed496766bcf31d3f950b34ae7cff47ac895b1e05baac",
+      "recorded": [
+        "snapshot_sha256"
+      ]
+    },
+    "s2b_seed0": {
+      "id": "s2b_seed0",
+      "kind": "snapshot",
+      "protocol": "s2b",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/s2b_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/s2b_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/s2b_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "6b8c6e68d9a6458e7a24084acb0ec99c9e4bc05fcec3a03b5dca29c8e1f751b1",
+      "head_sha256": "4d41d09a2088ae0b3d0b93970f8e7b5b7b2fcca845ed4f42202aecb735085e70",
+      "snapshot_sha256": "37b6aeb09e23991c46839c2ad490a5b265cdf701b6d8eb5d878df33cf842d464",
+      "recorded": [
+        "head_sha256",
+        "lora_sha256"
+      ]
+    },
+    "s2b_seed1": {
+      "id": "s2b_seed1",
+      "kind": "snapshot",
+      "protocol": "s2b",
+      "seed": 1,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/s2b_seed1/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/s2b_seed1/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/s2b_seed1/snapshots/step_05000/head.pt",
+      "lora_sha256": "10441dbd1113f3d05d10e1ee57a717bb312750b513c5d50ce9cff45c15d47fdb",
+      "head_sha256": "c66ebe49964ac95682386e73ba44e11cda0bf1ec0ff7b8aa14a6ffbc8ad26cdd",
+      "snapshot_sha256": "1048b0636062d244337e829858010ace69b446b8e9c361ebc53c26597e78b323",
+      "recorded": [
+        "head_sha256",
+        "lora_sha256"
+      ]
+    },
+    "s2b_deg_p35_seed0": {
+      "id": "s2b_deg_p35_seed0",
+      "kind": "snapshot",
+      "protocol": "s2b_deg_p35",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "tune",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-tune/Implementation/thesis_dbp/outputs/p3/s2/s2b_deg_p35_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-tune/Implementation/thesis_dbp/outputs/p3/s2/s2b_deg_p35_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-tune/Implementation/thesis_dbp/outputs/p3/s2/s2b_deg_p35_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "7658a77b36cae1b14015bda61d2bbbb1708b236e7e695641bcfe0ce1819118ee",
+      "head_sha256": "80fe4a481d1d7c5761f4b4c233f187226a40bb48e927a78d2905fe18c9215283",
+      "snapshot_sha256": "afb429a2b8be0b313c7ff2a6871147f6d47dbd3e936c9bfa04476f5023f0cab6",
+      "recorded": [
+        "head_sha256",
+        "lora_sha256"
+      ]
+    },
+    "s2b_reals_seed0": {
+      "id": "s2b_reals_seed0",
+      "kind": "snapshot",
+      "protocol": "s2b_reals",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "s2d",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp/outputs/p3/s2/s2b_reals_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp/outputs/p3/s2/s2b_reals_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp/outputs/p3/s2/s2b_reals_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "4018105fad6a16cf4cf65f2e93f20509bfd5c80d87620928c00015d95c4a7079",
+      "head_sha256": "29ca8244137653da8a943d861347faee547341c61bdcef2930fe88e813a4596d",
+      "snapshot_sha256": "7a4ba123c516dac5aa8eaa3d0bbd50dd6e59293ae2925073c8358a3ca86721e3",
+      "recorded": [
+        "head_sha256",
+        "lora_sha256"
+      ]
+    },
+    "s2d_p35_seed0": {
+      "id": "s2d_p35_seed0",
+      "kind": "snapshot",
+      "protocol": "s2d_p35",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "s2d",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp/outputs/p3/s2/s2d_p35_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp/outputs/p3/s2/s2d_p35_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp/outputs/p3/s2/s2d_p35_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "d7148267c2457daa3585162c38abc8dacfdada4f4fc05b82441f2829ade51689",
+      "head_sha256": "638447e6b41608796c27d48d29ddb59927fbf85ba1ffc9d4b6fcac20d8077b27",
+      "snapshot_sha256": "8356ef385d43193b7e72d615cb7292f4704b7a3d2e32ab45877b28a1fcee8449",
+      "recorded": [
+        "head_sha256",
+        "lora_sha256"
+      ]
+    },
+    "s2d_p35_seed1": {
+      "id": "s2d_p35_seed1",
+      "kind": "snapshot",
+      "protocol": "s2d_p35",
+      "seed": 1,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "s2d",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp/outputs/p3/s2/s2d_p35_seed1/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp/outputs/p3/s2/s2d_p35_seed1/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp/outputs/p3/s2/s2d_p35_seed1/snapshots/step_05000/head.pt",
+      "lora_sha256": "ad7aaa417116cecb95e04a299318ad971082f950b4a8bfbf571d680b8f412c05",
+      "head_sha256": "937491ef70226b26e77a241c26c60632597be3130200c55aa12cc015c6ef0639",
+      "snapshot_sha256": "98305d2049c51b755e92fe3a79c18fa51cae0a05289420b714ed299fb7992728",
+      "recorded": [
+        "head_sha256",
+        "lora_sha256"
+      ]
+    },
+    "full_bank_seed0": {
+      "id": "full_bank_seed0",
+      "kind": "lora_head",
+      "protocol": "full_bank",
+      "seed": 0,
+      "runs_config": "configs/p2_runs.yaml",
+      "step": null,
+      "source": "p2ref",
+      "weights": "/kaggle/input/datasets/muhammadadeelshah/dbp-p2-reference-models/full_bank_seed0",
+      "lora": "/kaggle/input/datasets/muhammadadeelshah/dbp-p2-reference-models/full_bank_seed0/lora",
+      "head": "/kaggle/input/datasets/muhammadadeelshah/dbp-p2-reference-models/full_bank_seed0/head.pt",
+      "lora_sha256": "4cd74c92a2c1ca4f387a44554205fd2821fa09fbaa429c65d05635c7961a6082",
+      "head_sha256": "ed47b1400fc1c6690e4ac3dc9bf2c54f50ce34a8e76d1add6342f919ba563806",
+      "recorded": [
+        "head_sha256",
+        "lora_sha256"
+      ]
+    },
+    "p_a_sd1_seed0": {
+      "id": "p_a_sd1_seed0",
+      "kind": "lora_head",
+      "protocol": "p_a_sd1",
+      "seed": 0,
+      "runs_config": "configs/p2_runs.yaml",
+      "step": null,
+      "source": "p2ref",
+      "weights": "/kaggle/input/datasets/muhammadadeelshah/dbp-p2-reference-models/p_a_sd1_seed0",
+      "lora": "/kaggle/input/datasets/muhammadadeelshah/dbp-p2-reference-models/p_a_sd1_seed0/lora",
+      "head": "/kaggle/input/datasets/muhammadadeelshah/dbp-p2-reference-models/p_a_sd1_seed0/head.pt",
+      "lora_sha256": "f411fba0cd83b24e7fddb7ac3d61cb29440ea9eb06f229f591bfa5680dbf7270",
+      "head_sha256": "4fc35c3c3ed0dbdb2ecb33bd68fb1a3b475168b7cd96b0c9ad8160a09e81c28c",
+      "recorded": [
+        "head_sha256",
+        "lora_sha256"
+      ]
+    }
+  },
+  "lists": {
+    "panel_b": {
+      "path": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_lists/panel_b.csv",
+      "rows": 9405,
+      "sha256": "5a8eaa0574cf07f7188397d6d0c8b92f06162e26b1017e44740da76174b056b5"
+    },
+    "luma": {
+      "path": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_lists/luma.csv",
+      "rows": 700,
+      "sha256": "e54513462d3d6bc190fb0fa4f052bf08ecf215d2c6b7a9dfa634684faafd34b0"
+    },
+    "threshold_reals": {
+      "path": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_lists/threshold_reals.csv",
+      "rows": 891,
+      "sha256": "83e5b9c09c9997907c001e42087552ff0f73847f7d47e7bcddae29417b67e4f5"
+    }
+  },
+  "staged": {
+    "local_root": "/tmp/dbp_p3_final_local",
+    "files": 10996,
+    "bytes": 1951910027,
+    "gb": 1.818,
+    "by_source": {
+      "open_images": {
+        "files": 400,
+        "bytes": 86566940
+      },
+      "coco": {
+        "files": 10596,
+        "bytes": 1865343087
+      }
+    },
+    "workers": 32,
+    "free_gb_before": 1048.74,
+    "margin_gb": 2.0,
+    "memory_gb_before": {
+      "MemTotal": 31.35,
+      "MemAvailable": 29.72,
+      "Cached": 4.75
+    },
+    "stat_seconds": 1.4,
+    "n_missing": 0,
+    "missing": [],
+    "seconds": 37.4,
+    "files_per_s": 294.4,
+    "mb_per_s": 49.8,
+    "verified": 10996,
+    "already_local": 0,
+    "n_sha256_mismatch": 0,
+    "sha256_mismatch": [],
+    "memory_gb_after": {
+      "MemTotal": 31.35,
+      "MemAvailable": 29.47,
+      "Cached": 9.53
+    },
+    "free_gb_after": 1046.9,
+    "ok": true,
+    "reason": ""
+  },
+  "stage": "clean",
+  "due": [
+    "lolo_f1_seed0",
+    "lolo_f2_seed0",
+    "lolo_f3_seed0",
+    "lolo_f4_seed0",
+    "lolo_f5_seed0",
+    "lolo_f6_seed0",
+    "lolo_f7_seed0",
+    "lolo_f8_seed0",
+    "bank_1_seed0",
+    "bank_2_near_seed0",
+    "bank_2_far_seed0",
+    "bank_4_near_seed0",
+    "bank_4_far_seed0",
+    "bank_6_near_seed0",
+    "bank_6_far_seed0",
+    "bank_1l_seed0",
+    "s2b_seed0",
+    "s2b_seed1",
+    "s2b_deg_p35_seed0",
+    "s2b_reals_seed0",
+    "s2d_p35_seed0",
+    "s2d_p35_seed1",
+    "full_bank_seed0",
+    "p_a_sd1_seed0"
+  ],
+  "complete": {
+    "clean": [],
+    "robust": []
+  },
+  "carried": {
+    "clean": [],
+    "robust": []
+  },
+  "incomplete_previous": {
+    "clean": [],
+    "robust": []
+  },
+  "jobs": [
+    "0:lolo_f1_seed0,lolo_f3_seed0,lolo_f5_seed0,lolo_f7_seed0,bank_1_seed0,bank_2_far_seed0,bank_4_far_seed0,bank_6_far_seed0,s2b_seed0,s2b_deg_p35_seed0,s2d_p35_seed0,full_bank_seed0",
+    "1:lolo_f2_seed0,lolo_f4_seed0,lolo_f6_seed0,lolo_f8_seed0,bank_2_near_seed0,bank_4_near_seed0,bank_6_near_seed0,bank_1l_seed0,s2b_seed1,s2b_reals_seed0,s2d_p35_seed1,p_a_sd1_seed0"
+  ],
+  "robust": {
+    "models": [
+      "s2d_p35_seed0",
+      "full_bank_seed0",
+      "p_a_sd1_seed0"
+    ],
+    "conditions": [
+      "jpeg95",
+      "jpeg75",
+      "jpeg50",
+      "jpeg30",
+      "webp90",
+      "webp70",
+      "webp50",
+      "resize075",
+      "resize050",
+      "blur05",
+      "blur1",
+      "blur2"
+    ],
+    "rows": "panel_b test rows"
+  },
+  "local_root": "/tmp/dbp_p3_final_local",
+  "ok": true,
+  "problems": []
+}

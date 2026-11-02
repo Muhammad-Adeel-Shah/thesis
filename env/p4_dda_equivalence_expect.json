@@ -1,0 +1,32 @@
+{
+  "stage": "p4_dda_equivalence (ISOLATED Kaggle CPU notebook: no Secrets, no private dataset) -- spec items 11 and 7.12",
+  "imports": [
+    "timm",
+    "torchvision",
+    "huggingface_hub",
+    "safetensors",
+    "PIL"
+  ],
+  "dda_commit": "08d6b414a33826403b9096cfdb7758d5eae12dbb",
+  "dinov2_commit": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+  "dda_ckpt": {
+    "repo": "Junwei-Xi/Dual-Data-Alignment",
+    "revision": "4390d9023899196b437480bb6a441915ef5d816c",
+    "file": "DDA_ckpt.pth",
+    "sha256": "b27a31d39374803ddeff02bfabb2be76e190b04300490cddfafb24f683f37e3e"
+  },
+  "images": [
+    "000000039477.jpg",
+    "000000185292.jpg"
+  ],
+  "images_source": "the first two val2017 names in reports/p2_panel_sets/p2_panel_e7_dda_coco.csv; read from the public Kaggle dataset awsaf49/coco-2017-dataset",
+  "tolerance": 0.001,
+  "allowed_inputs": [
+    "dbp-p4-dda-equiv",
+    "coco-2017-dataset"
+  ],
+  "expected": {
+    "wall": "about 0.3-0.5 h (ESTIMATED): bootstrap, DDA_ckpt.pth 1.26 GB, DINOv2 ViT-L/14 through torch.hub with its pretrained weights (about 1.2 GB), two ViT-L forward passes per implementation on CPU",
+    "quota": "CPU session: no GPU quota"
+  }
+}

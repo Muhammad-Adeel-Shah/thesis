@@ -1,0 +1,226 @@
+{
+  "run_id": "lolo_f7_seed0",
+  "protocol": "lolo_f7",
+  "seed": 0,
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "crop": 320,
+  "active_members": [
+    "dcae",
+    "flux",
+    "flux2_klein",
+    "movq_k22",
+    "realesrgan_x4",
+    "sd15",
+    "sd21",
+    "sd35",
+    "sd_ft_ema",
+    "sdxl",
+    "sdxl_fp16fix"
+  ],
+  "excluded_lineages": [
+    "kl_16ch_qwen"
+  ],
+  "lora": {
+    "target_modules": [
+      "k_proj",
+      "o_proj",
+      "q_proj",
+      "v_proj"
+    ],
+    "params_trainable": 589824,
+    "params_total": 86250240,
+    "trainable_pct": 0.6839
+  },
+  "batch": 16,
+  "batch_plan": {
+    "pairs": 6,
+    "reals": 8,
+    "reconstruction_fakes": 6,
+    "gen_matched_fakes": 2
+  },
+  "optimiser": {
+    "lr": 0.0001,
+    "weight_decay": 0.01,
+    "warmup_steps": 300,
+    "schedule": "cosine"
+  },
+  "step_budget": {
+    "allowance_hours": 2.25,
+    "measured_step_seconds": 0.0,
+    "steps": 6000,
+    "ceiling": 6000,
+    "undertrained": false,
+    "min_steps_per_run": 2000
+  },
+  "mode": "train",
+  "status": "OK",
+  "mode_detail": "fixed-steps (P3 LOLO); no selection inside the run",
+  "runs_config": "p3_runs.yaml",
+  "fixed_steps": 6000,
+  "heldout_every": 500,
+  "held_out_lineages": [
+    "kl_16ch_qwen"
+  ],
+  "held_out_members": [
+    "qwen_image"
+  ],
+  "heldout_reals": 491,
+  "heldout_reconstructions": 491,
+  "gen_matched_used": true,
+  "steps_run": 6000,
+  "resumed_from_step": null,
+  "curve": [
+    {
+      "step": 500,
+      "loss": 0.31173,
+      "val_auc": 0.96722,
+      "val_logloss": 0.21569,
+      "val_tpr_at_1pct_fpr": 0.85352,
+      "heldout_auc": 0.93659,
+      "heldout_auc_by_member": {
+        "qwen_image": 0.93659
+      }
+    },
+    {
+      "step": 1000,
+      "loss": 0.30277,
+      "val_auc": 0.98197,
+      "val_logloss": 0.15533,
+      "val_tpr_at_1pct_fpr": 0.9043,
+      "heldout_auc": 0.95862,
+      "heldout_auc_by_member": {
+        "qwen_image": 0.95862
+      }
+    },
+    {
+      "step": 1500,
+      "loss": 0.30904,
+      "val_auc": 0.99294,
+      "val_logloss": 0.09573,
+      "val_tpr_at_1pct_fpr": 0.96289,
+      "heldout_auc": 0.96913,
+      "heldout_auc_by_member": {
+        "qwen_image": 0.96913
+      }
+    },
+    {
+      "step": 2000,
+      "loss": 0.10006,
+      "val_auc": 0.99403,
+      "val_logloss": 0.0949,
+      "val_tpr_at_1pct_fpr": 0.95312,
+      "heldout_auc": 0.9769,
+      "heldout_auc_by_member": {
+        "qwen_image": 0.9769
+      }
+    },
+    {
+      "step": 2500,
+      "loss": 0.14166,
+      "val_auc": 0.99505,
+      "val_logloss": 0.09232,
+      "val_tpr_at_1pct_fpr": 0.94922,
+      "heldout_auc": 0.98112,
+      "heldout_auc_by_member": {
+        "qwen_image": 0.98112
+      }
+    },
+    {
+      "step": 3000,
+      "loss": 0.02158,
+      "val_auc": 0.99793,
+      "val_logloss": 0.06051,
+      "val_tpr_at_1pct_fpr": 0.97461,
+      "heldout_auc": 0.9796,
+      "heldout_auc_by_member": {
+        "qwen_image": 0.9796
+      }
+    },
+    {
+      "step": 3500,
+      "loss": 0.156,
+      "val_auc": 0.99837,
+      "val_logloss": 0.05905,
+      "val_tpr_at_1pct_fpr": 0.97852,
+      "heldout_auc": 0.98446,
+      "heldout_auc_by_member": {
+        "qwen_image": 0.98446
+      }
+    },
+    {
+      "step": 4000,
+      "loss": 0.25581,
+      "val_auc": 0.99814,
+      "val_logloss": 0.05255,
+      "val_tpr_at_1pct_fpr": 0.97852,
+      "heldout_auc": 0.98577,
+      "heldout_auc_by_member": {
+        "qwen_image": 0.98577
+      }
+    },
+    {
+      "step": 4500,
+      "loss": 0.07869,
+      "val_auc": 0.9986,
+      "val_logloss": 0.04925,
+      "val_tpr_at_1pct_fpr": 0.98047,
+      "heldout_auc": 0.98499,
+      "heldout_auc_by_member": {
+        "qwen_image": 0.98499
+      }
+    },
+    {
+      "step": 5000,
+      "loss": 0.13942,
+      "val_auc": 0.99852,
+      "val_logloss": 0.04903,
+      "val_tpr_at_1pct_fpr": 0.98047,
+      "heldout_auc": 0.98586,
+      "heldout_auc_by_member": {
+        "qwen_image": 0.98586
+      }
+    },
+    {
+      "step": 5500,
+      "loss": 0.07813,
+      "val_auc": 0.99852,
+      "val_logloss": 0.04891,
+      "val_tpr_at_1pct_fpr": 0.98047,
+      "heldout_auc": 0.98602,
+      "heldout_auc_by_member": {
+        "qwen_image": 0.98602
+      }
+    },
+    {
+      "step": 6000,
+      "loss": 0.12096,
+      "val_auc": 0.99851,
+      "val_logloss": 0.04927,
+      "val_tpr_at_1pct_fpr": 0.97852,
+      "heldout_auc": 0.98609,
+      "heldout_auc_by_member": {
+        "qwen_image": 0.98609
+      }
+    }
+  ],
+  "snapshots": [
+    500,
+    1000,
+    1500,
+    2000,
+    2500,
+    3000,
+    3500,
+    4000,
+    4500,
+    5000,
+    5500,
+    6000
+  ],
+  "measured_step_seconds_train_loop": 0.81177,
+  "gpu_hours": 1.492,
+  "checkpoint_every": 500,
+  "checkpoint": "checkpoint.pt",
+  "determinism": "seeds recorded; CUDA nondeterminism means no bit-exactness claim"
+}

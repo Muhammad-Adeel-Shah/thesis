@@ -1,0 +1,143 @@
+{
+  "what": "P3 section 4b degradation tuning, the rule committed 2026-10-17",
+  "development_data_only": true,
+  "unseen_slices": [
+    "e3_matched/GPT-Image2-fake",
+    "e3_matched/Nano-Banana2-fake",
+    "e4_wildrf_matched",
+    "e5_chameleon_pipeline"
+  ],
+  "fpr_pools": [
+    "e4_wildrf_matched",
+    "e5_chameleon_pipeline"
+  ],
+  "target_fpr": 0.05,
+  "threshold_rule": "5% FPR on the 491 COCO validation reals only (I-062)",
+  "models": {
+    "s2b_seed0": {
+      "threshold": -1.062391,
+      "val_reals": 491,
+      "threshold_achieved_fpr_on_val": 0.048879837067209775,
+      "fpr": {
+        "e4_wildrf_matched": {
+          "reals": 743,
+          "achieved_fpr": 0.6850605652759085
+        },
+        "e5_chameleon_pipeline": {
+          "reals": 1864,
+          "achieved_fpr": 0.555793991416309
+        }
+      },
+      "macro_fpr": 0.6204272783461088,
+      "auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "fakes": 500,
+          "reals": 477,
+          "auc": 0.6455765199161425
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "fakes": 500,
+          "reals": 477,
+          "auc": 0.8175849056603773
+        },
+        "e4_wildrf_matched": {
+          "fakes": 749,
+          "reals": 743,
+          "auc": 0.928148253301396
+        },
+        "e5_chameleon_pipeline": {
+          "fakes": 1884,
+          "reals": 1864,
+          "auc": 0.692126434032239
+        }
+      },
+      "macro_auc": 0.7708590282275387
+    },
+    "s2b_deg_p70_seed0": {
+      "threshold": -0.631176,
+      "val_reals": 491,
+      "threshold_achieved_fpr_on_val": 0.048879837067209775,
+      "fpr": {
+        "e4_wildrf_matched": {
+          "reals": 743,
+          "achieved_fpr": 0.6325706594885598
+        },
+        "e5_chameleon_pipeline": {
+          "reals": 1864,
+          "achieved_fpr": 0.47585836909871243
+        }
+      },
+      "macro_fpr": 0.5542145142936361,
+      "auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "fakes": 500,
+          "reals": 477,
+          "auc": 0.6481215932914046
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "fakes": 500,
+          "reals": 477,
+          "auc": 0.7873584905660377
+        },
+        "e4_wildrf_matched": {
+          "fakes": 749,
+          "reals": 743,
+          "auc": 0.9260476507932515
+        },
+        "e5_chameleon_pipeline": {
+          "fakes": 1884,
+          "reals": 1864,
+          "auc": 0.7337700354464521
+        }
+      },
+      "macro_auc": 0.7738244425242865
+    },
+    "s2b_deg_p35_seed0": {
+      "threshold": -0.695147,
+      "val_reals": 491,
+      "threshold_achieved_fpr_on_val": 0.048879837067209775,
+      "fpr": {
+        "e4_wildrf_matched": {
+          "reals": 743,
+          "achieved_fpr": 0.6446837146702558
+        },
+        "e5_chameleon_pipeline": {
+          "reals": 1864,
+          "achieved_fpr": 0.4742489270386266
+        }
+      },
+      "macro_fpr": 0.5594663208544411,
+      "auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "fakes": 500,
+          "reals": 477,
+          "auc": 0.6499832285115305
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "fakes": 500,
+          "reals": 477,
+          "auc": 0.802440251572327
+        },
+        "e4_wildrf_matched": {
+          "fakes": 749,
+          "reals": 743,
+          "auc": 0.9300637727827323
+        },
+        "e5_chameleon_pipeline": {
+          "fakes": 1884,
+          "reals": 1864,
+          "auc": 0.7156512829975488
+        }
+      },
+      "macro_auc": 0.7745346339660347
+    }
+  },
+  "guard_floor": 0.7608590282275387,
+  "passes_guard": {
+    "s2b_deg_p70_seed0": true,
+    "s2b_deg_p35_seed0": true
+  },
+  "chosen": "s2b_deg_p35_seed0",
+  "chosen_p": 0.35,
+  "reason": "both pass the guard; macro FPRs within 1 point (|delta| = 0.0053) -> the milder p"
+}

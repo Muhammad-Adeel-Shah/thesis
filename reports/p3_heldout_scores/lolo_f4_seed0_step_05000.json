@@ -1,0 +1,28 @@
+{
+  "run_id": "lolo_f4_seed0",
+  "protocol": "lolo_f4",
+  "seed": 0,
+  "step": 5000,
+  "snapshot": "snapshots/step_05000",
+  "snapshot_sha256": "ffcf62d068d19123c0466260f86699fc32a0dc2bfd71c18cda308088d0a0e46d",
+  "held_out_members": [
+    "dcae"
+  ],
+  "crop": 320,
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "dry_run_random_init": false,
+  "limit": null,
+  "seconds": 18.5,
+  "scored_by": "p3_score_heldout.py (rescored from the snapshot)",
+  "reported_heldout_auc": 0.9934,
+  "scores_csv": "lolo_f4_seed0_step_05000.csv",
+  "scores_sha256": "1404aa2f6ffb01f2b0409181fdbdc6b55187e0d4a8edbc1bb1ae6f4bbf83767d",
+  "rows": 982,
+  "reals": 491,
+  "reconstructions": 491,
+  "heldout_auc": 0.9934,
+  "heldout_auc_by_member": {
+    "dcae": 0.9934
+  }
+}

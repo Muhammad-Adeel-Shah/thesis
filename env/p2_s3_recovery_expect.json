@@ -1,0 +1,21 @@
+{
+  "stage": "s3_recovery",
+  "why": "The first S3 commit completed 9 of 12 members before a missing module stopped one shard and the deadline stopped the other. This run restores those 9 and computes the remaining 3.",
+  "imports": ["spandrel", "lpips", "peft", "diffusers", "transformers"],
+  "corpus": {"reals": 4100, "generated": 2488, "pairs": 49200},
+  "restored_members": 9,
+  "probe_rows": 18614,
+  "list_digest": "522115667bc498b745cf6a562a8d5b0e1a17cc491dcfda9f71cc97ef60788010",
+  "gen_matched": 2488,
+  "smoke_members": ["movq_k22", "qwen_image", "realesrgan_x4"],
+  "smoke_images": 2,
+  "jobs": [["0", "movq_k22"], ["1", "qwen_image,realesrgan_x4"]],
+  "deadline_hours": 3.5,
+  "poll_seconds": 30,
+  "expected": {
+    "setup_wall_hours": 0.35,
+    "s3_wall_hours": 2.03,
+    "quota_hours": 2.4,
+    "basis": "movq_k22 0.393 s/image measured in flight; qwen_image and realesrgan_x4 predicted from P1 x 1.226 (I-048); 18,614 rows; two T4s, Kaggle charges session time (I-042)"
+  }
+}

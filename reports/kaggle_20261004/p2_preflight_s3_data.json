@@ -1,0 +1,30 @@
+{
+  "stage": "s3_data",
+  "passed": true,
+  "checks": [
+    {
+      "name": "row counts",
+      "ok": true,
+      "detail": "p2_probe_images.csv=18614",
+      "seconds": 0.05
+    },
+    {
+      "name": "list digest",
+      "ok": true,
+      "detail": "digest 522115667bc498b7..., 9 sidecar(s) agree",
+      "seconds": 0.06
+    },
+    {
+      "name": "list resolves",
+      "ok": true,
+      "detail": "all 18614 rows resolve",
+      "seconds": 62.88
+    },
+    {
+      "name": "gen_matched hashes",
+      "ok": true,
+      "detail": "all 2488 files match the reference sha256",
+      "seconds": 0.72
+    }
+  ]
+}

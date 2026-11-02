@@ -1,0 +1,8 @@
+{
+  "member": "qwen_image",
+  "sha256": "f51883fea22339205c6ba049040fedcca082be64cbc00a7f6d0849a50f97b1ef",
+  "rows": 18614,
+  "crop": 320,
+  "images_sha256": "522115667bc498b745cf6a562a8d5b0e1a17cc491dcfda9f71cc97ef60788010",
+  "bytes": 1535447
+}

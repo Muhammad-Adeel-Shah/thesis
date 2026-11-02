@@ -1,0 +1,95 @@
+$ /usr/bin/python3 -u /kaggle/working/Implementation/thesis_dbp/scripts/p2_train_s2.py --protocol bank_2_near --seed 0 --root /kaggle/working/p1 --pairs-manifest /kaggle/input/datasets/muhammadadeelshah/dbp-p2-s2-inputs/p1_pairs_manifest.csv --splits /kaggle/input/datasets/muhammadadeelshah/dbp-p2-s2-inputs/p2_splits.csv --device cuda --out-dir /kaggle/working/Implementation/thesis_dbp/outputs/p3/s2 --reports-dir /kaggle/working/Implementation/thesis_dbp/reports --runs-config=configs/p3_runs.yaml --fixed-steps=6000 --stop-at=5000 --heldout-every=500 --checkpoint-every=500 --val-pairs=512
+2026-10-19 20:38:56 INFO    p2_train_s2 | run bank_2_near (BANK-2, near-first -- SD1 + SDXL (5 decoders))
+  excluded lineages : vq_movq_4ch, kl_16ch, kl_16ch_qwen, kl_32ch_flux2, dc_ae_f32, gan_sr
+  excluded members  : none
+  trained on        : sd15, sd21, sd_ft_ema, sdxl, sdxl_fp16fix
+  comparable to     : nothing published
+  evaluation crop   : 320 x1
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2568.76it/s]
+2026-10-19 20:39:03 INFO    p2_train_s2 | LoRA on ['k_proj', 'o_proj', 'q_proj', 'v_proj']: 589824 trainable of 86250240 (0.684%)
+2026-10-19 20:39:03 INFO    p2_train_s2 | D-039: 445 pair row(s) of flagged reals excluded
+2026-10-19 20:39:03 INFO    p2_train_s2 | diagnostic-only (t_ctrl): 7970 pair row(s) withheld from S2 training (B1)
+2026-10-19 20:39:03 INFO    p2_train_s2 | protocol data: 9630 train pair rows over 1926 reals, 2455 val pair rows, 1988/500 gen_matched
+2026-10-19 20:39:03 INFO    p2_train_s2 | batch plan: {'pairs': 6, 'reals': 8, 'reconstruction_fakes': 6, 'gen_matched_fakes': 2}
+2026-10-19 20:39:04 INFO    p2_train_s2 | held-out lineage(s) ['vq_movq_4ch', 'kl_16ch', 'kl_16ch_qwen', 'kl_32ch_flux2', 'dc_ae_f32', 'gan_sr']: members ['dcae', 'flux', 'flux2_klein', 'movq_k22', 'qwen_image', 'realesrgan_x4', 'sd35']; 491 validation reals, 3437 reconstructions
+2026-10-19 20:39:04 INFO    p2_train_s2 | FIXED-STEP mode: exactly 6000 steps; held-out evaluation and snapshot every 500; no early stopping
+/usr/local/lib/python3.13/dist-packages/torch/autograd/graph.py:869: UserWarning: Memory Efficient attention defaults to a non-deterministic algorithm. To explicitly enable determinism call torch.use_deterministic_algorithms(True, warn_only=False). (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/attention_backward.cu:900.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad68351-2f4e5006587faa8500c37605;128c6605-4fba-437a-b083-72253fcf5754)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/peft/utils/save_and_load.py:438: UserWarning: Could not find a config file in facebook/dinov3-vitb16-pretrain-lvd1689m - will assume that the vocabulary was not modified.
+  warnings.warn(
+2026-10-19 20:53:37 INFO    p2_train_s2 | step   500  lr 9.830e-05  loss 0.1878  val AUC 0.9943  held-out AUC None 
+2026-10-19 20:53:37 INFO    p2_train_s2 |   checkpoint at step 500 (0.24 GPU-h so far)
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad6858d-29b26e0409e9ff270685a638;ff4cf75d-f6c3-4fe0-8f7e-da0ad30835d6)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-19 21:03:09 INFO    p2_train_s2 | step  1000  lr 9.331e-05  loss 0.0235  val AUC 0.9986  held-out AUC None 
+2026-10-19 21:03:09 INFO    p2_train_s2 |   checkpoint at step 1000 (0.40 GPU-h so far)
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad68792-508bac7f3214ff3721fed346;cc5fbb50-a1b1-4c73-aa63-6d9c459275a5)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-19 21:11:46 INFO    p2_train_s2 | step  1500  lr 8.537e-05  loss 0.0564  val AUC 0.9996  held-out AUC None 
+2026-10-19 21:11:46 INFO    p2_train_s2 |   checkpoint at step 1500 (0.54 GPU-h so far)
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad6897e-7e2c6b294cb7ad982d3e585f;c5fd399a-d914-45ec-9db0-b3d120aabcd0)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-19 21:19:58 INFO    p2_train_s2 | step  2000  lr 7.502e-05  loss 0.0800  val AUC 0.9995  held-out AUC None 
+2026-10-19 21:19:58 INFO    p2_train_s2 |   checkpoint at step 2000 (0.68 GPU-h so far)
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad68b76-4568057e68425f684b37704a;67d74ccb-1de2-446b-95be-fae03cc35e5f)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-19 21:28:22 INFO    p2_train_s2 | step  2500  lr 6.297e-05  loss 0.0008  val AUC 0.9996  held-out AUC None 
+2026-10-19 21:28:22 INFO    p2_train_s2 |   checkpoint at step 2500 (0.81 GPU-h so far)
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad68d5d-4fba6536507e53fa501a60ee;6ad6d4ad-6191-4333-9473-3a97e18737bb)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-19 21:36:29 INFO    p2_train_s2 | step  3000  lr 5.003e-05  loss 0.0521  val AUC 0.9999  held-out AUC None 
+2026-10-19 21:36:29 INFO    p2_train_s2 |   checkpoint at step 3000 (0.95 GPU-h so far)
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad68f2f-219ee2256e17d47d7a614e48;750822db-1ff5-4e78-9676-434b039b1fb0)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-19 21:44:15 INFO    p2_train_s2 | step  3500  lr 3.708e-05  loss 0.0230  val AUC 0.9998  held-out AUC None 
+2026-10-19 21:44:15 INFO    p2_train_s2 |   checkpoint at step 3500 (1.08 GPU-h so far)
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad690f8-7bbe6f4c406883013f67b770;2f3ced46-1a52-469c-9b0a-da46ff59e343)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-19 21:51:52 INFO    p2_train_s2 | step  4000  lr 2.502e-05  loss 0.0228  val AUC 0.9999  held-out AUC None 
+2026-10-19 21:51:52 INFO    p2_train_s2 |   checkpoint at step 4000 (1.21 GPU-h so far)
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad692c0-7f6d2bbc19e114762d6c3014;a8821666-b115-4577-a041-4e4c1a8a4ae7)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-19 21:59:28 INFO    p2_train_s2 | step  4500  lr 1.466e-05  loss 0.0265  val AUC 0.9999  held-out AUC None 
+2026-10-19 21:59:28 INFO    p2_train_s2 |   checkpoint at step 4500 (1.33 GPU-h so far)
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad6961d-122b71ed548fe7182559b21b;5177ca9c-f357-421b-9bc2-221ad1837f6b)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad6961e-1f866a6673b8398f69c97676;fb4a2abe-3668-4ac1-94fe-8b5cbc63434e)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-19 22:13:50 INFO    p2_train_s2 | step  5000  lr 6.712e-06  loss 0.0680  val AUC 1.0000  held-out AUC 0.91434 {'dcae': 0.99654, 'flux': 0.9355, 'flux2_klein': 0.61762, 'movq_k22': 0.99914, 'qwen_image': 0.872, 'realesrgan_x4': 1.0, 'sd35': 0.97958}
+2026-10-19 22:13:50 INFO    p2_train_s2 |   checkpoint at step 5000 (1.46 GPU-h so far)
+2026-10-19 22:13:50 INFO    p2_train_s2 | done: 5000 fixed steps in 1.58 GPU-h; held-out AUC at the last step 0.91434

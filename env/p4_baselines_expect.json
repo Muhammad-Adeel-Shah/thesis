@@ -1,0 +1,92 @@
+{
+  "stage": "p4_baselines (Panel B, each row of spec section 3 once; descriptive) -- docs/P4_BASELINES_SPEC.md, frozen at tag p4-baselines-frozen",
+  "imports": [
+    "timm",
+    "open_clip",
+    "diffusers",
+    "lpips",
+    "safetensors",
+    "huggingface_hub",
+    "PIL"
+  ],
+  "gpus": 2,
+  "hf_token": true,
+  "spec": {
+    "path": "docs/P4_BASELINES_SPEC.md",
+    "sha256": "6576eaded3460810e7406011ccbe03909f5124f90d6b21e43b221e7c2b0f2a54"
+  },
+  "lists": {
+    "dir": "reports/kaggle_20261027/p3_final_session1/p3_final_lists",
+    "panel_b": {
+      "sha256": "5a8eaa0574cf07f7188397d6d0c8b92f06162e26b1017e44740da76174b056b5",
+      "rows": 9405
+    },
+    "luma": {
+      "sha256": "e54513462d3d6bc190fb0fa4f052bf08ecf215d2c6b7a9dfa634684faafd34b0",
+      "rows": 700
+    },
+    "threshold_reals": {
+      "sha256": "83e5b9c09c9997907c001e42087552ff0f73847f7d47e7bcddae29417b67e4f5",
+      "rows": 891
+    },
+    "panel_b_test_rows": 8655
+  },
+  "weights": {
+    "dda": {
+      "file": "dda/DDA_ckpt.pth",
+      "sha256": "b27a31d39374803ddeff02bfabb2be76e190b04300490cddfafb24f683f37e3e"
+    },
+    "siglip": {
+      "file": "siglip/open_clip_model.safetensors",
+      "sha256": "97faeafa0576c1ba4c92bae739ca06ef5f5d0c2db92f86a6086653d82a262043"
+    },
+    "cospy_semantic": {
+      "file": "cospy_zip/semantic_weights.pth",
+      "sha256": null
+    },
+    "cospy_artifact": {
+      "file": "cospy_zip/artifact_weights.pth",
+      "sha256": null
+    },
+    "cospy_fusion": {
+      "file": "cospy_zip/fusion_weights.pth",
+      "sha256": null
+    },
+    "fire": {
+      "file": "fire/fire_imagenet_adm.pth",
+      "sha256": null
+    }
+  },
+  "weights_note": "the four null sha256 values are recorded by the weights session (reports/p4_weights.json) and committed here before any baseline is scored; the pre-flight refuses to plan while any is null",
+  "aeroblade_aes": [
+    "sd15",
+    "sd21",
+    "movq_k21"
+  ],
+  "rows": {
+    "dda_native": {"baseline": "dda", "crop": 336, "condition": "clean"},
+    "dda_crop308": {"baseline": "dda", "crop": 308, "condition": "clean"},
+    "dda_jpeg50": {"baseline": "dda", "crop": 336, "condition": "jpeg50"},
+    "dda_resize050": {"baseline": "dda", "crop": 336, "condition": "resize050"},
+    "cospy_native": {"baseline": "cospy", "condition": "clean"},
+    "fire_native": {"baseline": "fire", "condition": "clean"},
+    "aeroblade": {"baseline": "aeroblade", "condition": "clean"}
+  },
+  "jobs": [
+    "0:dda_native,dda_crop308,dda_jpeg50,dda_resize050,cospy_native,fire_native",
+    "1:aeroblade"
+  ],
+  "batch": {
+    "dda": 16,
+    "cospy": 8
+  },
+  "workers": 32,
+  "margin_gb": 2.0,
+  "smoke_deadline_hours": 1.0,
+  "deadline_hours": 10.5,
+  "poll_seconds": 30,
+  "expected": {
+    "wall": "about 2-6 h (ESTIMATED, spec section 8): staging Panel B + luma + 891 reals (about 2 GB) 5-20 min; smoke of every row 0.2-0.4 h (model loads); GPU 0: DDA 4 rows (39,302 passes) 0.7-1.3 h + CO-SPY 0.6-1.4 h + FIRE 0.5-1.2 h = 1.8-3.9 h; GPU 1: AEROBLADE 2.3-7.5 h. If AEROBLADE runs to its upper bound the session may need a second run: complete rows are carried forward",
+    "quota": "Kaggle bills session wall time (I-042): 1 quota hour per session hour; 4.1-11.4 device-h approved (user, 2026-11-01)"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "run_id": "lolo_f7_seed0",
+  "protocol": "lolo_f7",
+  "seed": 0,
+  "step": 5000,
+  "snapshot": "snapshots/step_05000",
+  "snapshot_sha256": "8a27ee16a51b4bd576296b31c2046de785b880648574fe029261c2e45c5b0961",
+  "held_out_members": [
+    "qwen_image"
+  ],
+  "crop": 320,
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "dry_run_random_init": false,
+  "limit": null,
+  "seconds": 18.5,
+  "scored_by": "p3_score_heldout.py (rescored from the snapshot)",
+  "reported_heldout_auc": 0.98586,
+  "scores_csv": "lolo_f7_seed0_step_05000.csv",
+  "scores_sha256": "c88842153f8ccb378dc30d6bf684443bbf155d5fd69b7582a696285726345118",
+  "rows": 982,
+  "reals": 491,
+  "reconstructions": 491,
+  "heldout_auc": 0.98586,
+  "heldout_auc_by_member": {
+    "qwen_image": 0.98586
+  }
+}

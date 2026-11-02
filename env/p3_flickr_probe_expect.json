@@ -1,0 +1,22 @@
+{
+  "stage": "p3_flickr_probe",
+  "imports": [
+    "numpy"
+  ],
+  "metadata": {
+    "path": "reports/p3_open_images/oi_validation_cc_by_2.csv",
+    "sha256": "5eabde3b576e0c03ecb79b5575edcd9c6d934c0945c56315acaae129fd745c2b",
+    "rows": 41620
+  },
+  "farm": 3,
+  "c": 3,
+  "gap_s": 30,
+  "ip_echo_url": "https://api.ipify.org",
+  "local_source": null,
+  "expected": {
+    "accelerator": "None (CPU); no GPU quota",
+    "wall_minutes": "about 5 (ESTIMATED: staging and bootstrap, plus 5 gaps x 30 s plus 6 requests)",
+    "downloads_mb": "at most about 12 (ESTIMATED: 6 originals at the metadata mean of 2.0 MB, streamed and discarded; 0 if refused)",
+    "output": "one JSON report; no image"
+  }
+}

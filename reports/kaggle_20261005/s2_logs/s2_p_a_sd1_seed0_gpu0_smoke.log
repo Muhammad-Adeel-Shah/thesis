@@ -1,0 +1,38 @@
+$ /usr/bin/python3 -u /kaggle/working/Implementation/thesis_dbp/scripts/p2_train_s2.py --protocol p_a_sd1 --seed 0 --root /kaggle/working/p1 --pairs-manifest /kaggle/input/datasets/muhammadadeelshah/dbp-p2-s2-inputs/p1_pairs_manifest.csv --splits /kaggle/input/datasets/muhammadadeelshah/dbp-p2-s2-inputs/p2_splits.csv --device cuda --out-dir /tmp/dbp_s2_smoke/smoke_p_a_sd1_seed0_gpu0 --reports-dir /tmp/dbp_s2_smoke/smoke_p_a_sd1_seed0_gpu0 --smoke 2 --allowance-hours=2.25 --ceiling=8000 --calibrate=20
+2026-10-04 23:37:14 INFO    p2_train_s2 | run p_a_sd1 (P-A -- single family: the SD1 lineage only (PRIMARY for RQ1))
+  excluded lineages : kl_4ch_sdxl, kl_16ch, kl_16ch_qwen, kl_32ch_flux2, dc_ae_f32, vq_movq_4ch, gan_sr
+  trained on        : sd15, sd21, sd_ft_ema
+  comparable to     : nothing published
+  evaluation crop   : 320 x1
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2400.65it/s]
+2026-10-04 23:37:28 INFO    p2_train_s2 | LoRA on ['k_proj', 'o_proj', 'q_proj', 'v_proj']: 589824 trainable of 86250240 (0.684%)
+2026-10-04 23:37:29 INFO    p2_train_s2 | D-039: 267 pair row(s) of flagged reals excluded
+2026-10-04 23:37:29 INFO    p2_train_s2 | diagnostic-only (t_ctrl): 4782 pair row(s) withheld from S2 training (B1)
+2026-10-04 23:37:29 INFO    p2_train_s2 | protocol data: 5778 train pair rows over 1926 reals, 1473 val pair rows, 1988/500 gen_matched
+2026-10-04 23:37:29 INFO    p2_train_s2 | batch plan: {'pairs': 6, 'reals': 8, 'reconstruction_fakes': 6, 'gen_matched_fakes': 2}
+2026-10-04 23:37:29 INFO    p2_train_s2 | SMOKE: 2 step(s), then save, reload and compare
+/usr/local/lib/python3.13/dist-packages/torch/autograd/graph.py:869: UserWarning: Memory Efficient attention defaults to a non-deterministic algorithm. To explicitly enable determinism call torch.use_deterministic_algorithms(True, warn_only=False). (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/attention_backward.cu:900.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+2026-10-04 23:38:09 INFO    p2_train_s2 | step     2  loss 0.7401  val AUC 0.5024
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ac2e361-74295cf92c59b4616c04ba27;88a232d3-3160-498f-a1e4-e68326548f0d)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/peft/utils/save_and_load.py:438: UserWarning: Could not find a config file in facebook/dinov3-vitb16-pretrain-lvd1689m - will assume that the vocabulary was not modified.
+  warnings.warn(
+2026-10-04 23:38:09 INFO    p2_train_s2 |   checkpoint at step 2 (0.00 GPU-h so far)
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ac2e362-15b7f51d006ec55c3177241d;554cba66-e65b-46d0-b924-029105ca9306)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-04 23:38:10 INFO    p2_train_s2 | SMOKE PASSED: 2 step(s), checkpoint saved, reloaded and identical
+$ /usr/bin/python3 -u /kaggle/working/Implementation/thesis_dbp/scripts/p2_s2_infer.py --protocol p_a_sd1 --seed 0 --root /kaggle/working/p1 --device cuda --out-dir /tmp/dbp_s2_smoke/smoke_p_a_sd1_seed0_gpu0 --reports-dir /tmp/dbp_s2_smoke/smoke_p_a_sd1_seed0_gpu0 --panel-root /kaggle/input/notebooks/adeelshah29/phase-2/panel --list panel=/kaggle/input/datasets/muhammadadeelshah/dbp-p2-s2-inputs/p2_panel_images.csv --list luma=/kaggle/input/datasets/muhammadadeelshah/dbp-p2-s2-inputs/p2_luma_images.csv --list val=/kaggle/input/datasets/muhammadadeelshah/dbp-p2-s2-inputs/p2_s1_images.csv --only val=val --limit 2 --batch=32
+2026-10-04 23:38:44 INFO    p2_s2_infer | HF_TOKEN present: True
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2462.78it/s]
+2026-10-04 23:38:51 INFO    p2_s2_infer | p_a_sd1_seed0: selected model from /tmp/dbp_s2_smoke/smoke_p_a_sd1_seed0_gpu0/p_a_sd1_seed0, crop 320
+2026-10-04 23:38:52 INFO    p2_s2_infer | panel: 2 row(s) in 0.5 s (0.2571 s/image) -> panel.csv
+2026-10-04 23:38:52 INFO    p2_s2_infer | luma: 2 row(s) in 0.1 s (0.0487 s/image) -> luma.csv
+2026-10-04 23:38:52 INFO    p2_s2_infer | val: 2 row(s) in 0.1 s (0.0530 s/image) -> val.csv
+2026-10-04 23:38:52 INFO    p2_s2_infer | wrote p2_s2_scores_p_a_sd1_seed0.json

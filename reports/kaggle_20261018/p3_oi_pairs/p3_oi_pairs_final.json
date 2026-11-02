@@ -1,0 +1,73 @@
+{
+  "mode": "final",
+  "ok": true,
+  "problems": [],
+  "rows": 48000,
+  "rows_expected": 48000,
+  "members": {
+    "dcae": {
+      "rows": 4000,
+      "bytes": 935838568
+    },
+    "flux": {
+      "rows": 4000,
+      "bytes": 902456669
+    },
+    "flux2_klein": {
+      "rows": 4000,
+      "bytes": 921024138
+    },
+    "movq_k22": {
+      "rows": 4000,
+      "bytes": 928240937
+    },
+    "qwen_image": {
+      "rows": 4000,
+      "bytes": 840036036
+    },
+    "realesrgan_x4": {
+      "rows": 4000,
+      "bytes": 800924333
+    },
+    "sd15": {
+      "rows": 4000,
+      "bytes": 927901747
+    },
+    "sd21": {
+      "rows": 4000,
+      "bytes": 894153868
+    },
+    "sd35": {
+      "rows": 4000,
+      "bytes": 925636336
+    },
+    "sd_ft_ema": {
+      "rows": 4000,
+      "bytes": 922344338
+    },
+    "sdxl": {
+      "rows": 4000,
+      "bytes": 870889693
+    },
+    "sdxl_fp16fix": {
+      "rows": 4000,
+      "bytes": 867870943
+    }
+  },
+  "precision_rule": {
+    "sd15": "fp16",
+    "sd21": "fp16",
+    "sd_ft_ema": "fp16",
+    "sdxl": "fp32",
+    "sdxl_fp16fix": "fp16",
+    "sd35": "fp16",
+    "flux": "fp16",
+    "dcae": "fp16",
+    "realesrgan_x4": "fp32",
+    "flux2_klein": "fp16",
+    "qwen_image": "fp16",
+    "movq_k22": "fp32"
+  },
+  "bytes": 10737317606,
+  "gb": 10.0
+}

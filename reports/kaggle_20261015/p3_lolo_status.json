@@ -1,0 +1,47 @@
+{
+  "mode": "train+score",
+  "outcome": "COMPLETE",
+  "devices": [
+    "0",
+    "1"
+  ],
+  "deadline_hours": 9.5,
+  "wall_hours": 1.575,
+  "device_hours": 3.0834,
+  "runs": [
+    {
+      "run_id": "lolo_f1_seed0",
+      "protocol": "lolo_f1",
+      "seed": 0,
+      "state": "complete",
+      "device": "0",
+      "train_rc": 0,
+      "infer_rc": null,
+      "started": 1792062821.1515126,
+      "finished": 1792068491.1895587,
+      "hours": 1.575,
+      "logs": [
+        "s2_lolo_f1_seed0_gpu0_infer.log",
+        "s2_lolo_f1_seed0_gpu0_train.log"
+      ],
+      "note": "no training report; nothing to restore"
+    },
+    {
+      "run_id": "lolo_f2_seed0",
+      "protocol": "lolo_f2",
+      "seed": 0,
+      "state": "complete",
+      "device": "1",
+      "train_rc": 0,
+      "infer_rc": null,
+      "started": 1792062821.1519318,
+      "finished": 1792068251.1887865,
+      "hours": 1.5083,
+      "logs": [
+        "s2_lolo_f2_seed0_gpu1_infer.log",
+        "s2_lolo_f2_seed0_gpu1_train.log"
+      ],
+      "note": "no training report; nothing to restore"
+    }
+  ]
+}

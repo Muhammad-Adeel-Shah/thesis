@@ -1,0 +1,24 @@
+{
+  "outcome": "COMPLETE",
+  "failed_job": null,
+  "jobs": [
+    {
+      "index": 0,
+      "device": "0",
+      "members": "s2b_seed0,s2d_p35_seed0",
+      "returncode": 0,
+      "log": "truefake_smoke_job0_gpu0.log"
+    },
+    {
+      "index": 1,
+      "device": "1",
+      "members": "s2b_deg_p35_seed0,full_bank_seed0",
+      "returncode": 0,
+      "log": "truefake_smoke_job1_gpu1.log"
+    }
+  ],
+  "members_done": [],
+  "deadline_hours": 0.5,
+  "wall_hours": 0.0083,
+  "device_hours": 0.0167
+}

@@ -1,0 +1,37 @@
+{
+  "run_id": "s2b_deg_p70_seed0",
+  "protocol": "s2b_deg_p70",
+  "seed": 0,
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "dry_run_random_init": false,
+  "crop": 320,
+  "crop_policy": "centre",
+  "score": "head logit",
+  "model": "selected at best validation AUC",
+  "best_step": null,
+  "best_val_auc": null,
+  "lora_sha256": "64a33952f7e913818785800a18dbcb3243d0b9ea4a06c2252d6e4c96527d7fd7",
+  "head_sha256": "9a93eb80d7784cddf94e4ac2ae413540a9aad14b7b092108f30c8790e1f3c582",
+  "limit": null,
+  "lists": {
+    "panel": {
+      "source": "p3_tune_panel_rows.csv",
+      "view": null,
+      "rows": 6717,
+      "scores": "scores/panel.csv",
+      "sha256": "19cb7225683b1f31b64069aa4c33aaafa727b7c1d1e1093b43570df71cd0eb7e",
+      "seconds": 192.6,
+      "seconds_per_image": 0.02867
+    },
+    "val": {
+      "source": "p3_tune_val_reals.csv",
+      "view": null,
+      "rows": 491,
+      "scores": "scores/val.csv",
+      "sha256": "3cf06ab2e1570d3b475ad9e8c7c24b3c2dbfc804daf7efb32bc4031500cc4488",
+      "seconds": 9.9,
+      "seconds_per_image": 0.02014
+    }
+  }
+}

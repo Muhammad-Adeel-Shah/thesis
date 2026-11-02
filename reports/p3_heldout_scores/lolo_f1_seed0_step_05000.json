@@ -1,0 +1,32 @@
+{
+  "run_id": "lolo_f1_seed0",
+  "protocol": "lolo_f1",
+  "seed": 0,
+  "step": 5000,
+  "snapshot": "snapshots/step_05000",
+  "snapshot_sha256": "f8a3c5bf4eadff1cff5dd2dd906ed47ed6701e701b54106173d6d35af11ee5fa",
+  "held_out_members": [
+    "sd15",
+    "sd21",
+    "sd_ft_ema"
+  ],
+  "crop": 320,
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "dry_run_random_init": false,
+  "limit": null,
+  "seconds": 36.9,
+  "scored_by": "p3_score_heldout.py (rescored from the snapshot)",
+  "reported_heldout_auc": 0.99943,
+  "scores_csv": "lolo_f1_seed0_step_05000.csv",
+  "scores_sha256": "79f99ac5e58771087babb677dce1544b020215095db680e557d8f0054838ec08",
+  "rows": 1964,
+  "reals": 491,
+  "reconstructions": 1473,
+  "heldout_auc": 0.99943,
+  "heldout_auc_by_member": {
+    "sd15": 0.9998,
+    "sd21": 0.99907,
+    "sd_ft_ema": 0.99943
+  }
+}

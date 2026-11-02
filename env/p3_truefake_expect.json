@@ -1,0 +1,17 @@
+{
+  "stage": "p3_truefake (fetch the frozen TrueFake sample, CPU)",
+  "sample": "reports/truefake/truefake_sample.csv",
+  "sample_sha256": "a8954c2f63e81d95173cbec99e3f7c1ee2dd3d49527fac5ff7075de5e1ac8fd6",
+  "sample_rows": 16000,
+  "sample_gb": 8.6,
+  "zip_size": 694732361838,
+  "cd_sha256": "869a102f65504dc25df759de4a51ae6931cecac7b255b0b5ad270dad2544dc0b",
+  "workers": 4,
+  "expected": {
+    "accelerator": "None (CPU); no GPU quota",
+    "download": "7.985 GiB of members (8.57 GB) + the 123 MB archive index",
+    "wall_hours": "about 0.5-1.5 (ESTIMATED): about 16,000 range requests at 0.3-1.0 s each over 4 connections (20-70 min; per-request latency NOT-MEASURED on Kaggle) plus 2-7 min of transfer at 20-100 MB/s; setup about 0.1 h",
+    "output_gb": "about 8.6 (the members, decompressed; MEASURED per member in the manifest)",
+    "risk": "Google Drive may apply a download quota to the one heavily read file: the session then STOPS and reports (rule), it does not retry"
+  }
+}

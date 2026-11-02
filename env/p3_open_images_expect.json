@@ -1,0 +1,51 @@
+{
+  "stage": "p3_open_images",
+  "imports": [
+    "PIL",
+    "numpy"
+  ],
+  "inputs": {
+    "p1_gen_manifest.csv": {
+      "sha256": "c86935d39177ba0982b6ff12b129cce872c3e388281406535473a579a217635a",
+      "rows": 2488
+    },
+    "p1_pairs_manifest.csv": {
+      "sha256": "b19b7f5acee49d8848658b5b78b6398d9a1511ae72e688fc81379705aa99c65c",
+      "rows": 49200
+    }
+  },
+  "metadata": {
+    "path": "reports/p3_open_images/oi_validation_cc_by_2.csv",
+    "sha256": "5eabde3b576e0c03ecb79b5575edcd9c6d934c0945c56315acaae129fd745c2b",
+    "rows": 41620
+  },
+  "eval_views": {
+    "e3": "e3_matched",
+    "e4": "e4_wildrf_matched",
+    "e5": "e5_chameleon_pipeline"
+  },
+  "coco_counts": {
+    "train2017": 118287,
+    "val2017": 5000
+  },
+  "target": 4000,
+  "holdout": 400,
+  "workers": 8,
+  "hosts": [
+    "open-images-dataset\\.s3\\.amazonaws\\.com",
+    "open-images-dataset\\.s3[.-][a-z0-9-]+\\.amazonaws\\.com"
+  ],
+  "min_free_gb": {
+    "tmp": 3,
+    "out": 3
+  },
+  "local_source": null,
+  "expected": {
+    "accelerator": "None (CPU); no GPU quota",
+    "wall_hours": "about 0.5-0.7 (ESTIMATED): bootstrap about 0.06 h (MEASURED 212 s in LOLO session 2), COCO index 886 s (MEASURED, Open Images run 1), the walk about 0.1-0.25 h (ESTIMATED: about 4,300-4,700 files, 8 connections, 1024 px decodes)",
+    "downloads_gb": "about 1.6-1.75 (ESTIMATED: 4,300-4,700 rows walked x 371,264 B, the MEASURED mean of a 50-file HEAD probe of the S3 copies, 2026-10-15; 50/50 available)",
+    "peak_tmp_disk_gb": "about 0.1 (ESTIMATED: one 64-file batch of copies, max 1.29 MB measured, plus the COCO index CSV)",
+    "output_gb": "about 0.75-1.1 (ESTIMATED: 4,000 crops x 187,499-268,079 B, the MEASURED mean PNG crop sizes of the local Flickr run and of P1's T-real)"
+  },
+  "source": "s3"
+}

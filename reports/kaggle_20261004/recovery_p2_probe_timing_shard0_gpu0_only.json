@@ -1,0 +1,21 @@
+{
+  "shard": 0,
+  "num_shards": 1,
+  "crop": 320,
+  "images": 18614,
+  "calibration_only": false,
+  "images_sha256": "522115667bc498b745cf6a562a8d5b0e1a17cc491dcfda9f71cc97ef60788010",
+  "skipped_verified": [],
+  "members": [
+    {
+      "member": "movq_k22",
+      "kind": "vq",
+      "lineage": "vq_movq_4ch",
+      "precision": "fp32",
+      "images": 18614,
+      "seconds_per_image": 0.3832,
+      "crop": 320
+    }
+  ],
+  "projected_full_run_gpu_hours": 1.981
+}

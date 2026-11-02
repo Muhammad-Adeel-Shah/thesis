@@ -1,0 +1,5 @@
+key,lineage,tier,kind,revision,dtype,crop,psnr_db,lpips_vgg,mean_abs_residual,ms_per_img,cpu_ms_per_img,peak_gpu_mb,fp16_allowed,fp16_psnr_db,deterministic,max_abs_delta_rerun,status,detail
+sd15,kl_4ch_sd1,core,vae_kl,451f4fe16113,fp32,512,26.797,NOT-RUN,6.1222,,34606.8,PENDING-GPU,PENDING-GPU,PENDING-GPU,True,0,OK,
+sd15,kl_4ch_sd1,core,vae_kl,451f4fe16113,fp32,1024,35.368,NOT-RUN,3.3687,,138297.8,PENDING-GPU,PENDING-GPU,PENDING-GPU,True,0,OK,
+realesrgan_x4,gan_sr,core,sr_gan,,fp32,512,23.821,NOT-RUN,8.9955,,8185.9,PENDING-GPU,PENDING-GPU,PENDING-GPU,True,0,OK,
+realesrgan_x4,gan_sr,core,sr_gan,,fp32,1024,35.132,NOT-RUN,3.2259,,28908.1,PENDING-GPU,PENDING-GPU,PENDING-GPU,True,0,OK,

@@ -1,0 +1,190 @@
+{
+  "run_id": "s2d_p35_seed1",
+  "protocol": "s2d_p35",
+  "seed": 1,
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "crop": 320,
+  "active_members": [
+    "dcae",
+    "flux",
+    "flux2_klein",
+    "movq_k22",
+    "qwen_image",
+    "realesrgan_x4",
+    "sd15",
+    "sd21",
+    "sd35",
+    "sd_ft_ema",
+    "sdxl",
+    "sdxl_fp16fix"
+  ],
+  "excluded_lineages": [],
+  "lora": {
+    "target_modules": [
+      "k_proj",
+      "o_proj",
+      "q_proj",
+      "v_proj"
+    ],
+    "params_trainable": 589824,
+    "params_total": 86250240,
+    "trainable_pct": 0.6839
+  },
+  "batch": 16,
+  "batch_plan": {
+    "pairs": 6,
+    "reals": 8,
+    "reconstruction_fakes": 6,
+    "gen_matched_fakes": 2
+  },
+  "optimiser": {
+    "lr": 0.0001,
+    "weight_decay": 0.01,
+    "warmup_steps": 300,
+    "schedule": "cosine"
+  },
+  "step_budget": {
+    "allowance_hours": 2.25,
+    "measured_step_seconds": 0.0,
+    "steps": 6000,
+    "ceiling": 6000,
+    "undertrained": false,
+    "min_steps_per_run": 2000
+  },
+  "mode": "train",
+  "degrade": {
+    "p": 0.35,
+    "stream": [
+      1,
+      417
+    ],
+    "pairs": 40000,
+    "ops": {
+      "jpeg": 3406,
+      "none": 26168,
+      "resize": 3484,
+      "social": 1692,
+      "social_reshare": 1773,
+      "webp": 3477
+    },
+    "ms_per_pair": 7.02,
+    "batches": 5000,
+    "batch_build_ms": 255.238
+  },
+  "status": "OK",
+  "mode_detail": "P3 recipe: the fixed-steps schedule stopped at --stop-at; held-out scored per image at the final step",
+  "runs_config": "p3_runs.yaml",
+  "fixed_steps": 6000,
+  "schedule_steps": 6000,
+  "stop_at": 5000,
+  "excluded_members": [],
+  "heldout_scores": null,
+  "heldout_every": 500,
+  "held_out_lineages": [],
+  "held_out_members": [],
+  "heldout_reals": 0,
+  "heldout_reconstructions": 0,
+  "gen_matched_used": true,
+  "steps_run": 5000,
+  "resumed_from_step": null,
+  "curve": [
+    {
+      "step": 500,
+      "loss": 0.43566,
+      "lr": 9.830306056054858e-05,
+      "val_auc": 0.94974,
+      "val_logloss": 0.32865,
+      "val_tpr_at_1pct_fpr": 0.64258
+    },
+    {
+      "step": 1000,
+      "loss": 0.46114,
+      "lr": 9.331435422236938e-05,
+      "val_auc": 0.97038,
+      "val_logloss": 0.21976,
+      "val_tpr_at_1pct_fpr": 0.85938
+    },
+    {
+      "step": 1500,
+      "loss": 0.21398,
+      "lr": 8.53738462242905e-05,
+      "val_auc": 0.97686,
+      "val_logloss": 0.23464,
+      "val_tpr_at_1pct_fpr": 0.88477
+    },
+    {
+      "step": 2000,
+      "loss": 0.30398,
+      "lr": 7.502266906407107e-05,
+      "val_auc": 0.98734,
+      "val_logloss": 0.14423,
+      "val_tpr_at_1pct_fpr": 0.91797
+    },
+    {
+      "step": 2500,
+      "loss": 0.40821,
+      "lr": 6.296623835905105e-05,
+      "val_auc": 0.98829,
+      "val_logloss": 0.1492,
+      "val_tpr_at_1pct_fpr": 0.93164
+    },
+    {
+      "step": 3000,
+      "loss": 0.10712,
+      "lr": 5.0026179937583685e-05,
+      "val_auc": 0.9908,
+      "val_logloss": 0.13308,
+      "val_tpr_at_1pct_fpr": 0.93945
+    },
+    {
+      "step": 3500,
+      "loss": 0.15555,
+      "lr": 3.708433739663441e-05,
+      "val_auc": 0.99031,
+      "val_logloss": 0.12774,
+      "val_tpr_at_1pct_fpr": 0.94141
+    },
+    {
+      "step": 4000,
+      "loss": 0.32665,
+      "lr": 2.5022675917962868e-05,
+      "val_auc": 0.99261,
+      "val_logloss": 0.11564,
+      "val_tpr_at_1pct_fpr": 0.94727
+    },
+    {
+      "step": 4500,
+      "loss": 0.3531,
+      "lr": 1.4663177798502453e-05,
+      "val_auc": 0.99324,
+      "val_logloss": 0.11005,
+      "val_tpr_at_1pct_fpr": 0.94727
+    },
+    {
+      "step": 5000,
+      "loss": 0.30902,
+      "lr": 6.711825715214315e-06,
+      "val_auc": 0.99423,
+      "val_logloss": 0.09699,
+      "val_tpr_at_1pct_fpr": 0.95312
+    }
+  ],
+  "snapshots": [
+    500,
+    1000,
+    1500,
+    2000,
+    2500,
+    3000,
+    3500,
+    4000,
+    4500,
+    5000
+  ],
+  "measured_step_seconds_train_loop": 0.83421,
+  "gpu_hours": 1.212,
+  "checkpoint_every": 500,
+  "checkpoint": "checkpoint.pt",
+  "determinism": "seeds recorded; CUDA nondeterminism means no bit-exactness claim"
+}

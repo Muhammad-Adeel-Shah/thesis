@@ -1,0 +1,4 @@
+# Development-only requirements. Installed locally; not required on Kaggle.
+-r base.txt
+pytest>=8.0              # smoke + unit tests
+ruff>=0.5                # lint

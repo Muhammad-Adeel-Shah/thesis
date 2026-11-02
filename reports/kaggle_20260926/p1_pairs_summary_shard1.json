@@ -1,0 +1,68 @@
+{
+  "shard": 1,
+  "num_shards": 2,
+  "device": "cuda:1",
+  "n_reals": 4100,
+  "members": [
+    {
+      "member": "sd21",
+      "lineage": "kl_4ch_sd1",
+      "precision": "fp16",
+      "written": 4100,
+      "already_done": 0,
+      "failures": [],
+      "manifest": "p1_pairs_manifest_sd21.csv",
+      "status": "OK"
+    },
+    {
+      "member": "sdxl",
+      "lineage": "kl_4ch_sdxl",
+      "precision": "fp32",
+      "written": 4100,
+      "already_done": 0,
+      "failures": [],
+      "manifest": "p1_pairs_manifest_sdxl.csv",
+      "status": "OK"
+    },
+    {
+      "member": "sd35",
+      "lineage": "kl_16ch",
+      "precision": "fp16",
+      "written": 4100,
+      "already_done": 0,
+      "failures": [],
+      "manifest": "p1_pairs_manifest_sd35.csv",
+      "status": "OK"
+    },
+    {
+      "member": "dcae",
+      "lineage": "dc_ae_f32",
+      "precision": "fp16",
+      "written": 4100,
+      "already_done": 0,
+      "failures": [],
+      "manifest": "p1_pairs_manifest_dcae.csv",
+      "status": "OK"
+    },
+    {
+      "member": "flux2_klein",
+      "lineage": "kl_32ch_flux2",
+      "precision": "fp16",
+      "written": 4100,
+      "already_done": 0,
+      "failures": [],
+      "manifest": "p1_pairs_manifest_flux2_klein.csv",
+      "status": "OK"
+    },
+    {
+      "member": "movq_k22",
+      "lineage": "vq_movq_4ch",
+      "precision": "fp32",
+      "written": 4100,
+      "already_done": 0,
+      "failures": [],
+      "manifest": "p1_pairs_manifest_movq_k22.csv",
+      "status": "OK"
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "run_id": "bank_6_far_seed0",
+  "protocol": "bank_6_far",
+  "seed": 0,
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "crop": 320,
+  "active_members": [
+    "dcae",
+    "flux",
+    "flux2_klein",
+    "qwen_image",
+    "realesrgan_x4",
+    "sd15",
+    "sd21",
+    "sd35",
+    "sd_ft_ema"
+  ],
+  "excluded_lineages": [
+    "vq_movq_4ch",
+    "kl_4ch_sdxl"
+  ],
+  "lora": {
+    "target_modules": [
+      "k_proj",
+      "o_proj",
+      "q_proj",
+      "v_proj"
+    ],
+    "params_trainable": 589824,
+    "params_total": 86250240,
+    "trainable_pct": 0.6839
+  },
+  "batch": 16,
+  "batch_plan": {
+    "pairs": 6,
+    "reals": 8,
+    "reconstruction_fakes": 6,
+    "gen_matched_fakes": 2
+  },
+  "optimiser": {
+    "lr": 0.0001,
+    "weight_decay": 0.01,
+    "warmup_steps": 300,
+    "schedule": "cosine"
+  },
+  "step_budget": {
+    "allowance_hours": 2.25,
+    "measured_step_seconds": 0.0,
+    "steps": 6000,
+    "ceiling": 6000,
+    "undertrained": false,
+    "min_steps_per_run": 2000
+  },
+  "mode": "train",
+  "status": "OK",
+  "mode_detail": "P3 recipe: the fixed-steps schedule stopped at --stop-at; held-out scored per image at the final step",
+  "runs_config": "p3_runs.yaml",
+  "fixed_steps": 6000,
+  "schedule_steps": 6000,
+  "stop_at": 5000,
+  "excluded_members": [],
+  "heldout_scores": "p3_heldout_scores/bank_6_far_seed0_step_05000.csv",
+  "heldout_every": 500,
+  "held_out_lineages": [
+    "vq_movq_4ch",
+    "kl_4ch_sdxl"
+  ],
+  "held_out_members": [
+    "movq_k22",
+    "sdxl",
+    "sdxl_fp16fix"
+  ],
+  "heldout_reals": 491,
+  "heldout_reconstructions": 1473,
+  "gen_matched_used": true,
+  "steps_run": 5000,
+  "resumed_from_step": null,
+  "curve": [
+    {
+      "step": 500,
+      "loss": 0.3449,
+      "lr": 9.830306056054858e-05,
+      "val_auc": 0.95831,
+      "val_logloss": 0.26102,
+      "val_tpr_at_1pct_fpr": 0.80859
+    },
+    {
+      "step": 1000,
+      "loss": 0.24237,
+      "lr": 9.331435422236938e-05,
+      "val_auc": 0.97884,
+      "val_logloss": 0.18157,
+      "val_tpr_at_1pct_fpr": 0.9043
+    },
+    {
+      "step": 1500,
+      "loss": 0.18609,
+      "lr": 8.53738462242905e-05,
+      "val_auc": 0.99211,
+      "val_logloss": 0.10876,
+      "val_tpr_at_1pct_fpr": 0.9375
+    },
+    {
+      "step": 2000,
+      "loss": 0.13745,
+      "lr": 7.502266906407107e-05,
+      "val_auc": 0.99573,
+      "val_logloss": 0.09642,
+      "val_tpr_at_1pct_fpr": 0.95312
+    },
+    {
+      "step": 2500,
+      "loss": 0.10872,
+      "lr": 6.296623835905105e-05,
+      "val_auc": 0.99673,
+      "val_logloss": 0.07495,
+      "val_tpr_at_1pct_fpr": 0.94922
+    },
+    {
+      "step": 3000,
+      "loss": 0.05553,
+      "lr": 5.0026179937583685e-05,
+      "val_auc": 0.99813,
+      "val_logloss": 0.05831,
+      "val_tpr_at_1pct_fpr": 0.9707
+    },
+    {
+      "step": 3500,
+      "loss": 0.16287,
+      "lr": 3.708433739663441e-05,
+      "val_auc": 0.99832,
+      "val_logloss": 0.05284,
+      "val_tpr_at_1pct_fpr": 0.96875
+    },
+    {
+      "step": 4000,
+      "loss": 0.16032,
+      "lr": 2.5022675917962868e-05,
+      "val_auc": 0.99854,
+      "val_logloss": 0.05273,
+      "val_tpr_at_1pct_fpr": 0.9707
+    },
+    {
+      "step": 4500,
+      "loss": 0.17756,
+      "lr": 1.4663177798502453e-05,
+      "val_auc": 0.99863,
+      "val_logloss": 0.04886,
+      "val_tpr_at_1pct_fpr": 0.97461
+    },
+    {
+      "step": 5000,
+      "loss": 0.17163,
+      "lr": 6.711825715214315e-06,
+      "val_auc": 0.99866,
+      "val_logloss": 0.04898,
+      "val_tpr_at_1pct_fpr": 0.9707,
+      "heldout_auc": 0.99866,
+      "heldout_auc_by_member": {
+        "movq_k22": 0.99948,
+        "sdxl": 0.9986,
+        "sdxl_fp16fix": 0.9979
+      }
+    }
+  ],
+  "snapshots": [
+    500,
+    1000,
+    1500,
+    2000,
+    2500,
+    3000,
+    3500,
+    4000,
+    4500,
+    5000
+  ],
+  "measured_step_seconds_train_loop": 3.50414,
+  "gpu_hours": 5.485,
+  "checkpoint_every": 500,
+  "checkpoint": "checkpoint.pt",
+  "determinism": "seeds recorded; CUDA nondeterminism means no bit-exactness claim"
+}

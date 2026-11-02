@@ -1,0 +1,46 @@
+{
+  "what": "P2 development panel rebuilt on muhammadadeelshah (P3 uses only this copy)",
+  "source_of_truth": "reports/p2_panel_sets/p2_panel_<view>.csv (committed, with sha256)",
+  "views": [
+    "e3_matched",
+    "e4_wildrf_matched",
+    "e5_chameleon_pipeline",
+    "e7_dda_coco",
+    "e8_evalgen",
+    "t_ctrl_diagnostic"
+  ],
+  "ok": true,
+  "problems": [],
+  "rows_all": 12150,
+  "digest_all": "2e1c192024ec52e42c4e1761afa6fb2e37c0f7a6983f5ff75d1174305550b769",
+  "rows_scoreable": 11775,
+  "digest_scoreable": "bff608c3d8e00ea834532cd541849b4f21de803c8f8e27a55ca5e70424c51116",
+  "expected": {
+    "digest_all": "2e1c192024ec52e42c4e1761afa6fb2e37c0f7a6983f5ff75d1174305550b769",
+    "digest_scoreable": "bff608c3d8e00ea834532cd541849b4f21de803c8f8e27a55ca5e70424c51116"
+  },
+  "by_view": {
+    "e3_matched": 1500,
+    "e4_wildrf_matched": 1500,
+    "e5_chameleon_pipeline": 4000,
+    "e7_dda_coco": 3500,
+    "e8_evalgen": 1250,
+    "t_ctrl_diagnostic": 400
+  },
+  "by_view_label": {
+    "e3_matched/fake": 1000,
+    "e3_matched/real": 500,
+    "e4_wildrf_matched/fake": 751,
+    "e4_wildrf_matched/real": 749,
+    "e5_chameleon_pipeline/fake": 2000,
+    "e5_chameleon_pipeline/real": 2000,
+    "e7_dda_coco/fake": 3000,
+    "e7_dda_coco/real": 500,
+    "e8_evalgen/fake": 1250,
+    "t_ctrl_diagnostic/fake": 200,
+    "t_ctrl_diagnostic/real": 200
+  },
+  "panel_bytes": 2344945736,
+  "verification": "every file re-hashed against the committed sha256 (p2_materialise_panel.materialise_view, unchanged)",
+  "licence": "WildRF research-only, Chameleon academic-only: PRIVATE dataset only (CLAUDE.md section 6c)"
+}

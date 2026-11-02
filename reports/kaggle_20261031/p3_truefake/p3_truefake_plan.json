@@ -1,0 +1,188 @@
+{
+  "what": "P3 TrueFake scoring plan (secondary, descriptive)",
+  "sample": {
+    "path": "reports/truefake/truefake_sample.csv",
+    "sha256": "a8954c2f63e81d95173cbec99e3f7c1ee2dd3d49527fac5ff7075de5e1ac8fd6"
+  },
+  "manifest": {
+    "path": "reports/truefake/truefake_fetch_manifest.csv",
+    "sha256": "f8dd9adadf93ae9ee6e890eb79ef147ce3f58f24ea5cf638a7995f0df6338c54"
+  },
+  "models": {
+    "s2b_seed0": {
+      "id": "s2b_seed0",
+      "kind": "snapshot",
+      "protocol": "s2b",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/s2b_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/s2b_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-train/Implementation/thesis_dbp/outputs/p3/s2/s2b_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "6b8c6e68d9a6458e7a24084acb0ec99c9e4bc05fcec3a03b5dca29c8e1f751b1",
+      "head_sha256": "4d41d09a2088ae0b3d0b93970f8e7b5b7b2fcca845ed4f42202aecb735085e70",
+      "snapshot_sha256": "37b6aeb09e23991c46839c2ad490a5b265cdf701b6d8eb5d878df33cf842d464",
+      "recorded": [
+        "head_sha256",
+        "lora_sha256"
+      ]
+    },
+    "s2b_deg_p35_seed0": {
+      "id": "s2b_deg_p35_seed0",
+      "kind": "snapshot",
+      "protocol": "s2b_deg_p35",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "tune",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-tune/Implementation/thesis_dbp/outputs/p3/s2/s2b_deg_p35_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-tune/Implementation/thesis_dbp/outputs/p3/s2/s2b_deg_p35_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-tune/Implementation/thesis_dbp/outputs/p3/s2/s2b_deg_p35_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "7658a77b36cae1b14015bda61d2bbbb1708b236e7e695641bcfe0ce1819118ee",
+      "head_sha256": "80fe4a481d1d7c5761f4b4c233f187226a40bb48e927a78d2905fe18c9215283",
+      "snapshot_sha256": "afb429a2b8be0b313c7ff2a6871147f6d47dbd3e936c9bfa04476f5023f0cab6",
+      "recorded": [
+        "head_sha256",
+        "lora_sha256"
+      ]
+    },
+    "s2d_p35_seed0": {
+      "id": "s2d_p35_seed0",
+      "kind": "snapshot",
+      "protocol": "s2d_p35",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "s2d",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp/outputs/p3/s2/s2d_p35_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp/outputs/p3/s2/s2d_p35_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp/outputs/p3/s2/s2d_p35_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "d7148267c2457daa3585162c38abc8dacfdada4f4fc05b82441f2829ade51689",
+      "head_sha256": "638447e6b41608796c27d48d29ddb59927fbf85ba1ffc9d4b6fcac20d8077b27",
+      "snapshot_sha256": "8356ef385d43193b7e72d615cb7292f4704b7a3d2e32ab45877b28a1fcee8449",
+      "recorded": [
+        "head_sha256",
+        "lora_sha256"
+      ]
+    },
+    "full_bank_seed0": {
+      "id": "full_bank_seed0",
+      "kind": "lora_head",
+      "protocol": "full_bank",
+      "seed": 0,
+      "runs_config": "configs/p2_runs.yaml",
+      "step": null,
+      "source": "p2ref",
+      "weights": "/kaggle/input/datasets/muhammadadeelshah/dbp-p2-reference-models/full_bank_seed0",
+      "lora": "/kaggle/input/datasets/muhammadadeelshah/dbp-p2-reference-models/full_bank_seed0/lora",
+      "head": "/kaggle/input/datasets/muhammadadeelshah/dbp-p2-reference-models/full_bank_seed0/head.pt",
+      "lora_sha256": "4cd74c92a2c1ca4f387a44554205fd2821fa09fbaa429c65d05635c7961a6082",
+      "head_sha256": "ed47b1400fc1c6690e4ac3dc9bf2c54f50ce34a8e76d1add6342f919ba563806",
+      "recorded": [
+        "head_sha256",
+        "lora_sha256"
+      ]
+    }
+  },
+  "staged": {
+    "local_root": "/tmp/dbp_p3_truefake_local",
+    "files": 16000,
+    "bytes": 8611966656,
+    "gb": 8.021,
+    "by_source": {
+      "coco": {
+        "files": 16000,
+        "bytes": 8611966656
+      }
+    },
+    "workers": 16,
+    "free_gb_before": 1048.75,
+    "margin_gb": 2.0,
+    "memory_gb_before": {
+      "MemTotal": 31.35,
+      "MemAvailable": 29.67,
+      "Cached": 4.83
+    },
+    "stat_seconds": 3.1,
+    "n_missing": 0,
+    "missing": [],
+    "seconds": 121.9,
+    "files_per_s": 131.2,
+    "mb_per_s": 67.4,
+    "verified": 16000,
+    "already_local": 0,
+    "n_sha256_mismatch": 0,
+    "sha256_mismatch": [],
+    "memory_gb_after": {
+      "MemTotal": 31.35,
+      "MemAvailable": 29.57,
+      "Cached": 27.92
+    },
+    "free_gb_after": 1040.7,
+    "ok": true,
+    "reason": "",
+    "sample_root": "/kaggle/input/notebooks/muhammadadeelshah/truefake-fetch/truefake_sample"
+  },
+  "disjointness": {
+    "phash_bits": 6,
+    "pools": {
+      "Real/FFHQ": {
+        "ids": 1000,
+        "dropped_ids": 0
+      },
+      "Real/FORLAB": {
+        "ids": 1000,
+        "dropped_ids": 0
+      }
+    },
+    "matched": {},
+    "min_distance": 10,
+    "versions_checked": 7999,
+    "references": {
+      "t_real": 2417,
+      "open_images_train": 3600,
+      "sha256": 12034,
+      "phash": 12034,
+      "coco_originals": {
+        "originals": 2417,
+        "hashed": 2417,
+        "missing": [],
+        "sha256_mismatch": [],
+        "n_missing": 0,
+        "n_sha256_mismatch": 0
+      }
+    }
+  },
+  "list": {
+    "path": "/kaggle/working/Implementation/thesis_dbp/reports/p3_truefake_list.csv",
+    "rows": 16000,
+    "sha256": "6c3002e10c46058bf08267576966d6dee959fddc732577a794234beeb28fa1df",
+    "dropped_members": 0,
+    "too_small_members": 0,
+    "too_small": [],
+    "unreadable_members": 1,
+    "unreadable": [
+      {
+        "member": "TrueFake/PreSocial/Real/FORLAB/09258.jpg",
+        "error": "OSError: image file is truncated (35 bytes not processed)"
+      }
+    ],
+    "scored_members": 15999
+  },
+  "stage": "truefake",
+  "due": [
+    "s2b_seed0",
+    "s2b_deg_p35_seed0",
+    "s2d_p35_seed0",
+    "full_bank_seed0"
+  ],
+  "carried": [],
+  "jobs": [
+    "0:s2b_seed0,s2d_p35_seed0",
+    "1:s2b_deg_p35_seed0,full_bank_seed0"
+  ],
+  "local_root": "/tmp/dbp_p3_truefake_local",
+  "ok": true,
+  "problems": []
+}

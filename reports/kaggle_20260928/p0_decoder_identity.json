@@ -1,0 +1,42 @@
+{
+  "device": "cuda",
+  "crops": [
+    512,
+    1024
+  ],
+  "smoke_images": {
+    "512": "astronaut",
+    "1024": "retina"
+  },
+  "diffusers_api_check": {
+    "AutoencoderKLOutput.latent_dist": true,
+    "DiagonalGaussianDistribution.mode": true,
+    "DecoderOutput.sample": true,
+    "EncoderOutput.latent": true,
+    "VQEncoderOutput.latents": true,
+    "diffusers.AutoencoderKLFlux2": true,
+    "diffusers.AutoencoderKLQwenImage": true,
+    "diffusers.VQModel": true
+  },
+  "decoder_state_dict_sha256": {
+    "sd15": "d91d70b6fd5354e54a4268b673a04e6eb9df589ea5fbb40568cdfed3665599ea",
+    "sd21": "71cd356c763df913b5c3bb7956dd1ca5ebddd019f3417f020ce32cd5c51c4a76",
+    "sd_ft_ema": "d6d409e14f916e93e95f78277692f7b0831f6d0eeddf3d1f9972d9192de29433",
+    "sd_ft_mse": "71cd356c763df913b5c3bb7956dd1ca5ebddd019f3417f020ce32cd5c51c4a76",
+    "sdxl": "75a1d74d11a20d97384533095ce012157a49329a35c3c87d64902ca2d353bb0b",
+    "sdxl_fp16fix": "a1d9cb63f12eb0ba71e58b38d8b7cfaf40aff482cc2ec76c7addd5928530b352",
+    "sd35": "01fc6dcbc4acae882fb7306e1975f3462e68c71b2faf08dae868c4e56f2fc2e5",
+    "flux": "437cf47c90a5a29ed7ba57af42058cd598c9575aa257bb39becbb270b5f01971",
+    "dcae": "08ba73b3c22b004f05336e6c4c59293f12435c75fc84992d5458ea8a2b4506ba",
+    "flux2_klein": "d7f9de3c8b87940e8a5faa04fce5b5a573ed6b91d5d993d50e717ae9f718a59c",
+    "qwen_image": "38cf9058814795251439357c85d1ab1c31edd4de7d9a4f249f773e5f63e05311",
+    "movq_k22": "78781dae12e5d591ce869c30390e0adeb47cb4fdcfadca18d7c780f92660567d"
+  },
+  "byte_identical_decoder_groups": [
+    [
+      "sd21",
+      "sd_ft_mse"
+    ]
+  ],
+  "note": "Members listed in the same group share byte-identical decoder weights and are therefore ONE lineage, not two, for the leave-one-lineage-out protocol."
+}

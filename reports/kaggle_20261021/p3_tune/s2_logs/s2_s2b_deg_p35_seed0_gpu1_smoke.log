@@ -1,0 +1,44 @@
+$ /usr/bin/python3 -u /kaggle/working/Implementation/thesis_dbp/scripts/p2_train_s2.py --protocol s2b_deg_p35 --seed 0 --root /kaggle/working/p1 --pairs-manifest /kaggle/input/datasets/muhammadadeelshah/dbp-p2-s2-inputs/p1_pairs_manifest.csv --splits /kaggle/input/datasets/muhammadadeelshah/dbp-p2-s2-inputs/p2_splits.csv --device cuda --out-dir /tmp/dbp_p3_tune_smoke/smoke_s2b_deg_p35_seed0_gpu1 --reports-dir /tmp/dbp_p3_tune_smoke/smoke_s2b_deg_p35_seed0_gpu1 --smoke 2 --runs-config=configs/p3_runs.yaml --fixed-steps=6000 --stop-at=5000 --heldout-every=500 --checkpoint-every=500 --val-pairs=512
+2026-10-21 19:28:44 INFO    p2_train_s2 | run s2b_deg_p35 (S2-B+deg candidate, chain probability p = 0.35 (half))
+  excluded lineages : none
+  excluded members  : none
+  trained on        : sd15, sd21, sd_ft_ema, sdxl, sdxl_fp16fix, sd35, flux, dcae, realesrgan_x4, flux2_klein, qwen_image, movq_k22
+  comparable to     : nothing published
+  evaluation crop   : 320 x1
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2572.28it/s]
+2026-10-21 19:28:51 INFO    p2_train_s2 | LoRA on ['k_proj', 'o_proj', 'q_proj', 'v_proj']: 589824 trainable of 86250240 (0.684%)
+2026-10-21 19:28:52 INFO    p2_train_s2 | D-039: 1068 pair row(s) of flagged reals excluded
+2026-10-21 19:28:52 INFO    p2_train_s2 | diagnostic-only (t_ctrl): 19128 pair row(s) withheld from S2 training (B1)
+2026-10-21 19:28:52 INFO    p2_train_s2 | protocol data: 23112 train pair rows over 1926 reals, 5892 val pair rows, 1988/500 gen_matched
+2026-10-21 19:28:52 INFO    p2_train_s2 | batch plan: {'pairs': 6, 'reals': 8, 'reconstruction_fakes': 6, 'gen_matched_fakes': 2}
+2026-10-21 19:28:52 INFO    p2_train_s2 | degradation: chain probability 0.35 per pair (P3 section 4b)
+2026-10-21 19:28:52 INFO    p2_train_s2 | SMOKE: 2 step(s), then save, reload and compare
+/usr/local/lib/python3.13/dist-packages/torch/autograd/graph.py:869: UserWarning: Memory Efficient attention defaults to a non-deterministic algorithm. To explicitly enable determinism call torch.use_deterministic_algorithms(True, warn_only=False). (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/attention_backward.cu:900.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad9128a-01eaa4e75b2298d92487634c;1a271005-3e21-497b-981c-762681017f5e)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/peft/utils/save_and_load.py:438: UserWarning: Could not find a config file in facebook/dinov3-vitb16-pretrain-lvd1689m - will assume that the vocabulary was not modified.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad9128b-0921185d1b0da3722cbd9d4e;8ede7c65-97ef-432c-a3d0-88b409d16283)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-21 19:29:15 INFO    p2_train_s2 | step     2  lr 3.333e-07  loss 0.7285  val AUC 0.5121  held-out AUC None 
+2026-10-21 19:29:15 INFO    p2_train_s2 |   checkpoint at step 2 (0.00 GPU-h so far)
+/usr/local/lib/python3.13/dist-packages/peft/utils/other.py:1496: UserWarning: Unable to fetch remote file due to the following error 401 Client Error. (Request ID: Root=1-6ad9128b-5888ecd012c7dfeb2d0ece33;a25e1dd3-953d-4f51-88c9-ddc4be637258)
+
+Cannot access gated repo for url https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m/resolve/main/config.json.
+Access to model facebook/dinov3-vitb16-pretrain-lvd1689m is restricted. You must have access to it and be authenticated to access it. Please log in. - silently ignoring the lookup for the file config.json in facebook/dinov3-vitb16-pretrain-lvd1689m.
+  warnings.warn(
+2026-10-21 19:29:15 INFO    p2_train_s2 | SMOKE PASSED: 2 step(s), checkpoint saved, reloaded and identical
+$ /usr/bin/python3 -u /kaggle/working/Implementation/thesis_dbp/scripts/p2_s2_infer.py --protocol s2b_deg_p35 --seed 0 --root /kaggle/working/p1 --device cuda --out-dir /tmp/dbp_p3_tune_smoke/smoke_s2b_deg_p35_seed0_gpu1 --reports-dir /tmp/dbp_p3_tune_smoke/smoke_s2b_deg_p35_seed0_gpu1 --panel-root /kaggle/input/notebooks/muhammadadeelshah/dbp-p3-dev-panel/dev_panel --list panel=/kaggle/working/Implementation/thesis_dbp/reports/p3_tune_lists/p3_tune_panel_rows.csv --list val=/kaggle/working/Implementation/thesis_dbp/reports/p3_tune_lists/p3_tune_val_reals.csv --limit 2 --batch=32 --runs-config=configs/p3_runs.yaml
+2026-10-21 19:29:44 INFO    p2_s2_infer | HF_TOKEN present: True
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2708.87it/s]
+2026-10-21 19:29:51 INFO    p2_s2_infer | s2b_deg_p35_seed0: selected model from /tmp/dbp_p3_tune_smoke/smoke_s2b_deg_p35_seed0_gpu1/s2b_deg_p35_seed0, crop 320
+2026-10-21 19:29:52 INFO    p2_s2_infer | panel: 2 row(s) in 0.5 s (0.2273 s/image) -> panel.csv
+2026-10-21 19:29:52 INFO    p2_s2_infer | val: 2 row(s) in 0.1 s (0.0288 s/image) -> val.csv
+2026-10-21 19:29:52 INFO    p2_s2_infer | wrote p2_s2_scores_s2b_deg_p35_seed0.json

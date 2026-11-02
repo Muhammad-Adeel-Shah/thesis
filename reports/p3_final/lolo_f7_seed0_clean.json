@@ -1,0 +1,49 @@
+{
+  "model": "lolo_f7_seed0",
+  "stage": "clean",
+  "protocol": "lolo_f7",
+  "seed": 0,
+  "step": 5000,
+  "kind": "snapshot",
+  "snapshot_sha256": "8a27ee16a51b4bd576296b31c2046de785b880648574fe029261c2e45c5b0961",
+  "lora_sha256": "4766bcf6f1607e9cf155e7ae83c35a8cfd1e4d7f5b9e9cdf240dbd0ebde25e92",
+  "head_sha256": "b350e97cda6b789c97cffd849073e36223507cbd7a0161606fc8d15cd35a104d",
+  "crop": 320,
+  "crop_policy": "centre",
+  "score": "head logit",
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "dry_run_random_init": false,
+  "pillow": "13.0.0",
+  "conditions": {
+    "clean": null
+  },
+  "limit": null,
+  "lists": {
+    "panel_b": {
+      "rows": 9405,
+      "condition": "clean",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/lolo_f7_seed0/clean/panel_b.csv",
+      "sha256": "548dad63f217d46db78cfd9388f8481a07205d129edc9e54fd66fcce50c19d02",
+      "seconds": 176.9,
+      "seconds_per_image": 0.01881
+    },
+    "luma": {
+      "rows": 700,
+      "condition": "clean",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/lolo_f7_seed0/clean/luma.csv",
+      "sha256": "9dada383e7ec7797e56c319b2db20b846f27739477abb65c52dcfc073f516920",
+      "seconds": 11.9,
+      "seconds_per_image": 0.01695
+    },
+    "threshold_reals": {
+      "rows": 891,
+      "condition": "clean",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/lolo_f7_seed0/clean/threshold_reals.csv",
+      "sha256": "fab9e81b1ae9ba0850c215292eb68f9189036503550a55195d30db8a96cc8892",
+      "seconds": 14.3,
+      "seconds_per_image": 0.01603
+    }
+  },
+  "panel_b_digest": "267d9fde75d76a23640674fa2fff7e454de23971b8e296323ca4762507c2a551"
+}

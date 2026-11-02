@@ -1,0 +1,24 @@
+{
+  "label": "EXPLORATORY (X1 format control)",
+  "list": "x1_format_control_images.csv",
+  "rows": 14205,
+  "sha256": "889bc1290fd3c778ed7e8fb5ca325d816c634ae14f732ef74773b3e5283d660b",
+  "counts": {
+    "fit": 3101,
+    "tune": 813,
+    "val_reals": 491,
+    "val_gen_matched": 500,
+    "val_reconstructions": 5892,
+    "e7_panel": 3408,
+    "total": 14205
+  },
+  "by_root": {
+    "corpus": 10797,
+    "panel": 3408
+  },
+  "reencode": {
+    "format": "JPEG",
+    "quality": 95,
+    "subsampling": "4:4:4"
+  }
+}

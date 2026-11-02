@@ -1,0 +1,26 @@
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2396.53it/s]
+2026-10-27 19:13:16 INFO    p3_final_score | s2d_p35_seed0 robust jpeg95: 8655 rows in 246.9 s (0.0285 s/image)
+2026-10-27 19:17:08 INFO    p3_final_score | s2d_p35_seed0 robust jpeg75: 8655 rows in 231.9 s (0.0268 s/image)
+2026-10-27 19:21:00 INFO    p3_final_score | s2d_p35_seed0 robust jpeg50: 8655 rows in 231.3 s (0.0267 s/image)
+2026-10-27 19:25:01 INFO    p3_final_score | s2d_p35_seed0 robust jpeg30: 8655 rows in 241.8 s (0.0279 s/image)
+2026-10-27 19:40:53 INFO    p3_final_score | s2d_p35_seed0 robust webp90: 8655 rows in 951.9 s (0.1100 s/image)
+2026-10-27 19:54:20 INFO    p3_final_score | s2d_p35_seed0 robust webp70: 8655 rows in 807.2 s (0.0933 s/image)
+2026-10-27 20:06:57 INFO    p3_final_score | s2d_p35_seed0 robust webp50: 8655 rows in 757.0 s (0.0875 s/image)
+2026-10-27 20:13:17 INFO    p3_final_score | s2d_p35_seed0 robust resize075: 8655 rows in 380.0 s (0.0439 s/image)
+2026-10-27 20:19:03 INFO    p3_final_score | s2d_p35_seed0 robust resize050: 8655 rows in 345.1 s (0.0399 s/image)
+2026-10-27 20:25:32 INFO    p3_final_score | s2d_p35_seed0 robust blur05: 8655 rows in 389.8 s (0.0450 s/image)
+2026-10-27 20:32:07 INFO    p3_final_score | s2d_p35_seed0 robust blur1: 8655 rows in 394.6 s (0.0456 s/image)
+2026-10-27 20:37:52 INFO    p3_final_score | s2d_p35_seed0 robust blur2: 8655 rows in 344.9 s (0.0398 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2654.85it/s]
+2026-10-27 20:41:22 INFO    p3_final_score | p_a_sd1_seed0 robust jpeg95: 8655 rows in 209.1 s (0.0242 s/image)
+2026-10-27 20:44:46 INFO    p3_final_score | p_a_sd1_seed0 robust jpeg75: 8655 rows in 204.5 s (0.0236 s/image)
+2026-10-27 20:48:04 INFO    p3_final_score | p_a_sd1_seed0 robust jpeg50: 8655 rows in 198.0 s (0.0229 s/image)
+2026-10-27 20:51:21 INFO    p3_final_score | p_a_sd1_seed0 robust jpeg30: 8655 rows in 197.0 s (0.0228 s/image)
+2026-10-27 21:01:17 INFO    p3_final_score | p_a_sd1_seed0 robust webp90: 8655 rows in 595.3 s (0.0688 s/image)
+2026-10-27 21:09:37 INFO    p3_final_score | p_a_sd1_seed0 robust webp70: 8655 rows in 500.5 s (0.0578 s/image)
+2026-10-27 21:17:42 INFO    p3_final_score | p_a_sd1_seed0 robust webp50: 8655 rows in 484.8 s (0.0560 s/image)
+2026-10-27 21:22:10 INFO    p3_final_score | p_a_sd1_seed0 robust resize075: 8655 rows in 267.6 s (0.0309 s/image)
+2026-10-27 21:26:20 INFO    p3_final_score | p_a_sd1_seed0 robust resize050: 8655 rows in 250.4 s (0.0289 s/image)
+2026-10-27 21:30:58 INFO    p3_final_score | p_a_sd1_seed0 robust blur05: 8655 rows in 277.8 s (0.0321 s/image)
+2026-10-27 21:35:35 INFO    p3_final_score | p_a_sd1_seed0 robust blur1: 8655 rows in 276.8 s (0.0320 s/image)
+2026-10-27 21:40:14 INFO    p3_final_score | p_a_sd1_seed0 robust blur2: 8655 rows in 278.8 s (0.0322 s/image)

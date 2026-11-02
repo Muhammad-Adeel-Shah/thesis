@@ -1,0 +1,4 @@
+CPU: Intel(R) Xeon(R) CPU @ 2.00GHz | logical cores: 4
+index, name, clocks.current.sm [MHz], clocks.max.sm [MHz], clocks.current.memory [MHz], clocks.max.memory [MHz], power.draw [W], power.limit [W], temperature.gpu
+0, Tesla T4, 300 MHz, 1590 MHz, 405 MHz, 5001 MHz, 10.91 W, 70.00 W, 44
+1, Tesla T4, 300 MHz, 1590 MHz, 405 MHz, 5001 MHz, 11.30 W, 70.00 W, 45

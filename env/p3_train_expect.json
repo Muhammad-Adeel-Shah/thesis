@@ -1,0 +1,71 @@
+{
+  "stage": "p3_train (non-LOLO S2 runs, two per session, one per T4; LOLO rescoring in session 1)",
+  "imports": [
+    "peft",
+    "transformers",
+    "safetensors",
+    "huggingface_hub",
+    "PIL"
+  ],
+  "gpus": 2,
+  "hf_token": true,
+  "corpus": {
+    "reals": 4100,
+    "generated": 2488,
+    "pairs": 49200
+  },
+  "gen_matched": 2488,
+  "inputs": {
+    "p1_pairs_manifest.csv": {
+      "sha256": "b19b7f5acee49d8848658b5b78b6398d9a1511ae72e688fc81379705aa99c65c",
+      "rows": 49200
+    },
+    "p2_splits.csv": {
+      "sha256": "cc6c3e65f5b0f5a7b966c772fedbac46871006d12a2c82e58ffa17be30cdf10d",
+      "rows": 55788
+    },
+    "p2_splits_summary.json": {
+      "sha256": "be25a948b2926fe883791426509769afd7c85bf2bdbfb4ef9cbe3d79ddda5953"
+    },
+    "p1_gen_manifest.csv": {
+      "sha256": "c86935d39177ba0982b6ff12b129cce872c3e388281406535473a579a217635a",
+      "rows": 2488
+    }
+  },
+  "nstar": "reports/p3_nstar.json",
+  "nstar_sha256": "de30996d05bc0e4fb0408808cc9d4b97b27132d125298d09c991623a6c9ab678",
+  "queue": [
+    "bank_1:0",
+    "s2b:0",
+    "bank_2_near:0",
+    "bank_2_far:0",
+    "bank_4_near:0",
+    "bank_4_far:0",
+    "bank_6_near:0",
+    "bank_6_far:0",
+    "bank_1l:0",
+    "s2b:1"
+  ],
+  "runs_per_session": 2,
+  "devices": "0,1",
+  "train_args": [
+    "--runs-config=configs/p3_runs.yaml",
+    "--fixed-steps=6000",
+    "--stop-at=5000",
+    "--heldout-every=500",
+    "--checkpoint-every=500",
+    "--val-pairs=512"
+  ],
+  "smoke_steps": 2,
+  "smoke_deadline_hours": 0.75,
+  "deadline_hours": 9.5,
+  "rescore_smoke_deadline_hours": 0.5,
+  "rescore_deadline_hours": 1.0,
+  "poll_seconds": 30,
+  "expected": {
+    "per_session_wall_hours": "about 1.5-1.7 (ESTIMATED from MEASURED rates)",
+    "session_1_extra": "LOLO rescoring about 0.1-0.15 h (ESTIMATED) on GPU 0 after training",
+    "quota": "Kaggle bills session wall time (I-042 closed 2026-10-17): 1 quota hour per session hour",
+    "basis": "training 5,000 steps x 0.781-0.812 s/step (MEASURED train-loop rate, LOLO sessions 2-4, two runs in parallel on T4 x2) = 1.08-1.13 h; in-protocol validation 10 x 1,024 images x 0.0267 s (S1 rate) = 0.08 h; BANK-1 final held-out scoring about 5,900 images x 0.0267 s = 0.04 h; setup about 405 s MEASURED (LOLO session 2) + smoke about 0.04-0.06 h MEASURED (LOLO sessions 1-4); LOLO rescoring 8 folds, 3,928 real scorings + 5,892 reconstructions = 9,820 images x 0.0267 s = 0.07 h, plus 8 backbone loads."
+  }
+}

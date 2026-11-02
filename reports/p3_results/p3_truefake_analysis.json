@@ -1,0 +1,3124 @@
+{
+  "what": "P3 TrueFake, descriptive (P3_PLAN.md, rule fixed 2026-10-20)",
+  "caveats": [
+    "Secondary and descriptive: no decision rule, no hypothesis.",
+    "Both TrueFake real pools are Flickr, the platform of our training reals, so neither supports an FPR claim; FORLAB's FPR is reported descriptively only.",
+    "StyleGAN fakes are faces, so StyleGAN vs FFHQ is the content-matched comparison; any comparison against FORLAB also reflects content.",
+    "The platforms downscale (720/1200 px wide, <= 800 px tall), so the fixed 320 centre crop covers a different extent of the scene pre- and post-share.",
+    "FFHQ is non-commercial and FORLAB's terms are NOT-VERIFIED: no deployment claim (CLAUDE.md section 6c).",
+    "Twitter left most StableDiffusion1.5 / StableDiffusion2 fakes byte-identical to their pre-share file (counted in twitter_identical): their Twitter Delta is near zero, not exactly zero, because the reals were re-encoded."
+  ],
+  "list_sha256": "6c3002e10c46058bf08267576966d6dee959fddc732577a794234beeb28fa1df",
+  "models": {
+    "s2b_seed0": {
+      "scores_sha256": "5cbb5f05b2bf2be51718c5a2acae8e902e0f3264692cb097832c61b0e428dd1f",
+      "rows": 15999,
+      "lora_sha256": "6b8c6e68d9a6458e7a24084acb0ec99c9e4bc05fcec3a03b5dca29c8e1f751b1",
+      "head_sha256": "4d41d09a2088ae0b3d0b93970f8e7b5b7b2fcca845ed4f42202aecb735085e70",
+      "snapshot_sha256": "37b6aeb09e23991c46839c2ad490a5b265cdf701b6d8eb5d878df33cf842d464"
+    },
+    "s2b_deg_p35_seed0": {
+      "scores_sha256": "4b2481e86cae2d61064e6d1e0a7a028b17d1cf32aa03fc1585dc752e7cfb5d4b",
+      "rows": 15999,
+      "lora_sha256": "7658a77b36cae1b14015bda61d2bbbb1708b236e7e695641bcfe0ce1819118ee",
+      "head_sha256": "80fe4a481d1d7c5761f4b4c233f187226a40bb48e927a78d2905fe18c9215283",
+      "snapshot_sha256": "afb429a2b8be0b313c7ff2a6871147f6d47dbd3e936c9bfa04476f5023f0cab6"
+    },
+    "s2d_p35_seed0": {
+      "scores_sha256": "ddaf6fb6e0bf9d16fe204770ccadf4bc14384cd17ff06c0c85a20d3518ddb5fe",
+      "rows": 15999,
+      "lora_sha256": "d7148267c2457daa3585162c38abc8dacfdada4f4fc05b82441f2829ade51689",
+      "head_sha256": "638447e6b41608796c27d48d29ddb59927fbf85ba1ffc9d4b6fcac20d8077b27",
+      "snapshot_sha256": "8356ef385d43193b7e72d615cb7292f4704b7a3d2e32ab45877b28a1fcee8449"
+    },
+    "full_bank_seed0": {
+      "scores_sha256": "3d74c9272f6a03e9454454687926cde4f2d502b859f819ffa387d0f3ebe489f8",
+      "rows": 15999,
+      "lora_sha256": "4cd74c92a2c1ca4f387a44554205fd2821fa09fbaa429c65d05635c7961a6082",
+      "head_sha256": "ed47b1400fc1c6690e4ac3dc9bf2c54f50ce34a8e76d1add6342f919ba563806",
+      "snapshot_sha256": null
+    }
+  },
+  "bootstrap": {
+    "resamples": 2000,
+    "seed": 2026,
+    "level": 0.95,
+    "paired": "one id draw per group per resample, shared by every share and model; reals within their pool, fakes within their slice"
+  },
+  "counts": {
+    "kept_ids": {
+      "FFHQ": 1000,
+      "FLUX.1": 250,
+      "FORLAB": 999,
+      "StableDiffusion1.5": 250,
+      "StableDiffusion2": 250,
+      "StableDiffusion3": 250,
+      "StableDiffusionXL": 250,
+      "StyleGAN": 250,
+      "StyleGAN2": 250,
+      "StyleGAN3": 250
+    },
+    "excluded": {
+      "dropped": {},
+      "too_small": {},
+      "unreadable": {
+        "FORLAB": 1
+      }
+    },
+    "twitter_identical": {
+      "FLUX.1": 0,
+      "StableDiffusion1.5": 249,
+      "StableDiffusion2": 250,
+      "StableDiffusion3": 0,
+      "StableDiffusionXL": 0,
+      "StyleGAN": 0,
+      "StyleGAN2": 0,
+      "StyleGAN3": 0,
+      "FFHQ": 0,
+      "FORLAB": 0
+    }
+  },
+  "macros": {
+    "diffusion": [
+      "FLUX.1",
+      "StableDiffusion1.5",
+      "StableDiffusion2",
+      "StableDiffusion3",
+      "StableDiffusionXL"
+    ],
+    "stylegan": [
+      "StyleGAN",
+      "StyleGAN2",
+      "StyleGAN3"
+    ]
+  },
+  "forlab_fpr_at_k0_union_threshold": {
+    "note": "descriptive only, never a claim (both pools are Flickr)",
+    "target_fpr": 0.05,
+    "threshold_reals": 891,
+    "by_model": {
+      "s2b_seed0": {
+        "threshold": 2.011841,
+        "PreSocial": 0.19019019019019018,
+        "Facebook": 0.2872872872872873,
+        "Telegram": 0.08608608608608609,
+        "Twitter": 0.0970970970970971
+      },
+      "s2b_deg_p35_seed0": {
+        "threshold": 1.587504,
+        "PreSocial": 0.28128128128128127,
+        "Facebook": 0.35035035035035034,
+        "Telegram": 0.11711711711711711,
+        "Twitter": 0.11911911911911911
+      },
+      "s2d_p35_seed0": {
+        "threshold": 0.392948,
+        "PreSocial": 0.15815815815815815,
+        "Facebook": 0.40540540540540543,
+        "Telegram": 0.08708708708708708,
+        "Twitter": 0.0920920920920921
+      },
+      "full_bank_seed0": {
+        "threshold": 2.484523,
+        "PreSocial": 0.17117117117117117,
+        "Facebook": 0.3133133133133133,
+        "Telegram": 0.11011011011011011,
+        "Twitter": 0.10510510510510511
+      }
+    }
+  },
+  "results": {
+    "s2b_seed0": {
+      "auc": {
+        "PreSocial": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.972348,
+              "lower": 0.962777,
+              "upper": 0.981182
+            },
+            "StableDiffusion1.5": {
+              "point": 0.996536,
+              "lower": 0.990528,
+              "upper": 0.999832
+            },
+            "StableDiffusion2": {
+              "point": 0.99274,
+              "lower": 0.98864,
+              "upper": 0.995933
+            },
+            "StableDiffusion3": {
+              "point": 0.999088,
+              "lower": 0.998272,
+              "upper": 0.999716
+            },
+            "StableDiffusionXL": {
+              "point": 0.997928,
+              "lower": 0.994124,
+              "upper": 0.999804
+            },
+            "StyleGAN": {
+              "point": 0.714644,
+              "lower": 0.683773,
+              "upper": 0.745478
+            },
+            "StyleGAN2": {
+              "point": 0.694992,
+              "lower": 0.661792,
+              "upper": 0.729252
+            },
+            "StyleGAN3": {
+              "point": 0.644588,
+              "lower": 0.614179,
+              "upper": 0.675578
+            },
+            "diffusion": {
+              "point": 0.991728,
+              "lower": 0.989035,
+              "upper": 0.994169
+            },
+            "stylegan": {
+              "point": 0.684741,
+              "lower": 0.661303,
+              "upper": 0.708536
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.937962,
+              "lower": 0.918894,
+              "upper": 0.954559
+            },
+            "StableDiffusion1.5": {
+              "point": 0.994114,
+              "lower": 0.985993,
+              "upper": 0.998835
+            },
+            "StableDiffusion2": {
+              "point": 0.982102,
+              "lower": 0.973368,
+              "upper": 0.989142
+            },
+            "StableDiffusion3": {
+              "point": 0.996877,
+              "lower": 0.99483,
+              "upper": 0.998507
+            },
+            "StableDiffusionXL": {
+              "point": 0.994242,
+              "lower": 0.98669,
+              "upper": 0.998323
+            },
+            "StyleGAN": {
+              "point": 0.476865,
+              "lower": 0.438858,
+              "upper": 0.515059
+            },
+            "StyleGAN2": {
+              "point": 0.484236,
+              "lower": 0.441432,
+              "upper": 0.527005
+            },
+            "StyleGAN3": {
+              "point": 0.354735,
+              "lower": 0.323179,
+              "upper": 0.388108
+            },
+            "diffusion": {
+              "point": 0.981059,
+              "lower": 0.976159,
+              "upper": 0.985483
+            },
+            "stylegan": {
+              "point": 0.438612,
+              "lower": 0.412264,
+              "upper": 0.466186
+            }
+          }
+        },
+        "Facebook": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.5803,
+              "lower": 0.537995,
+              "upper": 0.620241
+            },
+            "StableDiffusion1.5": {
+              "point": 0.990052,
+              "lower": 0.980456,
+              "upper": 0.9964
+            },
+            "StableDiffusion2": {
+              "point": 0.9606,
+              "lower": 0.946084,
+              "upper": 0.973564
+            },
+            "StableDiffusion3": {
+              "point": 0.677384,
+              "lower": 0.635203,
+              "upper": 0.716658
+            },
+            "StableDiffusionXL": {
+              "point": 0.94336,
+              "lower": 0.927455,
+              "upper": 0.95726
+            },
+            "StyleGAN": {
+              "point": 0.661444,
+              "lower": 0.625267,
+              "upper": 0.696406
+            },
+            "StyleGAN2": {
+              "point": 0.481896,
+              "lower": 0.44217,
+              "upper": 0.524736
+            },
+            "StyleGAN3": {
+              "point": 0.506644,
+              "lower": 0.468902,
+              "upper": 0.544726
+            },
+            "diffusion": {
+              "point": 0.830339,
+              "lower": 0.816618,
+              "upper": 0.843918
+            },
+            "stylegan": {
+              "point": 0.549995,
+              "lower": 0.523912,
+              "upper": 0.576013
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.571295,
+              "lower": 0.533954,
+              "upper": 0.608254
+            },
+            "StableDiffusion1.5": {
+              "point": 0.983419,
+              "lower": 0.973566,
+              "upper": 0.990903
+            },
+            "StableDiffusion2": {
+              "point": 0.945497,
+              "lower": 0.930173,
+              "upper": 0.959307
+            },
+            "StableDiffusion3": {
+              "point": 0.666695,
+              "lower": 0.630012,
+              "upper": 0.703384
+            },
+            "StableDiffusionXL": {
+              "point": 0.919363,
+              "lower": 0.901475,
+              "upper": 0.935656
+            },
+            "StyleGAN": {
+              "point": 0.643528,
+              "lower": 0.609426,
+              "upper": 0.676102
+            },
+            "StyleGAN2": {
+              "point": 0.499684,
+              "lower": 0.463817,
+              "upper": 0.536944
+            },
+            "StyleGAN3": {
+              "point": 0.515215,
+              "lower": 0.480512,
+              "upper": 0.549283
+            },
+            "diffusion": {
+              "point": 0.817254,
+              "lower": 0.802357,
+              "upper": 0.830753
+            },
+            "stylegan": {
+              "point": 0.552809,
+              "lower": 0.527625,
+              "upper": 0.578933
+            }
+          }
+        },
+        "Telegram": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.826776,
+              "lower": 0.794054,
+              "upper": 0.858018
+            },
+            "StableDiffusion1.5": {
+              "point": 0.995076,
+              "lower": 0.987967,
+              "upper": 0.999412
+            },
+            "StableDiffusion2": {
+              "point": 0.992688,
+              "lower": 0.987151,
+              "upper": 0.996816
+            },
+            "StableDiffusion3": {
+              "point": 0.921272,
+              "lower": 0.900068,
+              "upper": 0.940882
+            },
+            "StableDiffusionXL": {
+              "point": 0.987264,
+              "lower": 0.978807,
+              "upper": 0.993892
+            },
+            "StyleGAN": {
+              "point": 0.699608,
+              "lower": 0.668115,
+              "upper": 0.733373
+            },
+            "StyleGAN2": {
+              "point": 0.627796,
+              "lower": 0.590377,
+              "upper": 0.666835
+            },
+            "StyleGAN3": {
+              "point": 0.66468,
+              "lower": 0.629125,
+              "upper": 0.700584
+            },
+            "diffusion": {
+              "point": 0.944615,
+              "lower": 0.935838,
+              "upper": 0.952915
+            },
+            "stylegan": {
+              "point": 0.664028,
+              "lower": 0.638717,
+              "upper": 0.69132
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.805029,
+              "lower": 0.775895,
+              "upper": 0.833747
+            },
+            "StableDiffusion1.5": {
+              "point": 0.992292,
+              "lower": 0.985417,
+              "upper": 0.997081
+            },
+            "StableDiffusion2": {
+              "point": 0.985393,
+              "lower": 0.978529,
+              "upper": 0.991031
+            },
+            "StableDiffusion3": {
+              "point": 0.898727,
+              "lower": 0.877925,
+              "upper": 0.91763
+            },
+            "StableDiffusionXL": {
+              "point": 0.97445,
+              "lower": 0.964591,
+              "upper": 0.982728
+            },
+            "StyleGAN": {
+              "point": 0.690991,
+              "lower": 0.6612,
+              "upper": 0.719852
+            },
+            "StyleGAN2": {
+              "point": 0.638839,
+              "lower": 0.605602,
+              "upper": 0.673023
+            },
+            "StyleGAN3": {
+              "point": 0.664785,
+              "lower": 0.630938,
+              "upper": 0.695625
+            },
+            "diffusion": {
+              "point": 0.931178,
+              "lower": 0.921914,
+              "upper": 0.939991
+            },
+            "stylegan": {
+              "point": 0.664872,
+              "lower": 0.640207,
+              "upper": 0.689244
+            }
+          }
+        },
+        "Twitter": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.923196,
+              "lower": 0.903276,
+              "upper": 0.94156
+            },
+            "StableDiffusion1.5": {
+              "point": 0.996028,
+              "lower": 0.988676,
+              "upper": 0.999892
+            },
+            "StableDiffusion2": {
+              "point": 0.99328,
+              "lower": 0.988543,
+              "upper": 0.996804
+            },
+            "StableDiffusion3": {
+              "point": 0.968244,
+              "lower": 0.956919,
+              "upper": 0.979004
+            },
+            "StableDiffusionXL": {
+              "point": 0.995972,
+              "lower": 0.993724,
+              "upper": 0.997912
+            },
+            "StyleGAN": {
+              "point": 0.645192,
+              "lower": 0.611335,
+              "upper": 0.681302
+            },
+            "StyleGAN2": {
+              "point": 0.60508,
+              "lower": 0.567682,
+              "upper": 0.644185
+            },
+            "StyleGAN3": {
+              "point": 0.617244,
+              "lower": 0.578834,
+              "upper": 0.654149
+            },
+            "diffusion": {
+              "point": 0.975344,
+              "lower": 0.969919,
+              "upper": 0.980479
+            },
+            "stylegan": {
+              "point": 0.622505,
+              "lower": 0.595995,
+              "upper": 0.648662
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.922819,
+              "lower": 0.905276,
+              "upper": 0.939281
+            },
+            "StableDiffusion1.5": {
+              "point": 0.996256,
+              "lower": 0.99013,
+              "upper": 0.999684
+            },
+            "StableDiffusion2": {
+              "point": 0.991427,
+              "lower": 0.986781,
+              "upper": 0.995047
+            },
+            "StableDiffusion3": {
+              "point": 0.96601,
+              "lower": 0.955595,
+              "upper": 0.976114
+            },
+            "StableDiffusionXL": {
+              "point": 0.993754,
+              "lower": 0.990302,
+              "upper": 0.996617
+            },
+            "StyleGAN": {
+              "point": 0.700496,
+              "lower": 0.671351,
+              "upper": 0.729759
+            },
+            "StyleGAN2": {
+              "point": 0.672432,
+              "lower": 0.640372,
+              "upper": 0.706327
+            },
+            "StyleGAN3": {
+              "point": 0.678062,
+              "lower": 0.645195,
+              "upper": 0.708365
+            },
+            "diffusion": {
+              "point": 0.974053,
+              "lower": 0.968916,
+              "upper": 0.979043
+            },
+            "stylegan": {
+              "point": 0.683664,
+              "lower": 0.659566,
+              "upper": 0.708516
+            }
+          }
+        }
+      },
+      "delta": {
+        "Facebook": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": -0.392048,
+              "lower": -0.430625,
+              "upper": -0.354703
+            },
+            "StableDiffusion1.5": {
+              "point": -0.006484,
+              "lower": -0.010944,
+              "upper": -0.003103
+            },
+            "StableDiffusion2": {
+              "point": -0.03214,
+              "lower": -0.045042,
+              "upper": -0.020663
+            },
+            "StableDiffusion3": {
+              "point": -0.321704,
+              "lower": -0.363713,
+              "upper": -0.282856
+            },
+            "StableDiffusionXL": {
+              "point": -0.054568,
+              "lower": -0.069954,
+              "upper": -0.040657
+            },
+            "StyleGAN": {
+              "point": -0.0532,
+              "lower": -0.08717,
+              "upper": -0.018243
+            },
+            "StyleGAN2": {
+              "point": -0.213096,
+              "lower": -0.24817,
+              "upper": -0.177302
+            },
+            "StyleGAN3": {
+              "point": -0.137944,
+              "lower": -0.173163,
+              "upper": -0.103862
+            },
+            "diffusion": {
+              "point": -0.161389,
+              "lower": -0.17461,
+              "upper": -0.148672
+            },
+            "stylegan": {
+              "point": -0.134747,
+              "lower": -0.160392,
+              "upper": -0.109621
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": -0.366667,
+              "lower": -0.401151,
+              "upper": -0.330706
+            },
+            "StableDiffusion1.5": {
+              "point": -0.010695,
+              "lower": -0.016267,
+              "upper": -0.00589
+            },
+            "StableDiffusion2": {
+              "point": -0.036605,
+              "lower": -0.049842,
+              "upper": -0.024295
+            },
+            "StableDiffusion3": {
+              "point": -0.330182,
+              "lower": -0.367034,
+              "upper": -0.293893
+            },
+            "StableDiffusionXL": {
+              "point": -0.074879,
+              "lower": -0.092282,
+              "upper": -0.05871
+            },
+            "StyleGAN": {
+              "point": 0.166663,
+              "lower": 0.128126,
+              "upper": 0.207832
+            },
+            "StyleGAN2": {
+              "point": 0.015447,
+              "lower": -0.022372,
+              "upper": 0.05614
+            },
+            "StyleGAN3": {
+              "point": 0.16048,
+              "lower": 0.120498,
+              "upper": 0.199048
+            },
+            "diffusion": {
+              "point": -0.163805,
+              "lower": -0.178002,
+              "upper": -0.150529
+            },
+            "stylegan": {
+              "point": 0.114197,
+              "lower": 0.080928,
+              "upper": 0.145901
+            }
+          }
+        },
+        "Telegram": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": -0.145572,
+              "lower": -0.175846,
+              "upper": -0.116679
+            },
+            "StableDiffusion1.5": {
+              "point": -0.00146,
+              "lower": -0.003221,
+              "upper": -0.000236
+            },
+            "StableDiffusion2": {
+              "point": -5.2e-05,
+              "lower": -0.005096,
+              "upper": 0.003852
+            },
+            "StableDiffusion3": {
+              "point": -0.077816,
+              "lower": -0.098732,
+              "upper": -0.058358
+            },
+            "StableDiffusionXL": {
+              "point": -0.010664,
+              "lower": -0.018765,
+              "upper": -0.004484
+            },
+            "StyleGAN": {
+              "point": -0.015036,
+              "lower": -0.042889,
+              "upper": 0.013205
+            },
+            "StyleGAN2": {
+              "point": -0.067196,
+              "lower": -0.094689,
+              "upper": -0.039126
+            },
+            "StyleGAN3": {
+              "point": 0.020092,
+              "lower": -0.008597,
+              "upper": 0.048609
+            },
+            "diffusion": {
+              "point": -0.047113,
+              "lower": -0.054996,
+              "upper": -0.039577
+            },
+            "stylegan": {
+              "point": -0.020713,
+              "lower": -0.041734,
+              "upper": 0.000124
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": -0.132933,
+              "lower": -0.160817,
+              "upper": -0.106602
+            },
+            "StableDiffusion1.5": {
+              "point": -0.001822,
+              "lower": -0.004965,
+              "upper": 0.001297
+            },
+            "StableDiffusion2": {
+              "point": 0.003291,
+              "lower": -0.003561,
+              "upper": 0.010335
+            },
+            "StableDiffusion3": {
+              "point": -0.09815,
+              "lower": -0.118434,
+              "upper": -0.078862
+            },
+            "StableDiffusionXL": {
+              "point": -0.019792,
+              "lower": -0.029538,
+              "upper": -0.01119
+            },
+            "StyleGAN": {
+              "point": 0.214126,
+              "lower": 0.179337,
+              "upper": 0.250141
+            },
+            "StyleGAN2": {
+              "point": 0.154603,
+              "lower": 0.118747,
+              "upper": 0.189307
+            },
+            "StyleGAN3": {
+              "point": 0.31005,
+              "lower": 0.274201,
+              "upper": 0.3438
+            },
+            "diffusion": {
+              "point": -0.049881,
+              "lower": -0.059359,
+              "upper": -0.04117
+            },
+            "stylegan": {
+              "point": 0.22626,
+              "lower": 0.197096,
+              "upper": 0.254965
+            }
+          }
+        },
+        "Twitter": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": -0.049152,
+              "lower": -0.062661,
+              "upper": -0.036893
+            },
+            "StableDiffusion1.5": {
+              "point": -0.000508,
+              "lower": -0.002076,
+              "upper": 0.00036
+            },
+            "StableDiffusion2": {
+              "point": 0.00054,
+              "lower": -0.000988,
+              "upper": 0.001964
+            },
+            "StableDiffusion3": {
+              "point": -0.030844,
+              "lower": -0.041828,
+              "upper": -0.020255
+            },
+            "StableDiffusionXL": {
+              "point": -0.001956,
+              "lower": -0.004824,
+              "upper": 0.00178
+            },
+            "StyleGAN": {
+              "point": -0.069452,
+              "lower": -0.092804,
+              "upper": -0.047979
+            },
+            "StyleGAN2": {
+              "point": -0.089912,
+              "lower": -0.1132,
+              "upper": -0.065519
+            },
+            "StyleGAN3": {
+              "point": -0.027344,
+              "lower": -0.054177,
+              "upper": -0.001681
+            },
+            "diffusion": {
+              "point": -0.016384,
+              "lower": -0.020254,
+              "upper": -0.012633
+            },
+            "stylegan": {
+              "point": -0.062236,
+              "lower": -0.079941,
+              "upper": -0.045653
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": -0.015143,
+              "lower": -0.02816,
+              "upper": -0.001445
+            },
+            "StableDiffusion1.5": {
+              "point": 0.002142,
+              "lower": 0.000388,
+              "upper": 0.004401
+            },
+            "StableDiffusion2": {
+              "point": 0.009325,
+              "lower": 0.004741,
+              "upper": 0.014691
+            },
+            "StableDiffusion3": {
+              "point": -0.030867,
+              "lower": -0.040923,
+              "upper": -0.021109
+            },
+            "StableDiffusionXL": {
+              "point": -0.000488,
+              "lower": -0.005706,
+              "upper": 0.007075
+            },
+            "StyleGAN": {
+              "point": 0.223632,
+              "lower": 0.192788,
+              "upper": 0.256434
+            },
+            "StyleGAN2": {
+              "point": 0.188196,
+              "lower": 0.156455,
+              "upper": 0.219246
+            },
+            "StyleGAN3": {
+              "point": 0.323327,
+              "lower": 0.291361,
+              "upper": 0.3551
+            },
+            "diffusion": {
+              "point": -0.007006,
+              "lower": -0.012087,
+              "upper": -0.00167
+            },
+            "stylegan": {
+              "point": 0.245052,
+              "lower": 0.218076,
+              "upper": 0.271453
+            }
+          }
+        }
+      }
+    },
+    "s2b_deg_p35_seed0": {
+      "auc": {
+        "PreSocial": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.977084,
+              "lower": 0.967159,
+              "upper": 0.985756
+            },
+            "StableDiffusion1.5": {
+              "point": 0.996628,
+              "lower": 0.990272,
+              "upper": 0.99996
+            },
+            "StableDiffusion2": {
+              "point": 0.994008,
+              "lower": 0.990868,
+              "upper": 0.996508
+            },
+            "StableDiffusion3": {
+              "point": 0.998044,
+              "lower": 0.996772,
+              "upper": 0.999116
+            },
+            "StableDiffusionXL": {
+              "point": 0.998916,
+              "lower": 0.996995,
+              "upper": 0.99986
+            },
+            "StyleGAN": {
+              "point": 0.812396,
+              "lower": 0.786031,
+              "upper": 0.837902
+            },
+            "StyleGAN2": {
+              "point": 0.738116,
+              "lower": 0.707943,
+              "upper": 0.768361
+            },
+            "StyleGAN3": {
+              "point": 0.788988,
+              "lower": 0.763424,
+              "upper": 0.813882
+            },
+            "diffusion": {
+              "point": 0.992936,
+              "lower": 0.990373,
+              "upper": 0.995374
+            },
+            "stylegan": {
+              "point": 0.779833,
+              "lower": 0.759882,
+              "upper": 0.800485
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.901353,
+              "lower": 0.877821,
+              "upper": 0.921834
+            },
+            "StableDiffusion1.5": {
+              "point": 0.990158,
+              "lower": 0.980909,
+              "upper": 0.996289
+            },
+            "StableDiffusion2": {
+              "point": 0.962935,
+              "lower": 0.949617,
+              "upper": 0.974111
+            },
+            "StableDiffusion3": {
+              "point": 0.980845,
+              "lower": 0.973553,
+              "upper": 0.986967
+            },
+            "StableDiffusionXL": {
+              "point": 0.988388,
+              "lower": 0.980977,
+              "upper": 0.993558
+            },
+            "StyleGAN": {
+              "point": 0.473582,
+              "lower": 0.437653,
+              "upper": 0.509947
+            },
+            "StyleGAN2": {
+              "point": 0.421235,
+              "lower": 0.379562,
+              "upper": 0.462296
+            },
+            "StyleGAN3": {
+              "point": 0.40822,
+              "lower": 0.374816,
+              "upper": 0.442756
+            },
+            "diffusion": {
+              "point": 0.964736,
+              "lower": 0.957441,
+              "upper": 0.971327
+            },
+            "stylegan": {
+              "point": 0.434346,
+              "lower": 0.407323,
+              "upper": 0.462222
+            }
+          }
+        },
+        "Facebook": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.618688,
+              "lower": 0.57601,
+              "upper": 0.661096
+            },
+            "StableDiffusion1.5": {
+              "point": 0.993688,
+              "lower": 0.98458,
+              "upper": 0.999232
+            },
+            "StableDiffusion2": {
+              "point": 0.971856,
+              "lower": 0.958967,
+              "upper": 0.982637
+            },
+            "StableDiffusion3": {
+              "point": 0.73334,
+              "lower": 0.693996,
+              "upper": 0.76909
+            },
+            "StableDiffusionXL": {
+              "point": 0.975948,
+              "lower": 0.966155,
+              "upper": 0.984265
+            },
+            "StyleGAN": {
+              "point": 0.718624,
+              "lower": 0.684551,
+              "upper": 0.751692
+            },
+            "StyleGAN2": {
+              "point": 0.514752,
+              "lower": 0.476082,
+              "upper": 0.556751
+            },
+            "StyleGAN3": {
+              "point": 0.546914,
+              "lower": 0.509548,
+              "upper": 0.583459
+            },
+            "diffusion": {
+              "point": 0.858704,
+              "lower": 0.845991,
+              "upper": 0.870902
+            },
+            "stylegan": {
+              "point": 0.59343,
+              "lower": 0.567667,
+              "upper": 0.618934
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.520725,
+              "lower": 0.483495,
+              "upper": 0.556951
+            },
+            "StableDiffusion1.5": {
+              "point": 0.981233,
+              "lower": 0.97051,
+              "upper": 0.989226
+            },
+            "StableDiffusion2": {
+              "point": 0.930775,
+              "lower": 0.913746,
+              "upper": 0.947203
+            },
+            "StableDiffusion3": {
+              "point": 0.642763,
+              "lower": 0.60506,
+              "upper": 0.678488
+            },
+            "StableDiffusionXL": {
+              "point": 0.924364,
+              "lower": 0.907235,
+              "upper": 0.94013
+            },
+            "StyleGAN": {
+              "point": 0.596757,
+              "lower": 0.562725,
+              "upper": 0.629797
+            },
+            "StyleGAN2": {
+              "point": 0.444348,
+              "lower": 0.408379,
+              "upper": 0.481051
+            },
+            "StyleGAN3": {
+              "point": 0.45626,
+              "lower": 0.422452,
+              "upper": 0.489013
+            },
+            "diffusion": {
+              "point": 0.799972,
+              "lower": 0.785236,
+              "upper": 0.813926
+            },
+            "stylegan": {
+              "point": 0.499122,
+              "lower": 0.47384,
+              "upper": 0.525711
+            }
+          }
+        },
+        "Telegram": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.84394,
+              "lower": 0.813284,
+              "upper": 0.873171
+            },
+            "StableDiffusion1.5": {
+              "point": 0.996064,
+              "lower": 0.989059,
+              "upper": 0.999888
+            },
+            "StableDiffusion2": {
+              "point": 0.99326,
+              "lower": 0.987879,
+              "upper": 0.99708
+            },
+            "StableDiffusion3": {
+              "point": 0.934472,
+              "lower": 0.915265,
+              "upper": 0.951747
+            },
+            "StableDiffusionXL": {
+              "point": 0.994584,
+              "lower": 0.990007,
+              "upper": 0.998068
+            },
+            "StyleGAN": {
+              "point": 0.771824,
+              "lower": 0.743841,
+              "upper": 0.801931
+            },
+            "StyleGAN2": {
+              "point": 0.655188,
+              "lower": 0.616333,
+              "upper": 0.69348
+            },
+            "StyleGAN3": {
+              "point": 0.696852,
+              "lower": 0.661742,
+              "upper": 0.73191
+            },
+            "diffusion": {
+              "point": 0.952464,
+              "lower": 0.944576,
+              "upper": 0.960276
+            },
+            "stylegan": {
+              "point": 0.707955,
+              "lower": 0.684015,
+              "upper": 0.733441
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.769754,
+              "lower": 0.740064,
+              "upper": 0.800297
+            },
+            "StableDiffusion1.5": {
+              "point": 0.991323,
+              "lower": 0.98402,
+              "upper": 0.996421
+            },
+            "StableDiffusion2": {
+              "point": 0.977429,
+              "lower": 0.96846,
+              "upper": 0.984929
+            },
+            "StableDiffusion3": {
+              "point": 0.880044,
+              "lower": 0.857922,
+              "upper": 0.900938
+            },
+            "StableDiffusionXL": {
+              "point": 0.974599,
+              "lower": 0.965853,
+              "upper": 0.982166
+            },
+            "StyleGAN": {
+              "point": 0.681902,
+              "lower": 0.652509,
+              "upper": 0.711029
+            },
+            "StyleGAN2": {
+              "point": 0.594346,
+              "lower": 0.560889,
+              "upper": 0.630244
+            },
+            "StyleGAN3": {
+              "point": 0.622158,
+              "lower": 0.587568,
+              "upper": 0.653434
+            },
+            "diffusion": {
+              "point": 0.91863,
+              "lower": 0.908707,
+              "upper": 0.928143
+            },
+            "stylegan": {
+              "point": 0.632802,
+              "lower": 0.607482,
+              "upper": 0.657235
+            }
+          }
+        },
+        "Twitter": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.940192,
+              "lower": 0.922547,
+              "upper": 0.956201
+            },
+            "StableDiffusion1.5": {
+              "point": 0.99636,
+              "lower": 0.989212,
+              "upper": 1.0
+            },
+            "StableDiffusion2": {
+              "point": 0.994552,
+              "lower": 0.991028,
+              "upper": 0.997316
+            },
+            "StableDiffusion3": {
+              "point": 0.976172,
+              "lower": 0.965708,
+              "upper": 0.98592
+            },
+            "StableDiffusionXL": {
+              "point": 0.999132,
+              "lower": 0.998416,
+              "upper": 0.999692
+            },
+            "StyleGAN": {
+              "point": 0.742552,
+              "lower": 0.712414,
+              "upper": 0.77333
+            },
+            "StyleGAN2": {
+              "point": 0.644716,
+              "lower": 0.607547,
+              "upper": 0.683103
+            },
+            "StyleGAN3": {
+              "point": 0.651356,
+              "lower": 0.614028,
+              "upper": 0.687189
+            },
+            "diffusion": {
+              "point": 0.981282,
+              "lower": 0.97674,
+              "upper": 0.985601
+            },
+            "stylegan": {
+              "point": 0.679541,
+              "lower": 0.65435,
+              "upper": 0.70436
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.89958,
+              "lower": 0.879527,
+              "upper": 0.917814
+            },
+            "StableDiffusion1.5": {
+              "point": 0.995103,
+              "lower": 0.988278,
+              "upper": 0.999195
+            },
+            "StableDiffusion2": {
+              "point": 0.984276,
+              "lower": 0.978241,
+              "upper": 0.98965
+            },
+            "StableDiffusion3": {
+              "point": 0.952296,
+              "lower": 0.939063,
+              "upper": 0.96496
+            },
+            "StableDiffusionXL": {
+              "point": 0.992288,
+              "lower": 0.988552,
+              "upper": 0.995456
+            },
+            "StyleGAN": {
+              "point": 0.68364,
+              "lower": 0.653893,
+              "upper": 0.712949
+            },
+            "StyleGAN2": {
+              "point": 0.614571,
+              "lower": 0.581211,
+              "upper": 0.648125
+            },
+            "StyleGAN3": {
+              "point": 0.614106,
+              "lower": 0.579318,
+              "upper": 0.645835
+            },
+            "diffusion": {
+              "point": 0.964709,
+              "lower": 0.958282,
+              "upper": 0.970797
+            },
+            "stylegan": {
+              "point": 0.637439,
+              "lower": 0.612014,
+              "upper": 0.663608
+            }
+          }
+        }
+      },
+      "delta": {
+        "Facebook": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": -0.358396,
+              "lower": -0.399474,
+              "upper": -0.319831
+            },
+            "StableDiffusion1.5": {
+              "point": -0.00294,
+              "lower": -0.006396,
+              "upper": -0.000604
+            },
+            "StableDiffusion2": {
+              "point": -0.022152,
+              "lower": -0.032933,
+              "upper": -0.012839
+            },
+            "StableDiffusion3": {
+              "point": -0.264704,
+              "lower": -0.303393,
+              "upper": -0.229482
+            },
+            "StableDiffusionXL": {
+              "point": -0.022968,
+              "lower": -0.032572,
+              "upper": -0.014995
+            },
+            "StyleGAN": {
+              "point": -0.093772,
+              "lower": -0.125844,
+              "upper": -0.062911
+            },
+            "StyleGAN2": {
+              "point": -0.223364,
+              "lower": -0.256586,
+              "upper": -0.189215
+            },
+            "StyleGAN3": {
+              "point": -0.242074,
+              "lower": -0.273641,
+              "upper": -0.211206
+            },
+            "diffusion": {
+              "point": -0.134232,
+              "lower": -0.146379,
+              "upper": -0.122609
+            },
+            "stylegan": {
+              "point": -0.186403,
+              "lower": -0.208871,
+              "upper": -0.163891
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": -0.380629,
+              "lower": -0.41442,
+              "upper": -0.345837
+            },
+            "StableDiffusion1.5": {
+              "point": -0.008925,
+              "lower": -0.015196,
+              "upper": -0.003099
+            },
+            "StableDiffusion2": {
+              "point": -0.03216,
+              "lower": -0.045038,
+              "upper": -0.018771
+            },
+            "StableDiffusion3": {
+              "point": -0.338082,
+              "lower": -0.375336,
+              "upper": -0.301752
+            },
+            "StableDiffusionXL": {
+              "point": -0.064024,
+              "lower": -0.0802,
+              "upper": -0.048283
+            },
+            "StyleGAN": {
+              "point": 0.123175,
+              "lower": 0.08371,
+              "upper": 0.161876
+            },
+            "StyleGAN2": {
+              "point": 0.023113,
+              "lower": -0.014352,
+              "upper": 0.062744
+            },
+            "StyleGAN3": {
+              "point": 0.04804,
+              "lower": 0.009584,
+              "upper": 0.085219
+            },
+            "diffusion": {
+              "point": -0.164764,
+              "lower": -0.178836,
+              "upper": -0.150735
+            },
+            "stylegan": {
+              "point": 0.064776,
+              "lower": 0.033835,
+              "upper": 0.097043
+            }
+          }
+        },
+        "Telegram": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": -0.133144,
+              "lower": -0.161307,
+              "upper": -0.105876
+            },
+            "StableDiffusion1.5": {
+              "point": -0.000564,
+              "lower": -0.001752,
+              "upper": 0.000212
+            },
+            "StableDiffusion2": {
+              "point": -0.000748,
+              "lower": -0.005121,
+              "upper": 0.002389
+            },
+            "StableDiffusion3": {
+              "point": -0.063572,
+              "lower": -0.082209,
+              "upper": -0.046708
+            },
+            "StableDiffusionXL": {
+              "point": -0.004332,
+              "lower": -0.008977,
+              "upper": -0.000804
+            },
+            "StyleGAN": {
+              "point": -0.040572,
+              "lower": -0.06378,
+              "upper": -0.017519
+            },
+            "StyleGAN2": {
+              "point": -0.082928,
+              "lower": -0.10794,
+              "upper": -0.058089
+            },
+            "StyleGAN3": {
+              "point": -0.092136,
+              "lower": -0.116409,
+              "upper": -0.067797
+            },
+            "diffusion": {
+              "point": -0.040472,
+              "lower": -0.047837,
+              "upper": -0.033384
+            },
+            "stylegan": {
+              "point": -0.071879,
+              "lower": -0.089409,
+              "upper": -0.05448
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": -0.1316,
+              "lower": -0.160694,
+              "upper": -0.10247
+            },
+            "StableDiffusion1.5": {
+              "point": 0.001165,
+              "lower": -0.002603,
+              "upper": 0.005298
+            },
+            "StableDiffusion2": {
+              "point": 0.014494,
+              "lower": 0.006305,
+              "upper": 0.023084
+            },
+            "StableDiffusion3": {
+              "point": -0.100801,
+              "lower": -0.121957,
+              "upper": -0.081336
+            },
+            "StableDiffusionXL": {
+              "point": -0.01379,
+              "lower": -0.022943,
+              "upper": -0.004977
+            },
+            "StyleGAN": {
+              "point": 0.20832,
+              "lower": 0.174221,
+              "upper": 0.243206
+            },
+            "StyleGAN2": {
+              "point": 0.173111,
+              "lower": 0.138897,
+              "upper": 0.207452
+            },
+            "StyleGAN3": {
+              "point": 0.213938,
+              "lower": 0.178704,
+              "upper": 0.247872
+            },
+            "diffusion": {
+              "point": -0.046106,
+              "lower": -0.056024,
+              "upper": -0.036144
+            },
+            "stylegan": {
+              "point": 0.198456,
+              "lower": 0.170304,
+              "upper": 0.228184
+            }
+          }
+        },
+        "Twitter": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": -0.036892,
+              "lower": -0.048748,
+              "upper": -0.026304
+            },
+            "StableDiffusion1.5": {
+              "point": -0.000268,
+              "lower": -0.00128,
+              "upper": 0.000312
+            },
+            "StableDiffusion2": {
+              "point": 0.000544,
+              "lower": -0.000788,
+              "upper": 0.001828
+            },
+            "StableDiffusion3": {
+              "point": -0.021872,
+              "lower": -0.031616,
+              "upper": -0.012876
+            },
+            "StableDiffusionXL": {
+              "point": 0.000216,
+              "lower": -0.00094,
+              "upper": 0.002036
+            },
+            "StyleGAN": {
+              "point": -0.069844,
+              "lower": -0.089385,
+              "upper": -0.051995
+            },
+            "StyleGAN2": {
+              "point": -0.0934,
+              "lower": -0.113609,
+              "upper": -0.071415
+            },
+            "StyleGAN3": {
+              "point": -0.137632,
+              "lower": -0.162564,
+              "upper": -0.114811
+            },
+            "diffusion": {
+              "point": -0.011654,
+              "lower": -0.014847,
+              "upper": -0.008541
+            },
+            "stylegan": {
+              "point": -0.100292,
+              "lower": -0.11562,
+              "upper": -0.085365
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": -0.001774,
+              "lower": -0.017643,
+              "upper": 0.014879
+            },
+            "StableDiffusion1.5": {
+              "point": 0.004945,
+              "lower": 0.001802,
+              "upper": 0.008481
+            },
+            "StableDiffusion2": {
+              "point": 0.021341,
+              "lower": 0.013921,
+              "upper": 0.030011
+            },
+            "StableDiffusion3": {
+              "point": -0.028549,
+              "lower": -0.040862,
+              "upper": -0.017744
+            },
+            "StableDiffusionXL": {
+              "point": 0.0039,
+              "lower": -0.001886,
+              "upper": 0.011396
+            },
+            "StyleGAN": {
+              "point": 0.210058,
+              "lower": 0.179999,
+              "upper": 0.241541
+            },
+            "StyleGAN2": {
+              "point": 0.193335,
+              "lower": 0.163249,
+              "upper": 0.223805
+            },
+            "StyleGAN3": {
+              "point": 0.205886,
+              "lower": 0.174216,
+              "upper": 0.238257
+            },
+            "diffusion": {
+              "point": -2.7e-05,
+              "lower": -0.006666,
+              "upper": 0.007033
+            },
+            "stylegan": {
+              "point": 0.203093,
+              "lower": 0.176096,
+              "upper": 0.230581
+            }
+          }
+        }
+      }
+    },
+    "s2d_p35_seed0": {
+      "auc": {
+        "PreSocial": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.988288,
+              "lower": 0.981804,
+              "upper": 0.993992
+            },
+            "StableDiffusion1.5": {
+              "point": 0.998352,
+              "lower": 0.994972,
+              "upper": 1.0
+            },
+            "StableDiffusion2": {
+              "point": 0.998608,
+              "lower": 0.997548,
+              "upper": 0.999352
+            },
+            "StableDiffusion3": {
+              "point": 0.999816,
+              "lower": 0.999572,
+              "upper": 0.999968
+            },
+            "StableDiffusionXL": {
+              "point": 0.999916,
+              "lower": 0.999772,
+              "upper": 0.999996
+            },
+            "StyleGAN": {
+              "point": 0.903424,
+              "lower": 0.885811,
+              "upper": 0.920701
+            },
+            "StyleGAN2": {
+              "point": 0.859424,
+              "lower": 0.83889,
+              "upper": 0.879966
+            },
+            "StyleGAN3": {
+              "point": 0.936168,
+              "lower": 0.923588,
+              "upper": 0.948303
+            },
+            "diffusion": {
+              "point": 0.996996,
+              "lower": 0.995508,
+              "upper": 0.998377
+            },
+            "stylegan": {
+              "point": 0.899672,
+              "lower": 0.885842,
+              "upper": 0.913205
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.943672,
+              "lower": 0.926458,
+              "upper": 0.959213
+            },
+            "StableDiffusion1.5": {
+              "point": 0.995972,
+              "lower": 0.988671,
+              "upper": 0.999904
+            },
+            "StableDiffusion2": {
+              "point": 0.989305,
+              "lower": 0.983807,
+              "upper": 0.993898
+            },
+            "StableDiffusion3": {
+              "point": 0.997758,
+              "lower": 0.995984,
+              "upper": 0.999079
+            },
+            "StableDiffusionXL": {
+              "point": 0.998791,
+              "lower": 0.997677,
+              "upper": 0.999564
+            },
+            "StyleGAN": {
+              "point": 0.611367,
+              "lower": 0.574346,
+              "upper": 0.647185
+            },
+            "StyleGAN2": {
+              "point": 0.525602,
+              "lower": 0.484645,
+              "upper": 0.564862
+            },
+            "StyleGAN3": {
+              "point": 0.687283,
+              "lower": 0.653272,
+              "upper": 0.720234
+            },
+            "diffusion": {
+              "point": 0.985099,
+              "lower": 0.981033,
+              "upper": 0.988872
+            },
+            "stylegan": {
+              "point": 0.608084,
+              "lower": 0.580473,
+              "upper": 0.634628
+            }
+          }
+        },
+        "Facebook": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.50308,
+              "lower": 0.463358,
+              "upper": 0.541791
+            },
+            "StableDiffusion1.5": {
+              "point": 0.993212,
+              "lower": 0.984115,
+              "upper": 0.998588
+            },
+            "StableDiffusion2": {
+              "point": 0.958276,
+              "lower": 0.942284,
+              "upper": 0.972821
+            },
+            "StableDiffusion3": {
+              "point": 0.654326,
+              "lower": 0.61247,
+              "upper": 0.693521
+            },
+            "StableDiffusionXL": {
+              "point": 0.941516,
+              "lower": 0.926778,
+              "upper": 0.955284
+            },
+            "StyleGAN": {
+              "point": 0.755088,
+              "lower": 0.723006,
+              "upper": 0.785246
+            },
+            "StyleGAN2": {
+              "point": 0.504208,
+              "lower": 0.463762,
+              "upper": 0.544811
+            },
+            "StyleGAN3": {
+              "point": 0.558024,
+              "lower": 0.519936,
+              "upper": 0.59414
+            },
+            "diffusion": {
+              "point": 0.810082,
+              "lower": 0.796767,
+              "upper": 0.823483
+            },
+            "stylegan": {
+              "point": 0.605773,
+              "lower": 0.578493,
+              "upper": 0.631245
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.446026,
+              "lower": 0.410815,
+              "upper": 0.480395
+            },
+            "StableDiffusion1.5": {
+              "point": 0.98366,
+              "lower": 0.973491,
+              "upper": 0.991163
+            },
+            "StableDiffusion2": {
+              "point": 0.92384,
+              "lower": 0.905164,
+              "upper": 0.941822
+            },
+            "StableDiffusion3": {
+              "point": 0.59045,
+              "lower": 0.549729,
+              "upper": 0.627728
+            },
+            "StableDiffusionXL": {
+              "point": 0.881838,
+              "lower": 0.861205,
+              "upper": 0.901143
+            },
+            "StyleGAN": {
+              "point": 0.655612,
+              "lower": 0.62428,
+              "upper": 0.686919
+            },
+            "StyleGAN2": {
+              "point": 0.451395,
+              "lower": 0.415222,
+              "upper": 0.486682
+            },
+            "StyleGAN3": {
+              "point": 0.485746,
+              "lower": 0.450049,
+              "upper": 0.518648
+            },
+            "diffusion": {
+              "point": 0.765163,
+              "lower": 0.749882,
+              "upper": 0.780181
+            },
+            "stylegan": {
+              "point": 0.530918,
+              "lower": 0.50442,
+              "upper": 0.556709
+            }
+          }
+        },
+        "Telegram": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.840956,
+              "lower": 0.812613,
+              "upper": 0.868308
+            },
+            "StableDiffusion1.5": {
+              "point": 0.997404,
+              "lower": 0.992428,
+              "upper": 0.99994
+            },
+            "StableDiffusion2": {
+              "point": 0.997336,
+              "lower": 0.99536,
+              "upper": 0.998724
+            },
+            "StableDiffusion3": {
+              "point": 0.945104,
+              "lower": 0.928504,
+              "upper": 0.959778
+            },
+            "StableDiffusionXL": {
+              "point": 0.990628,
+              "lower": 0.983691,
+              "upper": 0.99578
+            },
+            "StyleGAN": {
+              "point": 0.841196,
+              "lower": 0.817493,
+              "upper": 0.865512
+            },
+            "StyleGAN2": {
+              "point": 0.729244,
+              "lower": 0.694975,
+              "upper": 0.762345
+            },
+            "StyleGAN3": {
+              "point": 0.762934,
+              "lower": 0.731896,
+              "upper": 0.791952
+            },
+            "diffusion": {
+              "point": 0.954286,
+              "lower": 0.947075,
+              "upper": 0.961355
+            },
+            "stylegan": {
+              "point": 0.777791,
+              "lower": 0.756941,
+              "upper": 0.799291
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.759035,
+              "lower": 0.727988,
+              "upper": 0.790033
+            },
+            "StableDiffusion1.5": {
+              "point": 0.995403,
+              "lower": 0.9896,
+              "upper": 0.998915
+            },
+            "StableDiffusion2": {
+              "point": 0.988276,
+              "lower": 0.983074,
+              "upper": 0.99246
+            },
+            "StableDiffusion3": {
+              "point": 0.890747,
+              "lower": 0.869807,
+              "upper": 0.910928
+            },
+            "StableDiffusionXL": {
+              "point": 0.968837,
+              "lower": 0.958582,
+              "upper": 0.977647
+            },
+            "StyleGAN": {
+              "point": 0.73833,
+              "lower": 0.710073,
+              "upper": 0.766171
+            },
+            "StyleGAN2": {
+              "point": 0.636753,
+              "lower": 0.602883,
+              "upper": 0.670387
+            },
+            "StyleGAN3": {
+              "point": 0.663688,
+              "lower": 0.629669,
+              "upper": 0.692913
+            },
+            "diffusion": {
+              "point": 0.92046,
+              "lower": 0.911084,
+              "upper": 0.929711
+            },
+            "stylegan": {
+              "point": 0.67959,
+              "lower": 0.655245,
+              "upper": 0.701923
+            }
+          }
+        },
+        "Twitter": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.94672,
+              "lower": 0.931329,
+              "upper": 0.960816
+            },
+            "StableDiffusion1.5": {
+              "point": 0.997264,
+              "lower": 0.99178,
+              "upper": 1.0
+            },
+            "StableDiffusion2": {
+              "point": 0.998068,
+              "lower": 0.996648,
+              "upper": 0.999072
+            },
+            "StableDiffusion3": {
+              "point": 0.98332,
+              "lower": 0.976251,
+              "upper": 0.98969
+            },
+            "StableDiffusionXL": {
+              "point": 0.998684,
+              "lower": 0.997624,
+              "upper": 0.999416
+            },
+            "StyleGAN": {
+              "point": 0.821156,
+              "lower": 0.797656,
+              "upper": 0.845602
+            },
+            "StyleGAN2": {
+              "point": 0.741076,
+              "lower": 0.7097,
+              "upper": 0.771017
+            },
+            "StyleGAN3": {
+              "point": 0.780396,
+              "lower": 0.749978,
+              "upper": 0.808007
+            },
+            "diffusion": {
+              "point": 0.984811,
+              "lower": 0.981,
+              "upper": 0.988376
+            },
+            "stylegan": {
+              "point": 0.780876,
+              "lower": 0.760285,
+              "upper": 0.801093
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.899996,
+              "lower": 0.880057,
+              "upper": 0.91926
+            },
+            "StableDiffusion1.5": {
+              "point": 0.996773,
+              "lower": 0.990835,
+              "upper": 0.999936
+            },
+            "StableDiffusion2": {
+              "point": 0.993133,
+              "lower": 0.989754,
+              "upper": 0.995876
+            },
+            "StableDiffusion3": {
+              "point": 0.961489,
+              "lower": 0.950048,
+              "upper": 0.971934
+            },
+            "StableDiffusionXL": {
+              "point": 0.993081,
+              "lower": 0.989938,
+              "upper": 0.995788
+            },
+            "StyleGAN": {
+              "point": 0.721113,
+              "lower": 0.690526,
+              "upper": 0.749264
+            },
+            "StyleGAN2": {
+              "point": 0.650478,
+              "lower": 0.618464,
+              "upper": 0.683263
+            },
+            "StyleGAN3": {
+              "point": 0.685654,
+              "lower": 0.653812,
+              "upper": 0.717302
+            },
+            "diffusion": {
+              "point": 0.968894,
+              "lower": 0.963431,
+              "upper": 0.974354
+            },
+            "stylegan": {
+              "point": 0.685748,
+              "lower": 0.662218,
+              "upper": 0.711207
+            }
+          }
+        }
+      },
+      "delta": {
+        "Facebook": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": -0.485208,
+              "lower": -0.523607,
+              "upper": -0.447954
+            },
+            "StableDiffusion1.5": {
+              "point": -0.00514,
+              "lower": -0.010832,
+              "upper": -0.001392
+            },
+            "StableDiffusion2": {
+              "point": -0.040332,
+              "lower": -0.055888,
+              "upper": -0.026134
+            },
+            "StableDiffusion3": {
+              "point": -0.34549,
+              "lower": -0.387283,
+              "upper": -0.306252
+            },
+            "StableDiffusionXL": {
+              "point": -0.0584,
+              "lower": -0.0732,
+              "upper": -0.044692
+            },
+            "StyleGAN": {
+              "point": -0.148336,
+              "lower": -0.180401,
+              "upper": -0.116988
+            },
+            "StyleGAN2": {
+              "point": -0.355216,
+              "lower": -0.392865,
+              "upper": -0.317047
+            },
+            "StyleGAN3": {
+              "point": -0.378144,
+              "lower": -0.41386,
+              "upper": -0.344524
+            },
+            "diffusion": {
+              "point": -0.186914,
+              "lower": -0.200152,
+              "upper": -0.173821
+            },
+            "stylegan": {
+              "point": -0.293899,
+              "lower": -0.318985,
+              "upper": -0.268925
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": -0.497646,
+              "lower": -0.531817,
+              "upper": -0.463475
+            },
+            "StableDiffusion1.5": {
+              "point": -0.012312,
+              "lower": -0.017854,
+              "upper": -0.007423
+            },
+            "StableDiffusion2": {
+              "point": -0.065465,
+              "lower": -0.082061,
+              "upper": -0.049236
+            },
+            "StableDiffusion3": {
+              "point": -0.407307,
+              "lower": -0.447742,
+              "upper": -0.369616
+            },
+            "StableDiffusionXL": {
+              "point": -0.116953,
+              "lower": -0.137494,
+              "upper": -0.097905
+            },
+            "StyleGAN": {
+              "point": 0.044244,
+              "lower": 0.000984,
+              "upper": 0.084469
+            },
+            "StyleGAN2": {
+              "point": -0.074206,
+              "lower": -0.11739,
+              "upper": -0.032795
+            },
+            "StyleGAN3": {
+              "point": -0.201538,
+              "lower": -0.240427,
+              "upper": -0.163764
+            },
+            "diffusion": {
+              "point": -0.219937,
+              "lower": -0.23472,
+              "upper": -0.205684
+            },
+            "stylegan": {
+              "point": -0.077166,
+              "lower": -0.110154,
+              "upper": -0.045627
+            }
+          }
+        },
+        "Telegram": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": -0.147332,
+              "lower": -0.174515,
+              "upper": -0.121069
+            },
+            "StableDiffusion1.5": {
+              "point": -0.000948,
+              "lower": -0.002676,
+              "upper": -3.6e-05
+            },
+            "StableDiffusion2": {
+              "point": -0.001272,
+              "lower": -0.002945,
+              "upper": -0.000108
+            },
+            "StableDiffusion3": {
+              "point": -0.054712,
+              "lower": -0.071168,
+              "upper": -0.0401
+            },
+            "StableDiffusionXL": {
+              "point": -0.009288,
+              "lower": -0.016212,
+              "upper": -0.004172
+            },
+            "StyleGAN": {
+              "point": -0.062228,
+              "lower": -0.084144,
+              "upper": -0.040671
+            },
+            "StyleGAN2": {
+              "point": -0.13018,
+              "lower": -0.156919,
+              "upper": -0.103438
+            },
+            "StyleGAN3": {
+              "point": -0.173234,
+              "lower": -0.200213,
+              "upper": -0.147218
+            },
+            "diffusion": {
+              "point": -0.04271,
+              "lower": -0.049573,
+              "upper": -0.036042
+            },
+            "stylegan": {
+              "point": -0.121881,
+              "lower": -0.13956,
+              "upper": -0.104215
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": -0.184637,
+              "lower": -0.213536,
+              "upper": -0.15643
+            },
+            "StableDiffusion1.5": {
+              "point": -0.000569,
+              "lower": -0.002342,
+              "upper": 0.001643
+            },
+            "StableDiffusion2": {
+              "point": -0.001029,
+              "lower": -0.004677,
+              "upper": 0.002755
+            },
+            "StableDiffusion3": {
+              "point": -0.107011,
+              "lower": -0.127616,
+              "upper": -0.086978
+            },
+            "StableDiffusionXL": {
+              "point": -0.029954,
+              "lower": -0.039784,
+              "upper": -0.021385
+            },
+            "StyleGAN": {
+              "point": 0.126963,
+              "lower": 0.090732,
+              "upper": 0.163841
+            },
+            "StyleGAN2": {
+              "point": 0.111151,
+              "lower": 0.072964,
+              "upper": 0.147825
+            },
+            "StyleGAN3": {
+              "point": -0.023596,
+              "lower": -0.05824,
+              "upper": 0.010614
+            },
+            "diffusion": {
+              "point": -0.06464,
+              "lower": -0.073696,
+              "upper": -0.055731
+            },
+            "stylegan": {
+              "point": 0.071506,
+              "lower": 0.042804,
+              "upper": 0.099934
+            }
+          }
+        },
+        "Twitter": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": -0.041568,
+              "lower": -0.05355,
+              "upper": -0.030467
+            },
+            "StableDiffusion1.5": {
+              "point": -0.001088,
+              "lower": -0.003388,
+              "upper": 0.0
+            },
+            "StableDiffusion2": {
+              "point": -0.00054,
+              "lower": -0.0013,
+              "upper": 5.6e-05
+            },
+            "StableDiffusion3": {
+              "point": -0.016496,
+              "lower": -0.023414,
+              "upper": -0.010176
+            },
+            "StableDiffusionXL": {
+              "point": -0.001232,
+              "lower": -0.002244,
+              "upper": -0.000528
+            },
+            "StyleGAN": {
+              "point": -0.082268,
+              "lower": -0.102006,
+              "upper": -0.065055
+            },
+            "StyleGAN2": {
+              "point": -0.118348,
+              "lower": -0.141517,
+              "upper": -0.096656
+            },
+            "StyleGAN3": {
+              "point": -0.155772,
+              "lower": -0.179046,
+              "upper": -0.133801
+            },
+            "diffusion": {
+              "point": -0.012185,
+              "lower": -0.015189,
+              "upper": -0.009354
+            },
+            "stylegan": {
+              "point": -0.118796,
+              "lower": -0.134623,
+              "upper": -0.10369
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": -0.043676,
+              "lower": -0.0581,
+              "upper": -0.029295
+            },
+            "StableDiffusion1.5": {
+              "point": 0.000801,
+              "lower": -3.2e-05,
+              "upper": 0.002362
+            },
+            "StableDiffusion2": {
+              "point": 0.003828,
+              "lower": 0.001153,
+              "upper": 0.007071
+            },
+            "StableDiffusion3": {
+              "point": -0.036268,
+              "lower": -0.047656,
+              "upper": -0.02597
+            },
+            "StableDiffusionXL": {
+              "point": -0.00571,
+              "lower": -0.008665,
+              "upper": -0.003087
+            },
+            "StyleGAN": {
+              "point": 0.109746,
+              "lower": 0.078809,
+              "upper": 0.141422
+            },
+            "StyleGAN2": {
+              "point": 0.124877,
+              "lower": 0.091636,
+              "upper": 0.155528
+            },
+            "StyleGAN3": {
+              "point": -0.00163,
+              "lower": -0.031135,
+              "upper": 0.028414
+            },
+            "diffusion": {
+              "point": -0.016205,
+              "lower": -0.021051,
+              "upper": -0.011414
+            },
+            "stylegan": {
+              "point": 0.077664,
+              "lower": 0.051985,
+              "upper": 0.103475
+            }
+          }
+        }
+      }
+    },
+    "full_bank_seed0": {
+      "auc": {
+        "PreSocial": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.963888,
+              "lower": 0.952785,
+              "upper": 0.974008
+            },
+            "StableDiffusion1.5": {
+              "point": 0.996516,
+              "lower": 0.990744,
+              "upper": 0.999652
+            },
+            "StableDiffusion2": {
+              "point": 0.989128,
+              "lower": 0.983636,
+              "upper": 0.993508
+            },
+            "StableDiffusion3": {
+              "point": 0.998936,
+              "lower": 0.998016,
+              "upper": 0.999636
+            },
+            "StableDiffusionXL": {
+              "point": 0.998392,
+              "lower": 0.99564,
+              "upper": 0.999804
+            },
+            "StyleGAN": {
+              "point": 0.652722,
+              "lower": 0.617607,
+              "upper": 0.68694
+            },
+            "StyleGAN2": {
+              "point": 0.690276,
+              "lower": 0.656347,
+              "upper": 0.724407
+            },
+            "StyleGAN3": {
+              "point": 0.604256,
+              "lower": 0.572627,
+              "upper": 0.636566
+            },
+            "diffusion": {
+              "point": 0.989372,
+              "lower": 0.986385,
+              "upper": 0.99214
+            },
+            "stylegan": {
+              "point": 0.649085,
+              "lower": 0.624358,
+              "upper": 0.673339
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.943952,
+              "lower": 0.926762,
+              "upper": 0.959151
+            },
+            "StableDiffusion1.5": {
+              "point": 0.994398,
+              "lower": 0.986731,
+              "upper": 0.998751
+            },
+            "StableDiffusion2": {
+              "point": 0.982338,
+              "lower": 0.973906,
+              "upper": 0.989173
+            },
+            "StableDiffusion3": {
+              "point": 0.996953,
+              "lower": 0.994927,
+              "upper": 0.998459
+            },
+            "StableDiffusionXL": {
+              "point": 0.99554,
+              "lower": 0.990965,
+              "upper": 0.998371
+            },
+            "StyleGAN": {
+              "point": 0.500496,
+              "lower": 0.461933,
+              "upper": 0.540034
+            },
+            "StyleGAN2": {
+              "point": 0.56374,
+              "lower": 0.52109,
+              "upper": 0.605751
+            },
+            "StyleGAN3": {
+              "point": 0.413005,
+              "lower": 0.379083,
+              "upper": 0.449553
+            },
+            "diffusion": {
+              "point": 0.982636,
+              "lower": 0.978001,
+              "upper": 0.986716
+            },
+            "stylegan": {
+              "point": 0.492414,
+              "lower": 0.465233,
+              "upper": 0.520215
+            }
+          }
+        },
+        "Facebook": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.51654,
+              "lower": 0.477258,
+              "upper": 0.554432
+            },
+            "StableDiffusion1.5": {
+              "point": 0.987248,
+              "lower": 0.976782,
+              "upper": 0.994356
+            },
+            "StableDiffusion2": {
+              "point": 0.938772,
+              "lower": 0.920288,
+              "upper": 0.954734
+            },
+            "StableDiffusion3": {
+              "point": 0.638668,
+              "lower": 0.598758,
+              "upper": 0.676724
+            },
+            "StableDiffusionXL": {
+              "point": 0.912996,
+              "lower": 0.894083,
+              "upper": 0.930151
+            },
+            "StyleGAN": {
+              "point": 0.65995,
+              "lower": 0.622871,
+              "upper": 0.694816
+            },
+            "StyleGAN2": {
+              "point": 0.475472,
+              "lower": 0.435522,
+              "upper": 0.516662
+            },
+            "StyleGAN3": {
+              "point": 0.510732,
+              "lower": 0.473316,
+              "upper": 0.54725
+            },
+            "diffusion": {
+              "point": 0.798845,
+              "lower": 0.784723,
+              "upper": 0.813445
+            },
+            "stylegan": {
+              "point": 0.548718,
+              "lower": 0.522741,
+              "upper": 0.5738
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.539079,
+              "lower": 0.502697,
+              "upper": 0.574363
+            },
+            "StableDiffusion1.5": {
+              "point": 0.982723,
+              "lower": 0.972653,
+              "upper": 0.990407
+            },
+            "StableDiffusion2": {
+              "point": 0.9322,
+              "lower": 0.91475,
+              "upper": 0.948064
+            },
+            "StableDiffusion3": {
+              "point": 0.652388,
+              "lower": 0.617003,
+              "upper": 0.68893
+            },
+            "StableDiffusionXL": {
+              "point": 0.902659,
+              "lower": 0.882542,
+              "upper": 0.9206
+            },
+            "StyleGAN": {
+              "point": 0.669429,
+              "lower": 0.635228,
+              "upper": 0.702227
+            },
+            "StyleGAN2": {
+              "point": 0.509778,
+              "lower": 0.472736,
+              "upper": 0.548175
+            },
+            "StyleGAN3": {
+              "point": 0.538282,
+              "lower": 0.501464,
+              "upper": 0.572687
+            },
+            "diffusion": {
+              "point": 0.80181,
+              "lower": 0.786787,
+              "upper": 0.816259
+            },
+            "stylegan": {
+              "point": 0.572496,
+              "lower": 0.547456,
+              "upper": 0.598301
+            }
+          }
+        },
+        "Telegram": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.826696,
+              "lower": 0.796884,
+              "upper": 0.853728
+            },
+            "StableDiffusion1.5": {
+              "point": 0.994912,
+              "lower": 0.987784,
+              "upper": 0.9993
+            },
+            "StableDiffusion2": {
+              "point": 0.989888,
+              "lower": 0.983924,
+              "upper": 0.994517
+            },
+            "StableDiffusion3": {
+              "point": 0.924772,
+              "lower": 0.906064,
+              "upper": 0.941788
+            },
+            "StableDiffusionXL": {
+              "point": 0.985836,
+              "lower": 0.978607,
+              "upper": 0.991856
+            },
+            "StyleGAN": {
+              "point": 0.681244,
+              "lower": 0.648797,
+              "upper": 0.715375
+            },
+            "StyleGAN2": {
+              "point": 0.634232,
+              "lower": 0.597583,
+              "upper": 0.672248
+            },
+            "StyleGAN3": {
+              "point": 0.677348,
+              "lower": 0.642914,
+              "upper": 0.712337
+            },
+            "diffusion": {
+              "point": 0.944421,
+              "lower": 0.936276,
+              "upper": 0.952554
+            },
+            "stylegan": {
+              "point": 0.664275,
+              "lower": 0.638698,
+              "upper": 0.690726
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.794987,
+              "lower": 0.768097,
+              "upper": 0.821926
+            },
+            "StableDiffusion1.5": {
+              "point": 0.99182,
+              "lower": 0.985097,
+              "upper": 0.996558
+            },
+            "StableDiffusion2": {
+              "point": 0.981369,
+              "lower": 0.973545,
+              "upper": 0.987714
+            },
+            "StableDiffusion3": {
+              "point": 0.89781,
+              "lower": 0.878238,
+              "upper": 0.916064
+            },
+            "StableDiffusionXL": {
+              "point": 0.969522,
+              "lower": 0.959752,
+              "upper": 0.977783
+            },
+            "StyleGAN": {
+              "point": 0.669754,
+              "lower": 0.637804,
+              "upper": 0.69925
+            },
+            "StyleGAN2": {
+              "point": 0.635471,
+              "lower": 0.603085,
+              "upper": 0.668989
+            },
+            "StyleGAN3": {
+              "point": 0.666595,
+              "lower": 0.633358,
+              "upper": 0.69685
+            },
+            "diffusion": {
+              "point": 0.927102,
+              "lower": 0.917665,
+              "upper": 0.935839
+            },
+            "stylegan": {
+              "point": 0.657273,
+              "lower": 0.632182,
+              "upper": 0.681774
+            }
+          }
+        },
+        "Twitter": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": 0.905624,
+              "lower": 0.884651,
+              "upper": 0.925674
+            },
+            "StableDiffusion1.5": {
+              "point": 0.995944,
+              "lower": 0.988776,
+              "upper": 0.999716
+            },
+            "StableDiffusion2": {
+              "point": 0.989824,
+              "lower": 0.984011,
+              "upper": 0.994261
+            },
+            "StableDiffusion3": {
+              "point": 0.964164,
+              "lower": 0.95324,
+              "upper": 0.974541
+            },
+            "StableDiffusionXL": {
+              "point": 0.99354,
+              "lower": 0.990316,
+              "upper": 0.996344
+            },
+            "StyleGAN": {
+              "point": 0.62112,
+              "lower": 0.586289,
+              "upper": 0.658656
+            },
+            "StyleGAN2": {
+              "point": 0.604756,
+              "lower": 0.566779,
+              "upper": 0.64331
+            },
+            "StyleGAN3": {
+              "point": 0.624364,
+              "lower": 0.586521,
+              "upper": 0.660556
+            },
+            "diffusion": {
+              "point": 0.969819,
+              "lower": 0.964128,
+              "upper": 0.97528
+            },
+            "stylegan": {
+              "point": 0.616747,
+              "lower": 0.589673,
+              "upper": 0.64253
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": 0.914615,
+              "lower": 0.896322,
+              "upper": 0.931437
+            },
+            "StableDiffusion1.5": {
+              "point": 0.996236,
+              "lower": 0.990358,
+              "upper": 0.999552
+            },
+            "StableDiffusion2": {
+              "point": 0.98967,
+              "lower": 0.984472,
+              "upper": 0.993702
+            },
+            "StableDiffusion3": {
+              "point": 0.96563,
+              "lower": 0.955754,
+              "upper": 0.97506
+            },
+            "StableDiffusionXL": {
+              "point": 0.992705,
+              "lower": 0.988819,
+              "upper": 0.995816
+            },
+            "StyleGAN": {
+              "point": 0.68633,
+              "lower": 0.654482,
+              "upper": 0.716566
+            },
+            "StyleGAN2": {
+              "point": 0.675399,
+              "lower": 0.642634,
+              "upper": 0.709052
+            },
+            "StyleGAN3": {
+              "point": 0.688404,
+              "lower": 0.654365,
+              "upper": 0.718083
+            },
+            "diffusion": {
+              "point": 0.971771,
+              "lower": 0.96634,
+              "upper": 0.97702
+            },
+            "stylegan": {
+              "point": 0.683378,
+              "lower": 0.659017,
+              "upper": 0.708378
+            }
+          }
+        }
+      },
+      "delta": {
+        "Facebook": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": -0.447348,
+              "lower": -0.482619,
+              "upper": -0.413121
+            },
+            "StableDiffusion1.5": {
+              "point": -0.009268,
+              "lower": -0.015264,
+              "upper": -0.004876
+            },
+            "StableDiffusion2": {
+              "point": -0.050356,
+              "lower": -0.066541,
+              "upper": -0.036054
+            },
+            "StableDiffusion3": {
+              "point": -0.360268,
+              "lower": -0.399914,
+              "upper": -0.322259
+            },
+            "StableDiffusionXL": {
+              "point": -0.085396,
+              "lower": -0.104197,
+              "upper": -0.068759
+            },
+            "StyleGAN": {
+              "point": 0.007228,
+              "lower": -0.029209,
+              "upper": 0.043321
+            },
+            "StyleGAN2": {
+              "point": -0.214804,
+              "lower": -0.251922,
+              "upper": -0.178329
+            },
+            "StyleGAN3": {
+              "point": -0.093524,
+              "lower": -0.130561,
+              "upper": -0.059872
+            },
+            "diffusion": {
+              "point": -0.190527,
+              "lower": -0.203858,
+              "upper": -0.177051
+            },
+            "stylegan": {
+              "point": -0.100367,
+              "lower": -0.126448,
+              "upper": -0.073886
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": -0.404873,
+              "lower": -0.439209,
+              "upper": -0.37011
+            },
+            "StableDiffusion1.5": {
+              "point": -0.011676,
+              "lower": -0.017838,
+              "upper": -0.006482
+            },
+            "StableDiffusion2": {
+              "point": -0.050138,
+              "lower": -0.065182,
+              "upper": -0.03613
+            },
+            "StableDiffusion3": {
+              "point": -0.344565,
+              "lower": -0.380056,
+              "upper": -0.308134
+            },
+            "StableDiffusionXL": {
+              "point": -0.092881,
+              "lower": -0.112274,
+              "upper": -0.074962
+            },
+            "StyleGAN": {
+              "point": 0.168933,
+              "lower": 0.12896,
+              "upper": 0.211077
+            },
+            "StyleGAN2": {
+              "point": -0.053962,
+              "lower": -0.093401,
+              "upper": -0.012654
+            },
+            "StyleGAN3": {
+              "point": 0.125277,
+              "lower": 0.08458,
+              "upper": 0.164968
+            },
+            "diffusion": {
+              "point": -0.180826,
+              "lower": -0.195523,
+              "upper": -0.167002
+            },
+            "stylegan": {
+              "point": 0.080083,
+              "lower": 0.049065,
+              "upper": 0.111143
+            }
+          }
+        },
+        "Telegram": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": -0.137192,
+              "lower": -0.162591,
+              "upper": -0.113827
+            },
+            "StableDiffusion1.5": {
+              "point": -0.001604,
+              "lower": -0.004028,
+              "upper": -4e-06
+            },
+            "StableDiffusion2": {
+              "point": 0.00076,
+              "lower": -0.003517,
+              "upper": 0.004589
+            },
+            "StableDiffusion3": {
+              "point": -0.074164,
+              "lower": -0.092472,
+              "upper": -0.05721
+            },
+            "StableDiffusionXL": {
+              "point": -0.012556,
+              "lower": -0.019364,
+              "upper": -0.006924
+            },
+            "StyleGAN": {
+              "point": 0.028522,
+              "lower": 0.000178,
+              "upper": 0.057752
+            },
+            "StyleGAN2": {
+              "point": -0.056044,
+              "lower": -0.085086,
+              "upper": -0.027533
+            },
+            "StyleGAN3": {
+              "point": 0.073092,
+              "lower": 0.043823,
+              "upper": 0.102658
+            },
+            "diffusion": {
+              "point": -0.044951,
+              "lower": -0.052173,
+              "upper": -0.03797
+            },
+            "stylegan": {
+              "point": 0.01519,
+              "lower": -0.006395,
+              "upper": 0.036682
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": -0.148965,
+              "lower": -0.174256,
+              "upper": -0.123988
+            },
+            "StableDiffusion1.5": {
+              "point": -0.002579,
+              "lower": -0.006234,
+              "upper": 0.000586
+            },
+            "StableDiffusion2": {
+              "point": -0.000969,
+              "lower": -0.006923,
+              "upper": 0.005041
+            },
+            "StableDiffusion3": {
+              "point": -0.099143,
+              "lower": -0.118245,
+              "upper": -0.081004
+            },
+            "StableDiffusionXL": {
+              "point": -0.026018,
+              "lower": -0.03584,
+              "upper": -0.01781
+            },
+            "StyleGAN": {
+              "point": 0.169257,
+              "lower": 0.13372,
+              "upper": 0.207328
+            },
+            "StyleGAN2": {
+              "point": 0.071732,
+              "lower": 0.03563,
+              "upper": 0.107245
+            },
+            "StyleGAN3": {
+              "point": 0.25359,
+              "lower": 0.218014,
+              "upper": 0.288505
+            },
+            "diffusion": {
+              "point": -0.055535,
+              "lower": -0.064703,
+              "upper": -0.046782
+            },
+            "stylegan": {
+              "point": 0.16486,
+              "lower": 0.135116,
+              "upper": 0.193407
+            }
+          }
+        },
+        "Twitter": {
+          "FFHQ": {
+            "FLUX.1": {
+              "point": -0.058264,
+              "lower": -0.071678,
+              "upper": -0.045667
+            },
+            "StableDiffusion1.5": {
+              "point": -0.000572,
+              "lower": -0.0022,
+              "upper": 0.000344
+            },
+            "StableDiffusion2": {
+              "point": 0.000696,
+              "lower": -0.000888,
+              "upper": 0.002308
+            },
+            "StableDiffusion3": {
+              "point": -0.034772,
+              "lower": -0.045368,
+              "upper": -0.024816
+            },
+            "StableDiffusionXL": {
+              "point": -0.004852,
+              "lower": -0.008321,
+              "upper": -0.001492
+            },
+            "StyleGAN": {
+              "point": -0.031602,
+              "lower": -0.054742,
+              "upper": -0.008987
+            },
+            "StyleGAN2": {
+              "point": -0.08552,
+              "lower": -0.110182,
+              "upper": -0.060233
+            },
+            "StyleGAN3": {
+              "point": 0.020108,
+              "lower": -0.006576,
+              "upper": 0.046751
+            },
+            "diffusion": {
+              "point": -0.019553,
+              "lower": -0.023609,
+              "upper": -0.015609
+            },
+            "stylegan": {
+              "point": -0.032338,
+              "lower": -0.050335,
+              "upper": -0.015232
+            }
+          },
+          "FORLAB": {
+            "FLUX.1": {
+              "point": -0.029337,
+              "lower": -0.042901,
+              "upper": -0.01531
+            },
+            "StableDiffusion1.5": {
+              "point": 0.001838,
+              "lower": 0.000176,
+              "upper": 0.00392
+            },
+            "StableDiffusion2": {
+              "point": 0.007331,
+              "lower": 0.003203,
+              "upper": 0.012097
+            },
+            "StableDiffusion3": {
+              "point": -0.031323,
+              "lower": -0.041149,
+              "upper": -0.022449
+            },
+            "StableDiffusionXL": {
+              "point": -0.002835,
+              "lower": -0.0075,
+              "upper": 0.002299
+            },
+            "StyleGAN": {
+              "point": 0.185834,
+              "lower": 0.153884,
+              "upper": 0.218401
+            },
+            "StyleGAN2": {
+              "point": 0.11166,
+              "lower": 0.079933,
+              "upper": 0.142954
+            },
+            "StyleGAN3": {
+              "point": 0.275399,
+              "lower": 0.242917,
+              "upper": 0.306865
+            },
+            "diffusion": {
+              "point": -0.010865,
+              "lower": -0.015974,
+              "upper": -0.005561
+            },
+            "stylegan": {
+              "point": 0.190964,
+              "lower": 0.16384,
+              "upper": 0.217288
+            }
+          }
+        }
+      }
+    }
+  }
+}

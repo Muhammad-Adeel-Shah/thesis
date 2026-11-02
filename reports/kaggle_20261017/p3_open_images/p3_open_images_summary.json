@@ -1,0 +1,351 @@
+{
+  "target": 4000,
+  "holdout": 400,
+  "crop": 384,
+  "set_id": "t_oi",
+  "disk": [
+    {
+      "stage": "start",
+      "filesystems": [
+        {
+          "path": "/tmp/oi_originals",
+          "total_gb": 8156.88,
+          "used_gb": 7087.02,
+          "free_gb": 1069.85
+        },
+        {
+          "path": "/kaggle/working/oi",
+          "total_gb": 19.52,
+          "used_gb": 0.05,
+          "free_gb": 19.45
+        },
+        {
+          "path": "/kaggle/working/Implementation/thesis_dbp/reports",
+          "total_gb": 19.52,
+          "used_gb": 0.05,
+          "free_gb": 19.45
+        }
+      ]
+    },
+    {
+      "stage": "references loaded",
+      "filesystems": [
+        {
+          "path": "/tmp/oi_originals",
+          "total_gb": 8156.88,
+          "used_gb": 7087.02,
+          "free_gb": 1069.85
+        },
+        {
+          "path": "/kaggle/working/oi",
+          "total_gb": 19.52,
+          "used_gb": 0.05,
+          "free_gb": 19.45
+        },
+        {
+          "path": "/kaggle/working/Implementation/thesis_dbp/reports",
+          "total_gb": 19.52,
+          "used_gb": 0.05,
+          "free_gb": 19.45
+        }
+      ]
+    },
+    {
+      "stage": "1000 accepted",
+      "filesystems": [
+        {
+          "path": "/tmp/oi_originals",
+          "total_gb": 8156.88,
+          "used_gb": 7087.02,
+          "free_gb": 1069.85
+        },
+        {
+          "path": "/kaggle/working/oi",
+          "total_gb": 19.52,
+          "used_gb": 0.27,
+          "free_gb": 19.23
+        },
+        {
+          "path": "/kaggle/working/Implementation/thesis_dbp/reports",
+          "total_gb": 19.52,
+          "used_gb": 0.27,
+          "free_gb": 19.23
+        }
+      ]
+    },
+    {
+      "stage": "2000 accepted",
+      "filesystems": [
+        {
+          "path": "/tmp/oi_originals",
+          "total_gb": 8156.88,
+          "used_gb": 7087.02,
+          "free_gb": 1069.85
+        },
+        {
+          "path": "/kaggle/working/oi",
+          "total_gb": 19.52,
+          "used_gb": 0.47,
+          "free_gb": 19.03
+        },
+        {
+          "path": "/kaggle/working/Implementation/thesis_dbp/reports",
+          "total_gb": 19.52,
+          "used_gb": 0.47,
+          "free_gb": 19.03
+        }
+      ]
+    },
+    {
+      "stage": "3000 accepted",
+      "filesystems": [
+        {
+          "path": "/tmp/oi_originals",
+          "total_gb": 8156.88,
+          "used_gb": 7087.02,
+          "free_gb": 1069.85
+        },
+        {
+          "path": "/kaggle/working/oi",
+          "total_gb": 19.52,
+          "used_gb": 0.66,
+          "free_gb": 18.84
+        },
+        {
+          "path": "/kaggle/working/Implementation/thesis_dbp/reports",
+          "total_gb": 19.52,
+          "used_gb": 0.66,
+          "free_gb": 18.84
+        }
+      ]
+    },
+    {
+      "stage": "4000 accepted",
+      "filesystems": [
+        {
+          "path": "/tmp/oi_originals",
+          "total_gb": 8156.88,
+          "used_gb": 7087.02,
+          "free_gb": 1069.85
+        },
+        {
+          "path": "/kaggle/working/oi",
+          "total_gb": 19.52,
+          "used_gb": 0.87,
+          "free_gb": 18.63
+        },
+        {
+          "path": "/kaggle/working/Implementation/thesis_dbp/reports",
+          "total_gb": 19.52,
+          "used_gb": 0.87,
+          "free_gb": 18.63
+        }
+      ]
+    },
+    {
+      "stage": "end",
+      "filesystems": [
+        {
+          "path": "/tmp/oi_originals",
+          "total_gb": 8156.88,
+          "used_gb": 7087.02,
+          "free_gb": 1069.85
+        },
+        {
+          "path": "/kaggle/working/oi",
+          "total_gb": 19.52,
+          "used_gb": 0.86,
+          "free_gb": 18.65
+        },
+        {
+          "path": "/kaggle/working/Implementation/thesis_dbp/reports",
+          "total_gb": 19.52,
+          "used_gb": 0.86,
+          "free_gb": 18.65
+        }
+      ]
+    }
+  ],
+  "source": {
+    "mode": "s3",
+    "copy": "cvdf_s3_rescaled_max1024px"
+  },
+  "hosts": {
+    "approved_patterns": [
+      "open-images-dataset\\.s3\\.amazonaws\\.com",
+      "open-images-dataset\\.s3[.-][a-z0-9-]+\\.amazonaws\\.com"
+    ],
+    "redirect_hosts": []
+  },
+  "metadata": {
+    "cc_by_2_rows": 41620,
+    "rows_on_approved_hosts": 41620,
+    "rows_by_host": {
+      "open-images-dataset.s3.amazonaws.com": 41620
+    }
+  },
+  "references": {
+    "Panel B": 9405,
+    "P2 panel e3_matched": 1500,
+    "P2 panel e4_wildrf_matched": 1500,
+    "P2 panel e5_chameleon_pipeline": 4000,
+    "P2 panel e7_dda_coco": 3500,
+    "P2 panel e8_evalgen": 1250,
+    "P2 panel t_ctrl_diagnostic": 400,
+    "T-real": 2500,
+    "T-ctrl": 1600,
+    "SD1.5 generations": 2488,
+    "gen_matched": 2488,
+    "bank reconstructions": 49200,
+    "e3 reals": 726,
+    "e4 reals": 1251,
+    "e5 reals": 14863,
+    "COCO train2017": 118287,
+    "COCO val2017": 5000
+  },
+  "accepted": 4000,
+  "shortfall": 0,
+  "walked_rows": 4096,
+  "split": {
+    "held_out": 400,
+    "train": 3600
+  },
+  "rejections": {
+    "colour mode: greyscale (mode L/1) (rejected, not converted)": 51,
+    "greyscale (rgb_equal; COCO pipeline rule D-039)": 8,
+    "shorter side < 320": 8,
+    "shorter side 320-383 (below the 384 COCO crop)": 6,
+    "duplicate of a reference (phash:COCO train2017)": 6,
+    "colour mode: CMYK (rejected, not converted)": 3,
+    "crop duplicate of a reference (phash:e5 reals)": 2,
+    "crop duplicate of a reference (phash:COCO train2017)": 2,
+    "duplicate of a reference (phash:Panel B)": 1
+  },
+  "unapproved_hosts_walked": {},
+  "redirect_hosts_seen": {},
+  "downloaded_bytes": 1261956971,
+  "crop_bytes": 872531042,
+  "originals_verified": {
+    "width": {
+      "n": 4096,
+      "min": 296,
+      "p5": 683.0,
+      "p25": 1024.0,
+      "median": 1024.0,
+      "p75": 1024.0,
+      "p95": 1024.0,
+      "max": 8100
+    },
+    "height": {
+      "n": 4096,
+      "min": 261,
+      "p5": 584.4,
+      "p25": 683.0,
+      "median": 768.0,
+      "p75": 1000.5,
+      "p95": 1024.0,
+      "max": 3888
+    },
+    "megapixels": {
+      "n": 4096,
+      "min": 0.27,
+      "p5": 0.59,
+      "p25": 0.7,
+      "median": 0.78,
+      "p75": 0.79,
+      "p95": 1.05,
+      "max": 31.49
+    },
+    "shorter_side_histogram": {
+      "0-319": 8,
+      "320-383": 6,
+      "384-1023": 3815,
+      "1024-2047": 264,
+      "2048-3071": 1,
+      "3072-max": 2
+    },
+    "exif_camera_make_or_model": 4
+  },
+  "originals_accepted": {
+    "width": {
+      "n": 4000,
+      "min": 385,
+      "p5": 683.0,
+      "p25": 1024.0,
+      "median": 1024.0,
+      "p75": 1024.0,
+      "p95": 1024.0,
+      "max": 8100
+    },
+    "height": {
+      "n": 4000,
+      "min": 386,
+      "p5": 590.25,
+      "p25": 683.0,
+      "median": 768.0,
+      "p75": 997.75,
+      "p95": 1024.0,
+      "max": 3888
+    },
+    "megapixels": {
+      "n": 4000,
+      "min": 0.39,
+      "p5": 0.59,
+      "p25": 0.7,
+      "median": 0.78,
+      "p75": 0.79,
+      "p95": 1.05,
+      "max": 31.49
+    },
+    "shorter_side_histogram": {
+      "0-319": 0,
+      "320-383": 0,
+      "384-1023": 3736,
+      "1024-2047": 261,
+      "2048-3071": 1,
+      "3072-max": 2
+    },
+    "exif_camera_make_or_model": 4
+  },
+  "rotation_accepted": {
+    "0.0": 3468,
+    "": 493,
+    "270.0": 24,
+    "90.0": 14,
+    "180.0": 1
+  },
+  "by_host_group": {
+    "s3": {
+      "rows_walked": 4096,
+      "accepted": 4000,
+      "gone": 0,
+      "checksum_mismatch": 0,
+      "download_failed": 0,
+      "not_contacted": 0,
+      "not_needed": 9,
+      "originals_verified": 4096,
+      "median_width": 1024.0,
+      "median_height": 768.0
+    }
+  },
+  "fetch_policy": {
+    "max_parallel_connections": 8,
+    "retries": 3,
+    "backoff_base_s": 2.0,
+    "timeout_s": 60.0,
+    "slow_down_on": "403/429/503: shared delay doubles once per wave (or Retry-After), halves after 50 successes; stops after 600 s of refusals at the 60 s ceiling"
+  },
+  "throttle": {
+    "refusals": 0,
+    "raises": 0,
+    "max_delay_s": 0.0,
+    "final_delay_s": 0.0,
+    "tripped": false,
+    "trip_after_s_at_ceiling": 600.0,
+    "events": [],
+    "events_total": 0,
+    "refusal_samples": []
+  },
+  "dry_run_local_source": false,
+  "seconds": 973.6
+}

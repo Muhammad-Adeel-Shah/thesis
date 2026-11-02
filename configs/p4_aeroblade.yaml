@@ -1,0 +1,38 @@
+# ===========================================================================
+# P4 -- AEROBLADE's third autoencoder (spec docs/P4_BASELINES_SPEC.md, section 1)
+# ===========================================================================
+# AEROBLADE (faithful) uses our pinned `sd15` and `sd21` bank members, both from
+# decoder_bank.yaml, plus the Kandinsky 2.1 MoVQ below (user decision 2026-10-31). It is
+# not a bank member: it is listed here, in the bank's schema, so it is validated and
+# loaded exactly like one and goes through reconstruct.py's `vq` path.
+#
+# Pinned 2026-10-29 (Hub API: revision; movq/diffusion_pytorch_model.safetensors
+# 271,380,362 B, sha256 667319216c14764042b3e7cae7c4d1a309a409a674d413144e9ac65b572c6ea8).
+# movq/config.json read 2026-11-01 at this revision (660 B, sha256
+# b7448f3ea8aecf233629b20c1f606887e22244656edcee1be6a419079717a23e): VQModel, 16384 codes,
+# vq_embed_dim 4, latent_channels 4, spatial norm, four blocks (f8).
+# ===========================================================================
+
+schema_version: 2
+resolved_on: "2026-10-29"
+seed: 2026
+
+members:
+
+  - key: movq_k21
+    tier: optional
+    kind: vq
+    repo: kandinsky-community/kandinsky-2-1
+    subfolder: movq
+    revision: 04b366659663bf60deacb96fd3e38f1cb39a3be4
+    latent_channels: 4
+    downsample: 8
+    gated: false
+    license: apache-2.0
+    dtype_policy: fp32_default
+    crop_multiple: 8
+    generators: [Kandinsky 2.1]
+    refs: [P4]
+    notes: >-
+      AEROBLADE's Kandinsky 2.1 autoencoder (MoVQ, diffusers VQModel). Used by the P4
+      AEROBLADE baseline only; not a DBP bank member.
