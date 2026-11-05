@@ -6893,3 +6893,52 @@ refuses to plan while any is null.
 - **Integrity:** CLEAN.
 - **Dry-runs:** at HEAD after this commit; see the step-3 hand-over.
 
+### P4 — steps 1-2 originals verified; step 2 provenance recorded; pre-push audit (no push) — 2026-11-05
+
+**User decisions (2026-11-05):** `9ba3dde` approved.
+- **Step 2 is not re-run.**
+- **No push yet:** a pre-push audit comes first, and the user confirms the repository is
+  private.
+- **Step 3** (GPU scoring, code `9ba3dde`) was started by the user.
+
+**Step 2 provenance (recorded as the user asked):** step 2 ran on code `bffdfca`, which did
+not log the URLs or sha256 of what DDA's code downloaded (the DDA archive from github.com,
+DINOv2's code and weights through `torch.hub`). Those values are **NOT-VERIFIED** and will
+not be filled in. **Its result was an exact match:** both logits identical, abs diff 0.0,
+tolerance 1e-3.
+
+**Verification against the Kaggle originals** (the user placed them in `F:\thesis-2\kaggle_raw\`):
+- **`p4_weights.json`:** extracted from `p4_weights_reports.zip` (sha256
+  `d60c871fe2052928642a13ba0716b962af59cc4025137d4a7413474c28162c36`, 739 entries) into
+  `F:\thesis-2\kaggle_raw\p4_weights_reports_x\`. It is **byte-identical** to the committed
+  `reports/kaggle_20261105/p4_weights/p4_weights.json`: sha256
+  `42cf31bad09424a4b8c4181d03c7ebc3ff2dc55fb1b505973b31e5277f7f32b5`, 3,360 B, 66 fields,
+  0 differing.
+- **`p4_dda_equivalence.json`** (`F:\thesis-2\kaggle_raw\p4_dda_equivalence.json`): **byte-identical** to the
+  committed `reports/kaggle_20261105/p4_dda_equivalence.json`: sha256
+  `8c413410cdb1ec8dc6ed95d128296ff84d608ee42dfde1fdfa29bb1dd71a9673`, 1,191 B, 30 fields,
+  0 differing.
+- **Git blobs:** the copies in git (`git cat-file -p HEAD:...`) have the same two sha256
+  values.
+- **README:** the NOT-VERIFIED note in `reports/kaggle_20261105/README.md` is now
+  resolved, as recorded here.
+
+**Pre-push audit** (read-only; every blob reachable from `master`: 2 commits, 868 paths,
+875 blobs; nothing pushed):
+- **(a) Images:**
+  - by extension, only 12 paths: 6 PNG + 6 SVG charts under `reports/**/figures/`, each
+    under 1 MB (CLAUDE.md section 2b);
+  - by magic bytes, only those 6 PNGs;
+  - **no dataset image** under any extension, and no non-CSV file over 1 MB.
+- **(b) Secrets:** **0 hits** for Hugging Face, GitHub, AWS, Slack and OpenAI-style tokens,
+  private keys and Kaggle API keys. 0 risky file names (`.env`, `kaggle.json`, `*.pem`,
+  `*token*`, `*secret*`, `credentials*`).
+- **(c) Per-image files that would go to GitHub:** 150 CSVs (any with an image-id or path
+  column), 50,513,800 B, 788,963 rows.
+  - **Scores:** the P3 final scores (24 models), the held-out scores, and P2 session E's
+    real scores.
+  - **Manifests and lists:** Panel B, the TrueFake member manifests (no scores), the P2
+    panel sets, Open Images with its attribution, the COCO reals.
+  - **The TrueFake per-image scores are not among them** (git-ignored, kept in
+    `kaggle_raw`).
+
