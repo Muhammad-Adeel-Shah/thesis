@@ -42,35 +42,60 @@
     },
     "cospy_semantic": {
       "file": "cospy_zip/semantic_weights.pth",
-      "sha256": null
+      "sha256": "f391482e6b8bc28dea1f475e593c11da2761b798fd335871ba137641888d2dd4"
     },
     "cospy_artifact": {
       "file": "cospy_zip/artifact_weights.pth",
-      "sha256": null
+      "sha256": "3ec2b5aaf1d4d649e2413e43b68b389b2fda9840dc79f0c9aa0f4cea40e14f76"
     },
     "cospy_fusion": {
       "file": "cospy_zip/fusion_weights.pth",
-      "sha256": null
+      "sha256": "7af0160e79d35f8984dab41209aca10897e713f13f3b392a4d9bdce30a7cf6fb"
     },
     "fire": {
       "file": "fire/fire_imagenet_adm.pth",
-      "sha256": null
+      "sha256": "fabd7a700b8fbcc826407d96cc1afdd86cc2722a72e6300ba558cd0419efe689"
     }
   },
-  "weights_note": "the four null sha256 values are recorded by the weights session (reports/p4_weights.json) and committed here before any baseline is scored; the pre-flight refuses to plan while any is null",
+  "weights_note": "recorded by the weights session on Kaggle 2026-11-05 (code bffdfca; reports/kaggle_20261105/p4_weights/p4_weights.json) and committed before any baseline is scored",
   "aeroblade_aes": [
     "sd15",
     "sd21",
     "movq_k21"
   ],
   "rows": {
-    "dda_native": {"baseline": "dda", "crop": 336, "condition": "clean"},
-    "dda_crop308": {"baseline": "dda", "crop": 308, "condition": "clean"},
-    "dda_jpeg50": {"baseline": "dda", "crop": 336, "condition": "jpeg50"},
-    "dda_resize050": {"baseline": "dda", "crop": 336, "condition": "resize050"},
-    "cospy_native": {"baseline": "cospy", "condition": "clean"},
-    "fire_native": {"baseline": "fire", "condition": "clean"},
-    "aeroblade": {"baseline": "aeroblade", "condition": "clean"}
+    "dda_native": {
+      "baseline": "dda",
+      "crop": 336,
+      "condition": "clean"
+    },
+    "dda_crop308": {
+      "baseline": "dda",
+      "crop": 308,
+      "condition": "clean"
+    },
+    "dda_jpeg50": {
+      "baseline": "dda",
+      "crop": 336,
+      "condition": "jpeg50"
+    },
+    "dda_resize050": {
+      "baseline": "dda",
+      "crop": 336,
+      "condition": "resize050"
+    },
+    "cospy_native": {
+      "baseline": "cospy",
+      "condition": "clean"
+    },
+    "fire_native": {
+      "baseline": "fire",
+      "condition": "clean"
+    },
+    "aeroblade": {
+      "baseline": "aeroblade",
+      "condition": "clean"
+    }
   },
   "jobs": [
     "0:dda_native,dda_crop308,dda_jpeg50,dda_resize050,cospy_native,fire_native",

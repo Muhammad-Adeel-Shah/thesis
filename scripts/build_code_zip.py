@@ -26,8 +26,26 @@ import zipfile
 from pathlib import Path
 
 THESIS_DBP = Path(__file__).resolve().parents[1]
-REPO_ROOT = THESIS_DBP.parent
 PREFIX = "thesis_dbp"
+
+
+def _git_root() -> Path:
+    """The repository root: thesis_dbp/ itself (since 2026-11-05) or its parent (before)."""
+    out = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=THESIS_DBP,
+                         capture_output=True, text=True, check=True).stdout.strip()
+    return Path(out).resolve()
+
+
+REPO_ROOT = _git_root()
+#: How thesis_dbp/ is spelled inside git: "" when it is the repository root. Zip entries
+#: always start with ``thesis_dbp/``, whatever the layout, because the runbooks look for
+#: ``dbp-code*/thesis_dbp``.
+GIT_PREFIX = "" if THESIS_DBP.resolve() == REPO_ROOT else f"{PREFIX}/"
+
+
+def to_git(path: str) -> str:
+    """A zip entry name (``thesis_dbp/...``) as git spells it."""
+    return GIT_PREFIX + path.removeprefix(f"{PREFIX}/")
 
 #: Extensions that must reach Kaggle with LF line endings.
 LF_ONLY = (".sh", ".py")
@@ -82,17 +100,20 @@ def resolve(ref: str) -> tuple[str, str]:
 
 
 def tracked(ref: str) -> list[str]:
-    """Paths under thesis_dbp in a commit, or in the index when ``ref`` is ``:``."""
+    """Zip names (``thesis_dbp/...``) of the files in a commit, or in the index (``:``)."""
+    scope = GIT_PREFIX.rstrip("/") or "."
     if ref == ":":
-        out = git("ls-files", "-z", PREFIX)
+        out = git("ls-files", "-z", scope)
     else:
-        out = git("ls-tree", "-r", "-z", "--name-only", ref, PREFIX)
-    return sorted(p for p in out.split("\0") if p and p != GENERATED)
+        out = git("ls-tree", "-r", "-z", "--name-only", ref, scope)
+    names = (f"{PREFIX}/{p.removeprefix(GIT_PREFIX)}" for p in out.split("\0") if p)
+    return sorted(p for p in names if p != GENERATED)
 
 
 def blobs(ref: str, paths: list[str]) -> dict[str, bytes]:
     """Raw stored bytes of each path at ``ref`` (``:`` = the index), no conversion."""
-    spec = "".join(f"{ref}{p}\n" if ref == ":" else f"{ref}:{p}\n" for p in paths)
+    spec = "".join(f"{ref}{to_git(p)}\n" if ref == ":" else f"{ref}:{to_git(p)}\n"
+                   for p in paths)
     proc = subprocess.run(["git", "cat-file", "--batch"], cwd=REPO_ROOT,
                           input=spec.encode("utf-8"), capture_output=True, check=True)
     out: dict[str, bytes] = {}

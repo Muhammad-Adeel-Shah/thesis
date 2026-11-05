@@ -47,6 +47,32 @@ from p3_s2d_inputs import read_rows  # noqa: E402
 from p4_preflight import SCORES, SUMMARIES  # noqa: E402
 
 LOADERS = 4
+#: The only host torch.hub may download from in a scoring session: torchvision's VGG16
+#: for LPIPS (CLAUDE.md section 6). github.com and dl.fbaipublicfiles.com were allowed for
+#: the isolated DDA check only and must never be used here (user, 2026-11-05).
+TORCH_HUB_HOSTS = frozenset({"download.pytorch.org"})
+
+
+def guard_torch_hub() -> None:
+    """Refuse ``torch.hub.load`` (it runs downloaded code) and any other download host."""
+    from urllib.parse import urlparse
+
+    import torch.hub
+
+    original = torch.hub.download_url_to_file
+
+    def load(*args: Any, **kwargs: Any) -> Any:
+        raise ScoreError("torch.hub.load runs downloaded code; refused in a scoring session")
+
+    def download(url: str, *args: Any, **kwargs: Any) -> Any:
+        host = urlparse(url).hostname or ""
+        if host not in TORCH_HUB_HOSTS:
+            raise ScoreError(f"torch.hub download from {host} refused in a scoring session "
+                             f"(allowed: {sorted(TORCH_HUB_HOSTS)})")
+        return original(url, *args, **kwargs)
+
+    torch.hub.load = load
+    torch.hub.download_url_to_file = download
 FLAG = {"dda": "padded", "cospy": "upscaled", "fire": "cropped", "aeroblade": "cut_by_cap"}
 PREPROCESSING = {
     "dda": "CenterCrop({crop}) (zero-pads under {crop}) -> ToTensor -> CLIP mean/std",
@@ -120,10 +146,10 @@ class Scorer:
         vae = load_member(bank.by_key("sd15"), self.device, "fp32").model
         names = {k: weight(self.plan, f"cospy_{k}") for k in ("semantic", "artifact",
                                                                 "fusion")}
-        self.model = load_cospy({k: v[0] for k, v in names.items()},
-                                {k: v[1] for k, v in names.items()}, clip.to(self.device),
-                                dim, vae, self.device)
-        self.info = {"siglip_sha256": sha, "vae": "sd15 (pinned), fp32",
+        self.model, vae_record = load_cospy({k: v[0] for k, v in names.items()},
+                                            {k: v[1] for k, v in names.items()},
+                                            clip.to(self.device), dim, vae, self.device)
+        self.info = {"siglip_sha256": sha, "vae": vae_record, "vae_dtype": "fp32",
                      **{f"cospy_{k}_sha256": v[1] for k, v in names.items()}}
 
     def _load_fire(self) -> None:
@@ -276,6 +302,7 @@ def main() -> int:
     parser.add_argument("--deadline-hours", type=float, default=0.0)
     args = parser.parse_args()
     log = setup_logging("p4_score")
+    guard_torch_hub()
     if args.deadline_hours > 0:
         start_watchdog(args.deadline_hours, log)
     if args.limit and args.out_root is None:

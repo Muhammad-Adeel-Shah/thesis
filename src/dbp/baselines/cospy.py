@@ -24,8 +24,14 @@ only path for every reconstruction of ours.
 
 **Weights:** each ``.pth`` is sha256-checked and loaded with ``weights_only=True``.
 Upstream loads the artifact file ``strict=False``; here its keys must cover the artifact
-branch exactly, and **a VAE key in it stops the run** (spec section 1), because the
-pinned VAE would then not be the one in use.
+branch exactly.
+
+**The VAE in the artifact file** (user decision 2026-11-05, replacing the spec's stop):
+the released ``artifact_weights.pth`` holds the full VAE (248 keys; Kaggle 2026-11-05).
+Its tensors are compared with the pinned ``sd15`` VAE's. Equal -- exactly, or after a
+dtype cast -- the pinned VAE is used; different, the checkpoint's own VAE tensors are
+loaded (CO-SPY as published), the max absolute difference of each tensor is recorded, and
+the run continues. A partial VAE key set still stops it.
 """
 
 from __future__ import annotations
@@ -204,12 +210,38 @@ def artifact_keys(state: dict[str, torch.Tensor]) -> dict[str, Any]:
     return {"keys": len(state), "vae_keys": len(vae)}
 
 
+def choose_vae(art: dict[str, torch.Tensor], vae: Any) -> dict[str, Any]:
+    """Apply the 2026-11-05 rule to the VAE tensors in the artifact file.
+
+    Returns the record: where the VAE in use comes from and how the file's tensors
+    compare with the pinned ones. When they differ, the file's tensors are loaded into
+    ``vae`` (cast to its dtype) before this returns.
+    """
+    from dbp.baselines.common import compare_state
+
+    held = {k.removeprefix(VAE_PREFIX): v for k, v in art.items() if k.startswith(VAE_PREFIX)}
+    if not held:
+        return {"vae_keys": 0, "vae_source": "pinned sd15"}
+    pinned = {k: v.detach().cpu() for k, v in vae.state_dict().items()}
+    comparison = compare_state(held, pinned)
+    record = {"vae_keys": len(held), "vs_pinned_sd15": comparison}
+    if comparison["equal"]:
+        return {**record, "vae_source": "pinned sd15 (equal to the file's VAE)"}
+    if not comparison["same_keys"] or "shape_mismatch" in comparison:
+        raise BaselineError(f"CO-SPY artifact_weights.pth holds a VAE that does not fit the "
+                            f"pinned architecture ({comparison}); stop and ask")
+    dtype = next(iter(pinned.values())).dtype
+    vae.load_state_dict({k: v.to(dtype) for k, v in held.items()}, strict=True)
+    return {**record, "vae_source": "CO-SPY checkpoint (differs from pinned sd15)"}
+
+
 def load_cospy(paths: dict[str, Path], sha256: dict[str, str], clip: nn.Module,
-               clip_dim: int, vae: Any, device: str) -> CoSpyFusion:
+               clip_dim: int, vae: Any, device: str) -> tuple[CoSpyFusion, dict[str, Any]]:
     """Build the fused detector and load the three weight files (spec section 1).
 
     ``paths``/``sha256`` hold ``semantic``, ``artifact`` and ``fusion``. The SigLIP model
-    and the pinned VAE are passed in already loaded.
+    and the pinned VAE are passed in already loaded. Returns the model and the VAE record
+    (:func:`choose_vae`).
     """
     states = {k: load_pth(paths[k], sha256[k], f"CO-SPY {k}_weights.pth")
               for k in ("semantic", "artifact", "fusion")}
@@ -219,18 +251,16 @@ def load_cospy(paths: dict[str, Path], sha256: dict[str, str], clip: nn.Module,
     model.fc.load_state_dict({k.removeprefix("fc."): v for k, v in
                               fc_state(states["fusion"], "fusion").items()})
     art = states["artifact"]
-    held = artifact_keys(art)
-    if held["vae_keys"]:
-        raise BaselineError(f"CO-SPY artifact_weights.pth holds {held['vae_keys']} VAE "
-                            f"key(s): the pinned VAE would not be the one in use "
-                            f"(spec section 1). Stop and ask.")
     expected = [k for k in model.art.state_dict() if not k.startswith(VAE_PREFIX)]
-    require_exact_keys(expected, art.keys(), "CO-SPY artifact_weights.pth")
-    missing, unexpected = model.art.load_state_dict(art, strict=False)
+    require_exact_keys(expected, [k for k in art if not k.startswith(VAE_PREFIX)],
+                       "CO-SPY artifact_weights.pth")
+    vae_record = choose_vae(art, vae)
+    non_vae = {k: v for k, v in art.items() if not k.startswith(VAE_PREFIX)}
+    missing, unexpected = model.art.load_state_dict(non_vae, strict=False)
     if unexpected or any(not k.startswith(VAE_PREFIX) for k in missing):
         raise BaselineError(f"CO-SPY artifact load: missing {missing[:4]}, unexpected "
                             f"{unexpected[:4]}")
-    return model.to(device).eval()
+    return model.to(device).eval(), vae_record
 
 
 def cospy_input(img: np.ndarray) -> tuple[torch.Tensor, bool]:

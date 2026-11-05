@@ -8,12 +8,12 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P3-C (2026-10-29)**: every P3 confirmatory hypothesis is decided (`reports/p3_results/tables/t1_verdicts.md`): **H1-a PASS**, **H1-b PASS** (3/3 folds), **H1-c PASS**, **H3 FAIL**, **H3-k PASS** (Q and S), **H2 FAIL**, **H4 PASS**, **H5 FAIL**. Thesis tables and figures committed (`9626eca`). TrueFake (secondary, descriptive) **scored and analysed** (2026-10-31): 4 models, 3,999 ids kept (1 FORLAB id excluded: a truncated source JPEG), `reports/p3_results/p3_truefake_analysis.json`. P4 baseline spec **frozen** 2026-11-01 (tag `p4-baselines-frozen`, `docs/P4_BASELINES_SPEC.md`); baseline code built and dry-run 2026-11-02; Kaggle steps 1-2 (weights, isolated DDA check) handed over. |
+| Last prompt | **P3-C (2026-10-29)**: every P3 confirmatory hypothesis is decided (`reports/p3_results/tables/t1_verdicts.md`): **H1-a PASS**, **H1-b PASS** (3/3 folds), **H1-c PASS**, **H3 FAIL**, **H3-k PASS** (Q and S), **H2 FAIL**, **H4 PASS**, **H5 FAIL**. Thesis tables and figures committed (`9626eca`). TrueFake (secondary, descriptive) **scored and analysed** (2026-10-31): 4 models, 3,999 ids kept (1 FORLAB id excluded: a truncated source JPEG), `reports/p3_results/p3_truefake_analysis.json`. P4 baseline spec **frozen** 2026-11-01 (tag `p4-baselines-frozen`, `docs/P4_BASELINES_SPEC.md`); baseline code built and dry-run 2026-11-02; Kaggle steps 1 (weights) and 2 (isolated DDA check, PASS) done 2026-11-05; step 3 (GPU scoring) handed over. |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
 | Other pinned | accelerate 1.15.0, safetensors 0.8.0, huggingface_hub 1.32.0, scikit-learn 1.9.1, **scipy 1.18.1 (declared in `requirements/base.txt` at P2 for McNemar, Spearman and the bootstrap)**, numpy 2.5.2, pandas 3.0.6, ruff 0.16.8, pytest 9.1.1 |
-| Git branch / last commit | **P3 on `p3-plan`**, nothing pushed; tags `p3-prereg-frozen` and `p4-baselines-frozen` kept. Code for the TrueFake run: `218da57` (zip `dbp-code-218da57.zip` in kaggle_raw); the TrueFake analysis ran at `8ea9e56`; see the latest prompt entry for later commits. The commit a given run used is stamped into its upload as `COMMIT.txt` |
+| Git branch / last commit | **Repository re-rooted at `thesis_dbp/` by the user (2026-11-05):** branch `master`, `origin` = github.com/Muhammad-Adeel-Shah/thesis; the earlier history (183 commits, tags `p3-prereg-frozen`, `p4-baselines-frozen`) was removed with the old `.git`; see the 2026-11-05 entry. Code for the TrueFake run: `218da57` (zip `dbp-code-218da57.zip` in kaggle_raw); the TrueFake analysis ran at `8ea9e56`; see the latest prompt entry for later commits. The commit a given run used is stamped into its upload as `COMMIT.txt` |
 | Protected files integrity | **0 files checked, 0 changed — CLEAN** in both runtimes, algorithm self-test byte-identical. Kaggle verdict at `reports/kaggle_20260920/p0_integrity.json`. Since P1 the report is rewritten only when its content actually changes, so a CLEAN run no longer dirties the working tree |
 
 ## 2. Protected assets (never modified)
@@ -6817,4 +6817,79 @@ from git's bytes, `6576eade…2a54`, is checked by the pre-flight):
 **NOT-RUN:** every Kaggle step. FIRE's and the three CO-SPY `.pth` sha256 values are null
 in `env/p4_baselines_expect.json` until the weights session returns them. The pre-flight
 refuses to plan while any is null.
+
+### P4 — steps 1 and 2 returned; CO-SPY VAE rule; hashes committed; repository re-rooted; step 3 handed over — 2026-11-05
+
+**User decisions (2026-11-05):**
+- **Approved:** `c37ece3` (the freeze) and `bffdfca` (the code), and the four stated
+  deviations.
+- **The step-2 bundle meets the isolation rule.** That rule: no licensed images, no model
+  weights of ours, no reports and no Secrets in a session that runs third-party code.
+- **Hosts for DDA's own code:** it may fetch from github.com and dl.fbaipublicfiles.com
+  in the isolated step-2 session only. Record the URLs and sha256 of everything it
+  downloads. These hosts are never used in a scoring session.
+- **CO-SPY's `artifact_weights.pth` VAE:**
+  - equal to the pinned `sd15` VAE (exactly or after a dtype cast): continue with sd15;
+  - different: use the checkpoint's own VAE, record each tensor's max abs difference, and
+    continue;
+  - this does not stop the run. It replaces the stop rule in spec section 1, as a
+    post-freeze user decision; the spec file itself is unchanged, and its sha256 is still
+    checked.
+
+**Step 1, weights (Kaggle CPU, code `bffdfca`):**
+- **Files:** all four present, with the recorded size and sha256 (DDA, CO-SPY zip, SigLIP).
+- **FIRE recorded:** sha256 `fabd7a700b8fbcc826407d96cc1afdd86cc2722a72e6300ba558cd0419efe689`,
+  261,923,836 B.
+- **CO-SPY `.pth` files:** semantic `f391482e…2dd4` (6,186 B); artifact `3ec2b5aa…4f76`
+  (340,566,472 B); fusion `7af0160e…f6fb` (1,578 B).
+- **DDA:** 537 keys, strict load OK.
+- **CO-SPY artifact file:** 394 keys, 248 of them the VAE, **equal to pinned sd15 (max abs
+  diff 0.0)**.
+- **FIRE:** 318 keys, the full VAE, **equal to sd15 cast to fp16 (0.0)**.
+- **The only problem** was the CO-SPY stop that code `bffdfca` raised, now waived.
+- **Committed:** `reports/kaggle_20261105/p4_weights/p4_weights.json`.
+
+**Step 2, isolated DDA check (Kaggle CPU, no Secrets, code-only bundle, public COCO):**
+**PASS**.
+- **Result:** DDA's own code and `dbp.baselines.dda` give identical logits: −3.6115453 and
+  −2.9998522, abs diff 0.0, against a tolerance of 1e-3.
+- **Committed:** `reports/kaggle_20261105/p4_dda_equivalence.json`.
+- **Downloads: NOT-VERIFIED.** That run's downloads were not recorded: code `bffdfca` did
+  not log them.
+- **Transcription:** both JSON files are transcribed from the pasted output; their equality
+  with the Kaggle files is NOT-VERIFIED (`reports/kaggle_20261105/README.md`).
+
+**Changes:**
+- **CO-SPY VAE rule:**
+  - `dbp.baselines.common.compare_state` (exact or dtype-cast equality, with per-tensor
+    max abs difference);
+  - `cospy.choose_vae` / `load_cospy` apply the 2026-11-05 rule and return a VAE record,
+    which goes into the row summary;
+  - `p4_weights.py` records the comparison and no longer stops;
+  - `p4_preflight.py` accepts a weights report whose only problems are the waived CO-SPY
+    notice.
+- **Hashes committed:** `env/p4_baselines_expect.json` holds FIRE's and the three CO-SPY
+  `.pth` sha256 values (no null remains).
+- **Host guard:** `p4_score.py` refuses `torch.hub.load`, and lets `torch.hub` download
+  from download.pytorch.org only.
+- **Download log:** `p4_dda_equivalence.py` now records the URL and sha256 of every
+  download (the DDA archive, and `torch.hub`'s files).
+- **Re-rooting fixes:**
+  - **`.gitignore` correction:** the user's re-root made `thesis_dbp/` the repository
+    root. The new `thesis_dbp/.gitignore` written on 2026-11-02 had an unanchored `data/`,
+    which also excluded `src/dbp/data/` (7 files) from the first commit `db2aca9`, which
+    is already pushed. Appended `!src/dbp/data/`; the package is committed here.
+  - **`build_code_zip.py`:** works with the repository rooted at `thesis_dbp/` or at its
+    parent. Zip entries still start with `thesis_dbp/`.
+  - **`tests/test_repo_figures.py`:** lists from `thesis_dbp/`. In the new layout it would
+    otherwise have skipped silently. It now also fails if fewer than 100 files are listed.
+- **Comparison with the old history:** `db2aca9` holds the same bytes as `bffdfca` for
+  every file, except the 7 missing `src/dbp/data/` files and the new `.gitignore`.
+  Compared file by file against `F:\thesis-2\kaggle_raw\dbp-code-bffdfca.zip`.
+
+**Checks:**
+- **pytest:** 1,218 passed, 7 skipped (all in tests/test_gpu_smoke.py: no CUDA device, PENDING-GPU), 0 failed, 435 s.
+- **ruff:** clean.
+- **Integrity:** CLEAN.
+- **Dry-runs:** at HEAD after this commit; see the step-3 hand-over.
 

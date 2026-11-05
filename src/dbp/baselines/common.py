@@ -75,6 +75,34 @@ def require_exact_keys(expected: list[str] | set[str], found: list[str] | set[st
                             f"key(s) {diff['unexpected'][:8]}")
 
 
+def compare_state(held: dict[str, Any], reference: dict[str, Any]) -> dict[str, Any]:
+    """Whether two state dicts hold the same tensors, exactly or after a dtype cast.
+
+    ``equal`` is True when every tensor equals its reference exactly, or exactly once one
+    of the two is cast to the other's dtype (fp32 weights saved as fp16, say). When they
+    differ, ``per_tensor`` gives the max absolute difference of every tensor that is not
+    equal (user decision 2026-11-05: record it and continue).
+    """
+    import torch
+
+    if set(held) != set(reference):
+        return {"same_keys": False, "equal": False,
+                "only_held": len(set(held) - set(reference)),
+                "only_reference": len(set(reference) - set(held))}
+    per_tensor: dict[str, float] = {}
+    for key, tensor in held.items():
+        ref = reference[key]
+        if tensor.shape != ref.shape:
+            return {"same_keys": True, "equal": False, "shape_mismatch": key}
+        same = torch.equal(tensor, ref) or torch.equal(tensor.to(ref.dtype), ref) or \
+            torch.equal(tensor, ref.to(tensor.dtype))
+        if not same:
+            per_tensor[key] = float((tensor.double() - ref.double()).abs().max())
+    worst = max(per_tensor.values(), default=0.0)
+    return {"same_keys": True, "equal": not per_tensor, "max_abs_diff": worst,
+            **({"per_tensor": per_tensor} if per_tensor else {})}
+
+
 def fire_seed(image_id: str) -> int:
     """FIRE's per-image seed (spec section 3, item 7.13).
 

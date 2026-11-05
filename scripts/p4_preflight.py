@@ -45,6 +45,18 @@ PLAN = Path("reports") / "p4_plan.json"
 CLEAN_LISTS = ("panel_b", "luma", "threshold_reals")
 #: The weights session's report, inside its attached output.
 WEIGHTS_REPORT = Path("Implementation") / "thesis_dbp" / "reports" / "p4_weights.json"
+#: The one problem the user ruled is not a stop (2026-11-05): CO-SPY's artifact file
+#: holding the VAE. Code at bffdfca reported it as a problem; the session of 2026-11-05
+#: found those tensors equal to the pinned sd15 VAE (max abs diff 0.0).
+WAIVED = "CO-SPY artifact_weights.pth holds"
+
+
+def weights_report_ok(report: dict[str, Any]) -> bool:
+    """OK, or every problem is the waived CO-SPY VAE notice."""
+    if report.get("ok") is True:
+        return True
+    problems = report.get("problems") or []
+    return bool(problems) and all(p.startswith(WAIVED) for p in problems)
 
 
 def summary_path(root: Path, row: str) -> Path:
@@ -104,8 +116,10 @@ def check_weights(root: Path, expect: dict[str, Any]) -> tuple[dict[str, Any], l
     report = json.loads(report_path.read_text(encoding="utf-8")) \
         if report_path.is_file() else {}
     record["weights_report"] = {"path": str(report_path), "ok": report.get("ok"),
+                                "problems": report.get("problems"),
+                                "accepted": weights_report_ok(report),
                                 "commit": report.get("commit")}
-    if report.get("ok") is not True:
+    if not weights_report_ok(report):
         problems.append(f"the weights session's report ({report_path}) is missing or not OK")
     for name, spec in expect["weights"].items():
         path = root / spec["file"]

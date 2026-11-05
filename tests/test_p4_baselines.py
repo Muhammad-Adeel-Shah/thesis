@@ -216,7 +216,8 @@ def _cospy_files(tmp_path: Path, artifact_extra: dict | None = None) -> tuple[di
 
 def test_cospy_loads_the_three_files_and_fuses_two_logits(tmp_path: Path) -> None:
     paths, shas = _cospy_files(tmp_path)
-    model = cospy.load_cospy(paths, shas, _StubClip(), 4, _tiny_kl_vae(), "cpu")
+    model, record = cospy.load_cospy(paths, shas, _StubClip(), 4, _tiny_kl_vae(), "cpu")
+    assert record == {"vae_keys": 0, "vae_source": "pinned sd15"}
     assert torch.equal(model.fc.weight, torch.load(paths["fusion"])["fc.weight"])
     x = torch.rand(2, 3, 384, 384)
     with torch.no_grad():
@@ -224,11 +225,45 @@ def test_cospy_loads_the_three_files_and_fuses_two_logits(tmp_path: Path) -> Non
     assert first.shape == (2, 1) and torch.equal(first, second)  # latent_dist.mean
 
 
-def test_a_vae_key_in_the_artifact_file_stops_the_load(tmp_path: Path) -> None:
+def _vae_state(vae, scale: float = 1.0, dtype=None) -> dict:
+    return {f"{cospy.VAE_PREFIX}{k}": (v * scale).to(dtype or v.dtype)
+            for k, v in vae.state_dict().items()}
+
+
+@pytest.mark.parametrize("dtype", [None, torch.float16])
+def test_a_vae_equal_to_the_pinned_one_keeps_sd15(tmp_path: Path, dtype) -> None:
+    """User decision 2026-11-05: equal exactly, or after a dtype cast -> continue with sd15."""
+    vae = _tiny_kl_vae().half() if dtype is not None else _tiny_kl_vae()
+    paths, shas = _cospy_files(tmp_path, _vae_state(vae.float() if dtype else vae, dtype=dtype))
+    vae = _tiny_kl_vae().half().float() if dtype is not None else _tiny_kl_vae()
+    _, record = cospy.load_cospy(paths, shas, _StubClip(), 4, vae, "cpu")
+    assert record["vae_source"].startswith("pinned sd15") and record["vs_pinned_sd15"]["equal"]
+
+
+def test_a_different_vae_is_loaded_from_the_checkpoint_and_recorded(tmp_path: Path) -> None:
+    """User decision 2026-11-05: differ -> CO-SPY's own VAE, every difference recorded."""
+    paths, shas = _cospy_files(tmp_path, _vae_state(_tiny_kl_vae(), scale=1.5))
+    vae = _tiny_kl_vae()
+    _, record = cospy.load_cospy(paths, shas, _StubClip(), 4, vae, "cpu")
+    assert record["vae_source"].startswith("CO-SPY checkpoint")
+    key = "encoder.conv_in.weight"
+    assert record["vs_pinned_sd15"]["per_tensor"][key] > 0
+    assert torch.equal(vae.state_dict()[key], _tiny_kl_vae().state_dict()[key] * 1.5)
+
+
+def test_a_partial_vae_in_the_artifact_file_still_stops(tmp_path: Path) -> None:
     paths, shas = _cospy_files(tmp_path, {"artifact_encoder.vae.encoder.conv_in.weight":
                                           torch.zeros(1)})
-    with pytest.raises(common.BaselineError, match="VAE"):
+    with pytest.raises(common.BaselineError, match="does not fit"):
         cospy.load_cospy(paths, shas, _StubClip(), 4, _tiny_kl_vae(), "cpu")
+
+
+def test_compare_state_accepts_a_dtype_cast_and_reports_each_difference() -> None:
+    ref = {"a": torch.tensor([1.0, 2.0]), "b": torch.tensor([0.5])}
+    assert common.compare_state({"a": ref["a"].half(), "b": ref["b"]}, ref)["equal"]
+    out = common.compare_state({"a": ref["a"] + 0.25, "b": ref["b"]}, ref)
+    assert not out["equal"] and out["per_tensor"] == {"a": 0.25} and out["max_abs_diff"] == 0.25
+    assert common.compare_state({"a": ref["a"]}, ref)["same_keys"] is False
 
 
 def test_the_artifact_branch_sees_the_224_resize_without_antialias() -> None:
@@ -410,6 +445,68 @@ def test_the_preflight_refuses_a_weight_without_a_recorded_hash(tmp_path: Path) 
         "fire": {"file": "fire/x.pth", "sha256": None}}})
     assert record["weights_report"]["ok"] is True
     assert problems and "no recorded sha256" in problems[0]
+
+
+def test_the_weights_report_is_accepted_only_with_the_waived_cospy_notice() -> None:
+    pre = _script("p4_preflight")
+    notice = ("CO-SPY artifact_weights.pth holds 248 VAE key(s): the spec (section 1) stops "
+              "here; see artifact_vae_vs_pinned_sd15 and decide")
+    assert pre.weights_report_ok({"ok": True, "problems": []})
+    assert pre.weights_report_ok({"ok": False, "problems": [notice]})
+    assert not pre.weights_report_ok({"ok": False, "problems": [notice, "FIRE: refused"]})
+    assert not pre.weights_report_ok({"ok": False, "problems": []})
+    assert not pre.weights_report_ok({})
+
+
+def test_the_returned_weights_report_is_accepted_and_its_hashes_are_committed() -> None:
+    import json
+
+    pre = _script("p4_preflight")
+    report = json.loads((ROOT / "reports/kaggle_20261105/p4_weights/p4_weights.json")
+                        .read_text("utf-8"))
+    assert pre.weights_report_ok(report)
+    assert report["checks"]["cospy"]["artifact_vae_vs_pinned_sd15"]["equal"] is True
+    scoring = json.loads((ROOT / "env/p4_baselines_expect.json").read_text("utf-8"))
+    files = report["cospy_zip"]
+    assert scoring["weights"]["fire"]["sha256"] == report["files"]["fire"]["sha256"]
+    for name in ("semantic", "artifact", "fusion"):
+        assert scoring["weights"][f"cospy_{name}"]["sha256"] == \
+            files[f"{name}_weights.pth"]["sha256"]
+    assert all(entry["sha256"] for entry in scoring["weights"].values())
+
+
+def test_a_scoring_session_refuses_torch_hub_code_and_other_hosts(
+        monkeypatch: pytest.MonkeyPatch) -> None:
+    """User rule 2026-11-05: github.com / dl.fbaipublicfiles.com never in a scoring session."""
+    import torch.hub
+
+    score = _script("p4_score")
+    fetched: list[str] = []
+    monkeypatch.setattr(torch.hub, "download_url_to_file", lambda url, *a, **k: fetched.append(url))
+    monkeypatch.setattr(torch.hub, "load", torch.hub.load)
+    score.guard_torch_hub()
+    with pytest.raises(score.ScoreError, match="torch.hub.load"):
+        torch.hub.load("facebookresearch/dinov2", "dinov2_vitl14")
+    for url in ("https://dl.fbaipublicfiles.com/dinov2/x.pth",
+                "https://github.com/facebookresearch/dinov2/zipball/main"):
+        with pytest.raises(score.ScoreError, match="refused"):
+            torch.hub.download_url_to_file(url, "x")
+    torch.hub.download_url_to_file("https://download.pytorch.org/models/vgg16-397923af.pth", "x")
+    assert fetched == ["https://download.pytorch.org/models/vgg16-397923af.pth"]
+
+
+def test_no_scoring_code_calls_torch_hub_or_names_the_isolated_hosts() -> None:
+    """p4_score.py names the two hosts only to refuse them, so it is checked for calls only."""
+    import re
+
+    call = re.compile(r"torch\.hub\.load\(\s*[\"']")
+    files = [*(ROOT / "src/dbp/baselines").glob("*.py"), ROOT / "scripts/p4_score.py",
+             ROOT / "scripts/p4_preflight.py", ROOT / "env/kaggle_run_p4_baselines.py"]
+    for path in files:
+        text = path.read_text(encoding="utf-8")
+        assert not call.search(text), path.name
+        if path.name != "p4_score.py":
+            assert "fbaipublicfiles" not in text and "github.com" not in text, path.name
 
 
 def test_condition_rows_score_panel_b_test_rows_only() -> None:

@@ -58,3 +58,7 @@ docs/report/archive/
 Thumbs.db
 .DS_Store
 *.tmp
+
+# Correction 2026-11-05: `data/` above is unanchored, so it also matched the package
+# src/dbp/data/ and left it out of the first commit. Only the top-level data/ is ignored.
+!src/dbp/data/

@@ -12,7 +12,8 @@ from pathlib import Path
 
 import pytest
 
-REPO = Path(__file__).resolve().parents[2]
+THESIS_DBP = Path(__file__).resolve().parents[1]
+REPO = THESIS_DBP.parent
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff", ".gif",
                   ".svg", ".pdf", ".heic", ".avif"}
 CHART_SUFFIXES = {".svg", ".pdf", ".png"}
@@ -20,11 +21,17 @@ MAX_BYTES = 1_000_000
 
 
 def tracked_files() -> list[str]:
-    result = subprocess.run(["git", "ls-files"], cwd=REPO, capture_output=True, text=True,
-                            check=False)
+    """Every tracked file under thesis_dbp/, spelled ``thesis_dbp/...``.
+
+    Run from thesis_dbp/ itself, so it works whether thesis_dbp/ is the repository root
+    (since 2026-11-05) or a folder in it: ``git ls-files`` lists paths relative to the
+    working directory either way.
+    """
+    result = subprocess.run(["git", "ls-files"], cwd=THESIS_DBP, capture_output=True,
+                            text=True, check=False)
     if result.returncode != 0:
         pytest.skip("not a git checkout (NOT-RUN: git ls-files failed)")
-    return [line for line in result.stdout.splitlines() if line]
+    return [f"thesis_dbp/{line}" for line in result.stdout.splitlines() if line]
 
 
 def is_allowed_chart(path: str, size: int) -> bool:
@@ -36,7 +43,9 @@ def is_allowed_chart(path: str, size: int) -> bool:
 
 def test_every_tracked_image_is_an_allowed_chart() -> None:
     offenders = []
-    for path in tracked_files():
+    files = tracked_files()
+    assert len(files) > 100, f"only {len(files)} tracked files found: the listing is wrong"
+    for path in files:
         if Path(path).suffix.lower() not in IMAGE_SUFFIXES:
             continue
         size = (REPO / path).stat().st_size

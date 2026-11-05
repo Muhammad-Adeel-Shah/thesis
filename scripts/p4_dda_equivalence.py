@@ -18,6 +18,12 @@ It scores the same 2 COCO val2017 images with:
 
 **Pass:** the two logits agree within ``--tolerance`` (1e-3) on both images. The
 tolerance is never loosened; a failure is fixed at its cause (user, 2026-11-01).
+
+**Downloads** (user rule 2026-11-05): DDA's code may fetch from github.com and
+dl.fbaipublicfiles.com in this session only. Every download -- the DDA archive and
+whatever ``torch.hub`` fetches (DINOv2's code and its pretrained weights) -- is recorded
+with its URL and sha256 under ``downloads``. No scoring session may use these hosts;
+``p4_score.py`` refuses them.
 Writes ``--out`` (JSON) and exits 0 on a pass, 1 on a failure.
 """
 
@@ -42,6 +48,29 @@ from dbp.baselines.common import dryrun, file_sha256  # noqa: E402
 
 DDA_REPO = "roy-ch/Dual-Data-Alignment"
 DINOV2_REPO = "facebookresearch/dinov2"
+#: Every download this session makes for DDA's code, with its sha256 (user rule
+#: 2026-11-05: github.com and dl.fbaipublicfiles.com are allowed here only, and recorded).
+DOWNLOADS: list[dict[str, Any]] = []
+
+
+def record_download(url: str, path: Path, via: str) -> None:
+    """Append one download (URL, final URL, bytes, sha256) to :data:`DOWNLOADS`."""
+    DOWNLOADS.append({"url": url, "via": via, "file": Path(path).name,
+                      "bytes": Path(path).stat().st_size, "sha256": file_sha256(Path(path))})
+
+
+def watch_torch_hub() -> None:
+    """Record every file ``torch.hub`` downloads (DINOv2's code zip and its weights)."""
+    import torch.hub
+
+    original = torch.hub.download_url_to_file
+
+    def download(url: str, dst: str, *args: Any, **kwargs: Any) -> Any:
+        result = original(url, dst, *args, **kwargs)
+        record_download(url, Path(dst), "torch.hub.download_url_to_file")
+        return result
+
+    torch.hub.download_url_to_file = download
 
 
 def fetch_archive(commit: str, work: Path, local: Path | None) -> Path:
@@ -52,7 +81,9 @@ def fetch_archive(commit: str, work: Path, local: Path | None) -> Path:
     else:
         url = f"https://github.com/{DDA_REPO}/archive/{commit}.zip"
         with urllib.request.urlopen(url, timeout=120) as response, archive.open("wb") as out:
+            final = response.geturl()
             shutil.copyfileobj(response, out)
+        record_download(url, archive, f"urllib (final URL {final})")
     target = work / "dda_repo"
     with zipfile.ZipFile(archive) as handle:
         for name in handle.namelist():
@@ -167,8 +198,9 @@ def main() -> int:
         record.update({"pass": False, "problem": "DDA_ckpt.pth is not the recorded file"})
     else:
         inference = fetch_archive(expect["dda_commit"], args.work, args.local_archive)
-        record["archive_files"] = sorted(str(p.relative_to(inference)) for p in
+        record["archive_files"] = sorted(p.relative_to(inference).as_posix() for p in
                                          inference.rglob("*.py"))
+        watch_torch_hub()
         theirs = upstream_logits(inference, ckpt, images, expect["dinov2_commit"])
         ours = our_logits(ckpt, spec["sha256"], images,
                           expect.get("dryrun_dda_arch") if dryrun() else None)
@@ -176,6 +208,7 @@ def main() -> int:
             entry.update({"upstream_logit": a, "ours_logit": b, "abs_diff": abs(a - b)})
         worst = max(e["abs_diff"] for e in record["images"])
         record.update({"max_abs_diff": worst, "pass": worst <= expect["tolerance"]})
+    record["downloads"] = DOWNLOADS
     record["seconds"] = round(time.perf_counter() - started, 1)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")

@@ -18,9 +18,10 @@ a mismatch costs no GPU time:
 
 * DDA: the exact key set, then a strict load (spec 7.12);
 * CO-SPY: the semantic and fusion ``fc`` keys; the artifact keys against the artifact
-  branch, and **whether the file holds VAE keys** (which the spec says stops the run) --
-  if it does, whether those tensors equal the pinned ``sd15`` VAE's, so the user can
-  decide; SigLIP built from the local file;
+  branch, and **whether the file holds VAE keys** -- if it does, whether those tensors
+  equal the pinned ``sd15`` VAE's (exactly or after a dtype cast; otherwise the max
+  absolute difference of every tensor). Not a stop (user decision 2026-11-05: equal ->
+  sd15, different -> the checkpoint's own VAE); SigLIP built from the local file;
 * FIRE: every ResNet and filter key; how much of the VAE it holds (``full``/``none``/
   ``partial``), and if full, whether it equals the pinned ``sd15`` VAE cast to fp16.
 
@@ -46,6 +47,7 @@ sys.path.insert(0, str(THESIS_DBP / "scripts"))
 
 from dbp.baselines.common import (  # noqa: E402
     BaselineError,
+    compare_state,
     dryrun,
     file_sha256,
     key_diff,
@@ -123,27 +125,6 @@ def extract_cospy(zip_path: Path, names: list[str], out: Path) -> tuple[dict[str
     return record, problems
 
 
-def tensors_equal(state: dict[str, Any], reference: dict[str, Any], prefix: str,
-                  dtype: Any | None = None) -> dict[str, Any]:
-    """Whether ``state``'s ``prefix`` tensors equal ``reference`` (cast to ``dtype``)."""
-    import torch
-
-    held = {k.removeprefix(prefix): v for k, v in state.items() if k.startswith(prefix)}
-    if set(held) != set(reference):
-        return {"same_keys": False, "equal": False,
-                **{f"only_{s}": n for s, n in (("file", len(set(held) - set(reference))),
-                                                 ("pinned", len(set(reference) - set(held))))}}
-    worst = 0.0
-    for key, tensor in held.items():
-        ref = reference[key].to(dtype) if dtype is not None else reference[key]
-        if tensor.shape != ref.shape:
-            return {"same_keys": True, "equal": False, "shape_mismatch": key}
-        worst = max(worst, float((tensor.float() - ref.float()).abs().max()))
-    equal = all(torch.equal(held[k], reference[k].to(dtype) if dtype is not None
-                            else reference[k]) for k in held)
-    return {"same_keys": True, "equal": equal, "max_abs_diff": worst}
-
-
 def inspect_all(paths: dict[str, Path], expect: dict[str, Any], sd15_state: dict[str, Any],
                 sd15_vae: Any, log: Any) -> tuple[dict[str, Any], list[str]]:
     """Open every checkpoint with weights_only=True and check it against the adapters."""
@@ -192,10 +173,17 @@ def inspect_all(paths: dict[str, Path], expect: dict[str, Any], sd15_state: dict
         problems.append(f"CO-SPY artifact: {len(diff['missing'])} missing, "
                         f"{len(diff['unexpected'])} unexpected non-VAE key(s)")
     if vae_keys:
-        record["cospy"]["artifact_vae_vs_pinned_sd15"] = tensors_equal(
-            art, sd15_state, cospy.VAE_PREFIX)
-        problems.append(f"CO-SPY artifact_weights.pth holds {vae_keys} VAE key(s): the spec "
-                        f"(section 1) stops here; see artifact_vae_vs_pinned_sd15 and decide")
+        # User decision 2026-11-05: not a stop. Equal (exactly or after a dtype cast) ->
+        # the pinned sd15 VAE; different -> the file's own VAE, every difference recorded.
+        comparison = compare_state({k.removeprefix(cospy.VAE_PREFIX): v for k, v in
+                                    art.items() if k.startswith(cospy.VAE_PREFIX)},
+                                   sd15_state)
+        record["cospy"]["artifact_vae_vs_pinned_sd15"] = comparison
+        record["cospy"]["vae_in_use"] = "pinned sd15" if comparison["equal"] else \
+            "CO-SPY checkpoint (differs from pinned sd15)"
+        if not comparison["same_keys"] or "shape_mismatch" in comparison:
+            problems.append(f"CO-SPY artifact VAE does not fit the pinned architecture: "
+                            f"{comparison}")
     siglip = expect["hf"]["siglip"]
     clip, dim = cospy.build_siglip(paths["siglip"], siglip["sha256"],
                                    expect.get("siglip_model", cospy.SIGLIP),
@@ -223,8 +211,9 @@ def inspect_all(paths: dict[str, Path], expect: dict[str, Any], sd15_state: dict
     if held == "partial":
         problems.append("FIRE: the checkpoint holds part of the VAE")
     if held == "full":
-        record["fire"]["vae_vs_pinned_sd15_fp16"] = tensors_equal(state, sd15_state, "vae.",
-                                                                  torch.float16)
+        record["fire"]["vae_vs_pinned_sd15_fp16"] = compare_state(
+            {k.removeprefix("vae."): v for k, v in state.items() if k.startswith("vae.")},
+            {k: v.to(torch.float16) for k, v in sd15_state.items()})
     log.info("FIRE: %s", {k: record["fire"][k] for k in ("keys", "vae")})
     return record, problems
 

@@ -1,0 +1,44 @@
+{
+  "what": "P4 isolated DDA equivalence check (DDA's own code vs dbp.baselines.dda)",
+  "dda_commit": "08d6b414a33826403b9096cfdb7758d5eae12dbb",
+  "dinov2_commit": "7764ea0f912e53c92e82eb78a2a1631e92725fc8",
+  "ckpt_sha256": "b27a31d39374803ddeff02bfabb2be76e190b04300490cddfafb24f683f37e3e",
+  "ckpt_ok": true,
+  "tolerance": 0.001,
+  "python": "3.13.18",
+  "torch": "2.11.0+cpu",
+  "dry_run": false,
+  "images": [
+    {
+      "file": "000000039477.jpg",
+      "sha256": "66afd33bb79d40a43a8486acafb399b524a6c49b17f694aa1daa8f697aec70a1",
+      "size": [
+        640,
+        421
+      ],
+      "upstream_logit": -3.6115453243255615,
+      "ours_logit": -3.6115453243255615,
+      "abs_diff": 0.0
+    },
+    {
+      "file": "000000185292.jpg",
+      "sha256": "4e79bb9e163ebfda9bb8dcf2d8e42979d9c8ca381afbbb58b31bed88eb285880",
+      "size": [
+        421,
+        640
+      ],
+      "upstream_logit": -2.999852180480957,
+      "ours_logit": -2.999852180480957,
+      "abs_diff": 0.0
+    }
+  ],
+  "archive_files": [
+    "inference.py",
+    "models/dinov2_models.py",
+    "models/dinov2_models_lora.py",
+    "models/lora.py"
+  ],
+  "max_abs_diff": 0.0,
+  "pass": true,
+  "seconds": 55.1
+}
