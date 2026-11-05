@@ -6942,3 +6942,38 @@ tolerance 1e-3.
   - **The TrueFake per-image scores are not among them** (git-ignored, kept in
     `kaggle_raw`).
 
+### Repository — pre-push audit tool; first push of the P4 work to the private GitHub repository — 2026-11-05
+
+**User decisions (2026-11-05):**
+- `2730bb5` verified.
+- The GitHub repository `Muhammad-Adeel-Shah/thesis` is **PRIVATE** (the user checked and
+  changed its visibility).
+- Add the audit as `scripts/prepush_audit.py` with a test, commit and run it, then push
+  `master` to `origin`. The push also restores `src/dbp/data/` on GitHub.
+
+**Added:**
+- **`scripts/prepush_audit.py`** (read-only) checks every blob in every commit reachable
+  from `--ref`:
+  - **(a) Images:** any image or video extension, or an image signature in the bytes, must
+    be an SVG/PDF/PNG chart under `reports/**/figures/` of at most 1 MB.
+  - **(b) Secrets:** token and private-key patterns, reported redacted, and risky file
+    names.
+  - **(c) Per-image files:** CSVs with an image-id or path column, summarised by
+    directory.
+  - **Exit codes:** 0 when clean, 1 on any (a) or (b) violation, 2 when it cannot run.
+- **`tests/test_prepush_audit.py`:** 17 cases on throwaway repositories:
+  - a dataset JPEG, a PNG outside `figures/`, a chart over 1 MB, a renamed JPEG, a video;
+  - an image deleted in a later commit;
+  - four token kinds and four risky names;
+  - the per-image summary, and the exit codes;
+  - the fake tokens are assembled at run time.
+
+**Correction to the chat report of 2026-11-05 (not to this log):** the `p3_final_scores`
+group was given as 16.2 MB / 452,428 rows. The audit gives 15.22 MB / 575,484 rows in 108
+files. The totals in the previous entry are correct.
+
+**Audit of `master` = `2730bb5` before this commit:** CLEAN.
+- **(a):** 12 image files, all allowed charts.
+- **(b):** 0 content hits, 0 risky names.
+- **(c):** 150 CSVs, 50,513,800 B, 788,963 rows.
+
