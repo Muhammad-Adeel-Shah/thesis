@@ -1,0 +1,57 @@
+{
+  "row": "cospy_native",
+  "baseline": "cospy",
+  "condition": "clean",
+  "crop": null,
+  "preprocessing": "Resize(384) short side -> CenterCrop(384) -> ToTensor; inner Resize(224, antialias=False) for the artifact branch",
+  "score": "larger = more likely fake",
+  "siglip_sha256": "97faeafa0576c1ba4c92bae739ca06ef5f5d0c2db92f86a6086653d82a262043",
+  "vae": {
+    "vae_keys": 248,
+    "vs_pinned_sd15": {
+      "same_keys": true,
+      "equal": true,
+      "max_abs_diff": 0.0
+    },
+    "vae_source": "pinned sd15 (equal to the file's VAE)"
+  },
+  "vae_dtype": "fp32",
+  "cospy_semantic_sha256": "f391482e6b8bc28dea1f475e593c11da2761b798fd335871ba137641888d2dd4",
+  "cospy_artifact_sha256": "3ec2b5aaf1d4d649e2413e43b68b389b2fda9840dc79f0c9aa0f4cea40e14f76",
+  "cospy_fusion_sha256": "7af0160e79d35f8984dab41209aca10897e713f13f3b392a4d9bdce30a7cf6fb",
+  "versions": {
+    "torch": "2.11.0+cu130",
+    "timm": "1.0.30",
+    "diffusers": "0.42.0",
+    "pillow": "13.0.0"
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "limit": null,
+  "lists": {
+    "panel_b": {
+      "rows": 9405,
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p4_baseline_scores/cospy_native/panel_b.csv",
+      "sha256": "e2a41ed4882a739b1bbfa0524691d6bcdb2bb87270f5bdb023e1b2eba0293590",
+      "upscaled": 1942,
+      "seconds": 4132.0,
+      "seconds_per_image": 0.43934
+    },
+    "luma": {
+      "rows": 700,
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p4_baseline_scores/cospy_native/luma.csv",
+      "sha256": "c662b4ba06322c5cc2991cde10e2490a7ee63d65c2e1eaba4d5d418d65198896",
+      "upscaled": 120,
+      "seconds": 305.0,
+      "seconds_per_image": 0.43571
+    },
+    "threshold_reals": {
+      "rows": 891,
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p4_baseline_scores/cospy_native/threshold_reals.csv",
+      "sha256": "e10b3c0bdb035a5f9c472679ee7cfcb3aa3b7d12a2b73c324eef4ee164d3496c",
+      "upscaled": 0,
+      "seconds": 386.6,
+      "seconds_per_image": 0.43394
+    }
+  }
+}

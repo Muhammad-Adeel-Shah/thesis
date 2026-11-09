@@ -1,0 +1,24 @@
+{
+  "outcome": "DEADLINE",
+  "failed_job": null,
+  "jobs": [
+    {
+      "index": 0,
+      "device": "0",
+      "members": "dda_native,dda_crop308,dda_jpeg50,dda_resize050,cospy_native,fire_native",
+      "returncode": 0,
+      "log": "p4_score_job0_gpu0.log"
+    },
+    {
+      "index": 1,
+      "device": "1",
+      "members": "aeroblade",
+      "returncode": -15,
+      "log": "p4_score_job1_gpu1.log"
+    }
+  ],
+  "members_done": [],
+  "deadline_hours": 10.5,
+  "wall_hours": 10.5001,
+  "device_hours": 21.0003
+}

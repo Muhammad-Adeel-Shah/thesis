@@ -1,0 +1,28 @@
+{
+  "row": "dda_jpeg50",
+  "baseline": "dda",
+  "condition": "jpeg50",
+  "crop": 336,
+  "preprocessing": "CenterCrop(336) (zero-pads under 336) -> ToTensor -> CLIP mean/std",
+  "score": "larger = more likely fake",
+  "dda_ckpt_sha256": "b27a31d39374803ddeff02bfabb2be76e190b04300490cddfafb24f683f37e3e",
+  "versions": {
+    "torch": "2.11.0+cu130",
+    "timm": "1.0.30",
+    "diffusers": "0.42.0",
+    "pillow": "13.0.0"
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "limit": null,
+  "lists": {
+    "panel_b_test": {
+      "rows": 8655,
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p4_baseline_scores/dda_jpeg50/panel_b_test.csv",
+      "sha256": "567568abcb0e1b828936acec53360d51d71e26d80ffb7aac12d460143dac7ec0",
+      "padded": 1050,
+      "seconds": 1349.1,
+      "seconds_per_image": 0.15587
+    }
+  }
+}

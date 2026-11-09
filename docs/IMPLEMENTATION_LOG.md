@@ -6977,3 +6977,92 @@ files. The totals in the previous entry are correct.
 - **(b):** 0 content hits, 0 risky names.
 - **(c):** 150 CSVs, 50,513,800 B, 788,963 rows.
 
+### P4 — scoring session 1: 6 of 7 rows complete; AEROBLADE stopped at the deadline; measured rate; option A approved in principle — 2026-11-09
+
+**Session** (Kaggle T4 x2, code `9ba3dde`, 2026-11-05 08:51–19:27):
+- **Pre-flight:** passed. The spec sha256, the three lists, all six weight files and the
+  accepted weights report were checked; 10,996 files were staged and hash-verified in 26 s.
+- **Smoke:** all 7 rows passed.
+- **Scoring:** **exited 2 (DEADLINE at 10.5 h)**.
+  - GPU 0 finished its 6 rows in about 3.7 h, then idled.
+  - GPU 1 (AEROBLADE) was terminated at 10.5 h with nothing saved, because the worker
+    writes a list only when it completes, and Panel B (9,405) had not.
+- **Cost:** 10.6 h session wall, which is what Kaggle bills; 21.0 device-h by the runner's
+  count (2 x 10.5 h). The plan said 2–6 h wall / 4.1–11.4 device-h. **The AEROBLADE
+  estimate was wrong:** see below.
+- **Files:** in `F:\thesis-2\kaggle_raw\`:
+  - `p4_reports.zip`: sha256 `07bf1e39aeae8d79d88c725cfcc90a848770dd0e2ea1d1b3b1728e052caf2595`,
+    779 entries, extracted to `F:\thesis-2\kaggle_raw\p4_reports_x\`;
+  - `p4_smoke_job1_gpu1.log` (`328565a1…2d`) and `p4_score_job1_gpu1.log` (`68c7dd12…59`),
+    each byte-identical to the zip's copy.
+
+**The 6 complete rows, verified and committed**
+- **Verified:**
+  - each CSV's sha256 equals its summary's;
+  - the image ids are in the committed lists' order;
+  - every score is finite;
+  - the flag counts equal the summaries';
+  - `limit` is null; the device is cuda.
+- **Committed:** the summaries in `reports/p4_baselines/`, the scores in
+  `reports/p4_baseline_scores/` (`-text` in `.gitattributes`), and the plan, status,
+  hardware and the four worker logs in `reports/kaggle_20261105/p4_baselines_session1/`.
+
+| row | lists (rows) | flag | s/img (MEASURED) | seconds |
+|---|---|---|---|---|
+| `dda_native` | 9,405 / 700 / 891 | padded 1,281 / 31 / 0 | 0.146–0.148 | 1,624 |
+| `dda_crop308` | 9,405 / 700 / 891 | padded 0 / 0 / 0 | 0.115–0.117 | 1,284 |
+| `dda_jpeg50` | 8,655 test | padded 1,050 | 0.156 | 1,349 |
+| `dda_resize050` | 8,655 test | padded 1,050 | 0.164 | 1,422 |
+| `cospy_native` | 9,405 / 700 / 891 | upscaled 1,942 / 120 / 0 | 0.434–0.439 | 4,824 |
+| `fire_native` | 9,405 / 700 / 891 | cropped 4,582 / 618 / 0 | 0.187–0.260 | 2,738 |
+
+- **Cross-check:** DDA padded 1,281 Panel B rows, the count of rows with a short side
+  under 336 that the spec recorded on 2026-10-29.
+- **CO-SPY:** used the pinned sd15 VAE, equal to the file's.
+- **FIRE:** used the checkpoint's VAE in fp16, equal to sd15 cast to fp16.
+- **Pillow:** 13.0.0 on Kaggle, where DDA's README pins 12.3.0; a stated caveat, spec
+  section 4.
+
+**AEROBLADE, MEASURED** (smoke, 2 images per list, one T4, fp32, 3 AEs + LPIPS):
+
+| list | first 2 images, capped to <= 768 and a multiple of 8 | s/img | us per capped pixel |
+|---|---|---|---|
+| Panel B | 768 x 768, 768 x 768 | 10.44 | 17.7 |
+| luma | 640 x 520, 640 x 424 | 5.25 | 17.4 |
+| threshold reals | 384 x 384, 384 x 384 | 2.79 | 18.9 |
+
+- **The rate is linear in pixels:** 17.4–18.9 us per capped pixel across a 4x range of
+  image area.
+- **Bottleneck:** the work is GPU compute of the three fp32 round trips plus LPIPS, not
+  image loading. The same images load and score at 0.12 s/img in the DDA rows, so loading
+  is under about 2% of AEROBLADE's per-image time.
+- **Not separable:** the split between the three AEs and LPIPS is NOT-MEASURED; the
+  worker logs only whole lists.
+- **Pixel totals:** computed from the committed manifests (`p3_panel_b_selection.csv`,
+  `p1_reals_manifest_t_real.csv`, the Open Images manifest), after the 768 cap and the
+  multiple-of-8 crop:
+  - Panel B 3.405 Gpx (2,888 images cut by the cap);
+  - luma 0.192 Gpx;
+  - threshold reals 0.131 Gpx;
+  - **total 3.728 Gpx** (the spec's "about 3.7 Gpx").
+- **Single T4:** 3.728 Gpx x 17.4–18.9 us = **18.0–19.6 GPU-h**.
+- **Consistent with the session:** Panel B alone is 16.5–17.9 h, so it could not finish
+  in 10.5 h.
+- **Why the spec's 2.3–7.5 device-h was wrong:** it scaled P2's 320-px measurements
+  (sd15 0.18 s, Kandinsky 2.2 MoVQ 0.38 s, about 7.2 us/px for three AEs) and left out
+  LPIPS. The measured rate is 2.4–2.6x that; the cause is NOT-MEASURED.
+
+**User decisions (2026-11-09):** option A is approved in principle (execution only:
+split AEROBLADE across both GPUs, load images in the background, checkpoint). Option B
+(fp16) is rejected. Option C (drop or subset) only if option A proves unaffordable.
+1. **Exception to the "interrupted means re-scored from scratch" rule:** AEROBLADE may
+   resume from saved partial scores, because the method is deterministic.
+   - Checkpoints are append-only, hashed and never overwritten.
+   - On every resume, 20 already-saved rows are re-scored, and the run stops if any
+     differs beyond fp32 rounding.
+2. **Fail fast, for every row from now on:** the runbook measures s/img in the smoke and
+   refuses to start, or re-plans, if the projected time exceeds the session deadline.
+3. **Quota:** the user has 30 GPU h left this week (it resets on Saturday).
+
+**No option-A code yet;** the projection is reported to the user first.
+
