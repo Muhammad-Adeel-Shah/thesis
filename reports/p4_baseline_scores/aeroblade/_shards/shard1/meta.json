@@ -1,0 +1,19 @@
+{
+  "row": "aeroblade",
+  "shard": 1,
+  "manifest_sha256": "2c042891cdd1756628bf11d844be388daf7d63e1ac77d7fda5afaa3c1e8a4014",
+  "columns": [
+    "list",
+    "image_id",
+    "score",
+    "flag",
+    "lpips2_sd15",
+    "lpips2_sd21",
+    "lpips2_movq_k21"
+  ],
+  "aes": [
+    "sd15",
+    "sd21",
+    "movq_k21"
+  ]
+}

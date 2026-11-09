@@ -7148,3 +7148,52 @@ again from scratch" does not apply to AEROBLADE's shards.
 - **Refusals:** a second merge and a re-score of a finished shard were refused.
 - **The dry-run at HEAD follows the commit.**
 
+### P4 — scoring session 2: AEROBLADE complete (option A); all 7 rows of the frozen spec scored — 2026-11-10
+
+**Session** (Kaggle T4 x2, code `34a399a`, 2026-11-09). `F:\thesis-2\kaggle_raw\p4_reports_2.zip`: sha256
+`79e55a8848b516f597e73b9cc7401065b6a1cd4bda4838cf5709106f7dcec4ae`, 862 entries, extracted
+to `F:\thesis-2\kaggle_raw\p4_reports_2_x\`.
+- **Plan:**
+  - the 6 committed rows were complete (from the code), carried 0;
+  - due were `aeroblade#0` on GPU 0 and `aeroblade#1` on GPU 1;
+  - 3.728 Gpx dealt 1,863,819,392 / 1,863,824,448 px, 5,498 images each.
+- **Fail-fast projection** (from the smoke after one warm-up image): 17.17 / 18.55 us per
+  capped pixel, so 8.90 h / 9.61 h, against 10.5 h available after 0.08 h elapsed.
+  **Started.**
+- **Scoring:** **COMPLETE.** 10.09 h wall, 20.18 device-h by the runner's count; both jobs
+  exited 0.
+  - Shard 0: 9.35 h, 28 parts, 18.05 us/px.
+  - Shard 1: 10.08 h, 28 parts, 19.47 us/px.
+  - **The projection was 5% low:** the smoke's 6 images ran slightly faster per pixel than
+    the full shards. Shard 1 finished 0.42 h before the deadline.
+  - No resume was needed, so no `resumes.jsonl`.
+- **Merge:** 9,405 / 700 / 891 rows.
+
+**Verified** (locally, against the extracted output):
+- **Each shard:**
+  - the manifest sha256 equals the plan's;
+  - every part matches its ledger line (`ShardStore.load`);
+  - 5,498 rows in manifest order;
+  - the ledger sha256 equals the done record's.
+- **The merged CSVs:**
+  - the image ids are in the committed lists' order;
+  - every value equals its checkpoint value (rounded to the CSV's 6 decimals);
+  - every score is minus the minimum of its three LPIPS layer-2 distances (within 1.5e-6);
+  - all finite; the sha256 and row counts equal the summary's.
+- **Cross-check:** `cut_by_cap` 2,888 / 0 / 0. Panel B's 2,888 equals the count of
+  images with a side over 768, computed independently from `p3_panel_b_selection.csv`.
+- **The 6 earlier rows** in this output are byte-identical to the committed ones.
+- **AEs:** `sd15` @ `451f4fe1…`, `sd21` @ `bb215482…`, `movq_k21` @ `04b36665…`.
+- **Versions:** torch 2.11.0+cu130, timm 1.0.30, diffusers 0.42.0, Pillow 13.0.0.
+
+**Committed:**
+- `reports/p4_baselines/aeroblade.json`;
+- `reports/p4_baseline_scores/aeroblade/` (3 CSVs; the shard ledgers, meta and done records);
+- `reports/kaggle_20261109/p4_baselines_session2/` (plan, projection, status, smoke status,
+  hardware, 4 worker logs, the 2 shard manifests).
+- **Not committed:** the 56 checkpoint part files duplicate the merged scores and stay in
+  `F:\thesis-2\kaggle_raw\p4_reports_2_x\`. The committed ledgers carry their sha256 values.
+
+**P4 scoring is complete:** all 7 rows of the frozen spec are scored once. Next is the
+section 5 analysis (descriptive).
+

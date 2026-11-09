@@ -1,0 +1,76 @@
+{
+  "row": "aeroblade",
+  "baseline": "aeroblade",
+  "condition": "clean",
+  "crop": null,
+  "preprocessing": "centre crop <= 768 x 768 -> reconstruct.py (multiple of 8) per AE",
+  "score": "larger = more likely fake",
+  "aes": {
+    "sd15": "stable-diffusion-v1-5/stable-diffusion-v1-5@451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+    "sd21": "sd2-community/stable-diffusion-2-1@bb2154823665391b4fb29b0b9cf82a198964ee05",
+    "movq_k21": "kandinsky-community/kandinsky-2-1@04b366659663bf60deacb96fd3e38f1cb39a3be4"
+  },
+  "lpips": "vgg, v0.1, layer 2",
+  "versions": {
+    "torch": "2.11.0+cu130",
+    "timm": "1.0.30",
+    "diffusers": "0.42.0",
+    "pillow": "13.0.0"
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "limit": null,
+  "lists": {
+    "panel_b": {
+      "rows": 9405,
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p4_baseline_scores/aeroblade/panel_b.csv",
+      "sha256": "04f7599c570d09ac39ad5bf91a9d0ff31314f483457c281352f35e6b389bb133",
+      "cut_by_cap": 2888,
+      "seconds": null,
+      "seconds_per_image": 6.35946
+    },
+    "luma": {
+      "rows": 700,
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p4_baseline_scores/aeroblade/luma.csv",
+      "sha256": "505932538c03cf4c3f52ca7ae38df4cd01a1f31d6f63185de2d38ad7c4c0f36c",
+      "cut_by_cap": 0,
+      "seconds": null,
+      "seconds_per_image": 6.35946
+    },
+    "threshold_reals": {
+      "rows": 891,
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p4_baseline_scores/aeroblade/threshold_reals.csv",
+      "sha256": "09933470a9e710165eeefc4729b8f11844a204953f0eec8796d27ffceb1e908f",
+      "cut_by_cap": 0,
+      "seconds": null,
+      "seconds_per_image": 6.35946
+    }
+  },
+  "execution": {
+    "what": "split across GPUs by capped pixels; append-only checkpoints; every resume re-scored saved rows first (user 2026-11-09)",
+    "shards": {
+      "aeroblade#0": {
+        "items": 5498,
+        "pixels": 1863819392,
+        "parts": 28,
+        "ledger_sha256": "98aa544efb0ab90cbc21e21c37052989bd3e82fffb40c8bfa7279bbb8fea3d3d",
+        "manifest_sha256": "73a0084c430107e7a6338ccee6189cf7ef75b825886e7263dff8491604ce4569",
+        "seconds": 33642.5,
+        "device": "cuda"
+      },
+      "aeroblade#1": {
+        "items": 5498,
+        "pixels": 1863824448,
+        "parts": 28,
+        "ledger_sha256": "07e83f75939ce5d442ac7b441f8244a3cadab86224aa14fff5b6df1d27a4949a",
+        "manifest_sha256": "2c042891cdd1756628bf11d844be388daf7d63e1ac77d7fda5afaa3c1e8a4014",
+        "seconds": 36286.1,
+        "device": "cuda"
+      }
+    },
+    "resume_checks": {
+      "aeroblade#0": [],
+      "aeroblade#1": []
+    }
+  }
+}

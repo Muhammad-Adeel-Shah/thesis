@@ -1,0 +1,24 @@
+{
+  "outcome": "COMPLETE",
+  "failed_job": null,
+  "jobs": [
+    {
+      "index": 0,
+      "device": "0",
+      "members": "aeroblade#0",
+      "returncode": 0,
+      "log": "p4_score_job0_gpu0.log"
+    },
+    {
+      "index": 1,
+      "device": "1",
+      "members": "aeroblade#1",
+      "returncode": 0,
+      "log": "p4_score_job1_gpu1.log"
+    }
+  ],
+  "members_done": [],
+  "deadline_hours": 10.5,
+  "wall_hours": 10.0917,
+  "device_hours": 20.1834
+}

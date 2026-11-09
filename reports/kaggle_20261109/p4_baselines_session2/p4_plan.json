@@ -1,0 +1,254 @@
+{
+  "what": "P4 baseline scoring plan (spec sections 2-4)",
+  "spec": {
+    "path": "docs/P4_BASELINES_SPEC.md",
+    "sha256": "6576eaded3460810e7406011ccbe03909f5124f90d6b21e43b221e7c2b0f2a54"
+  },
+  "lists": {
+    "panel_b": {
+      "path": "/kaggle/working/Implementation/thesis_dbp/reports/kaggle_20261027/p3_final_session1/p3_final_lists/panel_b.csv",
+      "sha256": "5a8eaa0574cf07f7188397d6d0c8b92f06162e26b1017e44740da76174b056b5",
+      "rows": 9405
+    },
+    "luma": {
+      "path": "/kaggle/working/Implementation/thesis_dbp/reports/kaggle_20261027/p3_final_session1/p3_final_lists/luma.csv",
+      "sha256": "e54513462d3d6bc190fb0fa4f052bf08ecf215d2c6b7a9dfa634684faafd34b0",
+      "rows": 700
+    },
+    "threshold_reals": {
+      "path": "/kaggle/working/Implementation/thesis_dbp/reports/kaggle_20261027/p3_final_session1/p3_final_lists/threshold_reals.csv",
+      "sha256": "83e5b9c09c9997907c001e42087552ff0f73847f7d47e7bcddae29417b67e4f5",
+      "rows": 891
+    },
+    "panel_b_test": {
+      "rows": 8655
+    }
+  },
+  "weights": {
+    "weights_report": {
+      "path": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p4-weights/Implementation/thesis_dbp/reports/p4_weights.json",
+      "ok": false,
+      "problems": [
+        "CO-SPY artifact_weights.pth holds 248 VAE key(s): the spec (section 1) stops here; see artifact_vae_vs_pinned_sd15 and decide"
+      ],
+      "accepted": true,
+      "commit": "bffdfca"
+    },
+    "dda": {
+      "path": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p4-weights/p4_weights/dda/DDA_ckpt.pth",
+      "sha256": "b27a31d39374803ddeff02bfabb2be76e190b04300490cddfafb24f683f37e3e"
+    },
+    "siglip": {
+      "path": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p4-weights/p4_weights/siglip/open_clip_model.safetensors",
+      "sha256": "97faeafa0576c1ba4c92bae739ca06ef5f5d0c2db92f86a6086653d82a262043"
+    },
+    "cospy_semantic": {
+      "path": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p4-weights/p4_weights/cospy_zip/semantic_weights.pth",
+      "sha256": "f391482e6b8bc28dea1f475e593c11da2761b798fd335871ba137641888d2dd4"
+    },
+    "cospy_artifact": {
+      "path": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p4-weights/p4_weights/cospy_zip/artifact_weights.pth",
+      "sha256": "3ec2b5aaf1d4d649e2413e43b68b389b2fda9840dc79f0c9aa0f4cea40e14f76"
+    },
+    "cospy_fusion": {
+      "path": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p4-weights/p4_weights/cospy_zip/fusion_weights.pth",
+      "sha256": "7af0160e79d35f8984dab41209aca10897e713f13f3b392a4d9bdce30a7cf6fb"
+    },
+    "fire": {
+      "path": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p4-weights/p4_weights/fire/fire_imagenet_adm.pth",
+      "sha256": "fabd7a700b8fbcc826407d96cc1afdd86cc2722a72e6300ba558cd0419efe689"
+    }
+  },
+  "staged": {
+    "local_root": "/tmp/dbp_p4_local",
+    "files": 10996,
+    "bytes": 1951910027,
+    "gb": 1.818,
+    "by_source": {
+      "open_images": {
+        "files": 400,
+        "bytes": 86566940
+      },
+      "coco": {
+        "files": 10596,
+        "bytes": 1865343087
+      }
+    },
+    "workers": 32,
+    "free_gb_before": 966.83,
+    "margin_gb": 2.0,
+    "memory_gb_before": {
+      "MemTotal": 31.35,
+      "MemAvailable": 29.62,
+      "Cached": 9.91
+    },
+    "stat_seconds": 1.5,
+    "n_missing": 0,
+    "missing": [],
+    "seconds": 13.7,
+    "files_per_s": 801.1,
+    "mb_per_s": 135.6,
+    "verified": 10996,
+    "already_local": 0,
+    "n_sha256_mismatch": 0,
+    "sha256_mismatch": [],
+    "memory_gb_after": {
+      "MemTotal": 31.35,
+      "MemAvailable": 29.59,
+      "Cached": 14.39
+    },
+    "free_gb_after": 964.99,
+    "ok": true,
+    "reason": ""
+  },
+  "shards": {
+    "aeroblade": {
+      "n": 2,
+      "checkpoint_every": 200,
+      "resume_rescore": 20,
+      "units": {
+        "aeroblade#0": {
+          "shard": 0,
+          "manifest": "/kaggle/working/Implementation/thesis_dbp/reports/p4_shards/aeroblade_shard0.csv",
+          "sha256": "73a0084c430107e7a6338ccee6189cf7ef75b825886e7263dff8491604ce4569",
+          "items": 5498,
+          "pixels": 1863819392,
+          "saved_rows": 0,
+          "saved_pixels": 0,
+          "done": false,
+          "store": "/kaggle/working/Implementation/thesis_dbp/reports/p4_baseline_scores/aeroblade/_shards/shard0"
+        },
+        "aeroblade#1": {
+          "shard": 1,
+          "manifest": "/kaggle/working/Implementation/thesis_dbp/reports/p4_shards/aeroblade_shard1.csv",
+          "sha256": "2c042891cdd1756628bf11d844be388daf7d63e1ac77d7fda5afaa3c1e8a4014",
+          "items": 5498,
+          "pixels": 1863824448,
+          "saved_rows": 0,
+          "saved_pixels": 0,
+          "done": false,
+          "store": "/kaggle/working/Implementation/thesis_dbp/reports/p4_baseline_scores/aeroblade/_shards/shard1"
+        }
+      },
+      "carried_files": 0,
+      "pixels": 3727643840
+    }
+  },
+  "stage": "score",
+  "due": [
+    "aeroblade#0",
+    "aeroblade#1"
+  ],
+  "units": {
+    "aeroblade#0": {
+      "row": "aeroblade",
+      "shard": 0
+    },
+    "aeroblade#1": {
+      "row": "aeroblade",
+      "shard": 1
+    }
+  },
+  "rows_due": [
+    "aeroblade"
+  ],
+  "merge_due": [],
+  "complete": [
+    "dda_native",
+    "dda_crop308",
+    "dda_jpeg50",
+    "dda_resize050",
+    "cospy_native",
+    "fire_native"
+  ],
+  "carried": [],
+  "incomplete_previous": [],
+  "jobs": [
+    "0:aeroblade#0",
+    "1:aeroblade#1"
+  ],
+  "rows": {
+    "dda_native": {
+      "baseline": "dda",
+      "crop": 336,
+      "condition": "clean",
+      "lists": [
+        "panel_b",
+        "luma",
+        "threshold_reals"
+      ]
+    },
+    "dda_crop308": {
+      "baseline": "dda",
+      "crop": 308,
+      "condition": "clean",
+      "lists": [
+        "panel_b",
+        "luma",
+        "threshold_reals"
+      ]
+    },
+    "dda_jpeg50": {
+      "baseline": "dda",
+      "crop": 336,
+      "condition": "jpeg50",
+      "lists": [
+        "panel_b_test"
+      ]
+    },
+    "dda_resize050": {
+      "baseline": "dda",
+      "crop": 336,
+      "condition": "resize050",
+      "lists": [
+        "panel_b_test"
+      ]
+    },
+    "cospy_native": {
+      "baseline": "cospy",
+      "condition": "clean",
+      "lists": [
+        "panel_b",
+        "luma",
+        "threshold_reals"
+      ]
+    },
+    "fire_native": {
+      "baseline": "fire",
+      "condition": "clean",
+      "lists": [
+        "panel_b",
+        "luma",
+        "threshold_reals"
+      ]
+    },
+    "aeroblade": {
+      "baseline": "aeroblade",
+      "condition": "clean",
+      "lists": [
+        "panel_b",
+        "luma",
+        "threshold_reals"
+      ]
+    }
+  },
+  "list_files": {
+    "panel_b": "/kaggle/working/Implementation/thesis_dbp/reports/kaggle_20261027/p3_final_session1/p3_final_lists/panel_b.csv",
+    "luma": "/kaggle/working/Implementation/thesis_dbp/reports/kaggle_20261027/p3_final_session1/p3_final_lists/luma.csv",
+    "threshold_reals": "/kaggle/working/Implementation/thesis_dbp/reports/kaggle_20261027/p3_final_session1/p3_final_lists/threshold_reals.csv"
+  },
+  "weights_root": "/kaggle/input/notebooks/muhammadadeelshah/dbp-p4-weights/p4_weights",
+  "local_root": "/tmp/dbp_p4_local",
+  "aeroblade_aes": [
+    "sd15",
+    "sd21",
+    "movq_k21"
+  ],
+  "batch": {
+    "dda": 16,
+    "cospy": 8
+  },
+  "dryrun_arch": {},
+  "ok": true,
+  "problems": []
+}

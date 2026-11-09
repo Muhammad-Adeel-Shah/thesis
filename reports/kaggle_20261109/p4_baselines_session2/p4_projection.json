@@ -1,0 +1,43 @@
+{
+  "what": "P4 fail-fast projection (user decision 2026-11-09)",
+  "elapsed_hours": 0.082,
+  "available_hours": 10.5,
+  "deadline_hours": 10.5,
+  "jobs": [
+    {
+      "device": "0",
+      "units": [
+        {
+          "unit": "aeroblade#0",
+          "basis": "s/pixel",
+          "rate": 1.7172132772842638e-05,
+          "pixels_left": 1863819392,
+          "images_left": 5498,
+          "resume_seconds": 0.0,
+          "load_seconds": 33.5,
+          "seconds": 32039.25406402284
+        }
+      ],
+      "hours": 8.9,
+      "fits": true
+    },
+    {
+      "device": "1",
+      "units": [
+        {
+          "unit": "aeroblade#1",
+          "basis": "s/pixel",
+          "rate": 1.8549876847290643e-05,
+          "pixels_left": 1863824448,
+          "images_left": 5498,
+          "resume_seconds": 0.0,
+          "load_seconds": 32.2,
+          "seconds": 34605.91397536946
+        }
+      ],
+      "hours": 9.613,
+      "fits": true
+    }
+  ],
+  "ok": true
+}
