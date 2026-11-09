@@ -539,5 +539,11 @@ def test_the_expect_files_carry_the_spec_pins() -> None:
                                     "dda_resize050", "cospy_native", "fire_native",
                                     "aeroblade"}
     jobs = [j.partition(":")[2].split(",") for j in scoring["jobs"]]
-    assert sorted(m for j in jobs for m in j) == sorted(scoring["rows"])
+    units = [m for j in jobs for m in j]
+    n = scoring["shards"]["aeroblade"]["n"]
+    assert sorted({u.partition("#")[0] for u in units}) == sorted(scoring["rows"])
+    assert [u for u in units if u.startswith("aeroblade")] == [f"aeroblade#{k}" for k in range(n)]
+    assert len({j.partition(":")[0] for j in scoring["jobs"]}) == len(scoring["jobs"]) == n
+    assert scoring["shards"]["aeroblade"] == {"n": 2, "checkpoint_every": 200,
+                                              "resume_rescore": 20}
     assert scoring["weights"]["dda"]["sha256"] == weights["hf"]["dda"]["sha256"]

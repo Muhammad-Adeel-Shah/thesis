@@ -98,8 +98,8 @@
     }
   },
   "jobs": [
-    "0:dda_native,dda_crop308,dda_jpeg50,dda_resize050,cospy_native,fire_native",
-    "1:aeroblade"
+    "0:dda_native,dda_crop308,dda_jpeg50,dda_resize050,cospy_native,fire_native,aeroblade#0",
+    "1:aeroblade#1"
   ],
   "batch": {
     "dda": 16,
@@ -111,7 +111,17 @@
   "deadline_hours": 10.5,
   "poll_seconds": 30,
   "expected": {
-    "wall": "about 2-6 h (ESTIMATED, spec section 8): staging Panel B + luma + 891 reals (about 2 GB) 5-20 min; smoke of every row 0.2-0.4 h (model loads); GPU 0: DDA 4 rows (39,302 passes) 0.7-1.3 h + CO-SPY 0.6-1.4 h + FIRE 0.5-1.2 h = 1.8-3.9 h; GPU 1: AEROBLADE 2.3-7.5 h. If AEROBLADE runs to its upper bound the session may need a second run: complete rows are carried forward",
-    "quota": "Kaggle bills session wall time (I-042): 1 quota hour per session hour; 4.1-11.4 device-h approved (user, 2026-11-01)"
-  }
+    "wall": "AEROBLADE only (the other 6 rows are committed): about 9.3-10.1 h wall (MEASURED rate 17.4-18.9 us per capped pixel x 3.728 Gpx = 18.0-19.6 T4-h, split over 2 T4s = 9.0-9.8 h, plus about 0.3 h setup, smoke and resume check). If a session stops early the checkpoints keep everything scored; a second session of about 1-1.5 h finishes it",
+    "quota": "Kaggle bills session wall time (I-042): about 9.3-10.1 quota h, at most about 11.6 h with a second session"
+  },
+  "shards": {
+    "aeroblade": {
+      "n": 2,
+      "checkpoint_every": 200,
+      "resume_rescore": 20
+    }
+  },
+  "shards_note": "user decision 2026-11-09 (option A, execution only): AEROBLADE dealt to both T4s by capped pixels; append-only checkpoints every 200 images; every resume re-scores 20 saved rows and stops on a difference beyond fp32 rounding",
+  "session_limit_hours": 12.0,
+  "margin_hours": 0.25
 }

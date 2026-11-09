@@ -7066,3 +7066,85 @@ split AEROBLADE across both GPUs, load images in the background, checkpoint). Op
 
 **No option-A code yet;** the projection is reported to the user first.
 
+### P4 — option A built (AEROBLADE across both T4s, append-only checkpoints, resume check; fail-fast for every row) — 2026-11-09
+
+**User decisions (2026-11-09):** `c0b641f` approved.
+- **Option A:**
+  - split AEROBLADE across both T4s by pixel count;
+  - checkpoint every 200 images (append-only, hashed, never overwritten);
+  - on every resume, re-score 20 saved rows and stop if any differs beyond fp32 rounding;
+  - merge into the normal `aeroblade` row and verify against the committed lists.
+- **No background loading:** loading is under 2% of the time.
+- **Fail fast, every row:** time each row in the smoke (excluding the first, warm-up image),
+  and refuse to start if the projection exceeds the remaining deadline.
+- **Push:** `master` is pushed after the pre-push audit passes (the repository is private).
+
+**Exception, recorded as the user asked:** the earlier rule "an interrupted model is scored
+again from scratch" does not apply to AEROBLADE's shards.
+- **Resuming** from saved partial scores is allowed, because the method is deterministic.
+- **Checkpoints** are append-only, hashed and never overwritten.
+- **Every resume** first re-scores 20 saved rows (spread over what is saved), and stops if
+  any value differs beyond fp32 rounding.
+- **The tolerance:** a relative difference of at most 1e-6 (about 8 fp32 ulps), with an
+  absolute floor of 1e-9; values are stored at full float precision.
+
+**Built:**
+- **`src/dbp/baselines/shards.py`:**
+  - `capped_pixels`; `assign` (longest-processing-time on capped pixels, deterministic);
+  - `ShardStore`, the append-only store: part files plus `ledger.jsonl`. Each part is
+    checked against its ledger line on load; a planted, changed or missing part stops
+    the run; a part name is never written twice;
+  - `resume_sample`, `within_fp32`, and `merge` (every (list, id) exactly once, in the
+    committed order).
+- **`scripts/p4_preflight.py`:**
+  - deals a sharded row's images by capped pixels, read from the staged, hash-checked
+    copies, and writes `reports/p4_shards/<row>_shard<k>.csv`;
+  - carries earlier versions' checkpoints forward without overwriting (a differing file
+    stops the run);
+  - plans units `aeroblade#0`/`#1`, and the stage `merge` when every shard is done.
+- **`scripts/p4_score.py`:**
+  - **Shard units:** score in parts of 200. A resume runs the re-score check first, and
+    `resumes.jsonl` records every check. Each store's `meta.json` pins the manifest
+    sha256 and the column set. A finished shard writes `shard<k>.done.json`.
+  - **The smoke:** scores one untimed warm-up image per model, then times every smoke
+    image, recording `timing` (images, seconds, capped pixels) and `load_seconds`. It
+    also rehearses a resume check on its own store.
+  - **Dry-run seam:** `DBP_P4_STOP_AFTER_PARTS` (honoured only with `DBP_DRYRUN=1`)
+    rehearses a deadline.
+- **`scripts/p4_failfast.py`:**
+  - a row's time is load + s/image x its images; a shard's is load + s/pixel x its pixels
+    left + the resume re-score;
+  - a job is the sum of its units;
+  - the time available is min(deadline, 12 h session − elapsed − 0.25 h);
+  - exit 1 refuses the run, and `reports/p4_projection.json` gives the deadline to score
+    with.
+- **`scripts/p4_merge.py`:**
+  - verifies every store and ledger, then writes the normal `aeroblade` CSVs exactly as an
+    unsharded row's;
+  - its summary records each shard, its ledger hash and every resume check;
+  - exit 2 means a shard is not done.
+- **`env/kaggle_run_p4_baselines.py`:**
+  - records the session start;
+  - the smoke and the fail-fast check come before any long job;
+  - a merge cell follows the scoring;
+  - the verdict checks every row due.
+- **`env/p4_baselines_expect.json`:** `shards` (n 2, every 200, re-score 20); jobs
+  `0:…,aeroblade#0` / `1:aeroblade#1`; session limit 12 h, margin 0.25 h.
+- **Not built:** background image loading (user decision).
+
+**Tests:**
+- **`tests/test_p4_shards.py`** (14): the deal; the store (append, reload at full
+  precision, planted part, changed part, no overwrite); the resume sample; the tolerance;
+  the merge; the projection (s/image, s/pixel, the resume cost, the refusal, a late
+  session, a missing smoke).
+- **Full suite:** 1,247 passed, 7 skipped (GPU-only), 0 failed.
+- **ruff:** clean.
+
+**Local dry-run** (`p4_baselines`, against the index): PASSED in 2,834 s.
+- **Session 1:** all 7 rows; each shard stopped after one part (a rehearsed deadline); the
+  runbook exited nonzero, as expected.
+- **Session 2:** session 1 attached; shard 1 resumed from 2 saved rows (re-score check: 2
+  rows, ok); the fail-fast projection fit; merged 4 + 6 images into `aeroblade`.
+- **Refusals:** a second merge and a re-score of a finished shard were refused.
+- **The dry-run at HEAD follows the commit.**
+

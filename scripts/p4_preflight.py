@@ -18,6 +18,12 @@ workers (``p4_score.py``) only when every check holds:
    complete: it is carried forward and never scored again. A row with scores but no
    summary was interrupted: it is listed in ``incomplete_previous`` and scored again (the
    log must say why).
+6. **Sharded rows** (``expect["shards"]``, AEROBLADE; user decision 2026-11-09): the
+   row's images are dealt to its shards by capped pixel count, one shard manifest each
+   (``reports/p4_shards/``). Checkpoints of earlier versions are carried forward
+   append-only, so a shard resumes where it stopped (the worker re-scores saved rows
+   first). The work units are ``<row>#<k>``; when every shard is done, the stage is
+   ``merge`` (``p4_merge.py`` builds the row).
 
 Exit 0 when the plan is written, 1 when any check fails.
 """
@@ -35,11 +41,15 @@ THESIS_DBP = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(THESIS_DBP / "src"))
 sys.path.insert(0, str(THESIS_DBP / "scripts"))
 
+from dbp.baselines.common import BaselineError  # noqa: E402
+from dbp.baselines.shards import assign, capped_pixels  # noqa: E402
 from dbp.data.manifest import file_sha256  # noqa: E402
 from dbp.utils.logging import setup_logging  # noqa: E402
-from p3_s2d_inputs import read_rows, stage, write_record  # noqa: E402
+from p3_s2d_inputs import read_rows, stage, write_record, write_rows  # noqa: E402
 
 SCORES = Path("reports") / "p4_baseline_scores"
+SHARDS = Path("reports") / "p4_shards"
+SHARD_COLUMNS = ["order", "list", "image_id", "relative_path", "pixels"]
 SUMMARIES = Path("reports") / "p4_baselines"
 PLAN = Path("reports") / "p4_plan.json"
 CLEAN_LISTS = ("panel_b", "luma", "threshold_reals")
@@ -157,6 +167,84 @@ def carry(previous: list[Path], here: Path, rows: list[str], log: Any
     return carried, sorted(set(incomplete) - set(carried))
 
 
+def shard_dir(root: Path, row: str) -> Path:
+    """Where a sharded row's checkpoints live under a ``thesis_dbp`` root."""
+    return root / SCORES / row / "_shards"
+
+
+def shard_done(root: Path, row: str, k: int) -> Path:
+    """The record a shard writes when every one of its items is saved."""
+    return shard_dir(root, row) / f"shard{k}.done.json"
+
+
+def carry_checkpoints(previous: list[Path], here: Path, row: str, log: Any) -> int:
+    """Copy a sharded row's checkpoint files from earlier versions; never overwrite.
+
+    A file already present must be byte-identical to the earlier one (append-only).
+    Returns how many files were copied.
+    """
+    copied = 0
+    for root in previous:
+        source = shard_dir(root, row)
+        if not source.is_dir():
+            continue
+        for path in sorted(p for p in source.rglob("*") if p.is_file()):
+            target = shard_dir(here, row) / path.relative_to(source)
+            if target.exists():
+                if target.read_bytes() != path.read_bytes():
+                    raise BaselineError(f"checkpoint {target} differs from {path}: append-only "
+                                        f"checkpoints were changed")
+                continue
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, target)
+            copied += 1
+    if copied:
+        log.info("carried %d checkpoint file(s) of %s forward", copied, row)
+    return copied
+
+
+def build_shards(row: str, spec: dict[str, Any], lists: dict[str, list[dict[str, str]]],
+                 local_root: Path, previous: list[Path], log: Any) -> dict[str, Any]:
+    """Deal a row's images to its shards by capped pixels; write the shard manifests.
+
+    The deal depends only on the committed lists and the image sizes (read from the
+    staged, hash-checked copies), so every session builds the same manifests; a shard's
+    ledger records the manifest's sha256 and the worker refuses a different one.
+    """
+    from PIL import Image
+
+    items = []
+    for name in CLEAN_LISTS:
+        for row_ in lists[name]:
+            with Image.open(local_root / row_["relative_path"]) as handle:
+                width, height = handle.size
+            items.append({"order": len(items), "list": name, "image_id": row_["image_id"],
+                          "relative_path": row_["relative_path"],
+                          "pixels": capped_pixels(width, height)})
+    deal = assign(items, int(spec["n"]))
+    carried = carry_checkpoints(previous, THESIS_DBP, row, log)
+    units: dict[str, Any] = {}
+    for k, shard in enumerate(deal):
+        manifest = THESIS_DBP / SHARDS / f"{row}_shard{k}.csv"
+        write_rows(manifest, SHARD_COLUMNS, [{**i, "order": str(i["order"]),
+                                              "pixels": str(i["pixels"])} for i in shard])
+        ledger = shard_dir(THESIS_DBP, row) / f"shard{k}" / "ledger.jsonl"
+        saved = sum(json.loads(line)["rows"] for line in ledger.read_text("utf-8").splitlines()
+                    if line.strip()) if ledger.is_file() else 0
+        units[f"{row}#{k}"] = {
+            "shard": k, "manifest": str(manifest), "sha256": file_sha256(manifest),
+            "items": len(shard), "pixels": sum(i["pixels"] for i in shard),
+            "saved_rows": saved, "saved_pixels": sum(i["pixels"] for i in shard[:saved]),
+            "done": shard_done(THESIS_DBP, row, k).is_file(),
+            "store": str(shard_dir(THESIS_DBP, row) / f"shard{k}")}
+    log.info("%s: %d image(s), %.3f Gpx, dealt to %d shard(s): %s", row, len(items),
+             sum(i["pixels"] for i in items) / 1e9, len(deal),
+             {u: (v["items"], round(v["pixels"] / 1e9, 3), v["saved_rows"]) for u, v in
+              units.items()})
+    return {**{k: v for k, v in spec.items()}, "units": units, "carried_files": carried,
+            "pixels": sum(i["pixels"] for i in items)}
+
+
 def main() -> int:
     """Check everything; write the plan. Exit 0 when the plan is written."""
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
@@ -194,8 +282,28 @@ def main() -> int:
             f"staging FAILED: {staged.get('reason') or 'not every file verified'}"]}, log)
 
     rows = list(expect["rows"])
+    sharded = expect.get("shards", {})
     carried, incomplete = carry(args.previous, THESIS_DBP, rows, log)
-    due = [r for r in rows if not is_complete(THESIS_DBP, r)]
+    incomplete = [r for r in incomplete if r not in sharded]  # those resume (see below)
+    rows_due = [r for r in rows if not is_complete(THESIS_DBP, r)]
+    units: dict[str, dict[str, Any]] = {}
+    merge_due: list[str] = []
+    for row in rows_due:
+        if row not in sharded:
+            units[row] = {"row": row, "shard": None}
+            continue
+        try:
+            record.setdefault("shards", {})[row] = build_shards(
+                row, sharded[row], lists, args.local_root, args.previous, log)
+        except (BaselineError, OSError) as error:
+            return finish(args.out, {**record, "ok": False, "problems": [str(error)]}, log)
+        pending = [u for u, info in record["shards"][row]["units"].items()
+                   if not info["done"]]
+        for unit in pending:
+            units[unit] = {"row": row, "shard": record["shards"][row]["units"][unit]["shard"]}
+        if not pending:
+            merge_due.append(row)
+    due = list(units)
     jobs = []
     for job in expect["jobs"]:
         device, _, members = job.partition(":")
@@ -205,10 +313,12 @@ def main() -> int:
     unplaced = sorted(set(due) - {m for j in jobs for m in j.partition(':')[2].split(',')})
     if unplaced:
         return finish(args.out, {**record, "ok": False, "problems": [
-            f"rows in no job: {unplaced}"]}, log)
+            f"units in no job: {unplaced}"]}, log)
+    stage_name = "score" if due else ("merge" if merge_due else "complete")
     record.update({
-        "stage": "score" if due else "complete", "due": due,
-        "complete": [r for r in rows if r not in due], "carried": carried,
+        "stage": stage_name, "due": due, "units": units, "rows_due": rows_due,
+        "merge_due": merge_due,
+        "complete": [r for r in rows if r not in rows_due], "carried": carried,
         "incomplete_previous": incomplete, "jobs": jobs,
         "rows": {r: {**expect["rows"][r], "lists": row_lists(expect["rows"][r])}
                  for r in rows},
@@ -221,7 +331,8 @@ def main() -> int:
     if incomplete:
         log.warning("INTERRUPTED earlier and scored again (record the reason in the log): %s",
                     incomplete)
-    log.info("%d row(s) due %s; jobs %s", len(due), due, jobs)
+    log.info("stage %s: %d unit(s) due %s; jobs %s; merge due %s", stage_name, len(due), due,
+             jobs, merge_due)
     return finish(args.out, {**record, "ok": True, "problems": []}, log)
 
 

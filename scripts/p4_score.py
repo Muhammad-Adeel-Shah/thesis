@@ -18,6 +18,17 @@ preprocessing flag: padded / upscaled / cropped / cut by the cap) goes to
 AE), and the summary ``reports/p4_baselines/<row>.json`` is written last, so a summary
 means done. **Once only:** a row whose summary exists is refused. ``--limit N`` (the smoke)
 scores N rows per list into ``--out-root`` and is never a result.
+
+**Shards** (AEROBLADE; user decision 2026-11-09, execution only): a member ``<row>#<k>``
+scores shard ``k``'s manifest (``p4_preflight.build_shards``) into an append-only
+checkpoint store (``dbp.baselines.shards.ShardStore``), ``checkpoint_every`` images per
+part. On a resume, ``resume_rescore`` saved rows are scored again first and the run stops
+if any value differs beyond fp32 rounding; every check is appended to ``resumes.jsonl``.
+A finished shard writes ``shard<k>.done.json``; ``p4_merge.py`` builds the row.
+
+**Smoke timing** (fail fast, every row): with ``--limit``, the model first scores one image
+untimed (the warm-up), then every smoke image is timed. The summary records ``timing``
+(images, seconds, capped pixels) and ``load_seconds``; ``p4_failfast.py`` projects from it.
 """
 
 from __future__ import annotations
@@ -25,6 +36,8 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
+import shutil
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -38,6 +51,12 @@ sys.path.insert(0, str(THESIS_DBP / "src"))
 sys.path.insert(0, str(THESIS_DBP / "scripts"))
 
 from dbp.baselines.common import BaselineError, dryrun  # noqa: E402
+from dbp.baselines.shards import (  # noqa: E402
+    ShardStore,
+    capped_pixels,
+    resume_sample,
+    within_fp32,
+)
 from dbp.data.manifest import file_sha256  # noqa: E402
 from dbp.eval.perturb import CONDITIONS, apply_condition  # noqa: E402
 from dbp.utils.io import load_rgb_uint8  # noqa: E402
@@ -73,6 +92,8 @@ def guard_torch_hub() -> None:
 
     torch.hub.load = load
     torch.hub.download_url_to_file = download
+
+
 FLAG = {"dda": "padded", "cospy": "upscaled", "fire": "cropped", "aeroblade": "cut_by_cap"}
 PREPROCESSING = {
     "dda": "CenterCrop({crop}) (zero-pads under {crop}) -> ToTensor -> CLIP mean/std",
@@ -121,7 +142,9 @@ class Scorer:
         self.baseline, self.plan, self.device, self.log = baseline, plan, device, log
         self.local = Path(plan["local_root"])
         self.info: dict[str, Any] = {}
+        started = time.perf_counter()
         getattr(self, f"_load_{baseline}")()
+        self.load_seconds = time.perf_counter() - started
 
     def _arch(self, key: str) -> dict[str, Any]:
         return self.plan.get("dryrun_arch", {}).get(key, {}) if dryrun() else {}
@@ -241,9 +264,6 @@ class Scorer:
 def score_row(row_id: str, scorer: Scorer, plan: dict[str, Any], args: argparse.Namespace,
               log: Any) -> dict[str, Any]:
     """Score one row's lists; write its CSVs, then its summary."""
-    import torch
-    from PIL import __version__ as pillow
-
     spec = plan["rows"][row_id]
     out_root = args.out_root or THESIS_DBP
     summary_file = out_root / SUMMARIES / f"{row_id}.json"
@@ -256,6 +276,9 @@ def score_row(row_id: str, scorer: Scorer, plan: dict[str, Any], args: argparse.
              for name in ("panel_b", "luma", "threshold_reals")}
     lists["panel_b_test"] = [r for r in lists["panel_b"] if r["role"] == "test"]
     results: dict[str, Any] = {}
+    timing = {"images": 0, "seconds": 0.0, "pixels": 0}
+    if args.limit:  # the warm-up image: scored once, untimed, not saved
+        scorer.score(lists[spec["lists"][0]][:1], condition, spec.get("crop"))
     for name in spec["lists"]:
         rows = lists[name][: args.limit] if args.limit else lists[name]
         started = time.perf_counter()
@@ -270,24 +293,165 @@ def score_row(row_id: str, scorer: Scorer, plan: dict[str, Any], args: argparse.
         log.info("%s %s: %d rows in %.1f s (%.4f s/image); %s %d", row_id, name, len(rows),
                  seconds, seconds / max(1, len(rows)), FLAG[scorer.baseline],
                  results[name][FLAG[scorer.baseline]])
+        if args.limit:
+            timing["images"] += len(rows)
+            timing["seconds"] += seconds
+            timing["pixels"] += sum(image_pixels(scorer.local, r) for r in rows)
+    summary = describe(scorer, args) | {
+        "row": row_id, "condition": condition, "crop": spec.get("crop"),
+        "preprocessing": PREPROCESSING[scorer.baseline].format(crop=spec.get("crop")),
+        "lists": results}
+    if args.limit:
+        summary["timing"] = {**timing, "seconds": round(timing["seconds"], 3)}
+    write_json(summary_file, summary)
+    return summary
+
+
+def describe(scorer: Scorer, args: argparse.Namespace) -> dict[str, Any]:
+    """The fields every summary carries: model, versions, device, smoke or not."""
     import diffusers
     import timm
+    import torch
+    from PIL import __version__ as pillow
 
-    summary = {
-        "row": row_id, "baseline": scorer.baseline, "condition": condition,
-        "crop": spec.get("crop"),
-        "preprocessing": PREPROCESSING[scorer.baseline].format(crop=spec.get("crop")),
-        "score": "larger = more likely fake", **scorer.info,
-        "versions": {"torch": torch.__version__, "timm": timm.__version__,
-                     "diffusers": diffusers.__version__, "pillow": pillow},
-        "device": args.device, "dry_run": dryrun(), "limit": args.limit or None,
-        "lists": results,
-    }
-    summary_file.parent.mkdir(parents=True, exist_ok=True)
-    tmp = summary_file.with_name(summary_file.name + ".tmp")
-    tmp.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8", newline="\n")
-    tmp.replace(summary_file)
-    return summary
+    return {"baseline": scorer.baseline, "score": "larger = more likely fake", **scorer.info,
+            "versions": {"torch": torch.__version__, "timm": timm.__version__,
+                         "diffusers": diffusers.__version__, "pillow": pillow},
+            "device": args.device, "dry_run": dryrun(), "limit": args.limit or None,
+            "load_seconds": round(scorer.load_seconds, 1)}
+
+
+def write_json(path: Path, payload: dict[str, Any]) -> None:
+    """Atomic JSON write."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8", newline="\n")
+    tmp.replace(path)
+
+
+def image_pixels(local: Path, row: dict[str, str]) -> int:
+    """The image's pixels after AEROBLADE's 768 cap (the unit its time is linear in)."""
+    from PIL import Image
+
+    with Image.open(local / row["relative_path"]) as handle:
+        return capped_pixels(*handle.size)
+
+
+def stop_after_parts() -> int:
+    """DRY-RUN ONLY: stop a shard after this many parts, to rehearse a deadline (0 = off)."""
+    value = os.environ.get("DBP_P4_STOP_AFTER_PARTS", "0")
+    return int(value) if dryrun() else 0
+
+
+def score_shard(unit: str, scorer: Scorer, plan: dict[str, Any], args: argparse.Namespace,
+                log: Any) -> dict[str, Any]:
+    """Score one shard into its append-only checkpoints, resuming where it stopped."""
+    info = plan["units"][unit]
+    row, k = info["row"], int(info["shard"])
+    spec = plan["shards"][row]
+    shard = spec["units"][unit]
+    manifest = Path(shard["manifest"])
+    if file_sha256(manifest) != shard["sha256"]:
+        raise ScoreError(f"{unit}: the shard manifest changed since the pre-flight")
+    items = read_rows(manifest)[1]
+    if args.limit:  # the smoke: a fresh scratch store, the first N items of each list
+        root = args.out_root / SCORES / row / "_shards" / f"shard{k}"
+        if root.exists():
+            shutil.rmtree(root)
+        kept: list[dict[str, str]] = []
+        for item in items:
+            if sum(1 for i in kept if i["list"] == item["list"]) < args.limit:
+                kept.append(item)
+        items = kept
+    else:
+        root = Path(shard["store"])
+    done_file = root.parent / f"shard{k}.done.json"
+    if done_file.is_file() and not args.limit:
+        raise ScoreError(f"{unit}: already complete ({done_file}); each row is scored once")
+    columns = ["list", "image_id", "score", "flag", *scorer.extra()]
+    store = ShardStore(root, columns)
+    meta = {"row": row, "shard": k, "manifest_sha256": shard["sha256"], "columns": columns,
+            "aes": plan["aeroblade_aes"]}
+    meta_file = root / "meta.json"
+    if meta_file.is_file():
+        if json.loads(meta_file.read_text("utf-8")) != meta:
+            raise ScoreError(f"{unit}: the checkpoints were made for another manifest or "
+                             f"model set ({meta_file})")
+    else:
+        write_json(meta_file, meta)
+    saved = store.load()
+    for position, row_ in enumerate(saved):
+        if (row_["list"], row_["image_id"]) != (items[position]["list"],
+                                                items[position]["image_id"]):
+            raise ScoreError(f"{unit}: saved row {position} is not the manifest's")
+    started = time.perf_counter()
+    if saved:  # every resume re-scores saved rows first (user decision 2026-11-09)
+        check = resume_check(unit, scorer, items, saved, int(spec["resume_rescore"]), root, log)
+        log.info("%s resume: %d saved, %d re-scored, max relative diff %.3g -- %s", unit,
+                 len(saved), check["checked"], check["max_rel_diff"],
+                 "OK" if check["ok"] else "DIFFERENT")
+        if not check["ok"]:
+            raise ScoreError(f"{unit}: a re-scored saved row differs beyond fp32 rounding "
+                             f"({check['worst']}); stop (user decision 2026-11-09)")
+    elif args.limit:
+        scorer.score(items[:1], "clean", None)  # the warm-up image, untimed
+    every = int(spec["checkpoint_every"])
+    remaining = items[len(saved):]
+    timing = {"images": 0, "seconds": 0.0, "pixels": 0}
+    for parts, start in enumerate(range(0, len(remaining), every), start=1):
+        chunk = remaining[start: start + every]
+        began = time.perf_counter()
+        scored = scorer.score(chunk, "clean", None)
+        timing["seconds"] += time.perf_counter() - began
+        timing["images"] += len(chunk)
+        timing["pixels"] += sum(int(i["pixels"]) for i in chunk)
+        store.append([{"list": i["list"], "image_id": i["image_id"], "score": r["score"],
+                       "flag": int(bool(r["flag"])), **{c: r[c] for c in scorer.extra()}}
+                      for i, r in zip(chunk, scored, strict=True)])
+        log.info("%s: %d/%d saved (%.3f s/image)", unit, len(saved) + start + len(chunk),
+                 len(items), timing["seconds"] / max(1, timing["images"]))
+        if not args.limit and stop_after_parts() and parts >= stop_after_parts():
+            raise ScoreError(f"{unit}: DRY-RUN stop after {parts} part(s) (a rehearsed deadline)")
+    if args.limit:  # the smoke also rehearses a resume on what it just saved
+        check = resume_check(unit, scorer, items, store.load(), 1, root, log)
+        if not check["ok"]:
+            raise ScoreError(f"{unit}: the smoke's resume check differs ({check['worst']})")
+    record = describe(scorer, args) | {
+        "unit": unit, "row": row, "shard": k, "items": len(items),
+        "pixels": sum(int(i["pixels"]) for i in items), "parts": len(store.entries()),
+        "ledger_sha256": file_sha256(store.ledger), "manifest_sha256": shard["sha256"],
+        "seconds": round(time.perf_counter() - started, 1),
+        "timing": {**timing, "seconds": round(timing["seconds"], 3)}}
+    if args.limit:
+        write_json(args.out_root / SUMMARIES / f"{unit}.json", record)
+    else:
+        write_json(done_file, record)
+    return record
+
+
+def resume_check(unit: str, scorer: Scorer, items: list[dict[str, str]],
+                 saved: list[dict[str, str]], count: int, root: Path, log: Any
+                 ) -> dict[str, Any]:
+    """Re-score ``count`` saved rows; append the outcome to ``resumes.jsonl``."""
+    picks = resume_sample(len(saved), count)
+    again = scorer.score([items[p] for p in picks], "clean", None)
+    worst: dict[str, Any] = {}
+    max_rel, ok = 0.0, True
+    for position, fresh in zip(picks, again, strict=True):
+        for column in ["score", *scorer.extra()]:
+            old, new = float(saved[position][column]), float(fresh[column])
+            rel = abs(old - new) / max(abs(old), abs(new), 1e-30)
+            if rel > max_rel:
+                max_rel = rel
+                worst = {"image_id": saved[position]["image_id"], "column": column,
+                         "saved": old, "rescored": new}
+            ok = ok and within_fp32(old, new)
+    check = {"utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "unit": unit,
+             "saved_rows": len(saved), "checked": len(picks), "positions": picks,
+             "max_rel_diff": max_rel, "worst": worst, "ok": ok}
+    with (root / "resumes.jsonl").open("a", encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps(check) + "\n")
+    return check
 
 
 def main() -> int:
@@ -313,18 +477,22 @@ def main() -> int:
         log.error("the plan is not ok or has nothing to score: %s", plan.get("stage"))
         return 1
     scorers: dict[str, Scorer] = {}
-    for row_id in [m for m in args.members.split(",") if m]:
-        if row_id not in plan["due"]:
-            log.error("%s is not due in this plan", row_id)
+    for unit in [m for m in args.members.split(",") if m]:
+        if unit not in plan["due"]:
+            log.error("%s is not due in this plan", unit)
             return 1
-        baseline = plan["rows"][row_id]["baseline"]
+        info = plan["units"][unit]
+        baseline = plan["rows"][info["row"]]["baseline"]
         try:
             if baseline not in scorers:
                 for old in list(scorers):  # one baseline in memory at a time
                     del scorers[old]
                 _free()
                 scorers[baseline] = Scorer(baseline, plan, args.device, log)
-            score_row(row_id, scorers[baseline], plan, args, log)
+            if info["shard"] is None:
+                score_row(unit, scorers[baseline], plan, args, log)
+            else:
+                score_shard(unit, scorers[baseline], plan, args, log)
         except (ScoreError, BaselineError) as error:
             log.error("%s", error)
             return 1

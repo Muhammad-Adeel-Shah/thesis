@@ -13,9 +13,15 @@
 # | `fire_native` | FIRE, `--resize`, one image at a time, the seed rule |
 # | `aeroblade` | AEROBLADE (ours), 768 cap, `sd15` + `sd21` + KD2.1 MoVQ, LPIPS layer 2 |
 #
-# GPU 0 scores DDA, CO-SPY and FIRE; GPU 1 scores AEROBLADE (the long pole). A session
-# that stops early leaves complete rows; attach this notebook's previous version and run
-# again: complete rows are carried forward, never scored again.
+# Rows already scored are in the code (`reports/p4_baselines/`) and are never scored again.
+# **AEROBLADE is split** (user decision 2026-11-09, execution only): its images are dealt
+# to both T4s by capped pixels (`aeroblade#0`, `aeroblade#1`), saved in append-only
+# checkpoints every 200 images, and merged into the normal `aeroblade` row at the end. A
+# session that stops early keeps every checkpoint: attach its version and run again; each
+# shard re-scores 20 saved rows first and stops if any differs beyond fp32 rounding.
+#
+# **Fail fast** (every row): the smoke times each unit after one warm-up image, and the run
+# is refused if any GPU's projection exceeds the time left in the session.
 #
 # **Kaggle:** GPU **T4 x2**, Internet on, Secret `HF_TOKEN`, Save & Run All (Commit),
 # account `muhammadadeelshah`, **run alone**. Inputs, found by their contents:
@@ -27,7 +33,7 @@
 # | dataset `report` | the COCO reals (`p1_reals`) |
 # | dataset `dbp-p3-open-images` | `oi/reals`: the 400 held-out Open Images reals |
 # | notebook output `dbp-p4-weights` | `p4_weights/` and its report (step 1) |
-# | *(a re-run)* this notebook's previous version | complete rows, carried forward |
+# | *(a re-run)* this notebook's previous version | complete rows and checkpoints, carried |
 
 # %% Cell 1 — find the inputs by their contents, and the helpers every later cell uses
 import json
@@ -37,7 +43,9 @@ import platform
 import shutil
 import subprocess
 import sys
+import time
 
+SESSION_START = time.time()
 IN = pathlib.Path(os.environ.get("DBP_INPUT_ROOT", "/kaggle/input"))
 WORK = pathlib.Path(os.environ.get("DBP_WORKING_ROOT", "/kaggle/working"))
 TMP = pathlib.Path(os.environ.get("DBP_TMP_ROOT", "/tmp"))
@@ -142,7 +150,13 @@ assert py("p4_preflight.py", *plan_args) == 0, \
     "PRE-FLIGHT (spec / lists / weights / staging) FAILED -- see reports/p4_plan.json; " \
     "nothing has been scored"
 PLAN = json.loads((DBP / "reports" / "p4_plan.json").read_text())
-print("STAGE:", PLAN["stage"], "| due:", PLAN["due"], "| jobs:", PLAN["jobs"])
+print("STAGE:", PLAN["stage"], "| units due:", PLAN["due"], "| jobs:", PLAN["jobs"],
+      "| merge due:", PLAN["merge_due"])
+for row, spec in PLAN.get("shards", {}).items():
+    print(f"{row}: {spec['pixels'] / 1e9:.3f} Gpx;",
+          {u: f"{s['items']} images {s['pixels'] / 1e9:.3f} Gpx, {s['saved_rows']} saved"
+           for u, s in spec["units"].items()},
+          f"| {spec['carried_files']} checkpoint files carried")
 print("incomplete earlier (scored again; log the reason):", PLAN["incomplete_previous"])
 assert PLAN["stage"] != "complete", "EVERY ROW IS ALREADY SCORED"
 
@@ -151,37 +165,55 @@ SHARDS = ["--worker", DBP / "scripts" / "p4_score.py", "--log-dir",
 for job in PLAN["jobs"]:
     SHARDS += ["--job", job]
 WORKER = [f"--worker-arg={a}" for a in ("--plan", DBP / "reports" / "p4_plan.json")]
+SMOKE = TMP / "dbp_p4_smoke"
 
-# %% Cell 4 — PRE-FLIGHT 2: every row due, 2 images per list, on its own GPU
-assert py("p2_run_shards.py", *SHARDS, *WORKER, "--worker-arg=--limit", "--worker-arg=2",
-          "--worker-arg=--out-root", f"--worker-arg={TMP / 'dbp_p4_smoke'}",
-          "--log-prefix", "p4_smoke", "--status", DBP / "reports" / "p4_smoke_status.json",
-          "--deadline-hours", EXPECT["smoke_deadline_hours"]) == 0, \
-    "PRE-FLIGHT (rows) FAILED -- nothing has been scored"
+# %% Cell 4 — PRE-FLIGHT 2: every unit due, timed on 2 images per list; FAIL FAST on time
+if PLAN["due"]:
+    assert py("p2_run_shards.py", *SHARDS, *WORKER, "--worker-arg=--limit", "--worker-arg=2",
+              "--worker-arg=--out-root", f"--worker-arg={SMOKE}", "--log-prefix", "p4_smoke",
+              "--status", DBP / "reports" / "p4_smoke_status.json",
+              "--deadline-hours", EXPECT["smoke_deadline_hours"]) == 0, \
+        "PRE-FLIGHT (rows) FAILED -- nothing has been scored"
+    elapsed = (time.time() - SESSION_START) / 3600
+    assert py("p4_failfast.py", "--plan", DBP / "reports" / "p4_plan.json", "--expect",
+              EXPECT_PATH, "--smoke-root", SMOKE, "--elapsed-hours", f"{elapsed:.4f}") == 0, \
+        "FAIL-FAST: the projection exceeds the time left in this session -- REFUSED, " \
+        "nothing long has started (see reports/p4_projection.json)"
+    PROJECTION = json.loads((DBP / "reports" / "p4_projection.json").read_text())
+    print("projected:", {j["device"]: j["hours"] for j in PROJECTION["jobs"]},
+          "h; available", PROJECTION["available_hours"], "h")
 
-# %% Cell 5 — score every row due, once; one worker per T4
-code = py("p2_run_shards.py", *SHARDS, *WORKER, "--log-prefix", "p4_score",
-          "--status", DBP / "reports" / "p4_status.json",
-          "--deadline-hours", EXPECT["deadline_hours"])
+# %% Cell 5 — score every unit due, once; one worker per T4
+code = 0
+if PLAN["due"]:
+    code = py("p2_run_shards.py", *SHARDS, *WORKER, "--log-prefix", "p4_score",
+              "--status", DBP / "reports" / "p4_status.json",
+              "--deadline-hours", PROJECTION["deadline_hours"])
 print(f"scoring exited {code} (0 = complete, 1 = a worker failed, 2 = deadline)")
 
-# %% Cell 6 — report (cannot fail the run)
+# %% Cell 6 — merge the shards into their rows (the work step; verifies every image)
+merge_code = py("p4_merge.py", "--plan", DBP / "reports" / "p4_plan.json") \
+    if PLAN.get("shards") else 0
+print(f"merge exited {merge_code} (0 = merged or nothing to merge, 2 = a shard is not done, "
+      f"1 = verification FAILED)")
+
+# %% Cell 7 — report (cannot fail the run)
 py("p2_report.py", "--stage", "p4", "--status", "reports/p4_status.json",
    "--zip", WORK / "p4_reports")
 staged = PLAN.get("staged", {})
 times = []
-for row in PLAN["due"]:
+for row in PLAN["rows_due"]:
     path = DBP / "reports" / "p4_baselines" / f"{row}.json"
     summary = json.loads(path.read_text()) if path.is_file() else {}
-    seconds = sum(v.get("seconds", 0) for v in summary.get("lists", {}).values())
-    times.append(f"{row} {round(seconds)} s")
+    rates = {k: v.get("seconds_per_image") for k, v in summary.get("lists", {}).items()}
+    times.append(f"{row} {rates or 'not complete'}")
 print("THROUGHPUT |", f"staging {staged.get('files')} files {staged.get('gb')} GB in "
       f"{staged.get('seconds')} s |", " | ".join(times))
 
-# %% Cell 7 — verdict: this cell fails the notebook if a row due was not scored
-missing = [r for r in PLAN["due"]
+# %% Cell 8 — verdict: this cell fails the notebook if a row due was not completed
+missing = [r for r in PLAN["rows_due"]
            if not (DBP / "reports" / "p4_baselines" / f"{r}.json").is_file()]
-assert code == 0 and not missing, (f"scoring exited {code}; not scored: {missing}. Re-run with "
-                                   f"this version attached: complete rows are carried "
-                                   f"forward, the rest are scored (log the reason).")
-print("P4 BASELINE SCORING COMPLETE:", len(PLAN["due"]), "row(s)")
+assert code == 0 and merge_code == 0 and not missing, (
+    f"scoring exited {code}, merge {merge_code}; not complete: {missing}. Re-run with this "
+    f"version attached: complete rows and every checkpoint are carried forward.")
+print("P4 BASELINE SCORING COMPLETE:", PLAN["rows_due"])

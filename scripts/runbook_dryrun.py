@@ -2835,8 +2835,13 @@ def fixture_p4_baselines(work: Path, ref: str) -> Fixture:
         write_csv(list_dir / f"{name}.csv", columns, rows)
     test_rows = sum(1 for r in lists["panel_b"] if r["role"] == "test")
 
+    # The real results committed in the code would mark 6 rows complete; the fixture scores
+    # all seven on its own lists, so the code copy drops them (the copy only).
+    for committed in ("p4_baselines", "p4_baseline_scores"):
+        shutil.rmtree(code / "reports" / committed, ignore_errors=True)
     expect = json.loads((code / "env" / "p4_baselines_expect.json").read_text("utf-8"))
     rows = list(expect["rows"])
+    unsharded = [r for r in rows if r != "aeroblade"]
     expect.update({
         "stage": "p4_baselines (dry-run fixture)", "gpus": 0, "hf_token": False,
         "lists": {"dir": list_dir.relative_to(code).as_posix(), "panel_b_test_rows": test_rows,
@@ -2844,7 +2849,9 @@ def fixture_p4_baselines(work: Path, ref: str) -> Fixture:
                             "rows": len(items)} for name, items in lists.items()}},
         "weights": {k: {"file": v, "sha256": sha256_file(output / "p4_weights" / v)}
                     for k, v in layout.items()},
-        "aeroblade_aes": ["sd15", "movq_k22"], "jobs": [f"cpu:{','.join(rows)}"],
+        "aeroblade_aes": ["sd15", "movq_k22"],
+        "shards": {"aeroblade": {"n": 2, "checkpoint_every": 2, "resume_rescore": 20}},
+        "jobs": [f"cpu:{','.join(unsharded)},aeroblade#0", "cpu:aeroblade#1"],
         "batch": {"dda": 4, "cospy": 2}, "workers": 4, "margin_gb": 0.5,
         "smoke_deadline_hours": 1.0, "deadline_hours": 2.0, "poll_seconds": 2,
         "dryrun_arch": {"dda": P4_TINY_DDA,
@@ -2869,12 +2876,30 @@ def fixture_p4_baselines(work: Path, ref: str) -> Fixture:
         session1 = carry_to / "Implementation/thesis_dbp"
         plan1 = json.loads((session1 / "reports/p4_plan.json").read_text("utf-8"))
         plan2 = json.loads((dbp / "reports/p4_plan.json").read_text("utf-8"))
-        if plan1["due"] != rows or plan1["staged"]["verified"] != 10:
+        units = [*unsharded, "aeroblade#0", "aeroblade#1"]
+        if plan1["due"] != units or plan1["staged"]["verified"] != 10:
             problems.append(f"session 1 plan {plan1['due']} staged {plan1['staged']}")
-        if plan2["stage"] != "complete" or sorted(plan2["carried"]) != sorted(rows):
-            problems.append(f"session 2 plan {plan2['stage']} carried {plan2['carried']}")
+        # Session 1 rehearsed a deadline: each shard stopped after one part of 2 images.
+        shard1 = plan2["shards"]["aeroblade"]["units"]["aeroblade#1"]
+        if shard1["saved_rows"] != 2 or plan2["shards"]["aeroblade"]["carried_files"] < 3:
+            problems.append(f"session 2 did not resume shard 1: {shard1} carried "
+                            f"{plan2['shards']['aeroblade']['carried_files']}")
+        projection = json.loads((dbp / "reports/p4_projection.json").read_text("utf-8"))
+        timed = [u for j in projection["jobs"] for u in j["units"]]
+        if not projection["ok"] or {u["unit"] for u in timed} != set(plan2["due"]) or \
+                any(u["rate"] <= 0 for u in timed):
+            problems.append(f"fail-fast projection {projection}")
+        resumes = [json.loads(line) for line in
+                   (dbp / "reports/p4_baseline_scores/aeroblade/_shards/shard1/resumes.jsonl")
+                   .read_text("utf-8").splitlines()]
+        if not resumes or not all(r["ok"] for r in resumes) or resumes[0]["checked"] != 2:
+            problems.append(f"resume checks {resumes}")
+        merged = json.loads((dbp / "reports/p4_baselines/aeroblade.json").read_text("utf-8"))
+        shards = merged["execution"]["shards"]
+        if sum(s["items"] for s in shards.values()) != 10 or len(shards) != 2:
+            problems.append(f"merged shards {shards}")
         for row in rows:
-            summary = json.loads((session1 / "reports/p4_baselines" / f"{row}.json")
+            summary = json.loads((dbp / "reports/p4_baselines" / f"{row}.json")
                                  .read_text("utf-8"))
             sizes = {k: v["rows"] for k, v in summary["lists"].items()}
             want = {"panel_b_test": test_rows} if expect["rows"][row]["condition"] != \
@@ -2885,29 +2910,40 @@ def fixture_p4_baselines(work: Path, ref: str) -> Fixture:
                 key, at_least = flags[row]
                 if summary["lists"]["panel_b"][key] < at_least:
                     problems.append(f"{row}: {key} {summary['lists']['panel_b'][key]}")
-        fire_summary = json.loads((session1 / "reports/p4_baselines/fire_native.json")
+        fire_summary = json.loads((dbp / "reports/p4_baselines/fire_native.json")
                                   .read_text("utf-8"))
         if fire_summary["vae_source"] != "pinned sd15" or \
                 fire_summary["lists"]["panel_b"]["cropped"] < 1:
             problems.append(f"FIRE {fire_summary['vae_source']} {fire_summary['lists']}")
+        # A complete row is never scored or merged again.
         again = subprocess.run(
-            [sys.executable, str(session1 / "scripts/p4_score.py"), "--members", "dda_native",
-             "--device", "cpu", "--plan", str(session1 / "reports/p4_plan.json")],
-            capture_output=True, text=True, cwd=session1, check=False,
+            [sys.executable, str(dbp / "scripts/p4_merge.py"), "--plan",
+             str(dbp / "reports/p4_plan.json")],
+            capture_output=True, text=True, cwd=dbp, check=False,
             env=dict(os.environ, DBP_DRYRUN="1"))
-        if again.returncode == 0 or "scored once" not in again.stdout + again.stderr:
-            problems.append(f"a second scoring was not refused: {again.returncode}")
-        print(f"  check: session 1 scored {len(rows)} rows ({test_rows} test rows under each "
-              f"H5 condition); flags {[(r, flags[r][0]) for r in flags]} and FIRE crops "
-              f"recorded; session 2 carried {len(plan2['carried'])}; re-score refused "
-              f"(exit {again.returncode})")
+        if again.returncode != 0 or "not merged again" not in again.stdout + again.stderr:
+            problems.append(f"a second merge was not refused: {again.returncode}")
+        rescore = subprocess.run(
+            [sys.executable, str(dbp / "scripts/p4_score.py"), "--members", "aeroblade#1",
+             "--device", "cpu", "--plan", str(dbp / "reports/p4_plan.json")],
+            capture_output=True, text=True, cwd=dbp, check=False,
+            env=dict(os.environ, DBP_DRYRUN="1"))
+        if rescore.returncode == 0:
+            problems.append("a finished shard was scored again")
+        print(f"  check: session 1 stopped each shard after one part (rehearsed deadline); "
+              f"session 2 resumed shard 1 from {shard1['saved_rows']} saved rows "
+              f"(re-score check: {resumes[0]['checked']} rows, ok), fail-fast projected "
+              f"{ {j['device']: j['hours'] for j in projection['jobs']} } h; merged "
+              f"{ {u: s['items'] for u, s in shards.items()} } into aeroblade; flags "
+              f"{[(r, flags[r][0]) for r in flags]} and FIRE crops recorded; second merge and "
+              f"re-score refused")
         return problems
 
     return Fixture(
         {"DBP_INPUT_ROOT": str(inputs), "DBP_EXPECT": str(expect_path)}, commit,
-        [Session("session 1: frozen spec, lists and weights verified; 7 rows scored"),
-         Session("session 2: session 1 attached; every row carried; stops (already scored)",
-                 expect_exit="nonzero")],
+        [Session("session 1: 7 rows; each AEROBLADE shard stops after one part (rehearsed "
+                 "deadline)", env={"DBP_P4_STOP_AFTER_PARTS": "1"}, expect_exit="nonzero"),
+         Session("session 2: session 1 attached; shards resume (re-score check); merged")],
         carry_to=carry_to, check=check)
 
 
