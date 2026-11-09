@@ -1,0 +1,14 @@
+# Table 9b: FPR on the E4/E5 real pools and TPR on the unseen slices at each model's k = 0 union threshold
+
+Descriptive only: P4 has no hypothesis and no decision rule (spec header). AEROBLADE is our implementation from the paper (its repository has no licence). E7 FLUX.1 standard is an upper bound (CLAUDE.md section 6d). Kaggle's Pillow 13.0.0 is not the 12.3.0 DDA's README pins (spec section 4). Each model's own threshold: 5% FPR by the reals-only rule on the 891 threshold reals (491 COCO validation + 400 held-out Open Images). TPR is a point value (spec section 5).
+
+| model | group | threshold (k = 0 union) | FPR E4 | FPR E5 | macro FPR E4/E5 | TPR GPT-Image-2 (E3) | TPR Nano-Banana-2 (E3) | TPR E4 WildRF | TPR E5 Chameleon | status |
+|---|---|---|---|---|---|---|---|---|---|---|
+| DDA | baseline | -0.7064 | 15.6% [12.0%, 19.4%] | 10.0% [8.7%, 11.2%] | 12.8% [10.8%, 14.6%] | 10.3% | 67.3% | 90.1% | 65.4% | descriptive |
+| CO-SPY | baseline | -0.7175 | 33.4% [28.6%, 38.3%] | 21.6% [19.8%, 23.4%] | 27.5% [25.0%, 29.9%] | 19.3% | 9.6% | 78.1% | 53.0% | descriptive |
+| FIRE | baseline | 13.5907 | 2.6% [1.0%, 4.3%] | 4.0% [3.2%, 4.9%] | 3.3% [2.4%, 4.2%] | 1.3% | 5.8% | 5.4% | 5.5% | descriptive |
+| AEROBLADE (ours, from the paper) | baseline | -0.0181 | 10.2% [7.1%, 13.3%] | 21.4% [19.6%, 23.1%] | 15.8% [14.1%, 17.5%] | 21.1% | 27.9% | 26.2% | 20.0% | descriptive |
+| S2-D s0 | ours | 0.3929 | 15.8% [12.2%, 19.6%] | 12.0% [10.7%, 13.5%] | 13.9% [12.1%, 16.0%] | 16.6% | 53.8% | 86.9% | 27.5% | descriptive |
+| S2-D s1 | ours | 0.3663 | 16.3% [12.8%, 20.2%] | 11.8% [10.4%, 13.3%] | 14.1% [12.3%, 16.2%] | 12.6% | 40.4% | 86.7% | 34.4% | descriptive |
+| P2 full_bank | ours | 2.4845 | 15.8% [12.2%, 19.6%] | 13.7% [12.2%, 15.2%] | 14.8% [13.0%, 16.8%] | 12.1% | 31.7% | 90.1% | 31.9% | descriptive |
+| S2-B s0 | ours | 2.0118 | 16.8% [13.3%, 20.7%] | 11.7% [10.3%, 13.1%] | 14.3% [12.4%, 16.3%] | 12.1% | 28.8% | 91.2% | 34.4% | descriptive |

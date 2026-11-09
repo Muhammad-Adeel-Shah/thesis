@@ -7197,3 +7197,65 @@ to `F:\thesis-2\kaggle_raw\p4_reports_2_x\`.
 **P4 scoring is complete:** all 7 rows of the frozen spec are scored once. Next is the
 section 5 analysis (descriptive).
 
+### P4 — the spec section 5 analysis, run once (descriptive); thesis tables t9a-t9d and the figure — 2026-11-10
+
+**User decision (2026-11-10):** `47551d4` approved; the user pushed `master`. Run the
+section 5 analysis once, exactly as frozen; label anything extra exploratory; then t9a–t9d
+and one figure. Every row is descriptive.
+
+**Code, committed before the run** (`36d720d`): `scripts/p4_analyze.py`.
+- **Reused unchanged from `p3_analyze.py`:** the loaders, slices, the macro over the 4
+  unseen slices, the k = 0 union threshold and the bootstrap (2,000 resamples, seed 2026,
+  real pools drawn once per resample and shared by every model, percentile 95%).
+- **`INTERPRETATIONS`, fixed before the run:**
+  - items 1–4 apply to the five clean rows; item 5 is what the two H5 rows (test rows only)
+    are reported with;
+  - a difference is ours minus the baseline;
+  - TPR at the union threshold is a point value;
+  - E8 has TPR only;
+  - macro FPR is the mean of E4 and E5.
+- **Parallelism:** bootstrap calls run in 8 processes; each call keeps its own fresh seed,
+  so no value changes.
+- **Reproduction check:** the reference models (S2-D s0/s1, P2 `full_bank`, S2-B s0)
+  reproduce the committed P3 analysis exactly. That covers every slice AUC and TPR, every
+  pool FPR, the macro, the threshold, and S2-D seed 0's H5 curve with its intervals.
+
+**The run** (once, 2026-11-09 21:53–22:04 UTC, 456 bootstrap calls plus the H5 block):
+`reports/p4_results/p4_analysis.json`, sha256
+`4719106f5f80e1b494d5b546c83ff50840a1a2d8ce7e23c6469953794ee2d1ee`. Before it, a
+10-resample smoke run (to the scratchpad, not a result) tested the code.
+
+**Key numbers** (descriptive; macro AUC over the 4 unseen slices, 95% CI):
+
+| model | macro AUC | E4/E5 macro FPR at k = 0 |
+|---|---|---|
+| DDA | 0.784 [0.758, 0.810] | 12.8% [10.8, 14.6] |
+| DDA crop-308 | 0.784 [0.757, 0.809] | 12.1% [10.2, 14.0] |
+| CO-SPY | 0.770 [0.740, 0.799] | 27.5% [25.0, 29.9] |
+| FIRE | 0.549 [0.519, 0.579] | 3.3% [2.4, 4.2] |
+| AEROBLADE (ours) | 0.631 [0.597, 0.665] | 15.8% [14.1, 17.5] |
+| S2-D s0 / s1 | 0.755 / 0.760 | 13.9% / 14.1% |
+| P2 full_bank | 0.764 [0.737, 0.790] | 14.8% |
+
+- **Paired differences** (ours minus baseline, points):
+  - **S2-D s0:** vs DDA −2.9 [−6.0, +0.1]; vs CO-SPY −1.4 [−5.2, +2.1]; vs FIRE +20.6
+    [+16.9, +24.3]; vs AEROBLADE +12.4 [+8.1, +16.9].
+  - **Macro FPR vs CO-SPY:** −13.6 [−16.6, −10.4].
+- **By slice:** DDA is strongest on E4 (0.950) and E5 (0.873) and below chance on
+  GPT-Image-2 (0.476). Ours: E5 0.65–0.69, GPT-Image-2 0.60–0.63.
+- **E7, DDA's home benchmark:** DDA 0.96–1.00 per VAE, ours 0.98–1.00, CO-SPY 0.40–0.62.
+- **E8 TPR:** DDA 91–100%, ours 80–100%, FIRE 5–14%.
+- **H5:**
+  - DDA: JPEG q50 0.704 (−8.0 points from clean); resize 0.5 0.738 (−4.7).
+  - S2-D s0 minus DDA: −8.2 [−12.2, −4.6] under JPEG q50, −3.0 [−6.7, +0.6] under resize.
+- **Exploratory:** none.
+
+**Tables and figure** (`scripts/p4_thesis_tables.py`, from the JSON only):
+- `reports/p4_results/tables/`: `t9a_unseen_auc`, `t9b_fpr_tpr`, `t9c_paired`,
+  `t9d_e7_auc`, `t9d_e8_tpr`, `t9d_crop308`, `t9d_h5` (csv and md);
+- `reports/p4_results/figures/fig_p4_macro_auc` (png 80,799 B, svg 63,114 B).
+- **Caveats in every table note:** descriptive only; AEROBLADE is our implementation; E7
+  FLUX.1 standard is an upper bound; Kaggle Pillow 13.0.0 vs DDA's 12.3.0; E7 is DDA's
+  home benchmark (t9d).
+- **Tests:** `tests/test_p4_analyze.py` (4) and `tests/test_p4_thesis_tables.py` (4).
+
