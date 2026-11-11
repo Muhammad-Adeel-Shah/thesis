@@ -1,0 +1,78 @@
+{
+  "run_id": "s2d_p35_seed0",
+  "protocol": "s2d_p35",
+  "seed": 0,
+  "backbone": "dinov3-vitl16",
+  "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+  "crop": 320,
+  "active_members": [
+    "dcae",
+    "flux",
+    "flux2_klein",
+    "movq_k22",
+    "qwen_image",
+    "realesrgan_x4",
+    "sd15",
+    "sd21",
+    "sd35",
+    "sd_ft_ema",
+    "sdxl",
+    "sdxl_fp16fix"
+  ],
+  "excluded_lineages": [],
+  "lora": {
+    "target_modules": [
+      "k_proj",
+      "o_proj",
+      "q_proj",
+      "v_proj"
+    ],
+    "params_trainable": 1572864,
+    "params_total": 304702464,
+    "trainable_pct": 0.5162
+  },
+  "batch": 16,
+  "batch_plan": {
+    "pairs": 6,
+    "reals": 8,
+    "reconstruction_fakes": 6,
+    "gen_matched_fakes": 2
+  },
+  "optimiser": {
+    "lr": 0.0001,
+    "weight_decay": 0.01,
+    "warmup_steps": 300,
+    "schedule": "cosine"
+  },
+  "step_budget": {
+    "allowance_hours": 2.25,
+    "measured_step_seconds": 0.0,
+    "steps": 50,
+    "ceiling": 50,
+    "undertrained": false,
+    "min_steps_per_run": 2000
+  },
+  "mode": "smoke",
+  "degrade": {
+    "p": 0.35,
+    "stream": [
+      0,
+      417
+    ],
+    "pairs": 400,
+    "ops": {
+      "jpeg": 42,
+      "none": 248,
+      "resize": 41,
+      "social": 24,
+      "social_reshare": 23,
+      "webp": 22
+    },
+    "ms_per_pair": 6.683,
+    "batches": 50,
+    "batch_build_ms": 268.668
+  },
+  "status": "SMOKE-OK",
+  "steps_run": 50,
+  "problems": []
+}

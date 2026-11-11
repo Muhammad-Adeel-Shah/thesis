@@ -126,10 +126,26 @@ score exists, and it must reproduce the committed P3/P4 values of the comparator
 - **The two smokes:** gradient checkpointing on (the recipe), then off (would ViT-L fit
   without it).
 
+**Run:** Kaggle T4 × 2, `dbp-code-8800801`, 2026-11-11, `muhammadadeelshah`. Archive
+`F:\thesis-2\kaggle_raw\p3b_vitl_smoke_reports.zip` (25,041,554 B, sha256
+`aefacb4e…2f19`); the smoke records are committed under `reports/kaggle_20261111/p3b_smoke/`.
+- **Both smokes:** SMOKE-OK, exit 0, 50 optimiser steps, no out-of-memory, the trainer's
+  sha256 equal to the guard (`6b9c30c4…b7b6`). The run is the recipe: ViT-L @ `ea8dc286…`,
+  crop 320, batch 16 (8 / 6 / 2), LoRA on q/k/v/o, 1,572,864 of 304,702,464 parameters
+  trainable (0.5162%).
+- **Inputs identical to S2-D's:** the merged files' sha256, the pools (5,526 reals, Open
+  Images share 0.651466) and the Open Images pairs' content sha256 equal S2-D session 1's;
+  46,800 staged files hash-verified, 0 mismatched; 0 held-out rows anywhere.
+
 | item | value |
 |---|---|
-| peak GPU memory, recipe (checkpointing on) | PENDING-GPU |
-| seconds per step after warm-up | PENDING-GPU (ViT-B: 0.800 s/step, 1.165 GPU-h per run, MEASURED) |
-| projected GPU-h per 5,000-step run | PENDING-GPU |
-| gradient checkpointing needed | PENDING-GPU (a measurement smoke runs with it off) |
-| Panel B scoring per model | ESTIMATED from P3's 0.019–0.031 s/image (ViT-B) x the smoke's ViT-L/ViT-B step-time ratio, over 10,996 + 2 x 8,655 images |
+| peak GPU memory, recipe (checkpointing on) | **2.136 GiB allocated / 2.676 GiB reserved** of 14.562 GiB (MEASURED) |
+| seconds per step after warm-up, recipe | **1.7126 s/step** (max 1.8008), 2.14x ViT-B's 0.80041 (MEASURED) |
+| measurement smoke (checkpointing off) | 1.3636 s/step, 7.243 GiB allocated / 7.721 GiB reserved (MEASURED) |
+| projected GPU-h per 5,000-step run | **2.49** = 1.7126 s × 5,000 × ViT-B's overhead factor 1.048 (validation, checkpoints; the factor is ESTIMATED for ViT-L) |
+| projected two seeds | 4.99 GPU-h; **about 2.5–2.8 h wall** in parallel on T4 × 2 (ESTIMATED: the smoke ran one job at a time, and two jobs share 4 CPU cores) |
+| gradient checkpointing needed | **no**: ViT-L fits a T4 without it (7.2 of 14.6 GiB). The recipe keeps it **on**, because the trainer stays byte-identical; turning it off would save about 20% of step time and is not proposed |
+| Panel B scoring per model | **about 0.46–0.76 h** (ESTIMATED): S2-D ViT-B seed 0 MEASURED 779.5 s for clean (203.1 s), `jpeg50` (231.3 s) and `resize050` (345.1 s) (`reports/p3_final/s2d_p35_seed0_{clean,robust}.json`), scaled by 2.14 (the step-time ratio) up to 3.5 (the parameter ratio) |
+
+In fixed-steps mode the trainer records `allowance_hours` 2.25 but never caps steps on it
+(`fixed_budget`), so a 2.49 GPU-h run trains all 5,000 steps.

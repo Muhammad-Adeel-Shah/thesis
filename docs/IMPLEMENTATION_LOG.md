@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P3-C (2026-10-29)**: every P3 confirmatory hypothesis is decided (`reports/p3_results/tables/t1_verdicts.md`): **H1-a PASS**, **H1-b PASS** (3/3 folds), **H1-c PASS**, **H3 FAIL**, **H3-k PASS** (Q and S), **H2 FAIL**, **H4 PASS**, **H5 FAIL**. Thesis tables and figures committed (`9626eca`). TrueFake (secondary, descriptive) **scored and analysed** (2026-10-31): 4 models, 3,999 ids kept (1 FORLAB id excluded: a truncated source JPEG), `reports/p3_results/p3_truefake_analysis.json`. P4 baseline spec **frozen** 2026-11-01 (tag `p4-baselines-frozen`, `docs/P4_BASELINES_SPEC.md`); baseline code built and dry-run 2026-11-02; Kaggle steps 1 (weights) and 2 (isolated DDA check, PASS) done 2026-11-05; step 3 (GPU scoring) handed over. |
+| Last prompt | **P3b (2026-11-11)**: the ViT-L smoke ran on Kaggle (both smokes SMOKE-OK; recipe 1.7126 s/step, 2.136 GiB peak; projected 2.49 GPU-h per run). Pre-registration `docs/P3b_VITL_PREREG.md` is a DRAFT awaiting approval; no ViT-L training. Earlier: P3 decided (`reports/p3_results/tables/t1_verdicts.md`); P4 baselines scored and analysed (`reports/p4_results/`) |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -7324,3 +7324,56 @@ gated, licence other.
 **NOT-RUN:** the Kaggle smoke, and every ViT-L number. The pre-registration is not frozen;
 it waits for the user's approval and the smoke's numbers.
 
+### P3b — the ViT-L smoke on Kaggle: both smokes OK; 1.7126 s/step, 2.136 GiB; projected 2.49 GPU-h per run — 2026-11-11
+
+**Run:** Kaggle T4 x 2, `dbp-code-8800801`, 2026-11-11, `muhammadadeelshah`.
+- **Archive:** `F:\thesis-2\kaggle_raw\p3b_vitl_smoke_reports.zip`, 25,041,554 B, sha256
+  `aefacb4e2d4006a9ec6f82bab55ad1ccf8c65f584e7c0df80a21d37c7dce2f19`, `testzip` clean, 843
+  entries, no unsafe path. Extracted to `F:\thesis-2\kaggle_raw\p3b_vitl_smoke_x\`.
+- **Against HEAD's bytes:** 674 files identical. One differs, `p1_gen_matched_manifest.csv`:
+  only `png_path` and `jpg_path` (session paths, 2,488 rows); every hash, quality, seed and
+  size is equal.
+- **Committed:** `reports/kaggle_20261111/p3b_smoke/` (12 files, 47 KB).
+- **Open Images pairs:** read from `dbp-p3-reconstruct` through the share, as in S2-D. The
+  user confirmed (2026-11-11) that this input is private and authentic and is not to be
+  flagged again.
+
+**Checks:**
+- **Pre-flight PASSED** (6 checks; `HF_TOKEN present: true`; 7 input hashes; 2,488
+  gen_matched hashes).
+- **Inputs equal S2-D session 1's:** the merged files' sha256, the pools (5,526 reals, Open
+  Images share 0.651466) and the Open Images pairs' content sha256 `0a4e9a3c…1dc4`.
+- **Held-out check PASSED:** 0 held-out rows in every merged file and in the local copy.
+- **Staging:** 80,709 files, 17.681 GB in 128.7 s (627.2 files/s, 140.7 MB/s); 46,800
+  hash-verified, 0 mismatched, 0 missing.
+
+**MEASURED (`reports/kaggle_20261111/p3b_smoke/p3b_vitl_smoke.json`):**
+
+| smoke | status | s/step after warm-up (max) | peak allocated / reserved | wall |
+|---|---|---|---|---|
+| checkpointing on (the recipe) | SMOKE-OK, 50 steps | 1.7126 (1.8008) | 2.136 / 2.676 GiB | 146.8 s |
+| checkpointing off (measurement) | SMOKE-OK, 50 steps | 1.3636 (1.4606) | 7.243 / 7.721 GiB | 110.1 s |
+
+- **GPU:** Tesla T4, 14.562 GiB.
+- **The trainer:** sha256 `6b9c30c4…b7b6` in both, equal to the guard.
+- **The model:** ViT-L @ `ea8dc286…`; LoRA trains 1,572,864 of 304,702,464 parameters
+  (0.5162%); batch 16 (8 / 6 / 2); degradation chain p 0.35.
+- **The off run really ran without checkpointing:** memory 3.4x, step time 0.80x of the on
+  run.
+
+**Projection (ESTIMATED):**
+- **Per run:** 2.49 GPU-h = 1.7126 s x 5,000 x ViT-B's MEASURED overhead factor 1.048.
+- **Speed:** ViT-L/ViT-B step time 2.14.
+- **Two seeds:** 4.99 GPU-h, about 2.5–2.8 h wall in parallel. The smoke ran one job at a
+  time; two jobs share 4 CPU cores.
+- **Checkpointing:** not needed to fit; the recipe keeps it on (byte-identical trainer).
+- **The allowance:** the trainer records `allowance_hours` 2.25, but in fixed-steps mode
+  (`fixed_budget`) it never caps steps, so 2.49 GPU-h trains all 5,000 steps.
+- **Panel B scoring:** about 0.46–0.76 h per model, from S2-D ViT-B seed 0's MEASURED
+  779.5 s (clean 203.1, `jpeg50` 231.3, `resize050` 345.1;
+  `reports/p3_final/s2d_p35_seed0_{clean,robust}.json`) x 2.14 to 3.5.
+
+**Prereg:** section 6 filled in with these values. Sections 1–5 are unchanged. The
+pre-registration is still a DRAFT, not frozen and not tagged.
+
+**NOT-RUN:** ViT-L training and scoring (await approval).
