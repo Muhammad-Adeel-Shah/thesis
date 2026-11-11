@@ -2,8 +2,8 @@
 
 **Status:** **frozen 2026-11-11**, by the commit tagged `p3b-vitl-prereg-frozen`.
 - **When:** written before any ViT-L training and before any ViT-L score existed.
-- **Approval:** the pass rules Q1–Q6 are approved by the user (review of `8800801`, with
-  changes folded in).
+- **Approval:** the pass rules Q1–Q6 are approved by the user (reviews of `8800801` and
+  `7fbb06d`, with their changes folded in).
 - **Section 6** holds the Kaggle smoke's MEASURED numbers.
 
 After the freeze, nothing in sections 1–5 changes.
@@ -57,6 +57,14 @@ ViT-L/16**: `facebook/dinov3-vitl16-pretrain-lvd1689m` @
   crashes twice is reported as failed, never re-seeded.
 - A run whose loss is NaN or diverges is **not** resumed: it follows the failure path in
   section 5.
+
+**Run record.** The training session's pre-flight prints the runtime and saves it into the
+run record (`reports/p2_preflight_<stage>.json`, committed with the session's reports):
+- `torch.__version__` and `torch.version.cuda`;
+- the GPU name of every device;
+- the NVIDIA driver version.
+
+The smoke's archive does not hold these values (NOT-VERIFIED there).
 
 ## 2. Scoring
 

@@ -7432,3 +7432,24 @@ pre-registration is still a DRAFT, not frozen and not tagged.
 **NOT-RUN:** ViT-L training and scoring. The next step is the training runbook, the
 failure-path check and the `p3b_analyze.py` driver, each committed before it is used, then a
 dry-run and the hand-over.
+
+### P3b — second review (of `7fbb06d`) folded in: the run record; the freeze tag moved before its first push — 2026-11-11
+
+**User review of `7fbb06d`:**
+- **Accepted:** the smoke and section 6. Checkpointing stays on. Q1–Q6 approved as written.
+- **Items 1–5** repeat the review of `8800801`. They were already in at `0ae429b` (this
+  review was written against `7fbb06d`).
+- **Item 6 is new:** the training session's pre-flight must print and save
+  `torch.__version__`, `torch.version.cuda`, the GPU name and the driver into the run record.
+
+**Folded in:**
+- `docs/P3b_VITL_PREREG.md` section 1 gains "Run record", which states item 6.
+- The status line names both reviews.
+- No other change.
+
+**The tag:**
+- `p3b-vitl-prereg-frozen` was created locally on `0ae429b` and **never pushed**.
+- It is moved (`git tag -f`) to the commit carrying this entry, so the frozen text holds all
+  six items.
+- `0ae429b` stays in the history.
+- The external timestamp is the user's push, which comes before any training session.
