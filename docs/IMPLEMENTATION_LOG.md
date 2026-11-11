@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P3b (2026-11-11)**: the ViT-L smoke ran on Kaggle (both smokes SMOKE-OK; recipe 1.7126 s/step, 2.136 GiB peak; projected 2.49 GPU-h per run). Pre-registration `docs/P3b_VITL_PREREG.md` is a DRAFT awaiting approval; no ViT-L training. Earlier: P3 decided (`reports/p3_results/tables/t1_verdicts.md`); P4 baselines scored and analysed (`reports/p4_results/`) |
+| Last prompt | **P3b (2026-11-11)**: pre-registration `docs/P3b_VITL_PREREG.md` **FROZEN** (tag `p3b-vitl-prereg-frozen`) after the user's review of `8800801`; the Kaggle ViT-L smoke passed (recipe 1.7126 s/step, 2.136 GiB; projected 2.49 GPU-h per run). No ViT-L training yet. Earlier: P3 decided (`reports/p3_results/tables/t1_verdicts.md`); P4 baselines scored and analysed (`reports/p4_results/`) |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -7377,3 +7377,58 @@ it waits for the user's approval and the smoke's numbers.
 pre-registration is still a DRAFT, not frozen and not tagged.
 
 **NOT-RUN:** ViT-L training and scoring (await approval).
+
+### P3b — the user's review of `8800801` folded in; pre-registration FROZEN (`p3b-vitl-prereg-frozen`) — 2026-11-11
+
+**User review (2026-11-11):**
+- **Verdict:** APPROVED with changes. The pass rules Q1–Q6 are approved as written.
+- **When to freeze:** once the smoke's numbers are filled in, show the diff and tag before any
+  ViT-L training.
+- **No push** without the pre-push audit.
+
+**Folded into `docs/P3b_VITL_PREREG.md`:**
+1. **Primary question = Q1** (ViT-L vs DDA). Q2–Q6 are secondary. All six are reported
+   whatever the outcome.
+2. **Seed rule:** a question passes only if both seeds pass. If the seeds disagree, the verdict
+   is "seed-dependent", which counts as not passed. A failed "matches" is not evidence of being
+   worse, and the thesis says so.
+3. **Failure path (section 5, replacing "what would change the plan"):**
+   - **The checks:** a NaN or divergent loss (any non-finite recorded loss or validation AUC,
+     or a status other than `OK`), or a validation AUC at step 5,000 more than 5 points below
+     S2-D ViT-B's for the same seed.
+   - **ViT-B's values, MEASURED:** 0.99453 / 0.99423, from the two committed training reports.
+     The thresholds are therefore 0.94453 / 0.94423.
+   - **What happens on a failure:** stop and report; no re-tuning, no Panel B scoring.
+   - **Section 1:** a crash is still resumed from its checkpoint, but a NaN or divergent run is
+     not.
+   - **Out of memory with checkpointing on:** the only fallback is the university PC
+     (1x RTX 4000 Ada, 20 GB) with the byte-identical trainer, its hardware recorded. No
+     gradient accumulation, no trainer change.
+4. **Descriptive additions, the same as P4 and with the same bootstrap:**
+   - paired ViT-L − DDA under `jpeg50` and `resize050` (P4's `dda_jpeg50` and
+     `dda_resize050`);
+   - paired ΔFPR against DDA and CO-SPY, each model at its own k = 0 threshold;
+   - E7 AUC per VAE;
+   - E8 TPR at the k = 0 threshold.
+
+   DDA's and CO-SPY's scores are P4's, not re-scored.
+5. **Limitation line (section 3):** DINOv3 ViT-L/16 against DDA's DINOv2 ViT-L/14; the same
+   size, different pretraining and patch size.
+6. **The time plan (section 6):**
+   - The review's corrected pre-smoke estimate, 1.165 h x 2.5–3.5 = 2.9–4.1 h per seed (about
+     5–7 h of quota), is recorded and superseded by the MEASURED smoke.
+   - The measured ratio is 2.14, giving 2.49 GPU-h per seed and about 3.4–4.0 h of quota in
+     total (ESTIMATED).
+   - The 5–7 h stays as the planning margin.
+7. **The 2 h 35 min suite run** (entry "P3b — ViT-L follow-up planned", above): the cause is
+   still unknown. **From now on every full pytest run uses `--durations=20`**, so an outlier
+   like it can be diagnosed.
+
+**Frozen:**
+- The prereg's status line now reads FROZEN.
+- The commit carrying this entry is tagged `p3b-vitl-prereg-frozen`.
+- After the freeze, sections 1–5 do not change.
+
+**NOT-RUN:** ViT-L training and scoring. The next step is the training runbook, the
+failure-path check and the `p3b_analyze.py` driver, each committed before it is used, then a
+dry-run and the hand-over.

@@ -1,9 +1,12 @@
-# P3b — ViT-L follow-up: pre-registration (DRAFT, not frozen)
+# P3b — ViT-L follow-up: pre-registration (FROZEN)
 
-**Status:** draft of 2026-11-11, written **before any ViT-L training and before any ViT-L
-score exists**. It is frozen by a commit tagged `p3b-vitl-prereg-frozen` once the user
-has approved it and the Kaggle smoke (section 6) has been read. After the freeze, nothing
-in sections 1–5 changes.
+**Status:** **frozen 2026-11-11**, by the commit tagged `p3b-vitl-prereg-frozen`.
+- **When:** written before any ViT-L training and before any ViT-L score existed.
+- **Approval:** the pass rules Q1–Q6 are approved by the user (review of `8800801`, with
+  changes folded in).
+- **Section 6** holds the Kaggle smoke's MEASURED numbers.
+
+After the freeze, nothing in sections 1–5 changes.
 
 **Why:** P4 compared our S2-D (DINOv3 **ViT-B/16**) with DDA (DINOv2 **ViT-L/14**). DDA's
 macro AUC over the 4 unseen slices was 0.784 against S2-D's 0.755 / 0.760, a paired
@@ -50,8 +53,10 @@ ViT-L/16**: `facebook/dinov3-vitl16-pretrain-lvd1689m` @
 
 **No tuning on Panel B.** Nothing in this document is chosen from a Panel B score.
 - N\* stays 5,000; it is not reselected for ViT-L.
-- A run that fails (NaN loss or a crash) is resumed from its checkpoint. A run that fails
-  twice is reported as failed, never re-seeded.
+- A run that **crashes** (the session dies) is resumed from its checkpoint. A run that
+  crashes twice is reported as failed, never re-seeded.
+- A run whose loss is NaN or diverges is **not** resumed: it follows the failure path in
+  section 5.
 
 ## 2. Scoring
 
@@ -74,6 +79,13 @@ All are committed, and nothing is re-scored:
 - **S2-D ViT-B** seeds 0 and 1 (`reports/p3_final_scores/s2d_p35_seed{0,1}/`). ViT-L seed
   s is paired with ViT-B seed s.
 
+DDA's and CO-SPY's scores are the P4 scores, reused and never re-scored.
+
+**Limitation (stated wherever Q1 is reported):** the comparison with DDA is between models
+of the same size, not the same backbone. Ours is DINOv3 ViT-L/16; DDA's is DINOv2
+ViT-L/14. The pretraining (data, objective, version) and the patch size differ, so a
+difference between the two is not attributable to the method alone.
+
 ## 4. Questions and pass rules (fixed before training)
 
 **Statistics:**
@@ -82,8 +94,16 @@ All are committed, and nothing is re-scored:
 - **Bootstrap:** P3's `bootstrap`, unchanged: 2,000 resamples, seed 2026, real pools drawn
   once per resample and shared by every model in a comparison, percentile **95%**.
 - **Signs:** every difference is ViT-L minus the comparator.
-- **Judging:** a rule judged "on both seeds" passes only if it passes for seed 0 and for
-  seed 1.
+- **The primary question is Q1** (ViT-L vs DDA). Q2–Q6 are secondary. **All six are
+  reported, whatever the outcome.**
+- **Seed rule:** a question passes only if it passes for seed 0 **and** for seed 1.
+  - If the two seeds disagree, the verdict is **"seed-dependent"**, which counts as not
+    passed.
+  - If both fail, the verdict is "not passed".
+- **Reading a failed "matches":** failing Q1's or Q2's "matches" rule is **not** evidence
+  that ViT-L is worse than the comparator; it means the margin could not be shown. The
+  thesis says so wherever such a verdict is reported. Only a CI that lies wholly below 0
+  shows a deficit.
 
 | # | question | statistic | pass rule (fixed now) |
 |---|---|---|---|
@@ -94,11 +114,15 @@ All are committed, and nothing is re-scored:
 | Q5 | k-shot calibration at k = 50 | P3's H3-k methods (Q) and (S) on each view's calibration pool | **pass**, per method, if the achieved test FPR ≤ 7.5% in ≥ 80% of draws on each of E4 and E5, on both seeds (P3 H3-k's rule) |
 | Q6 | robustness | macro AUC under `jpeg50` and `resize050` minus clean (test rows) | **pass** if both are within 5 points of clean, on both seeds (P3 H5's rule) |
 
-**Descriptive** (no rule):
+**Descriptive** (no rule; the same items as P4, the same bootstrap: B = 2,000, seed 2026,
+the same slices; DDA's and CO-SPY's P4 scores reused, not re-scored):
+- **robustness, paired:** ViT-L − DDA macro AUC under `jpeg50` and under `resize050`,
+  against P4's `dda_jpeg50` and `dda_resize050`;
+- **false positives, paired:** ΔFPR, ViT-L − DDA and ViT-L − CO-SPY, each model at its own
+  k = 0 union threshold; also ViT-L − ViT-B;
+- **E7:** AUC per VAE (DDA's home benchmark, stated as such);
+- **E8:** TPR at the k = 0 threshold;
 - every slice's AUC and AP;
-- E7 per VAE (DDA's home benchmark, stated) and E8 TPR;
-- the paired FPR differences against ViT-B and DDA;
-- ViT-L − DDA under each H5 condition;
 - the training validation curve.
 
 **Exploratory:** anything else, labelled so.
@@ -107,13 +131,34 @@ All are committed, and nothing is re-scored:
 and `p4_analyze.py`'s functions unchanged. It will be committed before any ViT-L Panel B
 score exists, and it must reproduce the committed P3/P4 values of the comparators exactly.
 
-## 5. What would change the plan
+## 5. Failure path (pre-declared)
 
-- **The recipe smoke does not fit a T4.** If the recipe smoke (gradient checkpointing on)
-  runs out of memory, the plan stops and the user decides; the recipe is not changed
-  silently.
-- **The projected time is unaffordable.** If it does not fit the quota (section 6), the
-  user decides before any training.
+**Training fails: stop and report.** A seed's run fails if any of these holds:
+- the loss is NaN, or the run diverges: any recorded loss or validation AUC is not finite,
+  or the training report's status is not `OK`;
+- its validation AUC at step 5,000 is **more than 5 points below** S2-D ViT-B's for the
+  same seed. This is the trainer's existing P3 validation set (512 pairs). ViT-B's values,
+  MEASURED:
+  - seed 0: **0.99453** (`reports/kaggle_20261023/p3_s2d_session1/p2_s2_s2d_p35_seed0.json`);
+  - seed 1: **0.99423** (`reports/kaggle_20261024/p3_s2d_session2/p2_s2_s2d_p35_seed1.json`);
+  - so a ViT-L value below 0.94453 (seed 0) or 0.94423 (seed 1) fails.
+
+What happens then:
+- the failure is reported with the training report and curve;
+- there is **no re-tuning** (no change of LR, steps, schedule, crop, batch or LoRA);
+- there is **no Panel B scoring** of that seed;
+- the questions are reported as not answered, with the reason.
+
+The check runs on the training reports, before any Panel B score.
+
+**Out of memory on a T4.** If a T4 runs out of memory even with gradient checkpointing (the
+smoke shows 2.136 GiB of 14.562; section 6):
+- the **only** fallback is the university PC: 1x RTX 4000 Ada, 20 GB;
+- it runs the byte-identical trainer, and its hardware is recorded;
+- there is **no gradient accumulation and no trainer change**.
+
+**The projected time is unaffordable.** If it does not fit the quota (section 6), the user
+decides before any training.
 
 ## 6. Smoke and time plan (filled in from the Kaggle smoke before the freeze)
 
@@ -149,3 +194,18 @@ score exists, and it must reproduce the committed P3/P4 values of the comparator
 
 In fixed-steps mode the trainer records `allowance_hours` 2.25 but never caps steps on it
 (`fixed_budget`), so a 2.49 GPU-h run trains all 5,000 steps.
+
+**Time plan.** Quota is about 1 h per session hour.
+
+| session | what | wall / quota (ESTIMATED from the MEASURED smoke) |
+|---|---|---|
+| training | seeds 0 and 1 in parallel on T4 × 2: 2.49 GPU-h each, plus about 0.15 h for setup and staging | about 2.7–3.0 h |
+| scoring | both models in parallel: clean + `jpeg50` + `resize050` | about 0.7–1.0 h |
+| **total** | | **about 3.4–4.0 h** |
+
+**The earlier estimate is superseded.**
+- **What it was:** the pre-smoke estimate, corrected by the review (2026-11-11) to
+  1.165 h x 2.5–3.5 = 2.9–4.1 h per seed, about 5–7 h of quota in total.
+- **What was measured:** ViT-L/ViT-B step time is 2.14, below that assumed 2.5–3.5. That
+  gives 2.49 GPU-h per seed, about 3.4–4.0 h in total.
+- **Margin:** the review's 5–7 h stays the planning margin, if the quota is short.
