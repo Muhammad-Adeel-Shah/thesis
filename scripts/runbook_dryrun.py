@@ -2184,6 +2184,99 @@ def fixture_p3b_vitl_smoke(work: Path, ref: str) -> Fixture:
                    [Session("session 1: S2-D inputs verified; two ViT-L smokes")], check=check)
 
 
+def fixture_p3b_vitl_train(work: Path, ref: str) -> Fixture:
+    """The P3b ViT-L training in miniature: S2-D seeds 0 and 1 on the ViT-L stand-in, CPU.
+
+    The S2-D fixture's inputs and its recipe in miniature (6-step schedule stopped at 5),
+    with ``--backbone dinov3-vitl16``. Session 1 trains both seeds and is killed after their
+    step-4 checkpoints, so its failure-path check fails (no OK report). Session 2 has
+    session 1's output attached and resumes both to step 5; its check passes against
+    fixture ViT-B reports. **A decoy ViT-B output** -- an OK ``s2d_p35_seed0`` under
+    ``outputs/p3/s2``, the S2-D notebook's layout -- is attached to both sessions and must
+    never be taken for a ViT-L run. The pre-flight must record the runtime.
+    """
+    base = fixture_p3_s2d(work, ref)
+    inputs = work / "input"
+    code = inputs / "datasets/muhammadadeelshah/dbp-code-fixture/thesis_dbp"
+    s2d = json.loads(Path(base.env["DBP_EXPECT"]).read_text(encoding="utf-8"))
+    real = json.loads((code / "env" / "p3b_vitl_train_expect.json").read_text("utf-8"))
+    fixture_dir = code / "reports" / "dryrun_fixture"
+    vitb = {}
+    for seed in ("0", "1"):
+        path = fixture_dir / f"p3b_vitb_seed{seed}.json"
+        path.write_text(json.dumps({"curve": [{"step": TRAIN_STOP, "val_auc": 0.0}]}) + "\n",
+                        encoding="utf-8")
+        vitb[seed] = path.relative_to(code).as_posix()
+    expect = {**s2d, **{k: real[k] for k in ("backbone", "queue_template", "queue_resolved",
+                                             "runs_per_session", "out_dir", "log_dir")},
+              "stage": "p3b_vitl_train (dry-run fixture)",
+              "train_args": [*s2d["train_args"], "--backbone=dinov3-vitl16"],
+              "vitb_reports": vitb}
+    expect_path = work / "p3b_vitl_train_expect.json"
+    expect_path.write_text(json.dumps(expect, indent=2) + "\n", encoding="utf-8")
+    decoy = inputs / "notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp"
+    (decoy / "outputs/p3/s2/s2d_p35_seed0").mkdir(parents=True)
+    (decoy / "reports").mkdir(parents=True)
+    (decoy / "reports/p2_s2_s2d_p35_seed0.json").write_text(json.dumps(
+        {"status": "OK", "mode": "train", "backbone": "dinov3-vitb16", "steps_run": TRAIN_STOP,
+         "decoy": True}) + "\n", encoding="utf-8")
+    carry_to = inputs / "notebooks/muhammadadeelshah/dbp-p3b-vitl-train"
+
+    def check(work_dir: Path) -> list[str]:
+        try:
+            return check_results(work_dir)
+        except (OSError, KeyError, ValueError, IndexError, StopIteration) as exc:
+            return [f"the sessions did not leave the expected results: "
+                    f"{type(exc).__name__}: {exc}"]
+
+    def check_results(work_dir: Path) -> list[str]:
+        problems: list[str] = []
+        dbp = work_dir / "working/Implementation/thesis_dbp"
+        session1 = carry_to / "Implementation/thesis_dbp"
+        first = json.loads((session1 / "reports/p3b_train_check.json").read_text("utf-8"))
+        if first["all_pass"] or first["cleared_for_scoring"]:
+            problems.append(f"session 1 (killed) passed the failure path: {first}")
+        last = json.loads((dbp / "reports/p3b_train_check.json").read_text("utf-8"))
+        if not last["all_pass"] or last["cleared_for_scoring"] != ["0", "1"] or \
+                last["backbone"] != "dinov3-vitl16" or last["stop_at"] != TRAIN_STOP:
+            problems.append(f"session 2 failure path {last}")
+        for seed in ("0", "1"):
+            rid = f"s2d_p35_seed{seed}"
+            report = json.loads((dbp / "reports" / f"p2_s2_{rid}.json").read_text("utf-8"))
+            if report["status"] != "OK" or report["steps_run"] != TRAIN_STOP or \
+                    report["backbone"] != "dinov3-vitl16" or report.get("decoy") or \
+                    report.get("resumed_from_step") != TRAIN_KILL_AFTER + 1:
+                problems.append(f"{rid}: {report['status']} at {report['steps_run']}, "
+                                f"{report.get('backbone')}, resumed from "
+                                f"{report.get('resumed_from_step')}")
+            if not (dbp / "outputs/p3b/s2" / rid).is_dir():
+                problems.append(f"{rid}: no run directory under outputs/p3b/s2")
+            print(f"  check {rid}: {report['status']}, steps {report['steps_run']}, backbone "
+                  f"{report['backbone']}, resumed from step {report.get('resumed_from_step')}")
+        if (dbp / "outputs/p3/s2").exists():
+            problems.append("a run was written under outputs/p3/s2 (the ViT-B layout)")
+        preflight = json.loads((dbp / "reports/p2_preflight_p3b_vitl_train_data.json")
+                               .read_text("utf-8"))
+        runtime = next(c for c in preflight["checks"] if c["name"] == "runtime")
+        if not runtime["ok"] or not runtime["data"].get("torch") or \
+                "driver" not in runtime["data"] or "torch_cuda" not in runtime["data"]:
+            problems.append(f"runtime record {runtime}")
+        print(f"  check: failure path FAIL in the killed session, PASS after the resume "
+              f"(seeds {last['cleared_for_scoring']}); the decoy ViT-B output was not used; "
+              f"runtime recorded: {runtime['detail']}")
+        return problems
+
+    return Fixture(
+        {"DBP_INPUT_ROOT": str(inputs), "DBP_EXPECT": str(expect_path)}, base.commit,
+        [Session("session 1: both ViT-L seeds trained, killed after their step-4 "
+                 "checkpoints; a decoy ViT-B output attached",
+                 {"DBP_FAULT_EXIT_AFTER_STEP": str(TRAIN_KILL_AFTER)}, "nonzero"),
+         Session("session 2: session 1's output attached; both seeds resume to step 5; the "
+                 "failure path passes")],
+        carry_to=carry_to, check=check,
+    )
+
+
 FINAL_STEP, FINAL_N_MAX = 2, 3
 
 
@@ -3022,6 +3115,7 @@ FIXTURES: dict[str, Callable[[Path, str], Fixture]] = {
     "p4_dda_equivalence": fixture_p4_dda_equivalence,
     "p4_baselines": fixture_p4_baselines,
     "p3b_vitl_smoke": fixture_p3b_vitl_smoke,
+    "p3b_vitl_train": fixture_p3b_vitl_train,
 }
 
 

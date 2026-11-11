@@ -26,6 +26,7 @@ import csv
 import importlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -107,6 +108,45 @@ def check_gpus(expected: int) -> Check:
             return False, f"{found} CUDA device(s) {names}, expected {expected}"
         return True, f"{found} CUDA device(s) {names}"
     return _timed("gpu count", run)
+
+
+def gpu_driver() -> str | None:
+    """The NVIDIA driver version nvidia-smi reports, or None where there is none."""
+    smi = shutil.which("nvidia-smi")
+    if smi is None:
+        return None
+    done = subprocess.run([smi, "--query-gpu=driver_version", "--format=csv,noheader"],
+                          capture_output=True, text=True, check=False)
+    versions = sorted({line.strip() for line in done.stdout.splitlines() if line.strip()})
+    return ", ".join(versions) if done.returncode == 0 and versions else None
+
+
+def check_runtime(require_cuda: bool) -> Check:
+    """Record the runtime: torch, its CUDA and cuDNN, every GPU's name, the driver.
+
+    The values go into the check's ``data`` (so into the run record) and its detail line.
+    With ``require_cuda`` the check fails unless torch was built with CUDA, sees a device
+    and a driver is found; on a CPU dry-run it only records what it finds.
+    """
+    data: dict = {}
+
+    def run() -> tuple[bool, str]:
+        import torch
+
+        available = torch.cuda.is_available()
+        data.update({
+            "torch": torch.__version__, "torch_cuda": torch.version.cuda,
+            "cudnn": torch.backends.cudnn.version() if available else None,
+            "gpus": [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())]
+            if available else [],
+            "driver": gpu_driver(),
+        })
+        detail = (f"torch {data['torch']}, CUDA {data['torch_cuda']}, cuDNN {data['cudnn']}, "
+                  f"GPU {data['gpus'] or 'none'}, driver {data['driver']}")
+        if require_cuda and not (data["torch_cuda"] and data["gpus"] and data["driver"]):
+            return False, f"a CUDA runtime is required: {detail}"
+        return True, detail
+    return _timed("runtime", run, data)
 
 
 def check_hf_token() -> Check:
@@ -359,6 +399,9 @@ def main() -> int:
                         help="Image list to resolve; repeatable.")
     parser.add_argument("--expect-gpus", type=int, default=None)
     parser.add_argument("--hf-token", action="store_true", help="Require HF_TOKEN.")
+    parser.add_argument("--runtime", action="store_true",
+                        help="Record torch, CUDA, cuDNN, GPU names and the driver; with "
+                             "--expect-gpus > 0, also require a CUDA runtime.")
     parser.add_argument("--sha256", action="append", default=[], metavar="PATH=HASH")
     parser.add_argument("--root", type=Path, default=None, help="Corpus root.")
     parser.add_argument("--panel-root", type=Path, default=None)
@@ -393,6 +436,8 @@ def main() -> int:
         return 1
     if args.expect_gpus is not None:
         checks.append(check_gpus(args.expect_gpus))
+    if args.runtime:
+        checks.append(check_runtime(require_cuda=(args.expect_gpus or 0) > 0))
     if args.hf_token:
         checks.append(check_hf_token())
     if args.sha256:

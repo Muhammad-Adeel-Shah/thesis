@@ -21,6 +21,7 @@ from dbp.backbones.loader import BACKBONES, load_backbone  # noqa: E402
 def _script(name: str):
     spec = importlib.util.spec_from_file_location(f"_{name}", ROOT / "scripts" / f"{name}.py")
     module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module   # a dataclass in the module looks itself up here
     spec.loader.exec_module(module)
     return module
 
@@ -105,3 +106,119 @@ def test_the_report_never_fails_the_run(tmp_path: Path) -> None:
                            str(tmp_path), "--out", str(tmp_path / "o.json")],
                           capture_output=True, text=True, check=False)
     assert done.returncode == 0 and "report unavailable" in done.stdout
+
+
+# ------------------------------------------------- P3b training session (frozen prereg) ---
+
+TRAIN_EXPECT = ROOT / "env" / "p3b_vitl_train_expect.json"
+TRAIN_RUNBOOK = ROOT / "env" / "kaggle_run_p3b_vitl_train.py"
+
+
+def _vitl_report(**changes) -> dict:
+    report = {"status": "OK", "mode": "train", "backbone": "dinov3-vitl16",
+              "revision": BACKBONES["dinov3-vitl16"]["revision"], "steps_run": 5000,
+              "curve": [{"step": s, "loss": 0.2, "val_auc": 0.99} for s in range(500, 5001, 500)]}
+    report.update(changes)
+    return report
+
+
+def _check(report, vitb_auc: float = 0.99453) -> dict:
+    check = _script("p3b_train_check")
+    vitb = {"curve": [{"step": 5000, "val_auc": vitb_auc}]}
+    return check.check_seed(report, vitb, "dinov3-vitl16",
+                            BACKBONES["dinov3-vitl16"]["revision"], 5000)
+
+
+def test_a_healthy_vitl_run_passes_the_failure_path() -> None:
+    assert _check(_vitl_report())["verdict"] == "PASS"
+
+
+@pytest.mark.parametrize("change, reason", [
+    ({"curve": [{"step": 500, "loss": float("nan"), "val_auc": 0.9},
+                {"step": 5000, "loss": 0.2, "val_auc": 0.99}]}, "NaN or divergence"),
+    ({"curve": [{"step": 5000, "loss": 0.2, "val_auc": float("inf")}]}, "NaN or divergence"),
+    ({"status": "FAILED"}, "status"),
+    ({"backbone": "dinov3-vitb16"}, "backbone"),
+    ({"steps_run": 4500}, "steps_run"),
+    ({"curve": [{"step": 5000, "loss": 0.2, "val_auc": 0.944}]}, "more than 5 points below"),
+])
+def test_the_failure_path_stops_every_case_section_5_names(change, reason) -> None:
+    result = _check(_vitl_report(**change))
+    assert result["verdict"] == "FAIL" and any(reason in r for r in result["reasons"])
+
+
+def test_exactly_5_points_below_is_not_more_than_5() -> None:
+    at_floor = _vitl_report(curve=[{"step": 5000, "loss": 0.2, "val_auc": 0.94453}])
+    assert _check(at_floor)["verdict"] == "PASS"
+    assert _check(None)["reasons"][0] == "no training report"
+
+
+def test_the_training_expect_changes_only_the_backbone() -> None:
+    expect = json.loads(TRAIN_EXPECT.read_text("utf-8"))
+    s2d = json.loads((ROOT / "env" / "p3_s2d_expect.json").read_text("utf-8"))
+    assert expect["train_args"] == [*s2d["train_args"], "--backbone=dinov3-vitl16"]
+    for key in ("inputs", "oi", "corpus", "gen_matched", "nstar_sha256", "choice", "imports"):
+        assert expect[key] == s2d[key], key
+    assert expect["queue_resolved"] == ["s2d_p35:0", "s2d_p35:1"]
+    assert expect["out_dir"] == "outputs/p3b/s2" and expect["devices"] == "0,1"
+    check = _script("p3b_train_check")
+    assert check.stop_step(expect["train_args"]) == 5000
+    # the ViT-B reports it compares against are the committed ones, at 0.99453 / 0.99423
+    aucs = {s: check.val_auc_at(json.loads((ROOT / p).read_text("utf-8")), 5000)
+            for s, p in expect["vitb_reports"].items()}
+    assert aucs == {"0": 0.99453, "1": 0.99423}
+
+
+def test_the_committed_vitb_reports_would_fail_only_on_their_backbone(tmp_path: Path) -> None:
+    """The check reads real training reports: ViT-B's, posing as ViT-L's, fail on the
+    backbone and the revision alone."""
+    expect = json.loads(TRAIN_EXPECT.read_text("utf-8"))
+    for seed, relative in expect["vitb_reports"].items():
+        (tmp_path / f"p2_s2_s2d_p35_seed{seed}.json").write_bytes((ROOT / relative).read_bytes())
+    out = tmp_path / "check.json"
+    done = subprocess.run([sys.executable, str(ROOT / "scripts" / "p3b_train_check.py"),
+                           "--expect", str(TRAIN_EXPECT), "--reports-dir", str(tmp_path),
+                           "--out", str(out)], capture_output=True, text=True, check=False)
+    assert done.returncode == 1
+    record = json.loads(out.read_text("utf-8"))
+    for seed in ("0", "1"):
+        reasons = record["seeds"][seed]["reasons"]
+        assert len(reasons) == 1 and reasons[0].startswith("backbone 'dinov3-vitb16'"), reasons
+
+
+def test_the_runbook_never_resumes_from_a_vitb_output() -> None:
+    code = TRAIN_RUNBOOK.read_text("utf-8")
+    assert '"notebooks/*/*/Implementation/thesis_dbp/outputs/p3b/s2"' in code
+    assert "outputs/p3/s2" not in code.replace("outputs/p3b/s2", "")
+    assert "p3_train_next.py" not in code
+    assert '"--runtime"' in code and "p3b_train_check.py" in code
+
+
+def test_the_runtime_record_on_a_cpu_host() -> None:
+    preflight = _script("p2_preflight")
+    recorded = preflight.check_runtime(require_cuda=False)
+    assert recorded.ok and recorded.data["torch"] and "driver" in recorded.data
+    assert {"torch_cuda", "cudnn", "gpus"} <= set(recorded.data)
+    if not recorded.data["gpus"]:
+        required = preflight.check_runtime(require_cuda=True)
+        assert not required.ok and "CUDA runtime is required" in required.detail
+
+
+def test_the_seed_rule() -> None:
+    analyze = _script("p3b_analyze")
+    assert analyze.across_seeds({"0": True, "1": True}) == "PASS"
+    assert analyze.across_seeds({"0": True, "1": False}) == "seed-dependent"
+    assert analyze.across_seeds({"0": False, "1": False}) == "not passed"
+    assert analyze.across_seeds({"0": True, "1": None}) == "not answered"
+    assert (analyze.MATCH_MARGIN, analyze.GAIN) == (-0.02, 0.02)
+    assert "not evidence" in analyze.READING
+
+
+def test_the_reproduction_is_exact_and_against_the_current_references() -> None:
+    record = json.loads((ROOT / "reports" / "p3b_results" / "p3b_reproduce.json")
+                        .read_text("utf-8"))["reproduction"]
+    assert record["exact_match"] and record["checked"] == 20
+    assert all(not c["differences"] for c in record["checks"])
+    from dbp.data.manifest import file_sha256
+    for path, sha in record["references"].items():
+        assert file_sha256(ROOT / path) == sha, path
