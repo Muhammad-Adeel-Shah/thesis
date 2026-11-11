@@ -1,0 +1,33 @@
+{
+  "set_id": "t_ctrl",
+  "label": "real",
+  "source_root": "/tmp/div2k/DIV2K_train_HR",
+  "crop": 384,
+  "requested": 1600,
+  "kept": 1600,
+  "crops_per_image": 2,
+  "distinct_source_images": 800,
+  "split_grouping_column": "source_image_id",
+  "skipped_too_small": 0,
+  "unreadable": [],
+  "near_duplicate_groups": [],
+  "near_duplicates_dropped": [],
+  "compression_table": {
+    "real": {
+      "n": 1600,
+      "jpeg": 0,
+      "non_jpeg": 1600,
+      "formats": {
+        "PNG": 1600
+      },
+      "subsampling": {
+        "not-jpeg": 1600
+      },
+      "quality_min": null,
+      "quality_median": null,
+      "quality_max": null
+    }
+  },
+  "manifest": "p1_reals_manifest_t_ctrl.csv",
+  "manifest_sha256": "9f97354c527d02e25aa164e467e2ae0a9f5c4e94a96359ea0e6acc8db7a50833"
+}

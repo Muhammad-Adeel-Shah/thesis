@@ -1,0 +1,47 @@
+{
+  "mode": "train+score",
+  "outcome": "COMPLETE",
+  "devices": [
+    "0",
+    "1"
+  ],
+  "deadline_hours": 9.5,
+  "wall_hours": 1.5833,
+  "device_hours": 3.1667,
+  "runs": [
+    {
+      "run_id": "bank_2_near_seed0",
+      "protocol": "bank_2_near",
+      "seed": 0,
+      "state": "complete",
+      "device": "0",
+      "train_rc": 0,
+      "infer_rc": null,
+      "started": 1792442333.7276275,
+      "finished": 1792448033.7619116,
+      "hours": 1.5833,
+      "logs": [
+        "s2_bank_2_near_seed0_gpu0_infer.log",
+        "s2_bank_2_near_seed0_gpu0_train.log"
+      ],
+      "note": "no training report; nothing to restore"
+    },
+    {
+      "run_id": "bank_2_far_seed0",
+      "protocol": "bank_2_far",
+      "seed": 0,
+      "state": "complete",
+      "device": "1",
+      "train_rc": 0,
+      "infer_rc": null,
+      "started": 1792442333.7280738,
+      "finished": 1792448033.760851,
+      "hours": 1.5833,
+      "logs": [
+        "s2_bank_2_far_seed0_gpu1_infer.log",
+        "s2_bank_2_far_seed0_gpu1_train.log"
+      ],
+      "note": "no training report; nothing to restore"
+    }
+  ]
+}

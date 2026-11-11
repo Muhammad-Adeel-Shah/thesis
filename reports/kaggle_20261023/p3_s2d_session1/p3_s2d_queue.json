@@ -1,0 +1,13 @@
+{
+  "queue": [
+    "s2d_p35:0",
+    "s2b_reals:0",
+    "s2d_p35:1"
+  ],
+  "from": {
+    "path": "/kaggle/working/Implementation/thesis_dbp/reports/p3_degradation_choice.json",
+    "sha256": "6cda015100912a99fc3ec8112d49aa06933a3eaddf1fe431a8f9b85a0755e8d5",
+    "chosen": "s2b_deg_p35_seed0",
+    "chosen_p": 0.35
+  }
+}

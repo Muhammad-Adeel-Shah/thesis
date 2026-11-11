@@ -1,0 +1,110 @@
+2026-10-04 05:26:37 INFO    p2_probe_features | shard 0/1: 1 member(s) x 18614 image(s) at crop 320
+2026-10-04 05:26:37 INFO    p2_probe_features | members: ['movq_k22']
+2026-10-04 05:26:37 INFO    p2_probe_features | image-list digest: 522115667bc498b7
+2026-10-04 05:26:37 INFO    p2_probe_features | roots: {'corpus': '/kaggle/working/p1', 'panel': '/kaggle/input/notebooks/adeelshah29/phase-2/panel'}
+Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
+/usr/local/lib/python3.13/dist-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Loading model from: /usr/local/lib/python3.13/dist-packages/lpips/weights/v0.1/vgg.pth
+2026-10-04 05:26:40 INFO    p2_probe_features | precision from P1: {'movq_k22': 'fp32', 'realesrgan_x4': 'fp32', 'sdxl': 'fp32'}
+2026-10-04 05:26:40 INFO    p2_probe_features | loading movq_k22 (vq, fp32)
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_validators.py:205: UserWarning: The `local_dir_use_symlinks` argument is deprecated and ignored in `hf_hub_download`. Downloading to a local directory does not use symlinks anymore.
+  warnings.warn(
+2026-10-04 05:27:59 INFO    p2_probe_features |   movq_k22 200/18614  0.353 s/image
+2026-10-04 05:29:12 INFO    p2_probe_features |   movq_k22 400/18614  0.359 s/image
+2026-10-04 05:30:27 INFO    p2_probe_features |   movq_k22 600/18614  0.365 s/image
+2026-10-04 05:31:42 INFO    p2_probe_features |   movq_k22 800/18614  0.368 s/image
+2026-10-04 05:32:58 INFO    p2_probe_features |   movq_k22 1000/18614  0.369 s/image
+2026-10-04 05:34:13 INFO    p2_probe_features |   movq_k22 1200/18614  0.371 s/image
+2026-10-04 05:35:28 INFO    p2_probe_features |   movq_k22 1400/18614  0.371 s/image
+2026-10-04 05:36:44 INFO    p2_probe_features |   movq_k22 1600/18614  0.372 s/image
+2026-10-04 05:38:03 INFO    p2_probe_features |   movq_k22 1800/18614  0.375 s/image
+2026-10-04 05:39:22 INFO    p2_probe_features |   movq_k22 2000/18614  0.377 s/image
+2026-10-04 05:40:47 INFO    p2_probe_features |   movq_k22 2200/18614  0.381 s/image
+2026-10-04 05:42:23 INFO    p2_probe_features |   movq_k22 2400/18614  0.389 s/image
+2026-10-04 05:43:55 INFO    p2_probe_features |   movq_k22 2600/18614  0.395 s/image
+2026-10-04 05:45:18 INFO    p2_probe_features |   movq_k22 2800/18614  0.396 s/image
+2026-10-04 05:46:43 INFO    p2_probe_features |   movq_k22 3000/18614  0.398 s/image
+2026-10-04 05:47:59 INFO    p2_probe_features |   movq_k22 3200/18614  0.397 s/image
+2026-10-04 05:49:15 INFO    p2_probe_features |   movq_k22 3400/18614  0.396 s/image
+2026-10-04 05:50:31 INFO    p2_probe_features |   movq_k22 3600/18614  0.395 s/image
+2026-10-04 05:51:47 INFO    p2_probe_features |   movq_k22 3800/18614  0.394 s/image
+2026-10-04 05:53:04 INFO    p2_probe_features |   movq_k22 4000/18614  0.394 s/image
+2026-10-04 05:54:20 INFO    p2_probe_features |   movq_k22 4200/18614  0.393 s/image
+2026-10-04 05:55:37 INFO    p2_probe_features |   movq_k22 4400/18614  0.393 s/image
+2026-10-04 05:56:54 INFO    p2_probe_features |   movq_k22 4600/18614  0.393 s/image
+2026-10-04 05:58:11 INFO    p2_probe_features |   movq_k22 4800/18614  0.392 s/image
+2026-10-04 05:59:28 INFO    p2_probe_features |   movq_k22 5000/18614  0.392 s/image
+2026-10-04 06:00:44 INFO    p2_probe_features |   movq_k22 5200/18614  0.392 s/image
+2026-10-04 06:02:00 INFO    p2_probe_features |   movq_k22 5400/18614  0.391 s/image
+2026-10-04 06:03:16 INFO    p2_probe_features |   movq_k22 5600/18614  0.391 s/image
+2026-10-04 06:04:31 INFO    p2_probe_features |   movq_k22 5800/18614  0.390 s/image
+2026-10-04 06:05:47 INFO    p2_probe_features |   movq_k22 6000/18614  0.390 s/image
+2026-10-04 06:07:02 INFO    p2_probe_features |   movq_k22 6200/18614  0.389 s/image
+2026-10-04 06:08:17 INFO    p2_probe_features |   movq_k22 6400/18614  0.389 s/image
+2026-10-04 06:09:32 INFO    p2_probe_features |   movq_k22 6600/18614  0.388 s/image
+2026-10-04 06:10:46 INFO    p2_probe_features |   movq_k22 6800/18614  0.388 s/image
+2026-10-04 06:12:02 INFO    p2_probe_features |   movq_k22 7000/18614  0.388 s/image
+2026-10-04 06:13:17 INFO    p2_probe_features |   movq_k22 7200/18614  0.387 s/image
+2026-10-04 06:14:32 INFO    p2_probe_features |   movq_k22 7400/18614  0.387 s/image
+2026-10-04 06:15:48 INFO    p2_probe_features |   movq_k22 7600/18614  0.387 s/image
+2026-10-04 06:17:03 INFO    p2_probe_features |   movq_k22 7800/18614  0.386 s/image
+2026-10-04 06:18:19 INFO    p2_probe_features |   movq_k22 8000/18614  0.386 s/image
+2026-10-04 06:19:35 INFO    p2_probe_features |   movq_k22 8200/18614  0.386 s/image
+2026-10-04 06:20:50 INFO    p2_probe_features |   movq_k22 8400/18614  0.386 s/image
+2026-10-04 06:22:06 INFO    p2_probe_features |   movq_k22 8600/18614  0.386 s/image
+2026-10-04 06:23:22 INFO    p2_probe_features |   movq_k22 8800/18614  0.386 s/image
+2026-10-04 06:24:38 INFO    p2_probe_features |   movq_k22 9000/18614  0.385 s/image
+2026-10-04 06:25:54 INFO    p2_probe_features |   movq_k22 9200/18614  0.385 s/image
+2026-10-04 06:27:10 INFO    p2_probe_features |   movq_k22 9400/18614  0.385 s/image
+2026-10-04 06:28:26 INFO    p2_probe_features |   movq_k22 9600/18614  0.385 s/image
+2026-10-04 06:29:43 INFO    p2_probe_features |   movq_k22 9800/18614  0.385 s/image
+2026-10-04 06:31:00 INFO    p2_probe_features |   movq_k22 10000/18614  0.385 s/image
+2026-10-04 06:32:17 INFO    p2_probe_features |   movq_k22 10200/18614  0.385 s/image
+2026-10-04 06:33:34 INFO    p2_probe_features |   movq_k22 10400/18614  0.385 s/image
+2026-10-04 06:34:50 INFO    p2_probe_features |   movq_k22 10600/18614  0.385 s/image
+2026-10-04 06:36:06 INFO    p2_probe_features |   movq_k22 10800/18614  0.385 s/image
+2026-10-04 06:37:23 INFO    p2_probe_features |   movq_k22 11000/18614  0.385 s/image
+2026-10-04 06:38:40 INFO    p2_probe_features |   movq_k22 11200/18614  0.385 s/image
+2026-10-04 06:39:56 INFO    p2_probe_features |   movq_k22 11400/18614  0.385 s/image
+2026-10-04 06:41:12 INFO    p2_probe_features |   movq_k22 11600/18614  0.385 s/image
+2026-10-04 06:42:28 INFO    p2_probe_features |   movq_k22 11800/18614  0.385 s/image
+2026-10-04 06:43:45 INFO    p2_probe_features |   movq_k22 12000/18614  0.385 s/image
+2026-10-04 06:45:02 INFO    p2_probe_features |   movq_k22 12200/18614  0.385 s/image
+2026-10-04 06:46:18 INFO    p2_probe_features |   movq_k22 12400/18614  0.385 s/image
+2026-10-04 06:47:35 INFO    p2_probe_features |   movq_k22 12600/18614  0.385 s/image
+2026-10-04 06:48:52 INFO    p2_probe_features |   movq_k22 12800/18614  0.385 s/image
+2026-10-04 06:50:09 INFO    p2_probe_features |   movq_k22 13000/18614  0.385 s/image
+2026-10-04 06:51:26 INFO    p2_probe_features |   movq_k22 13200/18614  0.385 s/image
+2026-10-04 06:52:42 INFO    p2_probe_features |   movq_k22 13400/18614  0.385 s/image
+2026-10-04 06:54:00 INFO    p2_probe_features |   movq_k22 13600/18614  0.385 s/image
+2026-10-04 06:55:17 INFO    p2_probe_features |   movq_k22 13800/18614  0.385 s/image
+2026-10-04 06:56:34 INFO    p2_probe_features |   movq_k22 14000/18614  0.385 s/image
+2026-10-04 06:57:51 INFO    p2_probe_features |   movq_k22 14200/18614  0.385 s/image
+2026-10-04 06:59:08 INFO    p2_probe_features |   movq_k22 14400/18614  0.385 s/image
+2026-10-04 07:00:25 INFO    p2_probe_features |   movq_k22 14600/18614  0.385 s/image
+2026-10-04 07:01:42 INFO    p2_probe_features |   movq_k22 14800/18614  0.385 s/image
+2026-10-04 07:02:58 INFO    p2_probe_features |   movq_k22 15000/18614  0.385 s/image
+2026-10-04 07:04:15 INFO    p2_probe_features |   movq_k22 15200/18614  0.385 s/image
+2026-10-04 07:05:32 INFO    p2_probe_features |   movq_k22 15400/18614  0.385 s/image
+2026-10-04 07:06:48 INFO    p2_probe_features |   movq_k22 15600/18614  0.385 s/image
+2026-10-04 07:08:05 INFO    p2_probe_features |   movq_k22 15800/18614  0.385 s/image
+2026-10-04 07:09:22 INFO    p2_probe_features |   movq_k22 16000/18614  0.385 s/image
+2026-10-04 07:10:37 INFO    p2_probe_features |   movq_k22 16200/18614  0.384 s/image
+2026-10-04 07:11:51 INFO    p2_probe_features |   movq_k22 16400/18614  0.384 s/image
+2026-10-04 07:13:05 INFO    p2_probe_features |   movq_k22 16600/18614  0.384 s/image
+2026-10-04 07:14:21 INFO    p2_probe_features |   movq_k22 16800/18614  0.384 s/image
+2026-10-04 07:15:36 INFO    p2_probe_features |   movq_k22 17000/18614  0.384 s/image
+2026-10-04 07:16:50 INFO    p2_probe_features |   movq_k22 17200/18614  0.384 s/image
+2026-10-04 07:18:05 INFO    p2_probe_features |   movq_k22 17400/18614  0.384 s/image
+2026-10-04 07:19:20 INFO    p2_probe_features |   movq_k22 17600/18614  0.384 s/image
+2026-10-04 07:20:35 INFO    p2_probe_features |   movq_k22 17800/18614  0.384 s/image
+2026-10-04 07:21:50 INFO    p2_probe_features |   movq_k22 18000/18614  0.383 s/image
+2026-10-04 07:23:05 INFO    p2_probe_features |   movq_k22 18200/18614  0.383 s/image
+2026-10-04 07:24:21 INFO    p2_probe_features |   movq_k22 18400/18614  0.383 s/image
+2026-10-04 07:25:36 INFO    p2_probe_features |   movq_k22 18600/18614  0.383 s/image
+2026-10-04 07:25:41 INFO    p2_probe_features | movq_k22: 18614 image(s) in 7132.9 s = 0.3832 s/image (reconstruct + LPIPS)
+2026-10-04 07:25:41 INFO    p2_probe_features | wrote p2_probe_movq_k22.npz and its sidecar
+2026-10-04 07:25:42 INFO    p2_probe_features | wrote reports/p2_probe_timing_shard0.json

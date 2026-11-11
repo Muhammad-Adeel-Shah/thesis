@@ -1,0 +1,49 @@
+{
+  "model": "full_bank_seed0",
+  "stage": "clean",
+  "protocol": "full_bank",
+  "seed": 0,
+  "step": null,
+  "kind": "lora_head",
+  "snapshot_sha256": null,
+  "lora_sha256": "4cd74c92a2c1ca4f387a44554205fd2821fa09fbaa429c65d05635c7961a6082",
+  "head_sha256": "ed47b1400fc1c6690e4ac3dc9bf2c54f50ce34a8e76d1add6342f919ba563806",
+  "crop": 320,
+  "crop_policy": "centre",
+  "score": "head logit",
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "dry_run_random_init": false,
+  "pillow": "13.0.0",
+  "conditions": {
+    "clean": null
+  },
+  "limit": null,
+  "lists": {
+    "panel_b": {
+      "rows": 9405,
+      "condition": "clean",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/clean/panel_b.csv",
+      "sha256": "d693d2ec85a3b3d71e98fc9487f6ab390ba55b417140a58ddc40697bbc1c277b",
+      "seconds": 176.5,
+      "seconds_per_image": 0.01877
+    },
+    "luma": {
+      "rows": 700,
+      "condition": "clean",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/clean/luma.csv",
+      "sha256": "32e6f7402ec9352c878be7eb6652c6e0646ee4c9d67dd098c31eb418f3f701c0",
+      "seconds": 12.7,
+      "seconds_per_image": 0.0181
+    },
+    "threshold_reals": {
+      "rows": 891,
+      "condition": "clean",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/clean/threshold_reals.csv",
+      "sha256": "5403c268584016808702750c193a122056833a626c9ba1a59768db8caa7a2698",
+      "seconds": 13.7,
+      "seconds_per_image": 0.01536
+    }
+  },
+  "panel_b_digest": "267d9fde75d76a23640674fa2fff7e454de23971b8e296323ca4762507c2a551"
+}

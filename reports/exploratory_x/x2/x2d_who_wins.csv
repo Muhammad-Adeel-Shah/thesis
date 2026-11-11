@@ -1,0 +1,62 @@
+# EXPLORATORY (post-verdict): X2d. Best single module per slice by AUC, and its margin in points over the better of the other two (paired 95% CI).
+run,slice,best_module,best_auc,runner_up,margin_points,best_of_all_non_oracle
+P-A s0,e3_matched/GPT-Image2-fake,S3-Set,0.597,S2,"10.58 [5.91, 15.42]",AEROBLADE
+P-A s0,e3_matched/Nano-Banana2-fake,S2,0.723,S3-Set,"18.65 [14.50, 22.26]",S2
+P-A s0,e3_matched/content:Hybrid Images,S3-Set,0.522,S2,"4.33 [-4.49, 12.32]",S3-Set
+P-A s0,e3_matched/content:Structure Images,S2,0.476,S1,"5.17 [-2.17, 8.63]",S3-LR
+P-A s0,e3_matched/content:Texture Images,S2,0.840,S3-Set,"5.42 [-0.10, 10.60]",S2
+P-A s0,e4_wildrf_matched,S2,0.955,S1,"17.15 [14.97, 19.48]",S2
+P-A s0,e5_chameleon_pipeline,S2,0.685,S3-Set,"3.36 [1.32, 5.57]",AEROBLADE
+P-A s0,e7_dda_coco/FLUX.1,S2,0.935,S1,"1.70 [-0.06, 3.48]",F-mean(A2)
+P-A s0,e7_dda_coco/sd-vae-ft-ema,S2,1.000,S1,"5.94 [4.62, 7.36]",S2
+P-A s0,e7_dda_coco/sd-vae-ft-mse,S2,1.000,S1,"8.23 [6.65, 10.03]",S2
+P-A s0,e7_dda_coco/sdxl-vae,S2,0.998,S1,"12.05 [10.00, 13.92]",S2
+P-A s0,e7_dda_coco/stable-diffusion-2-1,S2,1.000,S1,"7.84 [6.25, 9.48]",S2
+P-A s0,e7_dda_coco/stable-diffusion-3.5-large,S2,0.969,S3-Set,"12.72 [10.01, 15.03]",S2
+P-A s0,e7_dda_coco_luma/FLUX.1,S2,0.803,S3-Set,"3.77 [-0.24, 7.56]",S2+S3-Set
+P-A s0,t_ctrl_diagnostic,S2,0.922,S3-Set,"0.42 [-2.89, 3.94]",S2+S3-Set
+P-A s1,e3_matched/GPT-Image2-fake,S3-Set,0.604,S2,"14.36 [9.39, 18.63]",AEROBLADE
+P-A s1,e3_matched/Nano-Banana2-fake,S2,0.694,S3-Set,"13.85 [9.16, 18.12]",S2
+P-A s1,e3_matched/content:Hybrid Images,S3-Set,0.521,S2,"5.79 [-3.23, 13.03]",S3-Set
+P-A s1,e3_matched/content:Structure Images,S3-Set,0.461,S2,"1.32 [-5.86, 7.97]",S3-LR
+P-A s1,e3_matched/content:Texture Images,S2,0.796,S3-Set,"1.51 [-4.48, 7.24]",S2+S3-Set
+P-A s1,e4_wildrf_matched,S2,0.955,S1,"17.15 [14.95, 19.38]",S2
+P-A s1,e5_chameleon_pipeline,S2,0.714,S3-Set,"6.28 [4.29, 8.53]",S2
+P-A s1,e7_dda_coco/FLUX.1,S2,0.934,S1,"1.54 [-0.30, 3.21]",F-mean(A2)
+P-A s1,e7_dda_coco/sd-vae-ft-ema,S2,1.000,S1,"5.93 [4.60, 7.33]",S2
+P-A s1,e7_dda_coco/sd-vae-ft-mse,S2,1.000,S1,"8.22 [6.64, 10.00]",S2
+P-A s1,e7_dda_coco/sdxl-vae,S2,0.999,S1,"12.10 [10.02, 13.93]",S2
+P-A s1,e7_dda_coco/stable-diffusion-2-1,S2,1.000,S1,"7.84 [6.25, 9.48]",S2
+P-A s1,e7_dda_coco/stable-diffusion-3.5-large,S2,0.968,S3-Set,"12.52 [9.92, 14.83]",S2
+P-A s1,e7_dda_coco_luma/FLUX.1,S2,0.819,S3-Set,"4.42 [0.73, 8.29]",S2+S3-Set
+P-A s1,t_ctrl_diagnostic,S2,0.919,S3-Set,"0.21 [-2.86, 3.66]",S2+S3-Set
+4ch_only,e3_matched/GPT-Image2-fake,S3-Set,0.545,S2,"2.32 [-2.58, 7.14]",AEROBLADE
+4ch_only,e3_matched/Nano-Banana2-fake,S2,0.722,S1,"19.82 [15.74, 22.68]",S2
+4ch_only,e3_matched/content:Hybrid Images,S3-Set,0.591,S2,"8.58 [-0.14, 16.97]",S3-Set
+4ch_only,e3_matched/content:Structure Images,S2,0.487,S1,"2.13 [-2.85, 6.77]",S3-LR
+4ch_only,e3_matched/content:Texture Images,S2,0.847,S3-Set,"10.94 [4.87, 16.54]",S2
+4ch_only,e4_wildrf_matched,S2,0.950,S1,"20.72 [18.34, 23.13]",S2
+4ch_only,e5_chameleon_pipeline,S3-Set,0.715,S2,"4.52 [2.48, 6.56]",S2+S3-Set
+4ch_only,e7_dda_coco/FLUX.1,S2,0.933,S1,"1.93 [0.10, 3.79]",F-mean(A2)
+4ch_only,e7_dda_coco/sd-vae-ft-ema,S2,1.000,S1,"6.34 [4.89, 7.80]",F-stack (A)
+4ch_only,e7_dda_coco/sd-vae-ft-mse,S2,1.000,S1,"8.27 [6.67, 10.07]",F-stack (A)
+4ch_only,e7_dda_coco/sdxl-vae,S2,0.999,S1,"11.03 [9.06, 13.02]",F-stack (A)
+4ch_only,e7_dda_coco/stable-diffusion-2-1,S2,1.000,S1,"8.09 [6.51, 9.78]",F-stack (A)
+4ch_only,e7_dda_coco/stable-diffusion-3.5-large,S2,0.969,S1,"14.45 [11.74, 15.95]",S2
+4ch_only,e7_dda_coco_luma/FLUX.1,S2,0.787,S3-Set,"7.08 [2.92, 11.10]",S2+S3-Set
+4ch_only,t_ctrl_diagnostic,S3-Set,0.939,S2,"2.44 [-0.86, 5.41]",S2+S3-Set
+full_bank,e3_matched/GPT-Image2-fake,S2,0.663,S3-Set,"3.94 [-0.91, 8.76]",S2+S3-Set
+full_bank,e3_matched/Nano-Banana2-fake,S2,0.825,S1,"26.19 [21.75, 29.22]",S2
+full_bank,e3_matched/content:Hybrid Images,S2,0.667,S3-Set,"24.34 [14.42, 31.02]",S2
+full_bank,e3_matched/content:Structure Images,S3-Set,0.626,S2,"1.79 [-5.35, 8.95]",S3-LR
+full_bank,e3_matched/content:Texture Images,S2,0.928,S3-Set,"23.64 [17.83, 29.16]",S2
+full_bank,e4_wildrf_matched,S2,0.927,S1,"13.37 [11.14, 15.82]",S2
+full_bank,e5_chameleon_pipeline,S3-Set,0.684,S2,"0.31 [-2.14, 2.56]",F-mean(A2)
+full_bank,e7_dda_coco/FLUX.1,S2,0.988,S3-Set,"7.25 [5.10, 8.39]",F-stack (A)
+full_bank,e7_dda_coco/sd-vae-ft-ema,S2,0.999,S1,"9.68 [7.89, 11.63]",S2
+full_bank,e7_dda_coco/sd-vae-ft-mse,S2,0.998,S1,"11.48 [9.43, 13.55]",S2
+full_bank,e7_dda_coco/sdxl-vae,S2,0.997,S1,"15.23 [12.96, 17.43]",F-stack (A)
+full_bank,e7_dda_coco/stable-diffusion-2-1,S2,0.998,S1,"11.88 [9.98, 14.08]",F-stack (A)
+full_bank,e7_dda_coco/stable-diffusion-3.5-large,S2,0.992,S3-Set,"13.05 [10.51, 15.35]",S2
+full_bank,e7_dda_coco_luma/FLUX.1,S2,0.949,S3-Set,"10.54 [7.63, 13.29]",F-stack (A)
+full_bank,t_ctrl_diagnostic,S2,0.962,S3-Set,"2.55 [-0.20, 5.46]",F-stack (A)

@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dbp"
+version = "0.0.1"
+description = "Decoder-Bank Probing (DBP) for cross-generator AI-generated image detection"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Muhammad Adeel Shah" }]
+
+# torch / torchvision / numpy are deliberately ABSENT from this list.
+# They are platform-provided: preinstalled on Kaggle (never reinstall -- guardrail #4)
+# and installed explicitly into .venv from the official PyTorch CPU index locally.
+# Listing them here would let a transitive resolve silently change the CUDA build.
+dependencies = [
+    "diffusers>=0.32.0",
+    "transformers>=4.56.0",
+    "peft>=0.11.0",
+    "accelerate>=0.30.0",
+    "safetensors>=0.4.0",
+    "huggingface_hub>=0.25.0",
+    "spandrel>=0.4.0",
+    "lpips>=0.1.4",
+    "scikit-learn>=1.3",
+    "Pillow>=10.0",
+    "pyyaml>=6.0",
+    "pandas>=2.0",
+    "tqdm>=4.65",
+    "matplotlib>=3.7",
+    "scikit-image>=0.22",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "network: requires reaching the Hugging Face Hub",
+    "gpu: requires a CUDA device",
+    "gated: requires an HF_TOKEN with accepted licences",
+]
+
+[tool.ruff]
+# Keep the lint cache inside thesis_dbp. Running ruff from REPO_ROOT would otherwise
+# create REPO_ROOT/.ruff_cache/, which is outside the P0 write scope and trips the
+# protected-asset integrity check.
+cache-dir = ".cache/ruff"
+line-length = 100
+target-version = "py310"
+src = ["src", "scripts", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]

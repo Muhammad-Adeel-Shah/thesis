@@ -1,0 +1,131 @@
+{
+  "generated_at_utc": "2026-09-20T07:30:08+00:00",
+  "runtime": {
+    "is_kaggle": true,
+    "kaggle_kernel_run_type": "Interactive",
+    "hf_home": "/tmp/hf_home",
+    "torch_home": "/tmp/torch_home"
+  },
+  "python": {
+    "version": "3.12.13",
+    "executable": "/usr/bin/python3",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "machine": "x86_64",
+    "in_venv": false,
+    "venv_prefix": null,
+    "conda_prefix": null
+  },
+  "torch": {
+    "available": true,
+    "torch_version": "2.10.0+cu128",
+    "torch_cuda_version": "12.8",
+    "cudnn_version": 91002,
+    "cuda_is_available": true,
+    "device_count": 2,
+    "devices": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "compute_capability": "7.5",
+        "sm": 75,
+        "total_memory_mb": 14912
+      },
+      {
+        "index": 1,
+        "name": "Tesla T4",
+        "compute_capability": "7.5",
+        "sm": 75,
+        "total_memory_mb": 14912
+      }
+    ],
+    "torchvision_version": "0.25.0+cu128"
+  },
+  "nvidia_smi": {
+    "available": true,
+    "gpus": [
+      "Tesla T4, 580.159.04, 15360 MiB",
+      "Tesla T4, 580.159.04, 15360 MiB"
+    ]
+  },
+  "packages": {
+    "torch": "2.10.0+cu128",
+    "torchvision": "0.25.0+cu128",
+    "numpy": "2.0.2",
+    "diffusers": "0.37.1",
+    "transformers": "5.0.0",
+    "peft": "0.19.1",
+    "accelerate": "1.13.0",
+    "safetensors": "0.7.0",
+    "huggingface_hub": "1.11.0",
+    "spandrel": "0.4.2",
+    "lpips": "0.1.4",
+    "scikit-learn": "1.6.1",
+    "Pillow": "11.3.0",
+    "pyyaml": "6.0.3",
+    "pandas": "2.3.3",
+    "tqdm": "4.67.3",
+    "matplotlib": "3.10.0",
+    "scikit-image": "0.25.2",
+    "pytest": "8.4.2",
+    "ruff": "0.15.11",
+    "einops": "0.8.2"
+  },
+  "pillow": {
+    "available": true,
+    "pillow": "11.3.0",
+    "libjpeg": "6.2",
+    "zlib": "1.2.11",
+    "libpng": null
+  },
+  "disk": {
+    "repo_root": {
+      "path": "/kaggle/working/Implementation",
+      "total_gb": 21.0,
+      "free_gb": 20.9
+    },
+    "hf_home": {
+      "path": "/tmp/hf_home",
+      "total_gb": 8656.9,
+      "free_gb": 1100.2
+    },
+    "tmp": {
+      "path": "/tmp",
+      "total_gb": 8656.9,
+      "free_gb": 1100.2
+    }
+  },
+  "ram_gb": 33.7,
+  "network": {
+    "pypi.org": "OK 200",
+    "huggingface.co": "OK 200",
+    "github.com": "OK 200"
+  },
+  "hf_token_present": true,
+  "git": {
+    "available": true,
+    "commit": "758e4c1fb636fb1947226c16734e183a916c87e3",
+    "branch": null,
+    "dirty": null,
+    "source": "COMMIT.txt"
+  },
+  "git_commit": "758e4c1fb636fb1947226c16734e183a916c87e3",
+  "git_commit_source": "COMMIT.txt",
+  "bank": {
+    "schema_version": 1,
+    "member_count": 10,
+    "pinned_revisions": {
+      "sd15": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+      "sd21": "bb2154823665391b4fb29b0b9cf82a198964ee05",
+      "sd_ft_ema": "f04b2c4b98319346dad8c65879f680b1997b204a",
+      "sd_ft_mse": "31f26fdeee1355a5c34592e401dd41e45d25a493",
+      "sdxl": "6f5909a7e596173e25d4e97b07fd19cdf9611c76",
+      "sdxl_fp16fix": "207b116dae70ace3637169f1ddd2434b91b3a8cd",
+      "sd35": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f",
+      "flux": "741f7c3ce8b383c54771c7003378a50191e9efe9",
+      "dcae": "ca69e17e97609e64ce055115a6515215109b1f50"
+    },
+    "pinned_sha256": {
+      "realesrgan_x4": "4fa0d38905f75ac06eb49a7951b426670021be3018265fd191d2125df9d682f1"
+    }
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "model": "full_bank_seed0",
+  "stage": "robust",
+  "protocol": "full_bank",
+  "seed": 0,
+  "step": null,
+  "kind": "lora_head",
+  "snapshot_sha256": null,
+  "lora_sha256": "4cd74c92a2c1ca4f387a44554205fd2821fa09fbaa429c65d05635c7961a6082",
+  "head_sha256": "ed47b1400fc1c6690e4ac3dc9bf2c54f50ce34a8e76d1add6342f919ba563806",
+  "crop": 320,
+  "crop_policy": "centre",
+  "score": "head logit",
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "dry_run_random_init": false,
+  "pillow": "13.0.0",
+  "conditions": {
+    "jpeg95": [
+      "jpeg",
+      95
+    ],
+    "jpeg75": [
+      "jpeg",
+      75
+    ],
+    "jpeg50": [
+      "jpeg",
+      50
+    ],
+    "jpeg30": [
+      "jpeg",
+      30
+    ],
+    "webp90": [
+      "webp",
+      90
+    ],
+    "webp70": [
+      "webp",
+      70
+    ],
+    "webp50": [
+      "webp",
+      50
+    ],
+    "resize075": [
+      "resize",
+      0.75
+    ],
+    "resize050": [
+      "resize",
+      0.5
+    ],
+    "blur05": [
+      "blur",
+      0.5
+    ],
+    "blur1": [
+      "blur",
+      1.0
+    ],
+    "blur2": [
+      "blur",
+      2.0
+    ]
+  },
+  "limit": null,
+  "lists": {
+    "jpeg95": {
+      "rows": 8655,
+      "condition": "jpeg95",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/robust/jpeg95.csv",
+      "sha256": "07da9faf2fe81934263879fb2f430ad1648656aa3799e725387b1129c66c2240",
+      "seconds": 236.2,
+      "seconds_per_image": 0.02729
+    },
+    "jpeg75": {
+      "rows": 8655,
+      "condition": "jpeg75",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/robust/jpeg75.csv",
+      "sha256": "9c5a15438636048c82941c961216985343916c6a7e29884cbf50df79f4bf5d4f",
+      "seconds": 229.9,
+      "seconds_per_image": 0.02657
+    },
+    "jpeg50": {
+      "rows": 8655,
+      "condition": "jpeg50",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/robust/jpeg50.csv",
+      "sha256": "f4e017aeddb44a31eb99942dbc9be5645df4e576c1886a5088b429b246c7cec0",
+      "seconds": 221.1,
+      "seconds_per_image": 0.02555
+    },
+    "jpeg30": {
+      "rows": 8655,
+      "condition": "jpeg30",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/robust/jpeg30.csv",
+      "sha256": "38de0ca2b285797196d507d3151b5f6897c10655eafded8017a9e261b94717ba",
+      "seconds": 217.6,
+      "seconds_per_image": 0.02514
+    },
+    "webp90": {
+      "rows": 8655,
+      "condition": "webp90",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/robust/webp90.csv",
+      "sha256": "7d044f5ae2ab9bf02b8b55e1567bca79ddf91436761fc26b2090b6d40b64b228",
+      "seconds": 907.0,
+      "seconds_per_image": 0.10479
+    },
+    "webp70": {
+      "rows": 8655,
+      "condition": "webp70",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/robust/webp70.csv",
+      "sha256": "1435e822cf9c5a6061ca165d6ca7638d9f466865ef5281f4d91b438da80ca800",
+      "seconds": 787.9,
+      "seconds_per_image": 0.09103
+    },
+    "webp50": {
+      "rows": 8655,
+      "condition": "webp50",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/robust/webp50.csv",
+      "sha256": "55342ca7cd47b9eff253f9f297d06e0a7beb6471f2760ad86f3ab1fe48dc711c",
+      "seconds": 750.5,
+      "seconds_per_image": 0.08671
+    },
+    "resize075": {
+      "rows": 8655,
+      "condition": "resize075",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/robust/resize075.csv",
+      "sha256": "6f8e17828d4a518c8e52e15f605ae5d912f3098b7331cecf6e2b6b61658e9080",
+      "seconds": 382.5,
+      "seconds_per_image": 0.0442
+    },
+    "resize050": {
+      "rows": 8655,
+      "condition": "resize050",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/robust/resize050.csv",
+      "sha256": "c2c9507e72b068a10d324c613eaff9ea5d2ddc9485fea7b336662a53f268ae2c",
+      "seconds": 331.0,
+      "seconds_per_image": 0.03824
+    },
+    "blur05": {
+      "rows": 8655,
+      "condition": "blur05",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/robust/blur05.csv",
+      "sha256": "7fba355aeab4fd3c941e47f5b6f6e2882c745f3cd98be5aa49b618a3591c0774",
+      "seconds": 383.6,
+      "seconds_per_image": 0.04432
+    },
+    "blur1": {
+      "rows": 8655,
+      "condition": "blur1",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/robust/blur1.csv",
+      "sha256": "e2e96adf06515b321b85dc125991dc852115521bfc994a134c3dabeb859ad8da",
+      "seconds": 384.9,
+      "seconds_per_image": 0.04447
+    },
+    "blur2": {
+      "rows": 8655,
+      "condition": "blur2",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/full_bank_seed0/robust/blur2.csv",
+      "sha256": "b09f937e400c57b9385648b9214b5de67cf222ec1c02f0bb2d83929dda471533",
+      "seconds": 382.2,
+      "seconds_per_image": 0.04416
+    }
+  },
+  "panel_b_digest": "267d9fde75d76a23640674fa2fff7e454de23971b8e296323ca4762507c2a551"
+}

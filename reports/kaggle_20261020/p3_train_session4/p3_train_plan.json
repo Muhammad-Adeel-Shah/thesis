@@ -1,0 +1,35 @@
+{
+  "queue": [
+    "bank_1:0",
+    "s2b:0",
+    "bank_2_near:0",
+    "bank_2_far:0",
+    "bank_4_near:0",
+    "bank_4_far:0",
+    "bank_6_near:0",
+    "bank_6_far:0",
+    "bank_1l:0",
+    "s2b:1"
+  ],
+  "complete": [
+    "bank_1:0",
+    "s2b:0",
+    "bank_2_near:0",
+    "bank_2_far:0",
+    "bank_4_near:0",
+    "bank_4_far:0"
+  ],
+  "remaining": [
+    "bank_6_near:0",
+    "bank_6_far:0",
+    "bank_1l:0",
+    "s2b:1"
+  ],
+  "selected": [
+    "bank_6_near:0",
+    "bank_6_far:0"
+  ],
+  "all_complete": false,
+  "lolo_rescore_due": false,
+  "lolo_score_files_carried": 16
+}

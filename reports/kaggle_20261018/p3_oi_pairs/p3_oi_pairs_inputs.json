@@ -1,0 +1,14 @@
+{
+  "mode": "inputs",
+  "ok": true,
+  "rows": 4000,
+  "rows_expected": 4000,
+  "missing": [],
+  "n_missing": 0,
+  "sha256_mismatch": [],
+  "n_sha256_mismatch": 0,
+  "splits": {
+    "train": 3600,
+    "held_out": 400
+  }
+}

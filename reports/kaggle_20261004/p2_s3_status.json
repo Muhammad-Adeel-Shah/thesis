@@ -1,0 +1,37 @@
+{
+  "outcome": "COMPLETE",
+  "failed_job": null,
+  "jobs": [
+    {
+      "index": 0,
+      "device": "0",
+      "members": "movq_k22",
+      "returncode": 0,
+      "log": "probe_job0.log"
+    },
+    {
+      "index": 1,
+      "device": "1",
+      "members": "qwen_image,realesrgan_x4",
+      "returncode": 0,
+      "log": "probe_job1.log"
+    }
+  ],
+  "members_done": [
+    "dcae",
+    "flux",
+    "flux2_klein",
+    "movq_k22",
+    "qwen_image",
+    "realesrgan_x4",
+    "sd15",
+    "sd21",
+    "sd35",
+    "sd_ft_ema",
+    "sdxl",
+    "sdxl_fp16fix"
+  ],
+  "deadline_hours": 3.5,
+  "wall_hours": 1.9917,
+  "device_hours": 3.9834
+}

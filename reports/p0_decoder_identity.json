@@ -1,0 +1,22 @@
+{
+  "device": "cpu",
+  "crops": [
+    512,
+    1024
+  ],
+  "smoke_images": {
+    "512": "astronaut",
+    "1024": "retina"
+  },
+  "diffusers_api_check": {
+    "AutoencoderKLOutput.latent_dist": true,
+    "DiagonalGaussianDistribution.mode": true,
+    "DecoderOutput.sample": true,
+    "EncoderOutput.latent": true
+  },
+  "decoder_state_dict_sha256": {
+    "sd15": "d91d70b6fd5354e54a4268b673a04e6eb9df589ea5fbb40568cdfed3665599ea"
+  },
+  "byte_identical_decoder_groups": [],
+  "note": "Members listed in the same group share byte-identical decoder weights and are therefore ONE lineage, not two, for the leave-one-lineage-out protocol."
+}

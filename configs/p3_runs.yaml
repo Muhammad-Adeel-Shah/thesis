@@ -1,0 +1,194 @@
+# ===========================================================================
+# P3 run configurations -- leave-one-lineage-out (LOLO), pre-registration section 3
+# ===========================================================================
+# FROZEN design (docs/P3_PREREGISTRATION.md, frozen 2026-10-08; docs/P3_PLAN.md
+# section 2). Fold f trains S2 with lineage f's members held out; an alias is never
+# split from its twin (sd21 == sd_ft_mse lie in kl_4ch_sd1 together). Fold 1 also
+# holds out gen_matched: SD1.5 generations would leak the SD1 lineage.
+#
+# The recipe is S2-B's (pre-registration section 3): P2's S2 trainer and
+# hyper-parameters, fixed-step training (no early stopping), no new reals, no
+# degradation. Every fold trains for N_max = 6,000 steps and evaluates its held-out
+# lineage every 500 steps (--fixed-steps 6000 --heldout-every 500); N* is chosen only
+# after all eight folds exist, by the nested rule, never inside a fold.
+#
+# excluded_lineages is validated against configs/decoder_bank.yaml, so a typo
+# cannot silently hold out nothing.
+# ===========================================================================
+
+runs:
+  - run_id: lolo_f1
+    label: "LOLO fold 1 -- SD1 (kl_4ch_sd1) and gen_matched held out"
+    excluded_lineages: [kl_4ch_sd1]     # sd15, sd21 == sd_ft_mse, sd_ft_ema
+    gen_matched: false
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: lolo_f2
+    label: "LOLO fold 2 -- SDXL (kl_4ch_sdxl) held out"
+    excluded_lineages: [kl_4ch_sdxl]    # sdxl, sdxl_fp16fix
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: lolo_f3
+    label: "LOLO fold 3 -- 16-channel KL (kl_16ch) held out"
+    excluded_lineages: [kl_16ch]        # sd35, flux
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: lolo_f4
+    label: "LOLO fold 4 -- DC-AE (dc_ae_f32) held out"
+    excluded_lineages: [dc_ae_f32]      # dcae
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: lolo_f5
+    label: "LOLO fold 5 -- GAN super-resolution (gan_sr) held out"
+    excluded_lineages: [gan_sr]         # realesrgan_x4
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: lolo_f6
+    label: "LOLO fold 6 -- FLUX.2 (kl_32ch_flux2) held out"
+    excluded_lineages: [kl_32ch_flux2]  # flux2_klein
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: lolo_f7
+    label: "LOLO fold 7 -- Qwen-Image (kl_16ch_qwen) held out"
+    excluded_lineages: [kl_16ch_qwen]   # qwen_image
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: lolo_f8
+    label: "LOLO fold 8 -- MoVQ (vq_movq_4ch) held out"
+    excluded_lineages: [vq_movq_4ch]    # movq_k22
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+# ===========================================================================
+# Non-LOLO P3 runs (pre-registration section 3; user decisions 2026-10-17)
+# ===========================================================================
+# The P3 recipe, the reading of "same recipe" in section 3: the 6,000-step cosine
+# schedule, STOPPED at N* = 5000 (--fixed-steps 6000 --stop-at 5000) -- exactly the
+# model N* was selected on. No selection inside a run; per-image held-out scores of
+# every member a run does not train on are written at its final step.
+#
+# Bank-size curve (P3_PLAN.md section 3): k = 1 is sd15 alone; k >= 2 adds whole
+# lineages, SD1 complete from k = 2; k = 8 is the full bank = S2-B. The two orders are
+# X3b's, at the lineage level:
+#   near-first: SD1, SDXL, MoVQ, 16ch, Qwen, FLUX.2, DC-AE, GAN-SR -> 1 / 5 / 8 / 10 / 12
+#   far-first : SD1, GAN-SR, DC-AE, FLUX.2, Qwen, 16ch, MoVQ, SDXL -> 1 / 4 / 6 / 9 / 12
+# (decoder counts; tests/test_p3_runs.py checks them against the registry).
+# gen_matched is kept in every run.
+
+  - run_id: bank_1
+    label: "BANK-1 -- sd15 alone (one decoder, the prior-work setting)"
+    excluded_lineages: [kl_4ch_sdxl, vq_movq_4ch, kl_16ch, kl_16ch_qwen, kl_32ch_flux2, dc_ae_f32, gan_sr]
+    excluded_members: [sd21, sd_ft_ema]  # sd21 also excludes its alias sd_ft_mse
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: bank_2_near
+    label: "BANK-2, near-first -- SD1 + SDXL (5 decoders)"
+    excluded_lineages: [vq_movq_4ch, kl_16ch, kl_16ch_qwen, kl_32ch_flux2, dc_ae_f32, gan_sr]
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: bank_4_near
+    label: "BANK-4, near-first -- SD1 + SDXL + MoVQ + 16ch (8 decoders)"
+    excluded_lineages: [kl_16ch_qwen, kl_32ch_flux2, dc_ae_f32, gan_sr]
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: bank_6_near
+    label: "BANK-6, near-first -- + Qwen + FLUX.2 (10 decoders)"
+    excluded_lineages: [dc_ae_f32, gan_sr]
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: bank_2_far
+    label: "BANK-2, far-first -- SD1 + GAN-SR (4 decoders)"
+    excluded_lineages: [dc_ae_f32, kl_32ch_flux2, kl_16ch_qwen, kl_16ch, vq_movq_4ch, kl_4ch_sdxl]
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: bank_4_far
+    label: "BANK-4, far-first -- SD1 + GAN-SR + DC-AE + FLUX.2 (6 decoders)"
+    excluded_lineages: [kl_16ch_qwen, kl_16ch, vq_movq_4ch, kl_4ch_sdxl]
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: bank_6_far
+    label: "BANK-6, far-first -- + Qwen + 16ch (9 decoders)"
+    excluded_lineages: [vq_movq_4ch, kl_4ch_sdxl]
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: bank_1l
+    label: "BANK-1L (descriptive) -- the whole SD1 lineage (3 decoders)"
+    excluded_lineages: [kl_4ch_sdxl, vq_movq_4ch, kl_16ch, kl_16ch_qwen, kl_32ch_flux2, dc_ae_f32, gan_sr]
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: s2b
+    label: "S2-B -- the P3 baseline: all 8 lineages (12 decoders) = BANK-8"
+    excluded_lineages: []
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+# ===========================================================================
+# Degradation tuning (P3_PLAN.md section 4b; rule fixed 2026-10-17, before training)
+# ===========================================================================
+# S2-B + the real-side degradation chain (dbp.train.degrade): one chain per pair,
+# identical for both members; 4 operations at 1/4 each, parameters uniform in their
+# ranges, JPEG chroma 4:2:0 / 4:4:4 at 50/50. Only p is tuned: 0.7 (the plan default)
+# and 0.35. Each is S2-B+deg seed 0 on the P3 recipe; the candidate the committed rule
+# selects IS the pre-registered S2-B+deg ablation.
+
+  - run_id: s2b_deg_p70
+    label: "S2-B+deg candidate, chain probability p = 0.7 (plan default)"
+    excluded_lineages: []
+    degrade_p: 0.7
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: s2b_deg_p35
+    label: "S2-B+deg candidate, chain probability p = 0.35 (half)"
+    excluded_lineages: []
+    degrade_p: 0.35
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+
+# ===========================================================================
+# S2-D and S2-B+reals (pre-registration section 3; mixing decided 2026-10-21)
+# ===========================================================================
+# S2-D = S2-B + the 3,600 Open Images V7 train reals with their reconstructions by all
+# 12 members + the degradation chain at the p the committed tuning rule chose
+# (reports/p3_degradation_choice.json). S2-B+reals = S2-B + the same reals, no
+# degradation. One real pool, COCO and Open Images together, sampled uniformly by real
+# by the unchanged trainer: the reals reach it through merged input files built and
+# verified by scripts/p3_s2d_inputs.py. The 400 held-out Open Images reals never enter
+# training. Both p entries exist so that the runbook resolves S2-D from the committed
+# result and never by hand; only the chosen one is trained.
+
+  - run_id: s2d_p70
+    label: "S2-D -- S2-B + Open Images train reals + degradation, p = 0.7"
+    excluded_lineages: []
+    degrade_p: 0.7
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: s2d_p35
+    label: "S2-D -- S2-B + Open Images train reals + degradation, p = 0.35"
+    excluded_lineages: []
+    degrade_p: 0.35
+    eval_crop: 320
+    eval_crops_per_image: 1
+
+  - run_id: s2b_reals
+    label: "S2-B+reals -- S2-B + Open Images train reals, no degradation"
+    excluded_lineages: []
+    eval_crop: 320
+    eval_crops_per_image: 1

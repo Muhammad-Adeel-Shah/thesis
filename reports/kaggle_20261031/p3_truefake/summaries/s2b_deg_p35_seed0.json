@@ -1,0 +1,30 @@
+{
+  "model": "s2b_deg_p35_seed0",
+  "stage": "truefake",
+  "protocol": "s2b_deg_p35",
+  "seed": 0,
+  "step": 5000,
+  "kind": "snapshot",
+  "snapshot_sha256": "afb429a2b8be0b313c7ff2a6871147f6d47dbd3e936c9bfa04476f5023f0cab6",
+  "lora_sha256": "7658a77b36cae1b14015bda61d2bbbb1708b236e7e695641bcfe0ce1819118ee",
+  "head_sha256": "80fe4a481d1d7c5761f4b4c233f187226a40bb48e927a78d2905fe18c9215283",
+  "crop": 320,
+  "crop_policy": "centre",
+  "score": "head logit",
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "dry_run_random_init": false,
+  "pillow": "13.0.0",
+  "limit": null,
+  "lists": {
+    "truefake": {
+      "rows": 15999,
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_truefake_scores/s2b_deg_p35_seed0/truefake.csv",
+      "sha256": "4b2481e86cae2d61064e6d1e0a7a028b17d1cf32aa03fc1585dc752e7cfb5d4b",
+      "seconds": 437.6,
+      "seconds_per_image": 0.02735
+    }
+  },
+  "list_sha256": "6c3002e10c46058bf08267576966d6dee959fddc732577a794234beeb28fa1df",
+  "sample_sha256": "a8954c2f63e81d95173cbec99e3f7c1ee2dd3d49527fac5ff7075de5e1ac8fd6"
+}

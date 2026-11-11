@@ -1,0 +1,104 @@
+{
+  "e7_dda_coco": {
+    "threshold_bits": 6,
+    "against": {
+      "p1_reals_manifest_t_real.csv": {
+        "status": "CLEAN",
+        "n_training": 2500,
+        "n_evaluation": 34969,
+        "matches": []
+      },
+      "p1_reals_manifest_t_ctrl.csv": {
+        "status": "CLEAN",
+        "n_training": 1600,
+        "n_evaluation": 34969,
+        "matches": []
+      }
+    }
+  },
+  "e8_evalgen": {
+    "threshold_bits": 6,
+    "against": {
+      "p1_reals_manifest_t_real.csv": {
+        "status": "CLEAN",
+        "n_training": 2500,
+        "n_evaluation": 5000,
+        "matches": []
+      },
+      "p1_reals_manifest_t_ctrl.csv": {
+        "status": "CLEAN",
+        "n_training": 1600,
+        "n_evaluation": 5000,
+        "matches": []
+      }
+    }
+  },
+  "e3_raw": {
+    "threshold_bits": 6,
+    "against": {
+      "p1_reals_manifest_t_real.csv": {
+        "status": "CLEAN",
+        "n_training": 2500,
+        "n_evaluation": 2178,
+        "matches": []
+      },
+      "p1_reals_manifest_t_ctrl.csv": {
+        "status": "CLEAN",
+        "n_training": 1600,
+        "n_evaluation": 2178,
+        "matches": []
+      }
+    }
+  },
+  "e3_preprocessing": {
+    "threshold_bits": 6,
+    "against": {
+      "p1_reals_manifest_t_real.csv": {
+        "status": "CLEAN",
+        "n_training": 2500,
+        "n_evaluation": 2178,
+        "matches": []
+      },
+      "p1_reals_manifest_t_ctrl.csv": {
+        "status": "CLEAN",
+        "n_training": 1600,
+        "n_evaluation": 2178,
+        "matches": []
+      }
+    }
+  },
+  "e5_chameleon": {
+    "threshold_bits": 6,
+    "against": {
+      "p1_reals_manifest_t_real.csv": {
+        "status": "CLEAN",
+        "n_training": 2500,
+        "n_evaluation": 26033,
+        "matches": []
+      },
+      "p1_reals_manifest_t_ctrl.csv": {
+        "status": "CLEAN",
+        "n_training": 1600,
+        "n_evaluation": 26033,
+        "matches": []
+      }
+    }
+  },
+  "e4_wildrf_test": {
+    "threshold_bits": 6,
+    "against": {
+      "p1_reals_manifest_t_real.csv": {
+        "status": "CLEAN",
+        "n_training": 2500,
+        "n_evaluation": 2503,
+        "matches": []
+      },
+      "p1_reals_manifest_t_ctrl.csv": {
+        "status": "CLEAN",
+        "n_training": 1600,
+        "n_evaluation": 2503,
+        "matches": []
+      }
+    }
+  }
+}

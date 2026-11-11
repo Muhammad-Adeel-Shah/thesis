@@ -1,0 +1,594 @@
+{
+  "run_id": "p_a_sd1_seed1",
+  "protocol": "p_a_sd1",
+  "seed": 1,
+  "fitted_on": "val_p_a_sd1_seed1",
+  "allowed_fakes": [
+    "gen_matched",
+    "sd15",
+    "sd21",
+    "sd_ft_ema"
+  ],
+  "validation": {
+    "rows": 932,
+    "reals": 491,
+    "fakes": 441,
+    "by_group": {
+      "gen_matched": 126,
+      "real": 491,
+      "sd15": 105,
+      "sd21": 100,
+      "sd_ft_ema": 110
+    },
+    "ids_sha256": "ddedab480a0029c8a12436bf0e2f237f9335e66fff11f6ed3ff8e38eb07c784d",
+    "definition": "probe-list validation rows whose label is real or whose member is one of the protocol's lineages or gen_matched (Amendment 2)"
+  },
+  "training": {
+    "s1_rows": 9692,
+    "s1_ids_sha256": "9c0caf3bd95a9aff76e1db40c21f3bc1db8f88509d0e2249fac9eb18a71317c1",
+    "s3_rows": 2000,
+    "s3_reals": 1000,
+    "s3_fakes": 1000,
+    "s3_ids_sha256": "22f245c62309df2eab7241dfaa1c45ed55b0a0dafce35120a04df3337e1d1bc7"
+  },
+  "streams": {
+    "s1": {
+      "val_auc": 0.9589943241383451,
+      "C": 0.1,
+      "grid": [
+        {
+          "C": 0.01,
+          "val_auc": 0.9540389135966675
+        },
+        {
+          "C": 0.1,
+          "val_auc": 0.9589943241383451
+        },
+        {
+          "C": 1.0,
+          "val_auc": 0.9530044196904831
+        },
+        {
+          "C": 10.0,
+          "val_auc": 0.942779555814179
+        }
+      ],
+      "n_train": 9692,
+      "n_val": 932
+    },
+    "s2": {
+      "val_auc": 0.9998983979199283
+    },
+    "s3_lr": {
+      "val_auc": 1.0,
+      "n_features": 240,
+      "columns": [
+        "sd15.psnr_db",
+        "sd15.mean_abs_residual",
+        "sd15.lpips_vgg",
+        "sd15.radial_logpower_00",
+        "sd15.radial_logpower_01",
+        "..."
+      ]
+    },
+    "s3_set": {
+      "val_auc": 0.9806124758117776,
+      "best_epoch": 200,
+      "epochs": 200,
+      "permutation_delta_after_training": 9.5367431640625e-07
+    },
+    "aeroblade": {
+      "val_auc": 0.630325449935575,
+      "trained": false,
+      "excluded_kinds": [
+        "sr_gan"
+      ]
+    },
+    "f_mean_rz": {
+      "val_auc": 0.9968272441359436,
+      "note": "in-sample for f_mean/f_stack (fitted on this set); f_mean_rz used the reals' location and scale only"
+    },
+    "f_mean": {
+      "val_auc": 1.0,
+      "note": "in-sample for f_mean/f_stack (fitted on this set); f_mean_rz used the reals' location and scale only"
+    },
+    "f_stack": {
+      "val_auc": 1.0,
+      "note": "in-sample for f_mean/f_stack (fitted on this set); f_mean_rz used the reals' location and scale only"
+    }
+  },
+  "calibrations": {
+    "s1": {
+      "fpr_1": {
+        "threshold": 5.3513312339782715,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.01,
+        "achieved_fpr": 0.008146639511201629,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 0.4376417233560091
+      },
+      "fpr_5": {
+        "threshold": 2.472266674041748,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.05,
+        "achieved_fpr": 0.048879837067209775,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 0.7959183673469388
+      },
+      "temperature": 1.3879988090526505
+    },
+    "s2": {
+      "fpr_1": {
+        "threshold": -1.992116,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.01,
+        "achieved_fpr": 0.008146639511201629,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 1.0
+      },
+      "fpr_5": {
+        "threshold": -4.953609,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.05,
+        "achieved_fpr": 0.048879837067209775,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 1.0
+      },
+      "temperature": 1.0873670029195779
+    },
+    "s3_lr": {
+      "fpr_1": {
+        "threshold": -2.104790449142456,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.01,
+        "achieved_fpr": 0.008146639511201629,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 1.0
+      },
+      "fpr_5": {
+        "threshold": -4.729036808013916,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.05,
+        "achieved_fpr": 0.048879837067209775,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 1.0
+      },
+      "temperature": 0.02000006847517378
+    },
+    "s3_set": {
+      "fpr_1": {
+        "threshold": 4.88454008102417,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.01,
+        "achieved_fpr": 0.008146639511201629,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 0.3945578231292517
+      },
+      "fpr_5": {
+        "threshold": 0.6629583239555359,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.05,
+        "achieved_fpr": 0.048879837067209775,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 0.9070294784580499
+      },
+      "temperature": 1.1360342409946373
+    },
+    "aeroblade": {
+      "fpr_1": {
+        "threshold": -0.01745099015533924,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.01,
+        "achieved_fpr": 0.008146639511201629,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 0.06575963718820861
+      },
+      "fpr_5": {
+        "threshold": -0.02125297114253044,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.05,
+        "achieved_fpr": 0.048879837067209775,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 0.16326530612244897
+      },
+      "temperature": 0.15274956605866946
+    },
+    "f_mean_rz": {
+      "fpr_1": {
+        "threshold": 2.8898554198345647,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.01,
+        "achieved_fpr": 0.008146639511201629,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 0.8412698412698413
+      },
+      "fpr_5": {
+        "threshold": 2.200233049548678,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.05,
+        "achieved_fpr": 0.048879837067209775,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 0.9954648526077098
+      }
+    },
+    "f_mean": {
+      "fpr_1": {
+        "threshold": -22.21308870769117,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.01,
+        "achieved_fpr": 0.008146639511201629,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 1.0
+      },
+      "fpr_5": {
+        "threshold": -50.441898685190566,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.05,
+        "achieved_fpr": 0.048879837067209775,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 1.0
+      }
+    },
+    "f_stack": {
+      "fpr_1": {
+        "threshold": -27.10201357756885,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.01,
+        "achieved_fpr": 0.008146639511201629,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 1.0
+      },
+      "fpr_5": {
+        "threshold": -60.17663477307909,
+        "rule": "target_fpr_on_reals",
+        "fitted_on": "val_p_a_sd1_seed1",
+        "n_fitted": 491,
+        "target": 0.05,
+        "achieved_fpr": 0.048879837067209775,
+        "achieved_tpr": null,
+        "val_tpr_at_threshold": 1.0
+      }
+    }
+  },
+  "fusions": {
+    "f_mean_rz": {
+      "kind": "robust_mean",
+      "streams": [
+        "s1",
+        "s2",
+        "s3_set"
+      ],
+      "medians": [
+        -2.388716697692871,
+        -9.806858,
+        -6.484434604644775
+      ],
+      "scales": [
+        2.578230563735962,
+        0.8463614837999988,
+        5.207077254581451
+      ],
+      "scale_rules": [
+        "mad",
+        "mad",
+        "mad"
+      ],
+      "clip": 5.0,
+      "fitted_on": "val_p_a_sd1_seed1",
+      "n_reals": 491,
+      "uses_fake_labels": false
+    },
+    "f_mean": {
+      "kind": "mean",
+      "streams": [
+        "aeroblade",
+        "s1",
+        "s2",
+        "s3_lr",
+        "s3_set"
+      ],
+      "temperatures": [
+        0.15275,
+        1.387999,
+        1.087367,
+        0.02,
+        1.136034
+      ],
+      "coefficients": [],
+      "intercept": 0.0,
+      "fitted_on": "val_p_a_sd1_seed1",
+      "n_fitted": 932
+    },
+    "f_stack": {
+      "kind": "stack",
+      "streams": [
+        "aeroblade",
+        "s1",
+        "s2",
+        "s3_lr",
+        "s3_set"
+      ],
+      "temperatures": [
+        0.15275,
+        1.387999,
+        1.087367,
+        0.02,
+        1.136034
+      ],
+      "coefficients": [
+        -0.004154,
+        0.071636,
+        0.155818,
+        0.248606,
+        -0.002869
+      ],
+      "intercept": 0.027964,
+      "fitted_on": "val_p_a_sd1_seed1",
+      "n_fitted": 932
+    }
+  },
+  "fusion_streams_configured": [
+    "aeroblade",
+    "s1",
+    "s2",
+    "s3_lr",
+    "s3_set"
+  ],
+  "governing_fusion": {
+    "name": "f_mean_rz",
+    "streams": [
+      "s1",
+      "s2",
+      "s3_set"
+    ],
+    "rule": "pre-registration Amendment 2"
+  },
+  "exploratory": {
+    "label": "EXPLORATORY -- not part of the gate (Amendment 2)",
+    "mean_psnr_db_on_validation_reals": {
+      "sd15": 23.4025,
+      "sd21": 24.5211,
+      "sd_ft_ema": 23.7563,
+      "sdxl": 24.7228,
+      "sdxl_fp16fix": 24.7446,
+      "sd35": 27.6542,
+      "flux": 28.9929,
+      "dcae": 22.5324,
+      "realesrgan_x4": 22.6715,
+      "flux2_klein": 30.553,
+      "qwen_image": 27.9525,
+      "movq_k22": 24.6059
+    },
+    "spearman_psnr_vs_s2_val_auc": {
+      "decoders": [
+        "sd15",
+        "sd21",
+        "sd_ft_ema",
+        "sdxl",
+        "sdxl_fp16fix",
+        "sd35",
+        "flux",
+        "dcae",
+        "realesrgan_x4",
+        "flux2_klein",
+        "qwen_image",
+        "movq_k22"
+      ],
+      "n": 12,
+      "rho": -0.7880922768806397,
+      "p_value": 0.002328675140237452
+    },
+    "spearman_psnr_vs_s2_val_auc_unseen_only": {
+      "decoders": [
+        "sdxl",
+        "sdxl_fp16fix",
+        "sd35",
+        "flux",
+        "dcae",
+        "realesrgan_x4",
+        "flux2_klein",
+        "qwen_image",
+        "movq_k22"
+      ],
+      "n": 9,
+      "rho": -0.8166666666666667,
+      "p_value": 0.0072247852463587885
+    }
+  },
+  "fusion_check": {
+    "stack_coefficients": {
+      "aeroblade": -0.004153752767082569,
+      "s1": 0.07163593787996685,
+      "s2": 0.15581823090626737,
+      "s3_lr": 0.2486056725206208,
+      "s3_set": -0.002868551861768996
+    },
+    "stack_intercept": 0.027963783885246028,
+    "standardised_weight": {
+      "aeroblade": 0.0,
+      "s1": 0.00229,
+      "s2": 0.0128,
+      "s3_lr": 0.98473,
+      "s3_set": 0.00017
+    },
+    "standardisation": "|coefficient| x standard deviation of the temperature-scaled validation logit, normalised to sum to 1",
+    "stack_val_auc_in_sample": 1.0,
+    "warnings": [],
+    "separation": [
+      "s3_lr separates the validation set perfectly (AUC 1.0)",
+      "F-stack separates the validation set perfectly (in-sample AUC 1.0)"
+    ],
+    "s2_share_threshold": 0.9,
+    "stop": true,
+    "stop_reasons": [
+      "s3_lr separates the validation set perfectly (AUC 1.0)",
+      "F-stack separates the validation set perfectly (in-sample AUC 1.0)"
+    ],
+    "rule": "user instruction 2026-10-05: STOP before scoring the panel if S2 holds >90% of the standardised F-stack weight or the fit shows separation",
+    "resolution": "Amendment 2 (D-069, commit 5a0b250): F-stack is secondary (Analysis A); the verdict is decided by F-mean(A2), which learns no weight, so this check is reported but no longer blocks scoring"
+  },
+  "per_group_val_auc_full_validation": {
+    "dcae": {
+      "n_fake": 107,
+      "in_protocol": false,
+      "s1": 0.92148,
+      "s2": 0.99724,
+      "s3_lr": 0.43554,
+      "s3_set": 0.99239,
+      "aeroblade": 0.50345,
+      "f_mean_rz": 0.99812
+    },
+    "flux": {
+      "n_fake": 111,
+      "in_protocol": false,
+      "s1": 0.81765,
+      "s2": 0.94055,
+      "s3_lr": 0.22203,
+      "s3_set": 0.90409,
+      "aeroblade": 0.95499,
+      "f_mean_rz": 0.95037
+    },
+    "flux2_klein": {
+      "n_fake": 123,
+      "in_protocol": false,
+      "s1": 0.54132,
+      "s2": 0.62451,
+      "s3_lr": 0.29606,
+      "s3_set": 0.95251,
+      "aeroblade": 0.97932,
+      "f_mean_rz": 0.76858
+    },
+    "gen_matched": {
+      "n_fake": 126,
+      "in_protocol": true,
+      "s1": 0.98471,
+      "s2": 0.99992,
+      "s3_lr": 1.0,
+      "s3_set": 0.96932,
+      "aeroblade": 0.77828,
+      "f_mean_rz": 0.99827
+    },
+    "movq_k22": {
+      "n_fake": 129,
+      "in_protocol": false,
+      "s1": 0.95699,
+      "s2": 0.99927,
+      "s3_lr": 0.42359,
+      "s3_set": 0.99912,
+      "aeroblade": 0.60132,
+      "f_mean_rz": 0.99989
+    },
+    "qwen_image": {
+      "n_fake": 104,
+      "in_protocol": false,
+      "s1": 0.8588,
+      "s2": 0.84972,
+      "s3_lr": 0.3777,
+      "s3_set": 0.84091,
+      "aeroblade": 0.83897,
+      "f_mean_rz": 0.89838
+    },
+    "realesrgan_x4": {
+      "n_fake": 129,
+      "in_protocol": false,
+      "s1": 0.99938,
+      "s2": 0.99998,
+      "s3_lr": 0.68307,
+      "s3_set": 0.9956,
+      "aeroblade": 0.93341,
+      "f_mean_rz": 1.0
+    },
+    "sd15": {
+      "n_fake": 105,
+      "in_protocol": true,
+      "s1": 0.96479,
+      "s2": 0.99998,
+      "s3_lr": 1.0,
+      "s3_set": 0.97998,
+      "aeroblade": 0.58809,
+      "f_mean_rz": 0.99688
+    },
+    "sd21": {
+      "n_fake": 100,
+      "in_protocol": true,
+      "s1": 0.95049,
+      "s2": 0.99988,
+      "s3_lr": 1.0,
+      "s3_set": 0.98835,
+      "aeroblade": 0.59411,
+      "f_mean_rz": 0.9965
+    },
+    "sd35": {
+      "n_fake": 112,
+      "in_protocol": false,
+      "s1": 0.82979,
+      "s2": 0.96585,
+      "s3_lr": 0.40719,
+      "s3_set": 0.9223,
+      "aeroblade": 0.71721,
+      "f_mean_rz": 0.96798
+    },
+    "sd_ft_ema": {
+      "n_fake": 110,
+      "in_protocol": true,
+      "s1": 0.93173,
+      "s2": 0.99981,
+      "s3_lr": 1.0,
+      "s3_set": 0.98711,
+      "aeroblade": 0.53409,
+      "f_mean_rz": 0.99543
+    },
+    "sdxl": {
+      "n_fake": 130,
+      "in_protocol": false,
+      "s1": 0.90462,
+      "s2": 0.99848,
+      "s3_lr": 0.16332,
+      "s3_set": 0.99361,
+      "aeroblade": 0.66055,
+      "f_mean_rz": 0.99732
+    },
+    "sdxl_fp16fix": {
+      "n_fake": 123,
+      "in_protocol": false,
+      "s1": 0.92065,
+      "s2": 0.99788,
+      "s3_lr": 0.16729,
+      "s3_set": 0.99018,
+      "aeroblade": 0.68198,
+      "f_mean_rz": 0.99757
+    }
+  },
+  "n_val": 932,
+  "note": "Every number here comes from train and validation. The test panel is untouched; p2_score.py scores it once against these frozen artefacts."
+}

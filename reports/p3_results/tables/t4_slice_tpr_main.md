@@ -1,0 +1,102 @@
+# Per-slice AUC, AP and TPR (descriptive), main models
+
+TPR at the k = 0 union threshold and TPR at a 5% FPR threshold calibrated on the slice's own test reals. E8 is fakes-only (TPR at k = 0 only). E7 FLUX.1 standard is an upper bound (section 6d shortcut).
+
+| model | view | slice | fakes | reals | auc | ap | tpr_k0_union | tpr_at_5pct_slice_calibrated | status |
+|---|---|---|---|---|---|---|---|---|---|
+| S2-D s0 | E3 | GPT-Image2-fake | 223 | 121 | 0.6043 | 0.7273 | 16.6% | 9.9% | descriptive |
+| S2-D s0 | E3 | Nano-Banana2-fake | 104 | 121 | 0.8293 | 0.8189 | 53.8% | 45.2% | descriptive |
+| S2-D s0 | E4 | fake | 465 | 392 | 0.9354 | 0.9505 | 86.9% | 74.6% | descriptive |
+| S2-D s0 | E5 | fake | 2000 | 2000 | 0.6524 | 0.6496 | 27.5% | 14.9% | descriptive |
+| S2-D s0 | E7 | FLUX.1 | 300 | 300 | 0.9842 | 0.9852 | 73.0% | 92.0% | descriptive |
+| S2-D s0 | E7 | sd-vae-ft-ema | 300 | 300 | 0.9997 | 0.9997 | 99.3% | 99.7% | descriptive |
+| S2-D s0 | E7 | sd-vae-ft-mse | 300 | 300 | 0.9999 | 0.9999 | 99.3% | 100.0% | descriptive |
+| S2-D s0 | E7 | sdxl-vae | 300 | 300 | 0.9994 | 0.9994 | 98.0% | 99.7% | descriptive |
+| S2-D s0 | E7 | stable-diffusion-2-1 | 300 | 300 | 0.9998 | 0.9998 | 98.7% | 100.0% | descriptive |
+| S2-D s0 | E7 | stable-diffusion-3.5-large | 300 | 300 | 0.9956 | 0.9959 | 90.0% | 97.3% | descriptive |
+| S2-D s0 | E7 luma | FLUX.1 | 300 | 300 | 0.9251 | 0.9251 | 35.7% | 62.7% | descriptive |
+| S2-D s0 | E8 | Flux | 250 | - | - | - | 82.4% | - | descriptive |
+| S2-D s0 | E8 | GoT | 250 | - | - | - | 98.0% | - | descriptive |
+| S2-D s0 | E8 | Infinity | 250 | - | - | - | 100.0% | - | descriptive |
+| S2-D s0 | E8 | NOVA | 250 | - | - | - | 95.6% | - | descriptive |
+| S2-D s0 | E8 | OmniGen | 250 | - | - | - | 97.2% | - | descriptive |
+| S2-D s1 | E3 | GPT-Image2-fake | 223 | 121 | 0.6012 | 0.7374 | 12.6% | 10.8% | descriptive |
+| S2-D s1 | E3 | Nano-Banana2-fake | 104 | 121 | 0.8253 | 0.8139 | 40.4% | 37.5% | descriptive |
+| S2-D s1 | E4 | fake | 465 | 392 | 0.9250 | 0.9420 | 86.7% | 72.7% | descriptive |
+| S2-D s1 | E5 | fake | 2000 | 2000 | 0.6900 | 0.6862 | 34.4% | 16.8% | descriptive |
+| S2-D s1 | E7 | FLUX.1 | 300 | 300 | 0.9827 | 0.9844 | 75.0% | 92.0% | descriptive |
+| S2-D s1 | E7 | sd-vae-ft-ema | 300 | 300 | 0.9999 | 0.9999 | 99.3% | 100.0% | descriptive |
+| S2-D s1 | E7 | sd-vae-ft-mse | 300 | 300 | 0.9999 | 0.9999 | 99.0% | 100.0% | descriptive |
+| S2-D s1 | E7 | sdxl-vae | 300 | 300 | 0.9994 | 0.9994 | 97.3% | 99.7% | descriptive |
+| S2-D s1 | E7 | stable-diffusion-2-1 | 300 | 300 | 0.9995 | 0.9996 | 98.3% | 99.7% | descriptive |
+| S2-D s1 | E7 | stable-diffusion-3.5-large | 300 | 300 | 0.9924 | 0.9930 | 88.0% | 95.7% | descriptive |
+| S2-D s1 | E7 luma | FLUX.1 | 300 | 300 | 0.9148 | 0.9195 | 47.3% | 65.3% | descriptive |
+| S2-D s1 | E8 | Flux | 250 | - | - | - | 80.4% | - | descriptive |
+| S2-D s1 | E8 | GoT | 250 | - | - | - | 97.2% | - | descriptive |
+| S2-D s1 | E8 | Infinity | 250 | - | - | - | 99.6% | - | descriptive |
+| S2-D s1 | E8 | NOVA | 250 | - | - | - | 94.0% | - | descriptive |
+| S2-D s1 | E8 | OmniGen | 250 | - | - | - | 96.8% | - | descriptive |
+| P2 full_bank | E3 | GPT-Image2-fake | 223 | 121 | 0.6316 | 0.7423 | 12.1% | 11.7% | descriptive |
+| P2 full_bank | E3 | Nano-Banana2-fake | 104 | 121 | 0.8067 | 0.7790 | 31.7% | 31.7% | descriptive |
+| P2 full_bank | E4 | fake | 465 | 392 | 0.9436 | 0.9538 | 90.1% | 75.1% | descriptive |
+| P2 full_bank | E5 | fake | 2000 | 2000 | 0.6724 | 0.6515 | 31.9% | 13.4% | descriptive |
+| P2 full_bank | E7 | FLUX.1 | 300 | 300 | 0.9863 | 0.9868 | 74.7% | 92.3% | descriptive |
+| P2 full_bank | E7 | sd-vae-ft-ema | 300 | 300 | 0.9994 | 0.9994 | 99.0% | 99.7% | descriptive |
+| P2 full_bank | E7 | sd-vae-ft-mse | 300 | 300 | 0.9993 | 0.9994 | 97.0% | 99.7% | descriptive |
+| P2 full_bank | E7 | sdxl-vae | 300 | 300 | 0.9989 | 0.9989 | 96.3% | 99.3% | descriptive |
+| P2 full_bank | E7 | stable-diffusion-2-1 | 300 | 300 | 0.9993 | 0.9993 | 96.7% | 100.0% | descriptive |
+| P2 full_bank | E7 | stable-diffusion-3.5-large | 300 | 300 | 0.9954 | 0.9955 | 89.7% | 97.0% | descriptive |
+| P2 full_bank | E7 luma | FLUX.1 | 300 | 300 | 0.9450 | 0.9455 | 46.7% | 72.0% | descriptive |
+| P2 full_bank | E8 | Flux | 250 | - | - | - | 66.8% | - | descriptive |
+| P2 full_bank | E8 | GoT | 250 | - | - | - | 92.8% | - | descriptive |
+| P2 full_bank | E8 | Infinity | 250 | - | - | - | 98.0% | - | descriptive |
+| P2 full_bank | E8 | NOVA | 250 | - | - | - | 90.0% | - | descriptive |
+| P2 full_bank | E8 | OmniGen | 250 | - | - | - | 92.4% | - | descriptive |
+| S2-B s0 | E3 | GPT-Image2-fake | 223 | 121 | 0.6217 | 0.7356 | 12.1% | 9.0% | descriptive |
+| S2-B s0 | E3 | Nano-Banana2-fake | 104 | 121 | 0.8006 | 0.7727 | 28.8% | 27.9% | descriptive |
+| S2-B s0 | E4 | fake | 465 | 392 | 0.9457 | 0.9546 | 91.2% | 75.5% | descriptive |
+| S2-B s0 | E5 | fake | 2000 | 2000 | 0.6847 | 0.6835 | 34.4% | 18.1% | descriptive |
+| S2-B s0 | E7 | FLUX.1 | 300 | 300 | 0.9884 | 0.9887 | 71.3% | 94.3% | descriptive |
+| S2-B s0 | E7 | sd-vae-ft-ema | 300 | 300 | 0.9994 | 0.9994 | 98.0% | 99.7% | descriptive |
+| S2-B s0 | E7 | sd-vae-ft-mse | 300 | 300 | 0.9994 | 0.9994 | 96.3% | 100.0% | descriptive |
+| S2-B s0 | E7 | sdxl-vae | 300 | 300 | 0.9992 | 0.9992 | 95.3% | 100.0% | descriptive |
+| S2-B s0 | E7 | stable-diffusion-2-1 | 300 | 300 | 0.9992 | 0.9992 | 95.3% | 100.0% | descriptive |
+| S2-B s0 | E7 | stable-diffusion-3.5-large | 300 | 300 | 0.9958 | 0.9959 | 87.3% | 98.7% | descriptive |
+| S2-B s0 | E7 luma | FLUX.1 | 300 | 300 | 0.9421 | 0.9416 | 33.7% | 67.7% | descriptive |
+| S2-B s0 | E8 | Flux | 250 | - | - | - | 70.4% | - | descriptive |
+| S2-B s0 | E8 | GoT | 250 | - | - | - | 93.6% | - | descriptive |
+| S2-B s0 | E8 | Infinity | 250 | - | - | - | 98.0% | - | descriptive |
+| S2-B s0 | E8 | NOVA | 250 | - | - | - | 90.4% | - | descriptive |
+| S2-B s0 | E8 | OmniGen | 250 | - | - | - | 92.8% | - | descriptive |
+| S2-B+deg | E3 | GPT-Image2-fake | 223 | 121 | 0.6239 | 0.7377 | 12.6% | 12.1% | descriptive |
+| S2-B+deg | E3 | Nano-Banana2-fake | 104 | 121 | 0.7858 | 0.7619 | 27.9% | 26.0% | descriptive |
+| S2-B+deg | E4 | fake | 465 | 392 | 0.9512 | 0.9572 | 92.9% | 74.6% | descriptive |
+| S2-B+deg | E5 | fake | 2000 | 2000 | 0.7049 | 0.6942 | 37.9% | 18.1% | descriptive |
+| S2-B+deg | E7 | FLUX.1 | 300 | 300 | 0.9866 | 0.9872 | 70.7% | 93.3% | descriptive |
+| S2-B+deg | E7 | sd-vae-ft-ema | 300 | 300 | 0.9993 | 0.9994 | 98.7% | 99.7% | descriptive |
+| S2-B+deg | E7 | sd-vae-ft-mse | 300 | 300 | 0.9995 | 0.9995 | 97.0% | 100.0% | descriptive |
+| S2-B+deg | E7 | sdxl-vae | 300 | 300 | 0.9992 | 0.9992 | 96.0% | 100.0% | descriptive |
+| S2-B+deg | E7 | stable-diffusion-2-1 | 300 | 300 | 0.9994 | 0.9994 | 96.0% | 100.0% | descriptive |
+| S2-B+deg | E7 | stable-diffusion-3.5-large | 300 | 300 | 0.9938 | 0.9941 | 84.7% | 95.3% | descriptive |
+| S2-B+deg | E7 luma | FLUX.1 | 300 | 300 | 0.9290 | 0.9293 | 36.3% | 59.3% | descriptive |
+| S2-B+deg | E8 | Flux | 250 | - | - | - | 73.2% | - | descriptive |
+| S2-B+deg | E8 | GoT | 250 | - | - | - | 95.6% | - | descriptive |
+| S2-B+deg | E8 | Infinity | 250 | - | - | - | 98.8% | - | descriptive |
+| S2-B+deg | E8 | NOVA | 250 | - | - | - | 92.8% | - | descriptive |
+| S2-B+deg | E8 | OmniGen | 250 | - | - | - | 93.6% | - | descriptive |
+| S2-B+reals | E3 | GPT-Image2-fake | 223 | 121 | 0.6082 | 0.7435 | 17.5% | 12.1% | descriptive |
+| S2-B+reals | E3 | Nano-Banana2-fake | 104 | 121 | 0.8654 | 0.8621 | 57.7% | 49.0% | descriptive |
+| S2-B+reals | E4 | fake | 465 | 392 | 0.9338 | 0.9490 | 84.3% | 73.3% | descriptive |
+| S2-B+reals | E5 | fake | 2000 | 2000 | 0.5978 | 0.5969 | 11.2% | 11.2% | descriptive |
+| S2-B+reals | E7 | FLUX.1 | 300 | 300 | 0.9884 | 0.9888 | 81.3% | 95.0% | descriptive |
+| S2-B+reals | E7 | sd-vae-ft-ema | 300 | 300 | 0.9998 | 0.9998 | 99.0% | 100.0% | descriptive |
+| S2-B+reals | E7 | sd-vae-ft-mse | 300 | 300 | 0.9998 | 0.9998 | 99.3% | 100.0% | descriptive |
+| S2-B+reals | E7 | sdxl-vae | 300 | 300 | 0.9995 | 0.9995 | 99.3% | 100.0% | descriptive |
+| S2-B+reals | E7 | stable-diffusion-2-1 | 300 | 300 | 0.9997 | 0.9997 | 99.0% | 100.0% | descriptive |
+| S2-B+reals | E7 | stable-diffusion-3.5-large | 300 | 300 | 0.9976 | 0.9978 | 95.0% | 99.3% | descriptive |
+| S2-B+reals | E7 luma | FLUX.1 | 300 | 300 | 0.9462 | 0.9450 | 44.3% | 73.0% | descriptive |
+| S2-B+reals | E8 | Flux | 250 | - | - | - | 90.0% | - | descriptive |
+| S2-B+reals | E8 | GoT | 250 | - | - | - | 98.4% | - | descriptive |
+| S2-B+reals | E8 | Infinity | 250 | - | - | - | 100.0% | - | descriptive |
+| S2-B+reals | E8 | NOVA | 250 | - | - | - | 95.6% | - | descriptive |
+| S2-B+reals | E8 | OmniGen | 250 | - | - | - | 97.2% | - | descriptive |

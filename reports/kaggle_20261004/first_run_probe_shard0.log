@@ -1,0 +1,418 @@
+2026-10-03 19:18:37 INFO    p2_probe_features | shard 0/2: 6 member(s) x 18614 image(s) at crop 320
+2026-10-03 19:18:37 INFO    p2_probe_features | members: ['sd15', 'sd_ft_ema', 'sdxl_fp16fix', 'flux', 'realesrgan_x4', 'qwen_image']
+2026-10-03 19:18:37 INFO    p2_probe_features | image-list digest: 522115667bc498b7
+2026-10-03 19:18:37 INFO    p2_probe_features | roots: {'corpus': '/kaggle/working/p1', 'panel': '/kaggle/input/notebooks/adeelshah29/phase-2/panel'}
+/usr/local/lib/python3.13/dist-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/usr/local/lib/python3.13/dist-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
+Downloading: "https://download.pytorch.org/models/vgg16-397923af.pth" to /tmp/torch_home/hub/checkpoints/vgg16-397923af.pth
+  0%|          | 0.00/528M [00:00<?, ?B/s]  1%|▏         | 7.12M/528M [00:00<00:07, 74.6MB/s]  5%|▍         | 24.4M/528M [00:00<00:03, 137MB/s]   8%|▊         | 42.0M/528M [00:00<00:03, 159MB/s] 11%|█         | 59.2M/528M [00:00<00:02, 167MB/s] 15%|█▍        | 76.6M/528M [00:00<00:02, 172MB/s] 18%|█▊        | 94.5M/528M [00:00<00:02, 177MB/s] 21%|██        | 112M/528M [00:00<00:02, 178MB/s]  24%|██▍       | 129M/528M [00:00<00:02, 179MB/s] 28%|██▊       | 147M/528M [00:00<00:02, 182MB/s] 31%|███▏      | 165M/528M [00:01<00:02, 184MB/s] 35%|███▍      | 183M/528M [00:01<00:01, 184MB/s] 38%|███▊      | 201M/528M [00:01<00:01, 182MB/s] 41%|████▏     | 218M/528M [00:01<00:01, 180MB/s] 45%|████▍     | 236M/528M [00:01<00:01, 181MB/s] 48%|████▊     | 253M/528M [00:01<00:01, 182MB/s] 51%|█████     | 270M/528M [00:01<00:01, 181MB/s] 55%|█████▍    | 288M/528M [00:01<00:01, 179MB/s] 58%|█████▊    | 306M/528M [00:01<00:01, 181MB/s] 61%|██████    | 323M/528M [00:01<00:01, 181MB/s] 65%|██████▍   | 340M/528M [00:02<00:01, 182MB/s] 68%|██████▊   | 358M/528M [00:02<00:00, 182MB/s] 71%|███████   | 375M/528M [00:02<00:00, 178MB/s] 74%|███████▍  | 392M/528M [00:02<00:00, 177MB/s] 78%|███████▊  | 409M/528M [00:02<00:00, 174MB/s] 81%|████████  | 426M/528M [00:02<00:00, 170MB/s] 84%|████████▍ | 442M/528M [00:02<00:00, 170MB/s] 87%|████████▋ | 458M/528M [00:02<00:00, 169MB/s] 90%|█████████ | 476M/528M [00:02<00:00, 172MB/s] 93%|█████████▎| 493M/528M [00:02<00:00, 175MB/s] 97%|█████████▋| 510M/528M [00:03<00:00, 174MB/s]100%|█████████▉| 527M/528M [00:03<00:00, 177MB/s]100%|██████████| 528M/528M [00:03<00:00, 175MB/s]
+Loading model from: /usr/local/lib/python3.13/dist-packages/lpips/weights/v0.1/vgg.pth
+2026-10-03 19:18:44 INFO    p2_probe_features | precision from P1: {'movq_k22': 'fp32', 'realesrgan_x4': 'fp32', 'sdxl': 'fp32'}
+2026-10-03 19:18:44 INFO    p2_probe_features | loading sd15 (vae_kl, fp16)
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_validators.py:205: UserWarning: The `local_dir_use_symlinks` argument is deprecated and ignored in `hf_hub_download`. Downloading to a local directory does not use symlinks anymore.
+  warnings.warn(
+2026-10-03 19:19:40 INFO    p2_probe_features |   sd15 200/18614  0.207 s/image
+2026-10-03 19:20:16 INFO    p2_probe_features |   sd15 400/18614  0.193 s/image
+2026-10-03 19:20:52 INFO    p2_probe_features |   sd15 600/18614  0.188 s/image
+2026-10-03 19:21:28 INFO    p2_probe_features |   sd15 800/18614  0.186 s/image
+2026-10-03 19:22:03 INFO    p2_probe_features |   sd15 1000/18614  0.184 s/image
+2026-10-03 19:22:40 INFO    p2_probe_features |   sd15 1200/18614  0.184 s/image
+2026-10-03 19:23:15 INFO    p2_probe_features |   sd15 1400/18614  0.183 s/image
+2026-10-03 19:23:51 INFO    p2_probe_features |   sd15 1600/18614  0.182 s/image
+2026-10-03 19:24:30 INFO    p2_probe_features |   sd15 1800/18614  0.184 s/image
+2026-10-03 19:25:10 INFO    p2_probe_features |   sd15 2000/18614  0.185 s/image
+2026-10-03 19:25:54 INFO    p2_probe_features |   sd15 2200/18614  0.189 s/image
+2026-10-03 19:26:51 INFO    p2_probe_features |   sd15 2400/18614  0.197 s/image
+2026-10-03 19:27:43 INFO    p2_probe_features |   sd15 2600/18614  0.202 s/image
+2026-10-03 19:28:25 INFO    p2_probe_features |   sd15 2800/18614  0.202 s/image
+2026-10-03 19:29:09 INFO    p2_probe_features |   sd15 3000/18614  0.204 s/image
+2026-10-03 19:29:44 INFO    p2_probe_features |   sd15 3200/18614  0.202 s/image
+2026-10-03 19:30:19 INFO    p2_probe_features |   sd15 3400/18614  0.200 s/image
+2026-10-03 19:30:53 INFO    p2_probe_features |   sd15 3600/18614  0.198 s/image
+2026-10-03 19:31:28 INFO    p2_probe_features |   sd15 3800/18614  0.197 s/image
+2026-10-03 19:32:03 INFO    p2_probe_features |   sd15 4000/18614  0.196 s/image
+2026-10-03 19:32:38 INFO    p2_probe_features |   sd15 4200/18614  0.195 s/image
+2026-10-03 19:33:12 INFO    p2_probe_features |   sd15 4400/18614  0.194 s/image
+2026-10-03 19:33:47 INFO    p2_probe_features |   sd15 4600/18614  0.193 s/image
+2026-10-03 19:34:22 INFO    p2_probe_features |   sd15 4800/18614  0.192 s/image
+2026-10-03 19:34:56 INFO    p2_probe_features |   sd15 5000/18614  0.191 s/image
+2026-10-03 19:35:31 INFO    p2_probe_features |   sd15 5200/18614  0.191 s/image
+2026-10-03 19:36:05 INFO    p2_probe_features |   sd15 5400/18614  0.190 s/image
+2026-10-03 19:36:40 INFO    p2_probe_features |   sd15 5600/18614  0.190 s/image
+2026-10-03 19:37:15 INFO    p2_probe_features |   sd15 5800/18614  0.189 s/image
+2026-10-03 19:37:49 INFO    p2_probe_features |   sd15 6000/18614  0.188 s/image
+2026-10-03 19:38:24 INFO    p2_probe_features |   sd15 6200/18614  0.188 s/image
+2026-10-03 19:38:59 INFO    p2_probe_features |   sd15 6400/18614  0.188 s/image
+2026-10-03 19:39:34 INFO    p2_probe_features |   sd15 6600/18614  0.187 s/image
+2026-10-03 19:40:09 INFO    p2_probe_features |   sd15 6800/18614  0.187 s/image
+2026-10-03 19:40:45 INFO    p2_probe_features |   sd15 7000/18614  0.187 s/image
+2026-10-03 19:41:20 INFO    p2_probe_features |   sd15 7200/18614  0.186 s/image
+2026-10-03 19:41:55 INFO    p2_probe_features |   sd15 7400/18614  0.186 s/image
+2026-10-03 19:42:31 INFO    p2_probe_features |   sd15 7600/18614  0.186 s/image
+2026-10-03 19:43:06 INFO    p2_probe_features |   sd15 7800/18614  0.186 s/image
+2026-10-03 19:43:42 INFO    p2_probe_features |   sd15 8000/18614  0.185 s/image
+2026-10-03 19:44:17 INFO    p2_probe_features |   sd15 8200/18614  0.185 s/image
+2026-10-03 19:44:53 INFO    p2_probe_features |   sd15 8400/18614  0.185 s/image
+2026-10-03 19:45:28 INFO    p2_probe_features |   sd15 8600/18614  0.185 s/image
+2026-10-03 19:46:04 INFO    p2_probe_features |   sd15 8800/18614  0.185 s/image
+2026-10-03 19:46:40 INFO    p2_probe_features |   sd15 9000/18614  0.185 s/image
+2026-10-03 19:47:15 INFO    p2_probe_features |   sd15 9200/18614  0.184 s/image
+2026-10-03 19:47:51 INFO    p2_probe_features |   sd15 9400/18614  0.184 s/image
+2026-10-03 19:48:26 INFO    p2_probe_features |   sd15 9600/18614  0.184 s/image
+2026-10-03 19:49:01 INFO    p2_probe_features |   sd15 9800/18614  0.184 s/image
+2026-10-03 19:49:37 INFO    p2_probe_features |   sd15 10000/18614  0.184 s/image
+2026-10-03 19:50:12 INFO    p2_probe_features |   sd15 10200/18614  0.184 s/image
+2026-10-03 19:50:48 INFO    p2_probe_features |   sd15 10400/18614  0.184 s/image
+2026-10-03 19:51:24 INFO    p2_probe_features |   sd15 10600/18614  0.184 s/image
+2026-10-03 19:52:00 INFO    p2_probe_features |   sd15 10800/18614  0.183 s/image
+2026-10-03 19:52:36 INFO    p2_probe_features |   sd15 11000/18614  0.183 s/image
+2026-10-03 19:53:12 INFO    p2_probe_features |   sd15 11200/18614  0.183 s/image
+2026-10-03 19:53:48 INFO    p2_probe_features |   sd15 11400/18614  0.183 s/image
+2026-10-03 19:54:24 INFO    p2_probe_features |   sd15 11600/18614  0.183 s/image
+2026-10-03 19:55:00 INFO    p2_probe_features |   sd15 11800/18614  0.183 s/image
+2026-10-03 19:55:35 INFO    p2_probe_features |   sd15 12000/18614  0.183 s/image
+2026-10-03 19:56:11 INFO    p2_probe_features |   sd15 12200/18614  0.183 s/image
+2026-10-03 19:56:47 INFO    p2_probe_features |   sd15 12400/18614  0.183 s/image
+2026-10-03 19:57:23 INFO    p2_probe_features |   sd15 12600/18614  0.183 s/image
+2026-10-03 19:57:59 INFO    p2_probe_features |   sd15 12800/18614  0.183 s/image
+2026-10-03 19:58:34 INFO    p2_probe_features |   sd15 13000/18614  0.183 s/image
+2026-10-03 19:59:10 INFO    p2_probe_features |   sd15 13200/18614  0.183 s/image
+2026-10-03 19:59:46 INFO    p2_probe_features |   sd15 13400/18614  0.183 s/image
+2026-10-03 20:00:22 INFO    p2_probe_features |   sd15 13600/18614  0.183 s/image
+2026-10-03 20:00:57 INFO    p2_probe_features |   sd15 13800/18614  0.183 s/image
+2026-10-03 20:01:33 INFO    p2_probe_features |   sd15 14000/18614  0.182 s/image
+2026-10-03 20:02:09 INFO    p2_probe_features |   sd15 14200/18614  0.182 s/image
+2026-10-03 20:02:45 INFO    p2_probe_features |   sd15 14400/18614  0.182 s/image
+2026-10-03 20:03:20 INFO    p2_probe_features |   sd15 14600/18614  0.182 s/image
+2026-10-03 20:03:56 INFO    p2_probe_features |   sd15 14800/18614  0.182 s/image
+2026-10-03 20:04:32 INFO    p2_probe_features |   sd15 15000/18614  0.182 s/image
+2026-10-03 20:05:07 INFO    p2_probe_features |   sd15 15200/18614  0.182 s/image
+2026-10-03 20:05:43 INFO    p2_probe_features |   sd15 15400/18614  0.182 s/image
+2026-10-03 20:06:18 INFO    p2_probe_features |   sd15 15600/18614  0.182 s/image
+2026-10-03 20:06:54 INFO    p2_probe_features |   sd15 15800/18614  0.182 s/image
+2026-10-03 20:07:29 INFO    p2_probe_features |   sd15 16000/18614  0.182 s/image
+2026-10-03 20:08:04 INFO    p2_probe_features |   sd15 16200/18614  0.182 s/image
+2026-10-03 20:08:38 INFO    p2_probe_features |   sd15 16400/18614  0.182 s/image
+2026-10-03 20:09:13 INFO    p2_probe_features |   sd15 16600/18614  0.182 s/image
+2026-10-03 20:09:49 INFO    p2_probe_features |   sd15 16800/18614  0.182 s/image
+2026-10-03 20:10:24 INFO    p2_probe_features |   sd15 17000/18614  0.181 s/image
+2026-10-03 20:11:00 INFO    p2_probe_features |   sd15 17200/18614  0.181 s/image
+2026-10-03 20:11:35 INFO    p2_probe_features |   sd15 17400/18614  0.181 s/image
+2026-10-03 20:12:11 INFO    p2_probe_features |   sd15 17600/18614  0.181 s/image
+2026-10-03 20:12:47 INFO    p2_probe_features |   sd15 17800/18614  0.181 s/image
+2026-10-03 20:13:23 INFO    p2_probe_features |   sd15 18000/18614  0.181 s/image
+2026-10-03 20:13:59 INFO    p2_probe_features |   sd15 18200/18614  0.181 s/image
+2026-10-03 20:14:35 INFO    p2_probe_features |   sd15 18400/18614  0.181 s/image
+2026-10-03 20:15:12 INFO    p2_probe_features |   sd15 18600/18614  0.181 s/image
+2026-10-03 20:15:14 INFO    p2_probe_features | sd15: 18614 image(s) in 3375.2 s = 0.1813 s/image (reconstruct + LPIPS)
+2026-10-03 20:15:14 INFO    p2_probe_features | wrote p2_probe_sd15.npz and its sidecar
+2026-10-03 20:15:14 INFO    p2_probe_features | loading sd_ft_ema (vae_kl, fp16)
+2026-10-03 20:15:54 INFO    p2_probe_features |   sd_ft_ema 200/18614  0.188 s/image
+2026-10-03 20:16:31 INFO    p2_probe_features |   sd_ft_ema 400/18614  0.187 s/image
+2026-10-03 20:17:08 INFO    p2_probe_features |   sd_ft_ema 600/18614  0.186 s/image
+2026-10-03 20:17:45 INFO    p2_probe_features |   sd_ft_ema 800/18614  0.185 s/image
+2026-10-03 20:18:22 INFO    p2_probe_features |   sd_ft_ema 1000/18614  0.186 s/image
+2026-10-03 20:18:59 INFO    p2_probe_features |   sd_ft_ema 1200/18614  0.186 s/image
+2026-10-03 20:19:35 INFO    p2_probe_features |   sd_ft_ema 1400/18614  0.185 s/image
+2026-10-03 20:20:12 INFO    p2_probe_features |   sd_ft_ema 1600/18614  0.185 s/image
+2026-10-03 20:20:52 INFO    p2_probe_features |   sd_ft_ema 1800/18614  0.186 s/image
+2026-10-03 20:21:32 INFO    p2_probe_features |   sd_ft_ema 2000/18614  0.188 s/image
+2026-10-03 20:22:15 INFO    p2_probe_features |   sd_ft_ema 2200/18614  0.190 s/image
+2026-10-03 20:23:05 INFO    p2_probe_features |   sd_ft_ema 2400/18614  0.195 s/image
+2026-10-03 20:23:53 INFO    p2_probe_features |   sd_ft_ema 2600/18614  0.198 s/image
+2026-10-03 20:24:34 INFO    p2_probe_features |   sd_ft_ema 2800/18614  0.199 s/image
+2026-10-03 20:25:18 INFO    p2_probe_features |   sd_ft_ema 3000/18614  0.200 s/image
+2026-10-03 20:25:53 INFO    p2_probe_features |   sd_ft_ema 3200/18614  0.199 s/image
+2026-10-03 20:26:28 INFO    p2_probe_features |   sd_ft_ema 3400/18614  0.198 s/image
+2026-10-03 20:27:04 INFO    p2_probe_features |   sd_ft_ema 3600/18614  0.196 s/image
+2026-10-03 20:27:40 INFO    p2_probe_features |   sd_ft_ema 3800/18614  0.196 s/image
+2026-10-03 20:28:15 INFO    p2_probe_features |   sd_ft_ema 4000/18614  0.195 s/image
+2026-10-03 20:28:51 INFO    p2_probe_features |   sd_ft_ema 4200/18614  0.194 s/image
+2026-10-03 20:29:27 INFO    p2_probe_features |   sd_ft_ema 4400/18614  0.193 s/image
+2026-10-03 20:30:03 INFO    p2_probe_features |   sd_ft_ema 4600/18614  0.193 s/image
+2026-10-03 20:30:39 INFO    p2_probe_features |   sd_ft_ema 4800/18614  0.192 s/image
+2026-10-03 20:31:14 INFO    p2_probe_features |   sd_ft_ema 5000/18614  0.192 s/image
+2026-10-03 20:31:50 INFO    p2_probe_features |   sd_ft_ema 5200/18614  0.191 s/image
+2026-10-03 20:32:26 INFO    p2_probe_features |   sd_ft_ema 5400/18614  0.191 s/image
+2026-10-03 20:33:02 INFO    p2_probe_features |   sd_ft_ema 5600/18614  0.190 s/image
+2026-10-03 20:33:38 INFO    p2_probe_features |   sd_ft_ema 5800/18614  0.190 s/image
+2026-10-03 20:34:14 INFO    p2_probe_features |   sd_ft_ema 6000/18614  0.190 s/image
+2026-10-03 20:34:50 INFO    p2_probe_features |   sd_ft_ema 6200/18614  0.189 s/image
+2026-10-03 20:35:26 INFO    p2_probe_features |   sd_ft_ema 6400/18614  0.189 s/image
+2026-10-03 20:36:01 INFO    p2_probe_features |   sd_ft_ema 6600/18614  0.189 s/image
+2026-10-03 20:36:37 INFO    p2_probe_features |   sd_ft_ema 6800/18614  0.188 s/image
+2026-10-03 20:37:13 INFO    p2_probe_features |   sd_ft_ema 7000/18614  0.188 s/image
+2026-10-03 20:37:49 INFO    p2_probe_features |   sd_ft_ema 7200/18614  0.188 s/image
+2026-10-03 20:38:25 INFO    p2_probe_features |   sd_ft_ema 7400/18614  0.188 s/image
+2026-10-03 20:39:01 INFO    p2_probe_features |   sd_ft_ema 7600/18614  0.187 s/image
+2026-10-03 20:39:37 INFO    p2_probe_features |   sd_ft_ema 7800/18614  0.187 s/image
+2026-10-03 20:40:13 INFO    p2_probe_features |   sd_ft_ema 8000/18614  0.187 s/image
+2026-10-03 20:40:49 INFO    p2_probe_features |   sd_ft_ema 8200/18614  0.187 s/image
+2026-10-03 20:41:25 INFO    p2_probe_features |   sd_ft_ema 8400/18614  0.187 s/image
+2026-10-03 20:42:01 INFO    p2_probe_features |   sd_ft_ema 8600/18614  0.187 s/image
+2026-10-03 20:42:37 INFO    p2_probe_features |   sd_ft_ema 8800/18614  0.186 s/image
+2026-10-03 20:43:13 INFO    p2_probe_features |   sd_ft_ema 9000/18614  0.186 s/image
+2026-10-03 20:43:49 INFO    p2_probe_features |   sd_ft_ema 9200/18614  0.186 s/image
+2026-10-03 20:44:25 INFO    p2_probe_features |   sd_ft_ema 9400/18614  0.186 s/image
+2026-10-03 20:45:01 INFO    p2_probe_features |   sd_ft_ema 9600/18614  0.186 s/image
+2026-10-03 20:45:37 INFO    p2_probe_features |   sd_ft_ema 9800/18614  0.186 s/image
+2026-10-03 20:46:13 INFO    p2_probe_features |   sd_ft_ema 10000/18614  0.186 s/image
+2026-10-03 20:46:50 INFO    p2_probe_features |   sd_ft_ema 10200/18614  0.186 s/image
+2026-10-03 20:47:27 INFO    p2_probe_features |   sd_ft_ema 10400/18614  0.186 s/image
+2026-10-03 20:48:04 INFO    p2_probe_features |   sd_ft_ema 10600/18614  0.186 s/image
+2026-10-03 20:48:41 INFO    p2_probe_features |   sd_ft_ema 10800/18614  0.186 s/image
+2026-10-03 20:49:18 INFO    p2_probe_features |   sd_ft_ema 11000/18614  0.186 s/image
+2026-10-03 20:49:55 INFO    p2_probe_features |   sd_ft_ema 11200/18614  0.186 s/image
+2026-10-03 20:50:32 INFO    p2_probe_features |   sd_ft_ema 11400/18614  0.186 s/image
+2026-10-03 20:51:08 INFO    p2_probe_features |   sd_ft_ema 11600/18614  0.185 s/image
+2026-10-03 20:51:45 INFO    p2_probe_features |   sd_ft_ema 11800/18614  0.185 s/image
+2026-10-03 20:52:21 INFO    p2_probe_features |   sd_ft_ema 12000/18614  0.185 s/image
+2026-10-03 20:52:58 INFO    p2_probe_features |   sd_ft_ema 12200/18614  0.185 s/image
+2026-10-03 20:53:34 INFO    p2_probe_features |   sd_ft_ema 12400/18614  0.185 s/image
+2026-10-03 20:54:11 INFO    p2_probe_features |   sd_ft_ema 12600/18614  0.185 s/image
+2026-10-03 20:54:48 INFO    p2_probe_features |   sd_ft_ema 12800/18614  0.185 s/image
+2026-10-03 20:55:24 INFO    p2_probe_features |   sd_ft_ema 13000/18614  0.185 s/image
+2026-10-03 20:56:01 INFO    p2_probe_features |   sd_ft_ema 13200/18614  0.185 s/image
+2026-10-03 20:56:38 INFO    p2_probe_features |   sd_ft_ema 13400/18614  0.185 s/image
+2026-10-03 20:57:15 INFO    p2_probe_features |   sd_ft_ema 13600/18614  0.185 s/image
+2026-10-03 20:57:52 INFO    p2_probe_features |   sd_ft_ema 13800/18614  0.185 s/image
+2026-10-03 20:58:28 INFO    p2_probe_features |   sd_ft_ema 14000/18614  0.185 s/image
+2026-10-03 20:59:05 INFO    p2_probe_features |   sd_ft_ema 14200/18614  0.185 s/image
+2026-10-03 20:59:41 INFO    p2_probe_features |   sd_ft_ema 14400/18614  0.185 s/image
+2026-10-03 21:00:18 INFO    p2_probe_features |   sd_ft_ema 14600/18614  0.185 s/image
+2026-10-03 21:00:55 INFO    p2_probe_features |   sd_ft_ema 14800/18614  0.185 s/image
+2026-10-03 21:01:31 INFO    p2_probe_features |   sd_ft_ema 15000/18614  0.185 s/image
+2026-10-03 21:02:07 INFO    p2_probe_features |   sd_ft_ema 15200/18614  0.185 s/image
+2026-10-03 21:02:44 INFO    p2_probe_features |   sd_ft_ema 15400/18614  0.185 s/image
+2026-10-03 21:03:20 INFO    p2_probe_features |   sd_ft_ema 15600/18614  0.185 s/image
+2026-10-03 21:03:56 INFO    p2_probe_features |   sd_ft_ema 15800/18614  0.185 s/image
+2026-10-03 21:04:32 INFO    p2_probe_features |   sd_ft_ema 16000/18614  0.185 s/image
+2026-10-03 21:05:07 INFO    p2_probe_features |   sd_ft_ema 16200/18614  0.185 s/image
+2026-10-03 21:05:41 INFO    p2_probe_features |   sd_ft_ema 16400/18614  0.184 s/image
+2026-10-03 21:06:16 INFO    p2_probe_features |   sd_ft_ema 16600/18614  0.184 s/image
+2026-10-03 21:06:52 INFO    p2_probe_features |   sd_ft_ema 16800/18614  0.184 s/image
+2026-10-03 21:07:29 INFO    p2_probe_features |   sd_ft_ema 17000/18614  0.184 s/image
+2026-10-03 21:08:05 INFO    p2_probe_features |   sd_ft_ema 17200/18614  0.184 s/image
+2026-10-03 21:08:41 INFO    p2_probe_features |   sd_ft_ema 17400/18614  0.184 s/image
+2026-10-03 21:09:18 INFO    p2_probe_features |   sd_ft_ema 17600/18614  0.184 s/image
+2026-10-03 21:09:55 INFO    p2_probe_features |   sd_ft_ema 17800/18614  0.184 s/image
+2026-10-03 21:10:32 INFO    p2_probe_features |   sd_ft_ema 18000/18614  0.184 s/image
+2026-10-03 21:11:09 INFO    p2_probe_features |   sd_ft_ema 18200/18614  0.184 s/image
+2026-10-03 21:11:46 INFO    p2_probe_features |   sd_ft_ema 18400/18614  0.184 s/image
+2026-10-03 21:12:23 INFO    p2_probe_features |   sd_ft_ema 18600/18614  0.184 s/image
+2026-10-03 21:12:25 INFO    p2_probe_features | sd_ft_ema: 18614 image(s) in 3428.5 s = 0.1842 s/image (reconstruct + LPIPS)
+2026-10-03 21:12:25 INFO    p2_probe_features | wrote p2_probe_sd_ft_ema.npz and its sidecar
+2026-10-03 21:12:25 INFO    p2_probe_features | loading sdxl_fp16fix (vae_kl, fp16)
+2026-10-03 21:13:05 INFO    p2_probe_features |   sdxl_fp16fix 200/18614  0.188 s/image
+2026-10-03 21:13:43 INFO    p2_probe_features |   sdxl_fp16fix 400/18614  0.188 s/image
+2026-10-03 21:14:20 INFO    p2_probe_features |   sdxl_fp16fix 600/18614  0.188 s/image
+2026-10-03 21:14:57 INFO    p2_probe_features |   sdxl_fp16fix 800/18614  0.187 s/image
+2026-10-03 21:15:34 INFO    p2_probe_features |   sdxl_fp16fix 1000/18614  0.187 s/image
+2026-10-03 21:16:11 INFO    p2_probe_features |   sdxl_fp16fix 1200/18614  0.187 s/image
+2026-10-03 21:16:48 INFO    p2_probe_features |   sdxl_fp16fix 1400/18614  0.186 s/image
+2026-10-03 21:17:25 INFO    p2_probe_features |   sdxl_fp16fix 1600/18614  0.186 s/image
+2026-10-03 21:18:05 INFO    p2_probe_features |   sdxl_fp16fix 1800/18614  0.187 s/image
+2026-10-03 21:18:45 INFO    p2_probe_features |   sdxl_fp16fix 2000/18614  0.189 s/image
+2026-10-03 21:19:28 INFO    p2_probe_features |   sdxl_fp16fix 2200/18614  0.191 s/image
+2026-10-03 21:20:20 INFO    p2_probe_features |   sdxl_fp16fix 2400/18614  0.197 s/image
+2026-10-03 21:21:08 INFO    p2_probe_features |   sdxl_fp16fix 2600/18614  0.200 s/image
+2026-10-03 21:21:51 INFO    p2_probe_features |   sdxl_fp16fix 2800/18614  0.201 s/image
+2026-10-03 21:22:37 INFO    p2_probe_features |   sdxl_fp16fix 3000/18614  0.203 s/image
+2026-10-03 21:23:13 INFO    p2_probe_features |   sdxl_fp16fix 3200/18614  0.202 s/image
+2026-10-03 21:23:48 INFO    p2_probe_features |   sdxl_fp16fix 3400/18614  0.200 s/image
+2026-10-03 21:24:24 INFO    p2_probe_features |   sdxl_fp16fix 3600/18614  0.199 s/image
+2026-10-03 21:25:01 INFO    p2_probe_features |   sdxl_fp16fix 3800/18614  0.198 s/image
+2026-10-03 21:25:37 INFO    p2_probe_features |   sdxl_fp16fix 4000/18614  0.197 s/image
+2026-10-03 21:26:14 INFO    p2_probe_features |   sdxl_fp16fix 4200/18614  0.197 s/image
+2026-10-03 21:26:50 INFO    p2_probe_features |   sdxl_fp16fix 4400/18614  0.196 s/image
+2026-10-03 21:27:28 INFO    p2_probe_features |   sdxl_fp16fix 4600/18614  0.196 s/image
+2026-10-03 21:28:05 INFO    p2_probe_features |   sdxl_fp16fix 4800/18614  0.195 s/image
+2026-10-03 21:28:41 INFO    p2_probe_features |   sdxl_fp16fix 5000/18614  0.195 s/image
+2026-10-03 21:29:17 INFO    p2_probe_features |   sdxl_fp16fix 5200/18614  0.194 s/image
+2026-10-03 21:29:54 INFO    p2_probe_features |   sdxl_fp16fix 5400/18614  0.194 s/image
+2026-10-03 21:30:30 INFO    p2_probe_features |   sdxl_fp16fix 5600/18614  0.193 s/image
+2026-10-03 21:31:05 INFO    p2_probe_features |   sdxl_fp16fix 5800/18614  0.193 s/image
+2026-10-03 21:31:41 INFO    p2_probe_features |   sdxl_fp16fix 6000/18614  0.192 s/image
+2026-10-03 21:32:17 INFO    p2_probe_features |   sdxl_fp16fix 6200/18614  0.192 s/image
+2026-10-03 21:32:52 INFO    p2_probe_features |   sdxl_fp16fix 6400/18614  0.191 s/image
+2026-10-03 21:33:28 INFO    p2_probe_features |   sdxl_fp16fix 6600/18614  0.191 s/image
+2026-10-03 21:34:04 INFO    p2_probe_features |   sdxl_fp16fix 6800/18614  0.191 s/image
+2026-10-03 21:34:40 INFO    p2_probe_features |   sdxl_fp16fix 7000/18614  0.190 s/image
+2026-10-03 21:35:15 INFO    p2_probe_features |   sdxl_fp16fix 7200/18614  0.190 s/image
+2026-10-03 21:35:51 INFO    p2_probe_features |   sdxl_fp16fix 7400/18614  0.190 s/image
+2026-10-03 21:36:27 INFO    p2_probe_features |   sdxl_fp16fix 7600/18614  0.189 s/image
+2026-10-03 21:37:03 INFO    p2_probe_features |   sdxl_fp16fix 7800/18614  0.189 s/image
+2026-10-03 21:37:39 INFO    p2_probe_features |   sdxl_fp16fix 8000/18614  0.189 s/image
+2026-10-03 21:38:15 INFO    p2_probe_features |   sdxl_fp16fix 8200/18614  0.189 s/image
+2026-10-03 21:38:51 INFO    p2_probe_features |   sdxl_fp16fix 8400/18614  0.189 s/image
+2026-10-03 21:39:27 INFO    p2_probe_features |   sdxl_fp16fix 8600/18614  0.188 s/image
+2026-10-03 21:40:02 INFO    p2_probe_features |   sdxl_fp16fix 8800/18614  0.188 s/image
+2026-10-03 21:40:38 INFO    p2_probe_features |   sdxl_fp16fix 9000/18614  0.188 s/image
+2026-10-03 21:41:14 INFO    p2_probe_features |   sdxl_fp16fix 9200/18614  0.188 s/image
+2026-10-03 21:41:49 INFO    p2_probe_features |   sdxl_fp16fix 9400/18614  0.187 s/image
+2026-10-03 21:42:25 INFO    p2_probe_features |   sdxl_fp16fix 9600/18614  0.187 s/image
+2026-10-03 21:43:01 INFO    p2_probe_features |   sdxl_fp16fix 9800/18614  0.187 s/image
+2026-10-03 21:43:37 INFO    p2_probe_features |   sdxl_fp16fix 10000/18614  0.187 s/image
+2026-10-03 21:44:13 INFO    p2_probe_features |   sdxl_fp16fix 10200/18614  0.187 s/image
+2026-10-03 21:44:49 INFO    p2_probe_features |   sdxl_fp16fix 10400/18614  0.187 s/image
+2026-10-03 21:45:26 INFO    p2_probe_features |   sdxl_fp16fix 10600/18614  0.187 s/image
+2026-10-03 21:46:02 INFO    p2_probe_features |   sdxl_fp16fix 10800/18614  0.187 s/image
+2026-10-03 21:46:40 INFO    p2_probe_features |   sdxl_fp16fix 11000/18614  0.187 s/image
+2026-10-03 21:47:17 INFO    p2_probe_features |   sdxl_fp16fix 11200/18614  0.187 s/image
+2026-10-03 21:47:53 INFO    p2_probe_features |   sdxl_fp16fix 11400/18614  0.186 s/image
+2026-10-03 21:48:30 INFO    p2_probe_features |   sdxl_fp16fix 11600/18614  0.186 s/image
+2026-10-03 21:49:06 INFO    p2_probe_features |   sdxl_fp16fix 11800/18614  0.186 s/image
+2026-10-03 21:49:43 INFO    p2_probe_features |   sdxl_fp16fix 12000/18614  0.186 s/image
+2026-10-03 21:50:19 INFO    p2_probe_features |   sdxl_fp16fix 12200/18614  0.186 s/image
+2026-10-03 21:50:55 INFO    p2_probe_features |   sdxl_fp16fix 12400/18614  0.186 s/image
+2026-10-03 21:51:31 INFO    p2_probe_features |   sdxl_fp16fix 12600/18614  0.186 s/image
+2026-10-03 21:52:08 INFO    p2_probe_features |   sdxl_fp16fix 12800/18614  0.186 s/image
+2026-10-03 21:52:44 INFO    p2_probe_features |   sdxl_fp16fix 13000/18614  0.186 s/image
+2026-10-03 21:53:21 INFO    p2_probe_features |   sdxl_fp16fix 13200/18614  0.186 s/image
+2026-10-03 21:53:57 INFO    p2_probe_features |   sdxl_fp16fix 13400/18614  0.186 s/image
+2026-10-03 21:54:34 INFO    p2_probe_features |   sdxl_fp16fix 13600/18614  0.186 s/image
+2026-10-03 21:55:10 INFO    p2_probe_features |   sdxl_fp16fix 13800/18614  0.186 s/image
+2026-10-03 21:55:46 INFO    p2_probe_features |   sdxl_fp16fix 14000/18614  0.186 s/image
+2026-10-03 21:56:23 INFO    p2_probe_features |   sdxl_fp16fix 14200/18614  0.186 s/image
+2026-10-03 21:56:59 INFO    p2_probe_features |   sdxl_fp16fix 14400/18614  0.186 s/image
+2026-10-03 21:57:35 INFO    p2_probe_features |   sdxl_fp16fix 14600/18614  0.185 s/image
+2026-10-03 21:58:12 INFO    p2_probe_features |   sdxl_fp16fix 14800/18614  0.185 s/image
+2026-10-03 21:58:48 INFO    p2_probe_features |   sdxl_fp16fix 15000/18614  0.185 s/image
+2026-10-03 21:59:24 INFO    p2_probe_features |   sdxl_fp16fix 15200/18614  0.185 s/image
+2026-10-03 22:00:01 INFO    p2_probe_features |   sdxl_fp16fix 15400/18614  0.185 s/image
+2026-10-03 22:00:37 INFO    p2_probe_features |   sdxl_fp16fix 15600/18614  0.185 s/image
+2026-10-03 22:01:13 INFO    p2_probe_features |   sdxl_fp16fix 15800/18614  0.185 s/image
+2026-10-03 22:01:50 INFO    p2_probe_features |   sdxl_fp16fix 16000/18614  0.185 s/image
+2026-10-03 22:02:25 INFO    p2_probe_features |   sdxl_fp16fix 16200/18614  0.185 s/image
+2026-10-03 22:02:59 INFO    p2_probe_features |   sdxl_fp16fix 16400/18614  0.185 s/image
+2026-10-03 22:03:34 INFO    p2_probe_features |   sdxl_fp16fix 16600/18614  0.185 s/image
+2026-10-03 22:04:11 INFO    p2_probe_features |   sdxl_fp16fix 16800/18614  0.185 s/image
+2026-10-03 22:04:47 INFO    p2_probe_features |   sdxl_fp16fix 17000/18614  0.185 s/image
+2026-10-03 22:05:23 INFO    p2_probe_features |   sdxl_fp16fix 17200/18614  0.185 s/image
+2026-10-03 22:06:00 INFO    p2_probe_features |   sdxl_fp16fix 17400/18614  0.185 s/image
+2026-10-03 22:06:36 INFO    p2_probe_features |   sdxl_fp16fix 17600/18614  0.185 s/image
+2026-10-03 22:07:13 INFO    p2_probe_features |   sdxl_fp16fix 17800/18614  0.185 s/image
+2026-10-03 22:07:49 INFO    p2_probe_features |   sdxl_fp16fix 18000/18614  0.185 s/image
+2026-10-03 22:08:25 INFO    p2_probe_features |   sdxl_fp16fix 18200/18614  0.184 s/image
+2026-10-03 22:09:01 INFO    p2_probe_features |   sdxl_fp16fix 18400/18614  0.184 s/image
+2026-10-03 22:09:38 INFO    p2_probe_features |   sdxl_fp16fix 18600/18614  0.184 s/image
+2026-10-03 22:09:40 INFO    p2_probe_features | sdxl_fp16fix: 18614 image(s) in 3433.0 s = 0.1844 s/image (reconstruct + LPIPS)
+2026-10-03 22:09:41 INFO    p2_probe_features | wrote p2_probe_sdxl_fp16fix.npz and its sidecar
+2026-10-03 22:09:41 INFO    p2_probe_features | loading flux (vae_kl, fp16)
+2026-10-03 22:10:19 INFO    p2_probe_features |   flux 200/18614  0.183 s/image
+2026-10-03 22:10:55 INFO    p2_probe_features |   flux 400/18614  0.183 s/image
+2026-10-03 22:11:32 INFO    p2_probe_features |   flux 600/18614  0.183 s/image
+2026-10-03 22:12:07 INFO    p2_probe_features |   flux 800/18614  0.182 s/image
+2026-10-03 22:12:43 INFO    p2_probe_features |   flux 1000/18614  0.181 s/image
+2026-10-03 22:13:20 INFO    p2_probe_features |   flux 1200/18614  0.182 s/image
+2026-10-03 22:13:55 INFO    p2_probe_features |   flux 1400/18614  0.181 s/image
+2026-10-03 22:14:31 INFO    p2_probe_features |   flux 1600/18614  0.181 s/image
+2026-10-03 22:15:11 INFO    p2_probe_features |   flux 1800/18614  0.182 s/image
+2026-10-03 22:15:50 INFO    p2_probe_features |   flux 2000/18614  0.184 s/image
+2026-10-03 22:16:36 INFO    p2_probe_features |   flux 2200/18614  0.188 s/image
+2026-10-03 22:17:33 INFO    p2_probe_features |   flux 2400/18614  0.196 s/image
+2026-10-03 22:18:26 INFO    p2_probe_features |   flux 2600/18614  0.201 s/image
+2026-10-03 22:19:08 INFO    p2_probe_features |   flux 2800/18614  0.202 s/image
+2026-10-03 22:19:53 INFO    p2_probe_features |   flux 3000/18614  0.204 s/image
+2026-10-03 22:20:28 INFO    p2_probe_features |   flux 3200/18614  0.202 s/image
+2026-10-03 22:21:02 INFO    p2_probe_features |   flux 3400/18614  0.200 s/image
+2026-10-03 22:21:37 INFO    p2_probe_features |   flux 3600/18614  0.198 s/image
+2026-10-03 22:22:11 INFO    p2_probe_features |   flux 3800/18614  0.197 s/image
+2026-10-03 22:22:46 INFO    p2_probe_features |   flux 4000/18614  0.196 s/image
+2026-10-03 22:23:20 INFO    p2_probe_features |   flux 4200/18614  0.195 s/image
+2026-10-03 22:23:55 INFO    p2_probe_features |   flux 4400/18614  0.194 s/image
+2026-10-03 22:24:30 INFO    p2_probe_features |   flux 4600/18614  0.193 s/image
+2026-10-03 22:25:05 INFO    p2_probe_features |   flux 4800/18614  0.192 s/image
+2026-10-03 22:25:39 INFO    p2_probe_features |   flux 5000/18614  0.191 s/image
+2026-10-03 22:26:14 INFO    p2_probe_features |   flux 5200/18614  0.191 s/image
+2026-10-03 22:26:48 INFO    p2_probe_features |   flux 5400/18614  0.190 s/image
+2026-10-03 22:27:23 INFO    p2_probe_features |   flux 5600/18614  0.189 s/image
+2026-10-03 22:27:57 INFO    p2_probe_features |   flux 5800/18614  0.189 s/image
+2026-10-03 22:28:32 INFO    p2_probe_features |   flux 6000/18614  0.188 s/image
+2026-10-03 22:29:06 INFO    p2_probe_features |   flux 6200/18614  0.188 s/image
+2026-10-03 22:29:41 INFO    p2_probe_features |   flux 6400/18614  0.187 s/image
+2026-10-03 22:30:16 INFO    p2_probe_features |   flux 6600/18614  0.187 s/image
+2026-10-03 22:30:50 INFO    p2_probe_features |   flux 6800/18614  0.186 s/image
+2026-10-03 22:31:25 INFO    p2_probe_features |   flux 7000/18614  0.186 s/image
+2026-10-03 22:32:00 INFO    p2_probe_features |   flux 7200/18614  0.186 s/image
+2026-10-03 22:32:35 INFO    p2_probe_features |   flux 7400/18614  0.186 s/image
+2026-10-03 22:33:10 INFO    p2_probe_features |   flux 7600/18614  0.185 s/image
+2026-10-03 22:33:45 INFO    p2_probe_features |   flux 7800/18614  0.185 s/image
+2026-10-03 22:34:20 INFO    p2_probe_features |   flux 8000/18614  0.185 s/image
+2026-10-03 22:34:55 INFO    p2_probe_features |   flux 8200/18614  0.185 s/image
+2026-10-03 22:35:30 INFO    p2_probe_features |   flux 8400/18614  0.184 s/image
+2026-10-03 22:36:05 INFO    p2_probe_features |   flux 8600/18614  0.184 s/image
+2026-10-03 22:36:40 INFO    p2_probe_features |   flux 8800/18614  0.184 s/image
+2026-10-03 22:37:15 INFO    p2_probe_features |   flux 9000/18614  0.184 s/image
+2026-10-03 22:37:50 INFO    p2_probe_features |   flux 9200/18614  0.183 s/image
+2026-10-03 22:38:25 INFO    p2_probe_features |   flux 9400/18614  0.183 s/image
+2026-10-03 22:39:00 INFO    p2_probe_features |   flux 9600/18614  0.183 s/image
+2026-10-03 22:39:35 INFO    p2_probe_features |   flux 9800/18614  0.183 s/image
+2026-10-03 22:40:10 INFO    p2_probe_features |   flux 10000/18614  0.183 s/image
+2026-10-03 22:40:45 INFO    p2_probe_features |   flux 10200/18614  0.183 s/image
+2026-10-03 22:41:21 INFO    p2_probe_features |   flux 10400/18614  0.183 s/image
+2026-10-03 22:41:57 INFO    p2_probe_features |   flux 10600/18614  0.183 s/image
+2026-10-03 22:42:33 INFO    p2_probe_features |   flux 10800/18614  0.183 s/image
+2026-10-03 22:43:09 INFO    p2_probe_features |   flux 11000/18614  0.182 s/image
+2026-10-03 22:43:45 INFO    p2_probe_features |   flux 11200/18614  0.182 s/image
+2026-10-03 22:44:21 INFO    p2_probe_features |   flux 11400/18614  0.182 s/image
+2026-10-03 22:44:56 INFO    p2_probe_features |   flux 11600/18614  0.182 s/image
+2026-10-03 22:45:32 INFO    p2_probe_features |   flux 11800/18614  0.182 s/image
+2026-10-03 22:46:07 INFO    p2_probe_features |   flux 12000/18614  0.182 s/image
+2026-10-03 22:46:43 INFO    p2_probe_features |   flux 12200/18614  0.182 s/image
+2026-10-03 22:47:18 INFO    p2_probe_features |   flux 12400/18614  0.182 s/image
+2026-10-03 22:47:53 INFO    p2_probe_features |   flux 12600/18614  0.182 s/image
+2026-10-03 22:48:29 INFO    p2_probe_features |   flux 12800/18614  0.182 s/image
+2026-10-03 22:49:04 INFO    p2_probe_features |   flux 13000/18614  0.182 s/image
+2026-10-03 22:49:40 INFO    p2_probe_features |   flux 13200/18614  0.182 s/image
+2026-10-03 22:50:16 INFO    p2_probe_features |   flux 13400/18614  0.182 s/image
+2026-10-03 22:50:51 INFO    p2_probe_features |   flux 13600/18614  0.182 s/image
+2026-10-03 22:51:26 INFO    p2_probe_features |   flux 13800/18614  0.181 s/image
+2026-10-03 22:52:02 INFO    p2_probe_features |   flux 14000/18614  0.181 s/image
+2026-10-03 22:52:37 INFO    p2_probe_features |   flux 14200/18614  0.181 s/image
+2026-10-03 22:53:13 INFO    p2_probe_features |   flux 14400/18614  0.181 s/image
+2026-10-03 22:53:48 INFO    p2_probe_features |   flux 14600/18614  0.181 s/image
+2026-10-03 22:54:23 INFO    p2_probe_features |   flux 14800/18614  0.181 s/image
+2026-10-03 22:54:59 INFO    p2_probe_features |   flux 15000/18614  0.181 s/image
+2026-10-03 22:55:34 INFO    p2_probe_features |   flux 15200/18614  0.181 s/image
+2026-10-03 22:56:10 INFO    p2_probe_features |   flux 15400/18614  0.181 s/image
+2026-10-03 22:56:45 INFO    p2_probe_features |   flux 15600/18614  0.181 s/image
+2026-10-03 22:57:21 INFO    p2_probe_features |   flux 15800/18614  0.181 s/image
+2026-10-03 22:57:56 INFO    p2_probe_features |   flux 16000/18614  0.181 s/image
+2026-10-03 22:58:31 INFO    p2_probe_features |   flux 16200/18614  0.181 s/image
+2026-10-03 22:59:05 INFO    p2_probe_features |   flux 16400/18614  0.181 s/image
+2026-10-03 22:59:40 INFO    p2_probe_features |   flux 16600/18614  0.181 s/image
+2026-10-03 23:00:15 INFO    p2_probe_features |   flux 16800/18614  0.181 s/image
+2026-10-03 23:00:50 INFO    p2_probe_features |   flux 17000/18614  0.180 s/image
+2026-10-03 23:01:26 INFO    p2_probe_features |   flux 17200/18614  0.180 s/image
+2026-10-03 23:02:01 INFO    p2_probe_features |   flux 17400/18614  0.180 s/image
+2026-10-03 23:02:37 INFO    p2_probe_features |   flux 17600/18614  0.180 s/image
+2026-10-03 23:03:13 INFO    p2_probe_features |   flux 17800/18614  0.180 s/image
+2026-10-03 23:03:48 INFO    p2_probe_features |   flux 18000/18614  0.180 s/image
+2026-10-03 23:04:25 INFO    p2_probe_features |   flux 18200/18614  0.180 s/image
+2026-10-03 23:05:01 INFO    p2_probe_features |   flux 18400/18614  0.180 s/image
+2026-10-03 23:05:37 INFO    p2_probe_features |   flux 18600/18614  0.180 s/image
+2026-10-03 23:05:39 INFO    p2_probe_features | flux: 18614 image(s) in 3357.1 s = 0.1804 s/image (reconstruct + LPIPS)
+2026-10-03 23:05:39 INFO    p2_probe_features | wrote p2_probe_flux.npz and its sidecar
+2026-10-03 23:05:39 INFO    p2_probe_features | loading realesrgan_x4 (sr_gan, fp32)
+Traceback (most recent call last):
+  File "/kaggle/working/Implementation/thesis_dbp/src/dbp/decoders/loaders.py", line 313, in load_member
+    model = _load_sr_gan(spec, torch_device, dtype, cache_dir)
+  File "/kaggle/working/Implementation/thesis_dbp/src/dbp/decoders/loaders.py", line 230, in _load_sr_gan
+    from spandrel import ImageModelDescriptor, ModelLoader
+ModuleNotFoundError: No module named 'spandrel'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/kaggle/working/Implementation/thesis_dbp/scripts/p2_probe_features.py", line 386, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/kaggle/working/Implementation/thesis_dbp/scripts/p2_probe_features.py", line 279, in main
+    member = load_member(spec, args.device, precision, args.cache_dir)
+  File "/kaggle/working/Implementation/thesis_dbp/src/dbp/decoders/loaders.py", line 322, in load_member
+    raise MemberLoadError(f"{spec.key}: {type(exc).__name__}: {exc}") from exc
+dbp.decoders.loaders.MemberLoadError: realesrgan_x4: ModuleNotFoundError: No module named 'spandrel'

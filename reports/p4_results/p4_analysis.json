@@ -1,0 +1,4794 @@
+{
+  "what": "P4 baselines on Panel B: spec section 5, descriptive only",
+  "spec": "docs/P4_BASELINES_SPEC.md (tag p4-baselines-frozen)",
+  "bootstrap": {
+    "resamples": 2000,
+    "seed": 2026,
+    "level": 0.95,
+    "function": "p3_analyze.bootstrap (unchanged)"
+  },
+  "interpretations": {
+    "rows_items_1_4": "items 1-4 apply to the five clean rows (dda_native, dda_crop308, cospy_native, fire_native, aeroblade); the two H5 rows were scored on Panel B test rows only (no luma, no threshold reals), so item 5 is what is reported for them",
+    "difference_sign": "a paired difference is ours minus the baseline (S2-D or full_bank minus the row); positive means ours is higher",
+    "tpr_point": "TPR at the union threshold is a point value: section 5 gives CIs for AUC, AP, the FPRs and the macros, not for TPR (as P3's descriptive section)",
+    "slices": "'every Panel B test slice' = the 4 unseen, E7's 6 VAE slices against the E7 test reals, E7 luma FLUX.1 against the E7 luma test reals; E8 has no reals, so only its TPR is reported",
+    "macro_fpr": "the mean of the E4 and E5 achieved FPRs at the row's own union threshold",
+    "h5_clean_reference": "DDA clean under item 5 is dda_native on the same Panel B test rows",
+    "h5_versus_s2d": "S2-D seed 0 under the same condition minus DDA under it, paired",
+    "bootstrap_calls": "every reported interval is one call of p3_analyze.bootstrap (fresh generator, seed 2026); calls are independent, so they may run in parallel processes without changing any value"
+  },
+  "labels": {
+    "upper_bound": "e7_dda_coco/FLUX.1 (CLAUDE.md section 6d)",
+    "home_benchmark": "E7 is DDA's home benchmark (DDA-COCO, built by DDA's authors); DDA trained on MSCOCO train, E7's reals are val2017 (spec section 6)"
+  },
+  "rows": {
+    "dda_native": {
+      "threshold_union": -0.706375,
+      "slices": {
+        "e3_matched/GPT-Image2-fake": {
+          "fakes": 223,
+          "reals": 121,
+          "auc": {
+            "point": 0.4763740132676129,
+            "lower": 0.41191490938739206,
+            "upper": 0.5428807026646406,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6381612118291231,
+            "lower": 0.5971209303739271,
+            "upper": 0.685489465073175,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.1031390134529148
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "fakes": 104,
+          "reals": 121,
+          "auc": {
+            "point": 0.837730451366815,
+            "lower": 0.7844087730451367,
+            "upper": 0.8872377622377622,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.8372967736445023,
+            "lower": 0.7856492240941683,
+            "upper": 0.8869432655157513,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.6730769230769231
+        },
+        "e4_wildrf_matched/fake": {
+          "fakes": 465,
+          "reals": 392,
+          "auc": {
+            "point": 0.9496543778801844,
+            "lower": 0.935262645380733,
+            "upper": 0.9621571209128813,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9649136870301973,
+            "lower": 0.9556129929200656,
+            "upper": 0.9730889047481945,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9010752688172043
+        },
+        "e5_chameleon_pipeline/fake": {
+          "fakes": 2000,
+          "reals": 2000,
+          "auc": {
+            "point": 0.873181625,
+            "lower": 0.8625464500000001,
+            "upper": 0.88349370625,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.8847401872268397,
+            "lower": 0.8748144901647441,
+            "upper": 0.8946183004412487,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.654
+        },
+        "e7_dda_coco/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9591777777777778,
+            "lower": 0.9444436111111111,
+            "upper": 0.972235,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9602967949502738,
+            "lower": 0.9437486652252458,
+            "upper": 0.9746350219867751,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.6733333333333333,
+          "label": "upper bound (CLAUDE.md section 6d)"
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9997444444444444,
+            "lower": 0.9991111111111111,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9997364403133515,
+            "lower": 0.9990880934910988,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 1.0
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9997,
+            "lower": 0.9991886111111111,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9997077533311831,
+            "lower": 0.9992194890797258,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9966666666666667
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9979555555555556,
+            "lower": 0.9957552777777777,
+            "upper": 0.9996,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9978279528449785,
+            "lower": 0.9953856088737664,
+            "upper": 0.999598768588275,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9666666666666667
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9996888888888888,
+            "lower": 0.9991555555555556,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9996898702953364,
+            "lower": 0.9991588917890402,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9966666666666667
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9725444444444444,
+            "lower": 0.9603552777777777,
+            "upper": 0.9830344444444444,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9744774342454459,
+            "lower": 0.963005043403187,
+            "upper": 0.9843379368951205,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.74
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.8971777777777777,
+            "lower": 0.8710211111111111,
+            "upper": 0.9194763888888888,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.8938168262290008,
+            "lower": 0.8649216494480195,
+            "upper": 0.919524309618764,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.51
+        },
+        "e8_evalgen/Flux": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.912
+        },
+        "e8_evalgen/GoT": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 1.0
+        },
+        "e8_evalgen/Infinity": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.988
+        },
+        "e8_evalgen/NOVA": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.992
+        },
+        "e8_evalgen/OmniGen": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 1.0
+        }
+      },
+      "pools": {
+        "e3_matched": {
+          "reals": 121,
+          "fpr_union": {
+            "point": 0.21487603305785125,
+            "lower": 0.14049586776859505,
+            "upper": 0.2892561983471074,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e4_wildrf_matched": {
+          "reals": 392,
+          "fpr_union": {
+            "point": 0.1556122448979592,
+            "lower": 0.11989795918367346,
+            "upper": 0.19387755102040816,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e5_chameleon_pipeline": {
+          "reals": 2000,
+          "fpr_union": {
+            "point": 0.0995,
+            "lower": 0.08748750000000001,
+            "upper": 0.112,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.013333333333333334,
+            "lower": 0.0033333333333333335,
+            "upper": 0.02666666666666667,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco_luma": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.056666666666666664,
+            "lower": 0.03,
+            "upper": 0.08341666666666621,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        }
+      },
+      "macro_auc_unseen": {
+        "point": 0.7842351168786531,
+        "lower": 0.7577890753790716,
+        "upper": 0.8096035014500892,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.1275561224489796,
+        "lower": 0.10844706632653062,
+        "upper": 0.14636352040816325,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "status": "descriptive"
+    },
+    "dda_crop308": {
+      "threshold_union": -0.581815,
+      "slices": {
+        "e3_matched/GPT-Image2-fake": {
+          "fakes": 223,
+          "reals": 121,
+          "auc": {
+            "point": 0.475410443612645,
+            "lower": 0.40770021865619094,
+            "upper": 0.5423961383093058,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6361535185288019,
+            "lower": 0.5948860863599231,
+            "upper": 0.6862516906320377,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.11210762331838565
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "fakes": 104,
+          "reals": 121,
+          "auc": {
+            "point": 0.8353464717101081,
+            "lower": 0.7839299904640813,
+            "upper": 0.8845398919262555,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.8321864490446608,
+            "lower": 0.7779200284495532,
+            "upper": 0.8839503053822012,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.6730769230769231
+        },
+        "e4_wildrf_matched/fake": {
+          "fakes": 465,
+          "reals": 392,
+          "auc": {
+            "point": 0.9433015141540487,
+            "lower": 0.9282744952819838,
+            "upper": 0.9562602863726136,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9598997507835434,
+            "lower": 0.9499342915389706,
+            "upper": 0.9686980801215739,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.8924731182795699
+        },
+        "e5_chameleon_pipeline/fake": {
+          "fakes": 2000,
+          "reals": 2000,
+          "auc": {
+            "point": 0.8802825,
+            "lower": 0.870075325,
+            "upper": 0.89008889375,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.8902781795229171,
+            "lower": 0.8802801705925782,
+            "upper": 0.8997598890050359,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.633
+        },
+        "e7_dda_coco/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9625777777777778,
+            "lower": 0.9488211111111111,
+            "upper": 0.9749908333333334,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9639647950336269,
+            "lower": 0.9488241413654681,
+            "upper": 0.9769141430365696,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.66,
+          "label": "upper bound (CLAUDE.md section 6d)"
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9995333333333334,
+            "lower": 0.9985111111111111,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9995146224077202,
+            "lower": 0.9984579608123269,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9966666666666667
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9994333333333333,
+            "lower": 0.9983108333333334,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9994896624526635,
+            "lower": 0.9984964384491367,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9966666666666667
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9971555555555556,
+            "lower": 0.9944330555555555,
+            "upper": 0.9991113888888888,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9970662764890695,
+            "lower": 0.994202541044557,
+            "upper": 0.9991394192143032,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9566666666666667
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9995222222222222,
+            "lower": 0.9988552777777778,
+            "upper": 0.9999444444444444,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9995266565734062,
+            "lower": 0.9988589125361783,
+            "upper": 0.9999450373885534,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.99
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9707,
+            "lower": 0.9589319444444444,
+            "upper": 0.9813008333333333,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9722675192840233,
+            "lower": 0.9608611753313427,
+            "upper": 0.9825897738361958,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.7233333333333334
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.8995444444444445,
+            "lower": 0.8744527777777777,
+            "upper": 0.9221891666666666,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.896403032017987,
+            "lower": 0.8679087857957726,
+            "upper": 0.9220773682958758,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.48
+        },
+        "e8_evalgen/Flux": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.908
+        },
+        "e8_evalgen/GoT": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 1.0
+        },
+        "e8_evalgen/Infinity": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.984
+        },
+        "e8_evalgen/NOVA": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.988
+        },
+        "e8_evalgen/OmniGen": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 1.0
+        }
+      },
+      "pools": {
+        "e3_matched": {
+          "reals": 121,
+          "fpr_union": {
+            "point": 0.17355371900826447,
+            "lower": 0.10743801652892562,
+            "upper": 0.2396694214876033,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e4_wildrf_matched": {
+          "reals": 392,
+          "fpr_union": {
+            "point": 0.16581632653061223,
+            "lower": 0.13010204081632654,
+            "upper": 0.20408163265306123,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e5_chameleon_pipeline": {
+          "reals": 2000,
+          "fpr_union": {
+            "point": 0.0755,
+            "lower": 0.06448750000000002,
+            "upper": 0.087,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.013333333333333334,
+            "lower": 0.0033333333333333335,
+            "upper": 0.02666666666666667,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco_luma": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.03666666666666667,
+            "lower": 0.016666666666666666,
+            "upper": 0.06,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        }
+      },
+      "macro_auc_unseen": {
+        "point": 0.7835852323692004,
+        "lower": 0.7574179642354092,
+        "upper": 0.8086750720646848,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.12065816326530612,
+        "lower": 0.1015466836734694,
+        "upper": 0.14004081632653062,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "status": "descriptive"
+    },
+    "cospy_native": {
+      "threshold_union": -0.717499,
+      "slices": {
+        "e3_matched/GPT-Image2-fake": {
+          "fakes": 223,
+          "reals": 121,
+          "auc": {
+            "point": 0.7740429159100174,
+            "lower": 0.7172293666382538,
+            "upper": 0.8276692732461179,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.8312735222986093,
+            "lower": 0.7846762481242094,
+            "upper": 0.8795273069875598,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.19282511210762332
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "fakes": 104,
+          "reals": 121,
+          "auc": {
+            "point": 0.7440400508582327,
+            "lower": 0.6756178480610299,
+            "upper": 0.8082505562619199,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6445554898956183,
+            "lower": 0.5774140699173499,
+            "upper": 0.7355767645538156,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.09615384615384616
+        },
+        "e4_wildrf_matched/fake": {
+          "fakes": 465,
+          "reals": 392,
+          "auc": {
+            "point": 0.8212969058591179,
+            "lower": 0.7922639620364275,
+            "upper": 0.8482888962036428,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.8586513732370024,
+            "lower": 0.8340876788365842,
+            "upper": 0.8819627549291291,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.7806451612903226
+        },
+        "e5_chameleon_pipeline/fake": {
+          "fakes": 2000,
+          "reals": 2000,
+          "auc": {
+            "point": 0.73869825,
+            "lower": 0.7234511124999999,
+            "upper": 0.753207909375,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.73444047045252,
+            "lower": 0.7175276282574456,
+            "upper": 0.751196605563479,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.5305
+        },
+        "e7_dda_coco/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.40386666666666665,
+            "lower": 0.3599325,
+            "upper": 0.44931499999999996,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.4398160142803025,
+            "lower": 0.41406654615406335,
+            "upper": 0.4773334151878124,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.013333333333333334,
+          "label": "upper bound (CLAUDE.md section 6d)"
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.5946222222222223,
+            "lower": 0.5462658333333333,
+            "upper": 0.6410469444444444,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5720422837649317,
+            "lower": 0.5292409475314963,
+            "upper": 0.6218400947663221,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.03333333333333333
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.5978666666666667,
+            "lower": 0.5505211111111111,
+            "upper": 0.6438461111111111,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5895392147294312,
+            "lower": 0.5483002116082145,
+            "upper": 0.637327491469597,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.03666666666666667
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.6014,
+            "lower": 0.556485,
+            "upper": 0.6469786111111111,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5986597513583698,
+            "lower": 0.5535149536649716,
+            "upper": 0.6476213867372496,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.04666666666666667
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.6159555555555556,
+            "lower": 0.570998611111111,
+            "upper": 0.6621530555555555,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6108088264886602,
+            "lower": 0.5671305662914007,
+            "upper": 0.659787388193158,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.06
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.48038888888888887,
+            "lower": 0.43348666666666663,
+            "upper": 0.5274130555555556,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.49659104684653566,
+            "lower": 0.46300251501939976,
+            "upper": 0.5401662512623095,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.02
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.5134333333333333,
+            "lower": 0.4677511111111111,
+            "upper": 0.5604561111111112,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5203586160842937,
+            "lower": 0.48498689908515435,
+            "upper": 0.5663531890155993,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.016666666666666666
+        },
+        "e8_evalgen/Flux": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.896
+        },
+        "e8_evalgen/GoT": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.992
+        },
+        "e8_evalgen/Infinity": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.936
+        },
+        "e8_evalgen/NOVA": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.964
+        },
+        "e8_evalgen/OmniGen": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 1.0
+        }
+      },
+      "pools": {
+        "e3_matched": {
+          "reals": 121,
+          "fpr_union": {
+            "point": 0.05785123966942149,
+            "lower": 0.01652892561983471,
+            "upper": 0.09917355371900827,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e4_wildrf_matched": {
+          "reals": 392,
+          "fpr_union": {
+            "point": 0.33418367346938777,
+            "lower": 0.2857142857142857,
+            "upper": 0.3826530612244898,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e5_chameleon_pipeline": {
+          "reals": 2000,
+          "fpr_union": {
+            "point": 0.216,
+            "lower": 0.1975,
+            "upper": 0.2335,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.02,
+            "lower": 0.006666666666666667,
+            "upper": 0.03674999999999955,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco_luma": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.006666666666666667,
+            "lower": 0.0,
+            "upper": 0.016666666666666666,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        }
+      },
+      "macro_auc_unseen": {
+        "point": 0.769519530656842,
+        "lower": 0.7399632297100033,
+        "upper": 0.798722883757889,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.2750918367346939,
+        "lower": 0.2500498724489796,
+        "upper": 0.2985559948979592,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "status": "descriptive"
+    },
+    "fire_native": {
+      "threshold_union": 13.590717,
+      "slices": {
+        "e3_matched/GPT-Image2-fake": {
+          "fakes": 223,
+          "reals": 121,
+          "auc": {
+            "point": 0.5064299744283438,
+            "lower": 0.4434959048289664,
+            "upper": 0.5675805136567469,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6707853638716147,
+            "lower": 0.6248248971580856,
+            "upper": 0.7224057170828566,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.013452914798206279
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "fakes": 104,
+          "reals": 121,
+          "auc": {
+            "point": 0.525588048315321,
+            "lower": 0.44984504132231407,
+            "upper": 0.602201207883026,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5197781665176431,
+            "lower": 0.4567294750296615,
+            "upper": 0.5946307182804903,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.057692307692307696
+        },
+        "e4_wildrf_matched/fake": {
+          "fakes": 465,
+          "reals": 392,
+          "auc": {
+            "point": 0.5544053105113013,
+            "lower": 0.5141657066052228,
+            "upper": 0.5939033355277594,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6061308495140886,
+            "lower": 0.5704632250146826,
+            "upper": 0.6467316417301969,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.053763440860215055
+        },
+        "e5_chameleon_pipeline/fake": {
+          "fakes": 2000,
+          "reals": 2000,
+          "auc": {
+            "point": 0.60969975,
+            "lower": 0.59296593125,
+            "upper": 0.62746910625,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.578516944743281,
+            "lower": 0.5619671867770426,
+            "upper": 0.59747549908292,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.055
+        },
+        "e7_dda_coco/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.5045666666666667,
+            "lower": 0.4593525,
+            "upper": 0.5497202777777777,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5160210741669442,
+            "lower": 0.47950711188328227,
+            "upper": 0.5633915848241486,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.01,
+          "label": "upper bound (CLAUDE.md section 6d)"
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.5193111111111111,
+            "lower": 0.4742647222222222,
+            "upper": 0.5659366666666666,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5281150814049398,
+            "lower": 0.49219932141544737,
+            "upper": 0.575804698140752,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.01
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.5072333333333333,
+            "lower": 0.4609975,
+            "upper": 0.5548583333333333,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5092040471672461,
+            "lower": 0.47372079353452573,
+            "upper": 0.5534240739355847,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.02
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.4796888888888889,
+            "lower": 0.4336747222222222,
+            "upper": 0.5261916666666666,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.49769729816680575,
+            "lower": 0.4623891903201413,
+            "upper": 0.5405752269902199,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.023333333333333334
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.5018555555555556,
+            "lower": 0.4544758333333333,
+            "upper": 0.5487233333333333,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5226783147572465,
+            "lower": 0.48432663335534076,
+            "upper": 0.5679220459221173,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.016666666666666666
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.4910333333333333,
+            "lower": 0.4475208333333333,
+            "upper": 0.5377669444444444,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5090794231494575,
+            "lower": 0.4724808169187235,
+            "upper": 0.5537150536343022,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.016666666666666666
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.5501222222222222,
+            "lower": 0.5042641666666666,
+            "upper": 0.5954336111111111,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5388989625168664,
+            "lower": 0.49965978338876693,
+            "upper": 0.5894326697274866,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.016666666666666666
+        },
+        "e8_evalgen/Flux": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.084
+        },
+        "e8_evalgen/GoT": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.096
+        },
+        "e8_evalgen/Infinity": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.14
+        },
+        "e8_evalgen/NOVA": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.084
+        },
+        "e8_evalgen/OmniGen": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.052
+        }
+      },
+      "pools": {
+        "e3_matched": {
+          "reals": 121,
+          "fpr_union": {
+            "point": 0.008264462809917356,
+            "lower": 0.0,
+            "upper": 0.024793388429752067,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e4_wildrf_matched": {
+          "reals": 392,
+          "fpr_union": {
+            "point": 0.025510204081632654,
+            "lower": 0.01020408163265306,
+            "upper": 0.04336734693877551,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e5_chameleon_pipeline": {
+          "reals": 2000,
+          "fpr_union": {
+            "point": 0.0405,
+            "lower": 0.032,
+            "upper": 0.04901249999999993,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.006666666666666667,
+            "lower": 0.0,
+            "upper": 0.016666666666666666,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco_luma": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.006666666666666667,
+            "lower": 0.0,
+            "upper": 0.016666666666666666,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        }
+      },
+      "macro_auc_unseen": {
+        "point": 0.5490307708137415,
+        "lower": 0.5187867992602235,
+        "upper": 0.5793954474006257,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.03300510204081633,
+        "lower": 0.02437691326530612,
+        "upper": 0.04213265306122449,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "status": "descriptive"
+    },
+    "aeroblade": {
+      "threshold_union": -0.01805,
+      "slices": {
+        "e3_matched/GPT-Image2-fake": {
+          "fakes": 223,
+          "reals": 121,
+          "auc": {
+            "point": 0.5856650483637846,
+            "lower": 0.5157608494237113,
+            "upper": 0.6538579846570063,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6611598110348886,
+            "lower": 0.6194850813233628,
+            "upper": 0.7178400596911859,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.21076233183856502
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "fakes": 104,
+          "reals": 121,
+          "auc": {
+            "point": 0.6352511125238398,
+            "lower": 0.5618146058486968,
+            "upper": 0.7054334869675778,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5198363305923823,
+            "lower": 0.46889384356538183,
+            "upper": 0.5949215832124345,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.27884615384615385
+        },
+        "e4_wildrf_matched/fake": {
+          "fakes": 465,
+          "reals": 392,
+          "auc": {
+            "point": 0.6863726135615537,
+            "lower": 0.6507037936142199,
+            "upper": 0.7213096609611586,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6843927257267841,
+            "lower": 0.649984575144534,
+            "upper": 0.7265674230294583,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.2623655913978495
+        },
+        "e5_chameleon_pipeline/fake": {
+          "fakes": 2000,
+          "reals": 2000,
+          "auc": {
+            "point": 0.61609325,
+            "lower": 0.598015078125,
+            "upper": 0.634614559375,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5297621321586339,
+            "lower": 0.5174411615059846,
+            "upper": 0.5449528167318469,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.1995
+        },
+        "e7_dda_coco/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.5493888888888889,
+            "lower": 0.50421625,
+            "upper": 0.5969676388888888,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5375898231695451,
+            "lower": 0.500548896054069,
+            "upper": 0.585642371554493,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.006666666666666667,
+          "label": "upper bound (CLAUDE.md section 6d)"
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9335333333333333,
+            "lower": 0.9128441666666667,
+            "upper": 0.9514894444444445,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9238220679592332,
+            "lower": 0.8975952053658305,
+            "upper": 0.946067487799614,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.12
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9942666666666666,
+            "lower": 0.990455,
+            "upper": 0.9972897222222222,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9944513508900779,
+            "lower": 0.9907214062819353,
+            "upper": 0.997365066282983,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.7333333333333333
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.7089722222222222,
+            "lower": 0.6670679166666666,
+            "upper": 0.7498343055555555,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6847387212803613,
+            "lower": 0.6400600258463895,
+            "upper": 0.7333474498249877,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.023333333333333334
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9955777777777778,
+            "lower": 0.9925666666666667,
+            "upper": 0.9978777777777778,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9956807559972968,
+            "lower": 0.9928327220680753,
+            "upper": 0.9979204274865869,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.73
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.5432055555555556,
+            "lower": 0.49474402777777776,
+            "upper": 0.5898375,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5290826671599822,
+            "lower": 0.490062004770225,
+            "upper": 0.5760586140582119,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.0033333333333333335
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.5205666666666666,
+            "lower": 0.4746694444444445,
+            "upper": 0.5668972222222223,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.5156191079479365,
+            "lower": 0.4800872943497219,
+            "upper": 0.561322886549655,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.006666666666666667
+        },
+        "e8_evalgen/Flux": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.576
+        },
+        "e8_evalgen/GoT": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.932
+        },
+        "e8_evalgen/Infinity": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.24
+        },
+        "e8_evalgen/NOVA": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.536
+        },
+        "e8_evalgen/OmniGen": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.728
+        }
+      },
+      "pools": {
+        "e3_matched": {
+          "reals": 121,
+          "fpr_union": {
+            "point": 0.19834710743801653,
+            "lower": 0.1322314049586777,
+            "upper": 0.2727272727272727,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e4_wildrf_matched": {
+          "reals": 392,
+          "fpr_union": {
+            "point": 0.10204081632653061,
+            "lower": 0.07142857142857142,
+            "upper": 0.1326530612244898,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e5_chameleon_pipeline": {
+          "reals": 2000,
+          "fpr_union": {
+            "point": 0.214,
+            "lower": 0.196,
+            "upper": 0.231,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.0,
+            "lower": 0.0,
+            "upper": 0.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco_luma": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.0033333333333333335,
+            "lower": 0.0,
+            "upper": 0.01,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        }
+      },
+      "macro_auc_unseen": {
+        "point": 0.6308455061122945,
+        "lower": 0.5967079799552386,
+        "upper": 0.6652364801222976,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.1580204081632653,
+        "lower": 0.1410401785714286,
+        "upper": 0.1753295918367347,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "status": "descriptive"
+    }
+  },
+  "reference": {
+    "s2d_p35_seed0": {
+      "threshold_union": 0.392948,
+      "slices": {
+        "e3_matched/GPT-Image2-fake": {
+          "fakes": 223,
+          "reals": 121,
+          "auc": {
+            "point": 0.6042693547789348,
+            "lower": 0.5382222139865841,
+            "upper": 0.6660184190045584,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.727251969650595,
+            "lower": 0.6843702606987865,
+            "upper": 0.7759114405740951,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.16591928251121077
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "fakes": 104,
+          "reals": 121,
+          "auc": {
+            "point": 0.8293070565797839,
+            "lower": 0.7760588842975207,
+            "upper": 0.8794540686586141,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.8188500800740577,
+            "lower": 0.763913313931998,
+            "upper": 0.8720541837266215,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.5384615384615384
+        },
+        "e4_wildrf_matched/fake": {
+          "fakes": 465,
+          "reals": 392,
+          "auc": {
+            "point": 0.93536866359447,
+            "lower": 0.9194084649989027,
+            "upper": 0.949633942286592,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9504940079206191,
+            "lower": 0.9376012764208982,
+            "upper": 0.9615976364743019,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.8688172043010752
+        },
+        "e5_chameleon_pipeline/fake": {
+          "fakes": 2000,
+          "reals": 2000,
+          "auc": {
+            "point": 0.65243025,
+            "lower": 0.63656765625,
+            "upper": 0.6699278937500001,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6495642118400302,
+            "lower": 0.6315818402165371,
+            "upper": 0.6679905862843261,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.275
+        },
+        "e7_dda_coco/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9842111111111111,
+            "lower": 0.9764441666666667,
+            "upper": 0.9906797222222222,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.985190842122133,
+            "lower": 0.9783271511270173,
+            "upper": 0.9913254647233019,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.73,
+          "label": "upper bound (CLAUDE.md section 6d)"
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9996666666666667,
+            "lower": 0.9989552777777778,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9996840242628261,
+            "lower": 0.9990376943404103,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9933333333333333
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9998888888888889,
+            "lower": 0.9996333333333334,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9998906989906354,
+            "lower": 0.999642471338295,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9933333333333333
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9994,
+            "lower": 0.9984997222222223,
+            "upper": 0.9999222222222223,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9994232994784203,
+            "lower": 0.9985726139059831,
+            "upper": 0.9999225919210873,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.98
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9998222222222222,
+            "lower": 0.9995,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9998235241988787,
+            "lower": 0.9995052267294606,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9866666666666667
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9956,
+            "lower": 0.9922222222222222,
+            "upper": 0.9980336111111111,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9958816024465114,
+            "lower": 0.992880363877166,
+            "upper": 0.9981464737333732,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9251,
+            "lower": 0.903865,
+            "upper": 0.9447116666666666,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9250935997714269,
+            "lower": 0.9022909525646753,
+            "upper": 0.946386072703978,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.3566666666666667
+        },
+        "e8_evalgen/Flux": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.824
+        },
+        "e8_evalgen/GoT": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.98
+        },
+        "e8_evalgen/Infinity": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 1.0
+        },
+        "e8_evalgen/NOVA": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.956
+        },
+        "e8_evalgen/OmniGen": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.972
+        }
+      },
+      "pools": {
+        "e3_matched": {
+          "reals": 121,
+          "fpr_union": {
+            "point": 0.1322314049586777,
+            "lower": 0.0743801652892562,
+            "upper": 0.19834710743801653,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e4_wildrf_matched": {
+          "reals": 392,
+          "fpr_union": {
+            "point": 0.15816326530612246,
+            "lower": 0.12244897959183673,
+            "upper": 0.19642857142857142,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e5_chameleon_pipeline": {
+          "reals": 2000,
+          "fpr_union": {
+            "point": 0.1205,
+            "lower": 0.1065,
+            "upper": 0.135,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.006666666666666667,
+            "lower": 0.0,
+            "upper": 0.016666666666666666,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco_luma": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.01,
+            "lower": 0.0,
+            "upper": 0.023333333333333334,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        }
+      },
+      "macro_auc_unseen": {
+        "point": 0.7553438312382972,
+        "lower": 0.7290097222282155,
+        "upper": 0.7811933343099132,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.13933163265306123,
+        "lower": 0.12107091836734694,
+        "upper": 0.1598940051020408,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "status": "descriptive"
+    },
+    "s2d_p35_seed1": {
+      "threshold_union": 0.366272,
+      "slices": {
+        "e3_matched/GPT-Image2-fake": {
+          "fakes": 223,
+          "reals": 121,
+          "auc": {
+            "point": 0.6011562835859615,
+            "lower": 0.538615980432124,
+            "upper": 0.6663825371530223,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.7374038079932153,
+            "lower": 0.6931255062801064,
+            "upper": 0.7847234501490412,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.12556053811659193
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "fakes": 104,
+          "reals": 121,
+          "auc": {
+            "point": 0.825333757151939,
+            "lower": 0.7697731246026701,
+            "upper": 0.8768316910362365,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.8138876085512005,
+            "lower": 0.7565171400904998,
+            "upper": 0.8709187632552399,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.40384615384615385
+        },
+        "e4_wildrf_matched/fake": {
+          "fakes": 465,
+          "reals": 392,
+          "auc": {
+            "point": 0.9249945139346061,
+            "lower": 0.9065392527978934,
+            "upper": 0.9414474983541803,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9420089632420039,
+            "lower": 0.9263950425591461,
+            "upper": 0.9558506012639821,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.8666666666666667
+        },
+        "e5_chameleon_pipeline/fake": {
+          "fakes": 2000,
+          "reals": 2000,
+          "auc": {
+            "point": 0.689951,
+            "lower": 0.6739108500000001,
+            "upper": 0.70661915,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6862478133691747,
+            "lower": 0.6680225370724846,
+            "upper": 0.7052878015885159,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.3435
+        },
+        "e7_dda_coco/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9827444444444444,
+            "lower": 0.9738538888888889,
+            "upper": 0.9899558333333334,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9844335905450384,
+            "lower": 0.977027112600865,
+            "upper": 0.9907599475960313,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.75,
+          "label": "upper bound (CLAUDE.md section 6d)"
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9999111111111111,
+            "lower": 0.9996666666666667,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9999124921286344,
+            "lower": 0.9996774193548387,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9933333333333333
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9998555555555556,
+            "lower": 0.9995555555555555,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9998585420048955,
+            "lower": 0.9995700163731384,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.99
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9994333333333333,
+            "lower": 0.9986666666666667,
+            "upper": 0.9999333333333333,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9994487497448978,
+            "lower": 0.998720615758395,
+            "upper": 0.9999335900100951,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9733333333333334
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9995333333333334,
+            "lower": 0.9987777777777778,
+            "upper": 0.9999555555555556,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9995533213948957,
+            "lower": 0.9988578375430819,
+            "upper": 0.999955850782098,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9833333333333333
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9924,
+            "lower": 0.9878555555555556,
+            "upper": 0.9959777777777777,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9929799678983307,
+            "lower": 0.9890142536476981,
+            "upper": 0.9962234410611882,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.88
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9147666666666666,
+            "lower": 0.8925180555555555,
+            "upper": 0.9356475,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9195407040838249,
+            "lower": 0.898855678085608,
+            "upper": 0.9397603606330028,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.47333333333333333
+        },
+        "e8_evalgen/Flux": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.804
+        },
+        "e8_evalgen/GoT": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.972
+        },
+        "e8_evalgen/Infinity": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.996
+        },
+        "e8_evalgen/NOVA": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.94
+        },
+        "e8_evalgen/OmniGen": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.968
+        }
+      },
+      "pools": {
+        "e3_matched": {
+          "reals": 121,
+          "fpr_union": {
+            "point": 0.05785123966942149,
+            "lower": 0.024793388429752067,
+            "upper": 0.10743801652892562,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e4_wildrf_matched": {
+          "reals": 392,
+          "fpr_union": {
+            "point": 0.16326530612244897,
+            "lower": 0.12755102040816327,
+            "upper": 0.20153061224489796,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e5_chameleon_pipeline": {
+          "reals": 2000,
+          "fpr_union": {
+            "point": 0.1185,
+            "lower": 0.1045,
+            "upper": 0.13251249999999995,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.006666666666666667,
+            "lower": 0.0,
+            "upper": 0.016666666666666666,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco_luma": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.016666666666666666,
+            "lower": 0.0033333333333333335,
+            "upper": 0.03333333333333333,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        }
+      },
+      "macro_auc_unseen": {
+        "point": 0.7603588886681265,
+        "lower": 0.7336146143718751,
+        "upper": 0.7857175003068344,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.1408826530612245,
+        "lower": 0.12254413265306123,
+        "upper": 0.16151900510204079,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "status": "descriptive"
+    },
+    "full_bank_seed0": {
+      "threshold_union": 2.484523,
+      "slices": {
+        "e3_matched/GPT-Image2-fake": {
+          "fakes": 223,
+          "reals": 121,
+          "auc": {
+            "point": 0.6315828484601416,
+            "lower": 0.5655218100285365,
+            "upper": 0.6961596190193824,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.742315416366615,
+            "lower": 0.6970996897614627,
+            "upper": 0.7905620958649137,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.1210762331838565
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "fakes": 104,
+          "reals": 121,
+          "auc": {
+            "point": 0.8066592498410681,
+            "lower": 0.7496026700572155,
+            "upper": 0.8609424666242848,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.7789743236770436,
+            "lower": 0.7171661959607606,
+            "upper": 0.8434586114964611,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.3173076923076923
+        },
+        "e4_wildrf_matched/fake": {
+          "fakes": 465,
+          "reals": 392,
+          "auc": {
+            "point": 0.9436416502084705,
+            "lower": 0.9270184606100504,
+            "upper": 0.9571098035988589,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9537637440749428,
+            "lower": 0.9392993029786008,
+            "upper": 0.9658144353392922,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9010752688172043
+        },
+        "e5_chameleon_pipeline/fake": {
+          "fakes": 2000,
+          "reals": 2000,
+          "auc": {
+            "point": 0.672427,
+            "lower": 0.6562303625,
+            "upper": 0.68945070625,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6514933986570692,
+            "lower": 0.6330386327386363,
+            "upper": 0.6707679064190734,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.3195
+        },
+        "e7_dda_coco/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9863111111111111,
+            "lower": 0.9789202777777778,
+            "upper": 0.9921894444444445,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9868123065290846,
+            "lower": 0.9796123313834176,
+            "upper": 0.9925811105455916,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.7466666666666667,
+          "label": "upper bound (CLAUDE.md section 6d)"
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9994111111111111,
+            "lower": 0.9984552777777778,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9994412640635482,
+            "lower": 0.9985557298760023,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.99
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9993444444444445,
+            "lower": 0.9982888888888889,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9993617120984221,
+            "lower": 0.9983477802263442,
+            "upper": 1.0,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.97
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9988555555555556,
+            "lower": 0.9975444444444445,
+            "upper": 0.9996888888888888,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9988822160236492,
+            "lower": 0.9976328848136199,
+            "upper": 0.9996979152787855,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9633333333333334
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9993222222222222,
+            "lower": 0.9984552777777778,
+            "upper": 0.9998888888888889,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9993261954365115,
+            "lower": 0.9984871147363455,
+            "upper": 0.9998885079454927,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9666666666666667
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9954111111111111,
+            "lower": 0.9921875,
+            "upper": 0.9979113888888889,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9955466321216345,
+            "lower": 0.9924508363699842,
+            "upper": 0.9979522126182471,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.8966666666666666
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9449666666666666,
+            "lower": 0.9267775,
+            "upper": 0.9614002777777778,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9455352486584994,
+            "lower": 0.9265549382664806,
+            "upper": 0.9621568441241292,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.4666666666666667
+        },
+        "e8_evalgen/Flux": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.668
+        },
+        "e8_evalgen/GoT": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.928
+        },
+        "e8_evalgen/Infinity": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.98
+        },
+        "e8_evalgen/NOVA": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.9
+        },
+        "e8_evalgen/OmniGen": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.924
+        }
+      },
+      "pools": {
+        "e3_matched": {
+          "reals": 121,
+          "fpr_union": {
+            "point": 0.06611570247933884,
+            "lower": 0.024793388429752067,
+            "upper": 0.11570247933884298,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e4_wildrf_matched": {
+          "reals": 392,
+          "fpr_union": {
+            "point": 0.15816326530612246,
+            "lower": 0.12244897959183673,
+            "upper": 0.19642857142857142,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e5_chameleon_pipeline": {
+          "reals": 2000,
+          "fpr_union": {
+            "point": 0.137,
+            "lower": 0.1225,
+            "upper": 0.1515,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.006666666666666667,
+            "lower": 0.0,
+            "upper": 0.016666666666666666,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco_luma": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.01,
+            "lower": 0.0,
+            "upper": 0.023333333333333334,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        }
+      },
+      "macro_auc_unseen": {
+        "point": 0.76357768712742,
+        "lower": 0.7366833118784424,
+        "upper": 0.7898856067687253,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.14758163265306123,
+        "lower": 0.12952551020408165,
+        "upper": 0.16756441326530613,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "status": "descriptive"
+    },
+    "s2b_seed0": {
+      "threshold_union": 2.011841,
+      "slices": {
+        "e3_matched/GPT-Image2-fake": {
+          "fakes": 223,
+          "reals": 121,
+          "auc": {
+            "point": 0.6216877293110477,
+            "lower": 0.5549318089167254,
+            "upper": 0.6871011377534003,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.7355656378064752,
+            "lower": 0.688768263392522,
+            "upper": 0.7843041435793147,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.1210762331838565
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "fakes": 104,
+          "reals": 121,
+          "auc": {
+            "point": 0.8006198347107438,
+            "lower": 0.7430685791481246,
+            "upper": 0.8542613636363636,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.7727021774990481,
+            "lower": 0.7099674507645999,
+            "upper": 0.8371767697820749,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.28846153846153844
+        },
+        "e4_wildrf_matched/fake": {
+          "fakes": 465,
+          "reals": 392,
+          "auc": {
+            "point": 0.9457208689927584,
+            "lower": 0.9294592111037964,
+            "upper": 0.9588180272108844,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9546107643650592,
+            "lower": 0.939448503533724,
+            "upper": 0.9669459433171083,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9118279569892473
+        },
+        "e5_chameleon_pipeline/fake": {
+          "fakes": 2000,
+          "reals": 2000,
+          "auc": {
+            "point": 0.684661125,
+            "lower": 0.669062178125,
+            "upper": 0.7013857343750001,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.6834794443548085,
+            "lower": 0.6652001416393271,
+            "upper": 0.7029247052014946,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.344
+        },
+        "e7_dda_coco/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9884111111111111,
+            "lower": 0.9819216666666667,
+            "upper": 0.9938002777777778,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9887050611559454,
+            "lower": 0.9821280807749655,
+            "upper": 0.9939173511959911,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.7133333333333334,
+          "label": "upper bound (CLAUDE.md section 6d)"
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9994222222222222,
+            "lower": 0.9985555555555555,
+            "upper": 0.9999447222222222,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9994366481150883,
+            "lower": 0.9986083417493669,
+            "upper": 0.9999456092527608,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.98
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9994333333333333,
+            "lower": 0.9984663888888888,
+            "upper": 0.9999777777777777,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.999422816397525,
+            "lower": 0.9984279716014337,
+            "upper": 0.9999778516057586,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9633333333333334
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9991777777777778,
+            "lower": 0.9980775,
+            "upper": 0.9998666666666667,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9991720496715714,
+            "lower": 0.9980441989723414,
+            "upper": 0.9998675499408048,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9533333333333334
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9991666666666666,
+            "lower": 0.9981111111111111,
+            "upper": 0.9998555555555556,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9991558045969257,
+            "lower": 0.9980903787828419,
+            "upper": 0.9998557565430806,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.9533333333333334
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9958111111111111,
+            "lower": 0.9925655555555556,
+            "upper": 0.9982447222222223,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.995924217829977,
+            "lower": 0.9928319223121295,
+            "upper": 0.998320264743245,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.8733333333333333
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "fakes": 300,
+          "reals": 300,
+          "auc": {
+            "point": 0.9421111111111111,
+            "lower": 0.9236177777777778,
+            "upper": 0.9592119444444445,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "ap": {
+            "point": 0.9415735808326168,
+            "lower": 0.9216773337874862,
+            "upper": 0.9596558024044943,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          },
+          "tpr_k0_union": 0.33666666666666667
+        },
+        "e8_evalgen/Flux": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.704
+        },
+        "e8_evalgen/GoT": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.936
+        },
+        "e8_evalgen/Infinity": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.98
+        },
+        "e8_evalgen/NOVA": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.904
+        },
+        "e8_evalgen/OmniGen": {
+          "fakes": 250,
+          "reals": 0,
+          "tpr_k0_union": 0.928
+        }
+      },
+      "pools": {
+        "e3_matched": {
+          "reals": 121,
+          "fpr_union": {
+            "point": 0.0743801652892562,
+            "lower": 0.03305785123966942,
+            "upper": 0.12396694214876033,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e4_wildrf_matched": {
+          "reals": 392,
+          "fpr_union": {
+            "point": 0.1683673469387755,
+            "lower": 0.1326530612244898,
+            "upper": 0.2066326530612245,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e5_chameleon_pipeline": {
+          "reals": 2000,
+          "fpr_union": {
+            "point": 0.117,
+            "lower": 0.10348750000000001,
+            "upper": 0.131,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.006666666666666667,
+            "lower": 0.0,
+            "upper": 0.016666666666666666,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        },
+        "e7_dda_coco_luma": {
+          "reals": 300,
+          "fpr_union": {
+            "point": 0.01,
+            "lower": 0.0,
+            "upper": 0.023333333333333334,
+            "level": 0.95,
+            "resamples": 2000,
+            "seed": 2026
+          }
+        }
+      },
+      "macro_auc_unseen": {
+        "point": 0.7631723895036374,
+        "lower": 0.7350533669763686,
+        "upper": 0.7901823812025296,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.14268367346938776,
+        "lower": 0.12412691326530612,
+        "upper": 0.16256823979591836,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "status": "descriptive"
+    }
+  },
+  "paired": {
+    "s2d_p35_seed0-dda_native": {
+      "minus": "dda_native",
+      "from": "s2d_p35_seed0",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": -0.028891285640355924,
+        "lower": -0.06011634026078326,
+        "upper": 0.0007121565386640588,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.01177551020408163,
+        "lower": -0.01127015306122446,
+        "upper": 0.03598647959183672,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": 0.12789534151132192,
+          "lower": 0.052016084201163715,
+          "upper": 0.20153429937367973,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": -0.008423394787031135,
+          "lower": -0.07255840750158925,
+          "upper": 0.05530832803560071,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": -0.014285714285714346,
+          "lower": -0.029698129251700758,
+          "upper": 0.000979811279350458,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": -0.22075137499999997,
+          "lower": -0.23518033749999995,
+          "upper": -0.20509389375000006,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.025033333333333352,
+          "lower": 0.011688888888888967,
+          "upper": 0.0385261111111111,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": -7.77777777777322e-05,
+          "lower": -0.0008113888888888721,
+          "upper": 0.0005558333333333066,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.0001888888888889051,
+          "lower": -0.0001666666666666483,
+          "upper": 0.0007000000000000339,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.0014444444444443594,
+          "lower": -0.0001780555555555003,
+          "upper": 0.003534166666666714,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": 0.00013333333333331865,
+          "lower": -0.00023333333333330764,
+          "upper": 0.0006222222222221935,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.023055555555555607,
+          "lower": 0.013021388888888933,
+          "upper": 0.034623333333333325,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.027922222222222293,
+          "lower": 0.00243277777777784,
+          "upper": 0.05631388888888885,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "s2d_p35_seed0-dda_crop308": {
+      "minus": "dda_crop308",
+      "from": "s2d_p35_seed0",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": -0.028241401130903232,
+        "lower": -0.057956956935495255,
+        "upper": 0.0012141816688850024,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.018673469387755104,
+        "lower": -0.00566071428571429,
+        "upper": 0.04356364795918362,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": 0.12885891116628984,
+          "lower": 0.05432679835451951,
+          "upper": 0.20491513174962003,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": -0.006039415130324244,
+          "lower": -0.06818380483153204,
+          "upper": 0.057461856325492645,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": -0.007932850559578708,
+          "lower": -0.023993992758393708,
+          "upper": 0.007836844415185347,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": -0.22785224999999998,
+          "lower": -0.24258734999999995,
+          "upper": -0.21215615625000003,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.021633333333333393,
+          "lower": 0.009454166666666663,
+          "upper": 0.03425944444444446,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": 0.00013333333333331865,
+          "lower": -0.0006669444444444806,
+          "upper": 0.0010999999999999899,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.0004555555555556534,
+          "lower": -0.00015583333333335178,
+          "upper": 0.0015672222222222695,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.0022444444444443823,
+          "lower": 0.00036638888888884994,
+          "upper": 0.004700833333333366,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": 0.00029999999999996696,
+          "lower": -0.00014444444444439153,
+          "upper": 0.0009444444444444144,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.024900000000000033,
+          "lower": 0.014821388888888957,
+          "upper": 0.03570083333333339,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.025555555555555554,
+          "lower": 0.0005866666666667504,
+          "upper": 0.052745555555555476,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "s2d_p35_seed0-cospy_native": {
+      "minus": "cospy_native",
+      "from": "s2d_p35_seed0",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": -0.014175699418544796,
+        "lower": -0.05161497039745057,
+        "upper": 0.020821954313736214,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": -0.13576020408163267,
+        "lower": -0.16569642857142858,
+        "upper": -0.10409502551020411,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": -0.16977356113108255,
+          "lower": -0.25119890301300823,
+          "upper": -0.08749397768965644,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": 0.08526700572155121,
+          "lower": 0.00348855689764776,
+          "upper": 0.16465551493960578,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": 0.11407175773535216,
+          "lower": 0.08482787469826644,
+          "upper": 0.14498079877112133,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": -0.08626800000000001,
+          "lower": -0.10645997812500008,
+          "upper": -0.06509301249999998,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.5803444444444446,
+          "lower": 0.5355386111111111,
+          "upper": 0.6244241666666667,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": 0.40504444444444443,
+          "lower": 0.3586833333333333,
+          "upper": 0.45320333333333324,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.4020222222222223,
+          "lower": 0.3560647222222222,
+          "upper": 0.4492999999999999,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.3979999999999999,
+          "lower": 0.3522855555555556,
+          "upper": 0.44269444444444445,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": 0.3838666666666666,
+          "lower": 0.3375069444444444,
+          "upper": 0.4288255555555555,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.5152111111111112,
+          "lower": 0.4679119444444445,
+          "upper": 0.5618477777777778,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.41166666666666674,
+          "lower": 0.36424361111111114,
+          "upper": 0.4582061111111111,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "s2d_p35_seed0-fire_native": {
+      "minus": "fire_native",
+      "from": "s2d_p35_seed0",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": 0.20631306042455566,
+        "lower": 0.16900957859024976,
+        "upper": 0.243206008039923,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.1063265306122449,
+        "lower": 0.08574426020408163,
+        "upper": 0.12818494897959182,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": 0.09783938035059103,
+          "lower": 0.016006374383871338,
+          "upper": 0.17685487158581323,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": 0.30371900826446285,
+          "lower": 0.2125715193897012,
+          "upper": 0.39154879211697385,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": 0.38096335308316875,
+          "lower": 0.33757831358349794,
+          "upper": 0.4239588819398727,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": 0.042730500000000005,
+          "lower": 0.01927452500000007,
+          "upper": 0.06632896562499996,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.47964444444444443,
+          "lower": 0.4341258333333334,
+          "upper": 0.5260633333333332,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": 0.48035555555555565,
+          "lower": 0.43353305555555566,
+          "upper": 0.5253072222222223,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.4926555555555556,
+          "lower": 0.4449536111111111,
+          "upper": 0.5388155555555556,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.519711111111111,
+          "lower": 0.47300027777777787,
+          "upper": 0.5656955555555555,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": 0.49796666666666656,
+          "lower": 0.4512063888888889,
+          "upper": 0.5453591666666667,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.5045666666666667,
+          "lower": 0.457933888888889,
+          "upper": 0.5487288888888888,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.37497777777777785,
+          "lower": 0.3248444444444445,
+          "upper": 0.42652444444444443,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "s2d_p35_seed0-aeroblade": {
+      "minus": "aeroblade",
+      "from": "s2d_p35_seed0",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": 0.12449832512600267,
+        "lower": 0.08101752252939354,
+        "upper": 0.16863812896557065,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": -0.018688775510204064,
+        "lower": -0.04342793367346938,
+        "upper": 0.007272193877551001,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": 0.018604306415150207,
+          "lower": -0.07803246488529811,
+          "upper": 0.11515027980580357,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": 0.19405594405594406,
+          "lower": 0.10075492689129055,
+          "upper": 0.28424984106802287,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": 0.24899605003291636,
+          "lower": 0.21362279185867894,
+          "upper": 0.28447025181040164,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": 0.03633699999999995,
+          "lower": 0.014182828125000019,
+          "upper": 0.05934650625000001,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.4348222222222222,
+          "lower": 0.38726083333333333,
+          "upper": 0.48082263888888893,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": 0.06613333333333338,
+          "lower": 0.0482219444444445,
+          "upper": 0.08684694444444438,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.005622222222222306,
+          "lower": 0.002577500000000014,
+          "upper": 0.009444722222222144,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.29042777777777773,
+          "lower": 0.24954972222222227,
+          "upper": 0.3325176388888889,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": 0.004244444444444384,
+          "lower": 0.0019666666666666695,
+          "upper": 0.007244722222222273,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.45239444444444443,
+          "lower": 0.40588416666666666,
+          "upper": 0.5006455555555556,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.4045333333333334,
+          "lower": 0.3552211111111111,
+          "upper": 0.4544234722222222,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "s2d_p35_seed1-dda_native": {
+      "minus": "dda_native",
+      "from": "s2d_p35_seed1",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": -0.023876228210526595,
+        "lower": -0.054258046140413387,
+        "upper": 0.004079075127394507,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.013326530612244897,
+        "lower": -0.010633290816326557,
+        "upper": 0.037510204081632664,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": 0.1247822703183486,
+          "lower": 0.052882370381351206,
+          "upper": 0.1981312307749324,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": -0.012396694214875992,
+          "lower": -0.07461856325492688,
+          "upper": 0.051899237126509824,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": -0.024659863945578286,
+          "lower": -0.041551596445029614,
+          "upper": -0.007729180381830137,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": -0.18323062499999998,
+          "lower": -0.19842885625,
+          "upper": -0.16773193124999997,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.023566666666666625,
+          "lower": 0.00954416666666669,
+          "upper": 0.037612222222222255,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": 0.0001666666666666483,
+          "lower": -0.00019999999999997797,
+          "upper": 0.0007777777777777661,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.00015555555555557543,
+          "lower": -0.0002555555555555644,
+          "upper": 0.0007000000000000339,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.001477777777777689,
+          "lower": -0.00010027777777776532,
+          "upper": 0.0036113888888888957,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": -0.0001555555555554644,
+          "lower": -0.0009000000000000119,
+          "upper": 0.00046694444444449884,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.019855555555555515,
+          "lower": 0.010233333333333317,
+          "upper": 0.031255833333333365,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.017588888888888876,
+          "lower": -0.00877805555555555,
+          "upper": 0.04783305555555548,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "s2d_p35_seed1-dda_crop308": {
+      "minus": "dda_crop308",
+      "from": "s2d_p35_seed1",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": -0.023226343701073904,
+        "lower": -0.0528953956918403,
+        "upper": 0.003974246434103755,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.02022448979591837,
+        "lower": -0.00288392857142859,
+        "upper": 0.04455803571428572,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": 0.1257458399733165,
+          "lower": 0.05558221843382877,
+          "upper": 0.19916521513545563,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": -0.0100127145581691,
+          "lower": -0.07192069294342021,
+          "upper": 0.05181579783852509,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": -0.01830700021944265,
+          "lower": -0.035168010752688175,
+          "upper": -0.0018481182795698917,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": -0.1903315,
+          "lower": -0.20522361249999993,
+          "upper": -0.17523126874999997,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.020166666666666666,
+          "lower": 0.006988611111111155,
+          "upper": 0.033867222222222264,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": 0.00037777777777769916,
+          "lower": -0.00015583333333335178,
+          "upper": 0.0013669444444445106,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.00042222222222232375,
+          "lower": -0.0002666666666666373,
+          "upper": 0.001555555555555535,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.002277777777777712,
+          "lower": 0.0003886111111111067,
+          "upper": 0.004689166666666629,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": 1.1111111111183902e-05,
+          "lower": -0.0007666666666665822,
+          "upper": 0.0007780555555555414,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.02169999999999994,
+          "lower": 0.012098611111111112,
+          "upper": 0.0324563888888889,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.015222222222222137,
+          "lower": -0.011293611111111119,
+          "upper": 0.04403361111111114,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "s2d_p35_seed1-cospy_native": {
+      "minus": "cospy_native",
+      "from": "s2d_p35_seed1",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": -0.009160641988715468,
+        "lower": -0.04477280076833296,
+        "upper": 0.024192101876873557,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": -0.1342091836734694,
+        "lower": -0.16354591836734692,
+        "upper": -0.10344834183673471,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": -0.17288663232405588,
+          "lower": -0.2505336693473668,
+          "upper": -0.09118333765704346,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": 0.08129370629370636,
+          "lower": 0.0011820565797838504,
+          "upper": 0.15959353146853134,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": 0.10369760807548822,
+          "lower": 0.07240344524906733,
+          "upper": 0.13546768707482995,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": -0.04874725000000002,
+          "lower": -0.0691889281249999,
+          "upper": -0.027787743750000017,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.5788777777777778,
+          "lower": 0.5332425000000001,
+          "upper": 0.6236266666666667,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": 0.4052888888888888,
+          "lower": 0.3588202777777778,
+          "upper": 0.4535677777777778,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.40198888888888895,
+          "lower": 0.35610777777777786,
+          "upper": 0.4493352777777778,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.39803333333333324,
+          "lower": 0.3524958333333334,
+          "upper": 0.44273027777777774,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": 0.3835777777777778,
+          "lower": 0.33692083333333334,
+          "upper": 0.42864527777777783,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.5120111111111111,
+          "lower": 0.46503722222222227,
+          "upper": 0.5595677777777779,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.4013333333333333,
+          "lower": 0.3530102777777777,
+          "upper": 0.44977805555555556,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "s2d_p35_seed1-fire_native": {
+      "minus": "fire_native",
+      "from": "s2d_p35_seed1",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": 0.211328117854385,
+        "lower": 0.17331258321679027,
+        "upper": 0.24828758166743448,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.10787755102040816,
+        "lower": 0.0883705357142857,
+        "upper": 0.13043494897959182,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": 0.0947263091576177,
+          "lower": 0.012997072230663782,
+          "upper": 0.17719582700218656,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": 0.299745708836618,
+          "lower": 0.21264303877940244,
+          "upper": 0.3873271614748887,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": 0.3705892034233048,
+          "lower": 0.32739261026991434,
+          "upper": 0.414467577353522,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": 0.08025125,
+          "lower": 0.05620228749999998,
+          "upper": 0.10421021249999995,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.4781777777777777,
+          "lower": 0.43255444444444446,
+          "upper": 0.5246169444444444,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": 0.4806,
+          "lower": 0.43406000000000006,
+          "upper": 0.5257133333333333,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.4926222222222223,
+          "lower": 0.44495416666666665,
+          "upper": 0.5388463888888889,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.5197444444444443,
+          "lower": 0.4728541666666667,
+          "upper": 0.5658675,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": 0.4976777777777778,
+          "lower": 0.4506419444444444,
+          "upper": 0.5447055555555554,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.5013666666666666,
+          "lower": 0.45440305555555566,
+          "upper": 0.5459591666666667,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.36464444444444444,
+          "lower": 0.3144375000000001,
+          "upper": 0.4177908333333333,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "s2d_p35_seed1-aeroblade": {
+      "minus": "aeroblade",
+      "from": "s2d_p35_seed1",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": 0.129513382555832,
+        "lower": 0.08863228195894285,
+        "upper": 0.1708125365755036,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": -0.017137755102040797,
+        "lower": -0.04307334183673468,
+        "upper": 0.009360714285714217,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": 0.01549123522217688,
+          "lower": -0.07484712596820216,
+          "upper": 0.10359114998332278,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": 0.1900826446280992,
+          "lower": 0.10393157978385245,
+          "upper": 0.27836935791481243,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": 0.23862190037305242,
+          "lower": 0.2024980798771121,
+          "upper": 0.27612848365152515,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": 0.07385774999999994,
+          "lower": 0.051087774999999946,
+          "upper": 0.09711528437499992,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.4333555555555555,
+          "lower": 0.3850245833333334,
+          "upper": 0.478474861111111,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": 0.06637777777777776,
+          "lower": 0.048422222222222255,
+          "upper": 0.08706777777777773,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.0055888888888889765,
+          "lower": 0.0025555555555556416,
+          "upper": 0.009456111111111104,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.29046111111111106,
+          "lower": 0.24955041666666666,
+          "upper": 0.33264513888888886,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": 0.003955555555555601,
+          "lower": 0.001588888888888862,
+          "upper": 0.006966944444444343,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.44919444444444434,
+          "lower": 0.40240208333333327,
+          "upper": 0.4969244444444444,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.3942,
+          "lower": 0.34317041666666676,
+          "upper": 0.4454372222222222,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "full_bank_seed0-dda_native": {
+      "minus": "dda_native",
+      "from": "full_bank_seed0",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": -0.02065742975123308,
+        "lower": -0.050450107471576966,
+        "upper": 0.007849979960128992,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.020025510204081637,
+        "lower": -0.0028348214285714157,
+        "upper": 0.04393494897959183,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": 0.15520883519252865,
+          "lower": 0.08312363339880664,
+          "upper": 0.22599785049846202,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": -0.03107120152574694,
+          "lower": -0.09305665924984104,
+          "upper": 0.031150667514303846,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": -0.006012727671713902,
+          "lower": -0.022795561773096305,
+          "upper": 0.009964340574939681,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": -0.20075462499999996,
+          "lower": -0.21709699999999996,
+          "upper": -0.18493694375000003,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.027133333333333343,
+          "lower": 0.01387749999999999,
+          "upper": 0.04084888888888888,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": -0.0003333333333332966,
+          "lower": -0.0013111111111110435,
+          "upper": 0.00046694444444449884,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": -0.0003555555555555534,
+          "lower": -0.0014333333333332865,
+          "upper": 0.00042222222222221273,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.0009000000000000119,
+          "lower": -0.0009666666666666712,
+          "upper": 0.0030113888888889592,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": -0.0003666666666666263,
+          "lower": -0.0011783333333333858,
+          "upper": 0.00025583333333333973,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.022866666666666702,
+          "lower": 0.013377222222222266,
+          "upper": 0.03406722222222224,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.04778888888888888,
+          "lower": 0.024007500000000095,
+          "upper": 0.07405888888888885,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "full_bank_seed0-dda_crop308": {
+      "minus": "dda_crop308",
+      "from": "full_bank_seed0",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": -0.02000754524178039,
+        "lower": -0.04908352261843838,
+        "upper": 0.008658313133013578,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.02692346938775511,
+        "lower": 0.001705612244897957,
+        "upper": 0.052608418367346914,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": 0.15617240484749656,
+          "lower": 0.08634140014082942,
+          "upper": 0.22711429418522752,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": -0.028687221869040047,
+          "lower": -0.08980054036872212,
+          "upper": 0.0324380165289256,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": 0.0003401360544217358,
+          "lower": -0.016420616633750284,
+          "upper": 0.01689721856484529,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": -0.20785549999999997,
+          "lower": -0.22369865625000002,
+          "upper": -0.19112991250000005,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.023733333333333384,
+          "lower": 0.01156416666666673,
+          "upper": 0.035813611111111116,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": -0.00012222222222224577,
+          "lower": -0.0011669444444445366,
+          "upper": 0.0009780555555556304,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": -8.888888888880508e-05,
+          "lower": -0.0013336111111110767,
+          "upper": 0.0012111111111111628,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.0017000000000000348,
+          "lower": -0.00032222222222222374,
+          "upper": 0.004188888888888909,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": -0.00019999999999997797,
+          "lower": -0.0010444444444444062,
+          "upper": 0.0005444444444444585,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.024711111111111128,
+          "lower": 0.01506583333333334,
+          "upper": 0.03543416666666675,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.04542222222222214,
+          "lower": 0.021936666666666667,
+          "upper": 0.07152222222222215,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "full_bank_seed0-cospy_native": {
+      "minus": "cospy_native",
+      "from": "full_bank_seed0",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": -0.005941843529421953,
+        "lower": -0.04146164785648783,
+        "upper": 0.029024228587874693,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": -0.12751020408163266,
+        "lower": -0.15744948979591836,
+        "upper": -0.09659706632653065,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": -0.14246006744987583,
+          "lower": -0.22099284734833044,
+          "upper": -0.0684264166326948,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": 0.06261919898283541,
+          "lower": -0.01990424348378885,
+          "upper": 0.14320764462809918,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": 0.12234474434935261,
+          "lower": 0.09217632214175989,
+          "upper": 0.15419738863287255,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": -0.06627125,
+          "lower": -0.08658775624999997,
+          "upper": -0.04584421874999998,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.5824444444444445,
+          "lower": 0.5367883333333334,
+          "upper": 0.6263172222222221,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": 0.40478888888888886,
+          "lower": 0.35873166666666667,
+          "upper": 0.4530138888888889,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.4014777777777778,
+          "lower": 0.35565138888888886,
+          "upper": 0.4486188888888889,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.39745555555555556,
+          "lower": 0.35192222222222225,
+          "upper": 0.44252444444444444,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": 0.38336666666666663,
+          "lower": 0.33649638888888894,
+          "upper": 0.4284580555555555,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.5150222222222223,
+          "lower": 0.468128888888889,
+          "upper": 0.5624558333333334,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.4315333333333333,
+          "lower": 0.38399694444444443,
+          "upper": 0.4798716666666666,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "full_bank_seed0-fire_native": {
+      "minus": "fire_native",
+      "from": "full_bank_seed0",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": 0.2145469163136785,
+        "lower": 0.17421236353588573,
+        "upper": 0.25452657577576837,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": 0.1145765306122449,
+        "lower": 0.09396875,
+        "upper": 0.13688392857142856,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": 0.12515287403179776,
+          "lower": 0.03477467294222297,
+          "upper": 0.21117370196049365,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": 0.28107120152574705,
+          "lower": 0.18594445327399878,
+          "upper": 0.37556222186904,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": 0.3892363396971692,
+          "lower": 0.34810470155804263,
+          "upper": 0.43282079767390824,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": 0.06272725000000001,
+          "lower": 0.039584212499999986,
+          "upper": 0.08636291249999993,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.4817444444444444,
+          "lower": 0.4349319444444444,
+          "upper": 0.5283025,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": 0.4801000000000001,
+          "lower": 0.43326000000000003,
+          "upper": 0.5250233333333333,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.49211111111111117,
+          "lower": 0.4444408333333334,
+          "upper": 0.53848,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.5191666666666668,
+          "lower": 0.4720716666666667,
+          "upper": 0.5653436111111111,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": 0.4974666666666666,
+          "lower": 0.45067611111111117,
+          "upper": 0.5445594444444445,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.5043777777777778,
+          "lower": 0.45744388888888887,
+          "upper": 0.5484716666666666,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.39484444444444444,
+          "lower": 0.34660722222222223,
+          "upper": 0.44519,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    },
+    "full_bank_seed0-aeroblade": {
+      "minus": "aeroblade",
+      "from": "full_bank_seed0",
+      "status": "descriptive",
+      "macro_auc_unseen": {
+        "point": 0.13273218101512552,
+        "lower": 0.08958437473632591,
+        "upper": 0.17583778387888296,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "macro_fpr_e4_e5": {
+        "point": -0.010438775510204057,
+        "lower": -0.035547193877551016,
+        "upper": 0.015645408163265276,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "slice_auc": {
+        "e3_matched/GPT-Image2-fake": {
+          "point": 0.04591780009635693,
+          "lower": -0.052093910980987986,
+          "upper": 0.13828706963643772,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e3_matched/Nano-Banana2-fake": {
+          "point": 0.17140813731722826,
+          "lower": 0.07984941195168477,
+          "upper": 0.26629450095359186,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e4_wildrf_matched/fake": {
+          "point": 0.2572690366469168,
+          "lower": 0.22086522108843537,
+          "upper": 0.29459005376344083,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e5_chameleon_pipeline/fake": {
+          "point": 0.05633374999999996,
+          "lower": 0.03230814687499999,
+          "upper": 0.07963895312500005,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/FLUX.1": {
+          "point": 0.4369222222222222,
+          "lower": 0.38887652777777776,
+          "upper": 0.48259958333333325,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-ema": {
+          "point": 0.06587777777777781,
+          "lower": 0.048040277777777786,
+          "upper": 0.08652583333333326,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sd-vae-ft-mse": {
+          "point": 0.005077777777777848,
+          "lower": 0.0018661111111111276,
+          "upper": 0.008923611111111047,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/sdxl-vae": {
+          "point": 0.2898833333333334,
+          "lower": 0.2487154166666667,
+          "upper": 0.33195013888888886,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-2-1": {
+          "point": 0.003744444444444439,
+          "lower": 0.0013538888888888908,
+          "upper": 0.006833611111111133,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco/stable-diffusion-3.5-large": {
+          "point": 0.4522055555555555,
+          "lower": 0.4052075000000001,
+          "upper": 0.4998627777777777,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        },
+        "e7_dda_coco_luma/FLUX.1": {
+          "point": 0.4244,
+          "lower": 0.37553249999999994,
+          "upper": 0.47510416666666666,
+          "level": 0.95,
+          "resamples": 2000,
+          "seed": 2026
+        }
+      }
+    }
+  },
+  "h5": {
+    "jpeg50": {
+      "row": "dda_jpeg50",
+      "macro_auc": {
+        "point": 0.7042905035161302,
+        "lower": 0.6727060756630456,
+        "upper": 0.7344189086491949,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "minus_dda_clean": {
+        "point": -0.0799446133625229,
+        "lower": -0.09607834205362623,
+        "upper": -0.0639614372359159,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "s2d_seed0_macro_auc": {
+        "point": 0.6219339025988275,
+        "lower": 0.5909835347777952,
+        "upper": 0.6509872171923377,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "s2d_seed0_minus_dda": {
+        "point": -0.08235660091730268,
+        "lower": -0.12162916349737245,
+        "upper": -0.046341543962764915,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      }
+    },
+    "resize050": {
+      "row": "dda_resize050",
+      "macro_auc": {
+        "point": 0.7376180345707862,
+        "lower": 0.7092961540885429,
+        "upper": 0.7666012139592365,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "minus_dda_clean": {
+        "point": -0.046617082307866875,
+        "lower": -0.05984137546450736,
+        "upper": -0.03274778319686123,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "s2d_seed0_macro_auc": {
+        "point": 0.7073864712965998,
+        "lower": 0.6771784651707049,
+        "upper": 0.737757700081608,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      },
+      "s2d_seed0_minus_dda": {
+        "point": -0.030231563274186413,
+        "lower": -0.06668078151548204,
+        "upper": 0.005834624977348591,
+        "level": 0.95,
+        "resamples": 2000,
+        "seed": 2026
+      }
+    }
+  },
+  "exploratory": {
+    "note": "nothing exploratory at this commit"
+  }
+}

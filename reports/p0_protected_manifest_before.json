@@ -1,0 +1,33 @@
+{
+  "algo_version": 1,
+  "generated_at_utc": "2026-09-19T00:00:00+00:00",
+  "repo_root_basename": "Implementation",
+  "excluded_top_level_dirs": [
+    ".git",
+    "thesis_dbp"
+  ],
+  "excluded_files": [
+    ".gitignore",
+    "CLAUDE.md"
+  ],
+  "hash_extensions": [
+    ".cfg",
+    ".csv",
+    ".ipynb",
+    ".json",
+    ".md",
+    ".py",
+    ".sh",
+    ".toml",
+    ".txt",
+    ".yaml",
+    ".yml"
+  ],
+  "note": "Protected set = every pre-existing file in REPO_ROOT outside the P0 write scope (.git/, thesis_dbp/, .gitignore, CLAUDE.md). It is EMPTY at P0 because REPO_ROOT was a fresh directory; FIRE and the zero-shot results live on Kaggle and are not mirrored here. Any entry appearing in a later verification that was not added deliberately is a scope-lock violation. Re-baseline when prior_results/ is added.",
+  "counts": {
+    "total": 0,
+    "sha256": 0,
+    "fast": 0
+  },
+  "entries": []
+}

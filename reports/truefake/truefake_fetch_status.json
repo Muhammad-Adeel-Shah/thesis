@@ -1,0 +1,15 @@
+{
+  "sample": "truefake_sample.csv",
+  "sample_sha256": "a8954c2f63e81d95173cbec99e3f7c1ee2dd3d49527fac5ff7075de5e1ac8fd6",
+  "members": 16000,
+  "outcome": "COMPLETE",
+  "refusal": null,
+  "index": {
+    "entries": 600876,
+    "cd_sha256": "869a102f65504dc25df759de4a51ae6931cecac7b255b0b5ad270dad2544dc0b",
+    "size": 694732361838
+  },
+  "members_done": 16000,
+  "bytes_compressed_fetched": 8574203526,
+  "seconds": 4166.8
+}

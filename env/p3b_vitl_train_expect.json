@@ -1,0 +1,81 @@
+{
+  "stage": "p3b_vitl_train (DINOv3 ViT-L/16 on the unchanged S2-D recipe, seeds 0 and 1 in parallel, one per T4) -- docs/P3b_VITL_PREREG.md (tag p3b-vitl-prereg-frozen)",
+  "imports": [
+    "peft",
+    "transformers",
+    "safetensors",
+    "huggingface_hub",
+    "PIL"
+  ],
+  "gpus": 2,
+  "hf_token": true,
+  "corpus": {
+    "reals": 4100,
+    "generated": 2488,
+    "pairs": 49200
+  },
+  "gen_matched": 2488,
+  "inputs": {
+    "p1_pairs_manifest.csv": {
+      "sha256": "b19b7f5acee49d8848658b5b78b6398d9a1511ae72e688fc81379705aa99c65c",
+      "rows": 49200
+    },
+    "p2_splits.csv": {
+      "sha256": "cc6c3e65f5b0f5a7b966c772fedbac46871006d12a2c82e58ffa17be30cdf10d",
+      "rows": 55788
+    },
+    "p2_splits_summary.json": {
+      "sha256": "be25a948b2926fe883791426509769afd7c85bf2bdbfb4ef9cbe3d79ddda5953"
+    },
+    "p1_gen_manifest.csv": {
+      "sha256": "c86935d39177ba0982b6ff12b129cce872c3e388281406535473a579a217635a",
+      "rows": 2488
+    }
+  },
+  "nstar": "reports/p3_nstar.json",
+  "nstar_sha256": "de30996d05bc0e4fb0408808cc9d4b97b27132d125298d09c991623a6c9ab678",
+  "oi": {
+    "reals_manifest": "reports/kaggle_20261017/p3_open_images/p3_open_images_manifest.csv",
+    "reals_manifest_sha256": "37bfc7db545798b043c0eb908f7911d7d9e10fc2fc1622b22006c2354f1b34e2",
+    "pairs_digest": "reports/kaggle_20261018/p3_oi_pairs/p3_oi_pairs_manifest_digest.json",
+    "pairs_digest_sha256": "0eda8b9b905b281077d82ad6f82582585d67e2d70f440aa3eaaaae6495158202",
+    "train_reals": 3600,
+    "held_out_reals": 400,
+    "hash_workers": 32
+  },
+  "choice": "reports/p3_degradation_choice.json",
+  "backbone": "dinov3-vitl16",
+  "queue_template": [
+    "s2d:0",
+    "s2d:1"
+  ],
+  "queue_resolved": [
+    "s2d_p35:0",
+    "s2d_p35:1"
+  ],
+  "runs_per_session": 2,
+  "devices": "0,1",
+  "train_args": [
+    "--runs-config=configs/p3_runs.yaml",
+    "--fixed-steps=6000",
+    "--stop-at=5000",
+    "--heldout-every=500",
+    "--checkpoint-every=500",
+    "--val-pairs=512",
+    "--backbone=dinov3-vitl16"
+  ],
+  "out_dir": "outputs/p3b/s2",
+  "log_dir": "outputs/p3b/logs",
+  "vitb_reports": {
+    "0": "reports/kaggle_20261023/p3_s2d_session1/p2_s2_s2d_p35_seed0.json",
+    "1": "reports/kaggle_20261024/p3_s2d_session2/p2_s2_s2d_p35_seed1.json"
+  },
+  "smoke_steps": 2,
+  "smoke_deadline_hours": 0.75,
+  "deadline_hours": 9.5,
+  "poll_seconds": 30,
+  "expected": {
+    "wall": "about 2.7-3.0 h (ESTIMATED from the MEASURED smoke): setup, staging and the 2-step pre-flight smokes about 0.15-0.3 h, then two 5,000-step runs in parallel at 1.7126 s/step x ViT-B's overhead 1.048 = 2.49 GPU-h each, a little more because two jobs share 4 CPU cores (docs/P3b_VITL_PREREG.md section 6)",
+    "quota": "about 2.7-3.0 quota h (Kaggle bills session wall time, I-042); the deadline 9.5 h is more than 3x the projection, and a run cut short resumes from its 500-step checkpoint"
+  }
+}

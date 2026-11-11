@@ -1,0 +1,118 @@
+{
+  "protocol": "p_a_sd1",
+  "rule": "Amendment 2 point 6: GO only if every seed passes",
+  "runs": {
+    "p_a_sd1_seed0": {
+      "verdict": "NO-GO",
+      "passes_on": [],
+      "M1": {
+        "fusion": "f_mean_rz",
+        "fusion_macro": 0.8763285263646529,
+        "best_single_macro": 0.8851965241600759,
+        "best_single": {
+          "max_over": [
+            "s1",
+            "s2",
+            "s3_lr",
+            "s3_set",
+            "aeroblade"
+          ],
+          "max_on_data": "s2",
+          "max_share_in_replicates": {
+            "s2": 1.0
+          }
+        },
+        "difference_points": -0.8867997795423022,
+        "ci_points": [
+          -1.7722319590196076,
+          -0.07688723187033936
+        ],
+        "ci_excludes_zero": true,
+        "passes": false
+      },
+      "M2": {
+        "fusion": "f_mean_rz",
+        "fusion_macro": 0.7446482196028572,
+        "best_single_macro": 0.8035718670280072,
+        "best_single": {
+          "max_over": [
+            "s1",
+            "s2",
+            "s3_lr",
+            "s3_set",
+            "aeroblade"
+          ],
+          "max_on_data": "s2",
+          "max_share_in_replicates": {
+            "s2": 1.0
+          }
+        },
+        "difference_points": -5.892364742514999,
+        "ci_points": [
+          -6.962960971092798,
+          -4.803436495898016
+        ],
+        "ci_excludes_zero": true,
+        "passes": false
+      },
+      "synthetic": false
+    },
+    "p_a_sd1_seed1": {
+      "verdict": "NO-GO",
+      "passes_on": [],
+      "M1": {
+        "fusion": "f_mean_rz",
+        "fusion_macro": 0.9157882034867346,
+        "best_single_macro": 0.8991508721924246,
+        "best_single": {
+          "max_over": [
+            "s1",
+            "s2",
+            "s3_lr",
+            "s3_set",
+            "aeroblade"
+          ],
+          "max_on_data": "s2",
+          "max_share_in_replicates": {
+            "s2": 1.0
+          }
+        },
+        "difference_points": 1.6637331294309998,
+        "ci_points": [
+          1.0039624016560813,
+          2.3210726441971437
+        ],
+        "ci_excludes_zero": true,
+        "passes": false
+      },
+      "M2": {
+        "fusion": "f_mean_rz",
+        "fusion_macro": 0.7509547881600255,
+        "best_single_macro": 0.8013013596523396,
+        "best_single": {
+          "max_over": [
+            "s1",
+            "s2",
+            "s3_lr",
+            "s3_set",
+            "aeroblade"
+          ],
+          "max_on_data": "s2",
+          "max_share_in_replicates": {
+            "s2": 1.0
+          }
+        },
+        "difference_points": -5.034657149231414,
+        "ci_points": [
+          -6.136825799908116,
+          -3.980948311457
+        ],
+        "ci_excludes_zero": true,
+        "passes": false
+      },
+      "synthetic": false
+    }
+  },
+  "verdict": "NO-GO",
+  "synthetic": false
+}

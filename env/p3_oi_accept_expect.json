@@ -1,0 +1,38 @@
+{
+  "stage": "p3_oi_accept",
+  "imports": [
+    "PIL",
+    "numpy"
+  ],
+  "inputs": {
+    "p1_gen_manifest.csv": {
+      "sha256": "c86935d39177ba0982b6ff12b129cce872c3e388281406535473a579a217635a",
+      "rows": 2488
+    },
+    "p1_pairs_manifest.csv": {
+      "sha256": "b19b7f5acee49d8848658b5b78b6398d9a1511ae72e688fc81379705aa99c65c",
+      "rows": 49200
+    }
+  },
+  "candidates": {
+    "path": "reports/p3_open_images/p3_oi_candidates_manifest.csv",
+    "sha256": "PENDING-LOCAL-RUN",
+    "rows": "PENDING-LOCAL-RUN"
+  },
+  "eval_views": {
+    "e3": "e3_matched",
+    "e4": "e4_wildrf_matched",
+    "e5": "e5_chameleon_pipeline"
+  },
+  "coco_counts": {
+    "train2017": 118287,
+    "val2017": 5000
+  },
+  "target": 4000,
+  "holdout": 400,
+  "expected": {
+    "accelerator": "None (CPU); no GPU quota",
+    "wall_minutes": "about 25-30 (MEASURED basis: the COCO index took 886 s in Open Images run 1; plus staging, about 4,200 crop re-hashes and the dedup, ESTIMATED)",
+    "output_gb": "about 1.1 (ESTIMATED: 4,000 crops x 268 KB, the measured mean of P1's T-real crops)"
+  }
+}

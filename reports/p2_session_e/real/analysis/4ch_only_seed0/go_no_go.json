@@ -1,0 +1,303 @@
+{
+  "run_id": "4ch_only_seed0",
+  "protocol": "4ch_only",
+  "seed": 0,
+  "synthetic": false,
+  "criterion": "Amendment 2: GO if F-mean(A2) minus the maximum over the five single heads is >= 2.0 points on M1 or M2 and the 95% paired bootstrap CI excludes 0",
+  "preregistration_sha256": "792a5f659e6fdd199a8efba27043cd76ddbffdcdd79d8806f7df0c9098e4eb98",
+  "scores_sha256": "68d71efc040bcb32d4be20eaf3b55a160c7ff01aaad9c612bc5b8e2e05ae5d54",
+  "heads_report_sha256": "a1c427672273036eb7876f007ca10faaead7cc77da60936eb714dc810fe75d02",
+  "gate_slices_m1": [
+    "e3_matched/GPT-Image2-fake",
+    "e3_matched/Nano-Banana2-fake",
+    "e4_wildrf_matched",
+    "e5_chameleon_pipeline",
+    "e7_dda_coco/stable-diffusion-3.5-large",
+    "e7_dda_coco_luma/FLUX.1",
+    "e8_evalgen/Flux",
+    "e8_evalgen/GoT",
+    "e8_evalgen/Infinity",
+    "e8_evalgen/NOVA",
+    "e8_evalgen/OmniGen"
+  ],
+  "gate_slices_m2": [
+    "e3_matched/GPT-Image2-fake",
+    "e3_matched/Nano-Banana2-fake",
+    "e4_wildrf_matched",
+    "e5_chameleon_pipeline",
+    "e7_dda_coco/stable-diffusion-3.5-large",
+    "e7_dda_coco_luma/FLUX.1"
+  ],
+  "bootstrap": {
+    "resamples": 1000,
+    "seed": 2026,
+    "scheme": "fakes within slice, reals within view pool, luma rows with their parent; same draw for every stream"
+  },
+  "governing": {
+    "M1": {
+      "fusion": "f_mean_rz",
+      "fusion_macro": 0.9027652910343034,
+      "best_single_macro": 0.8438719660712084,
+      "best_single": {
+        "max_over": [
+          "s1",
+          "s2",
+          "s3_lr",
+          "s3_set",
+          "aeroblade"
+        ],
+        "max_on_data": "s2",
+        "max_share_in_replicates": {
+          "s2": 1.0
+        }
+      },
+      "difference_points": 5.889332496309496,
+      "ci_points": [
+        5.1057310647948455,
+        6.644067771092481
+      ],
+      "ci_excludes_zero": true,
+      "passes": true
+    },
+    "M2": {
+      "fusion": "f_mean_rz",
+      "fusion_macro": 0.711123787571286,
+      "best_single_macro": 0.769874773876575,
+      "best_single": {
+        "max_over": [
+          "s1",
+          "s2",
+          "s3_lr",
+          "s3_set",
+          "aeroblade"
+        ],
+        "max_on_data": "s2",
+        "max_share_in_replicates": {
+          "s2": 1.0
+        }
+      },
+      "difference_points": -5.875098630528896,
+      "ci_points": [
+        -6.970963119723194,
+        -4.882333754614707
+      ],
+      "ci_excludes_zero": true,
+      "passes": false
+    },
+    "passes_on": [
+      "M1"
+    ],
+    "verdict": "GO",
+    "m1_m2_disagree_in_sign": true
+  },
+  "analysis_a": {
+    "M1": {
+      "fusion": "f_stack",
+      "fusion_macro": 0.8445176130947017,
+      "best_single_macro": 0.8438719660712084,
+      "best_single": {
+        "fixed": "s2"
+      },
+      "difference_points": 0.06456470234933454,
+      "ci_points": [
+        -0.7594060535430909,
+        0.8380768490284486
+      ],
+      "ci_excludes_zero": false,
+      "passes": false
+    },
+    "M2": {
+      "fusion": "f_stack",
+      "fusion_macro": 0.7243601218338593,
+      "best_single_macro": 0.769874773876575,
+      "best_single": {
+        "fixed": "s2"
+      },
+      "difference_points": -4.551465204271565,
+      "ci_points": [
+        -5.558127313127846,
+        -3.6174365248372786
+      ],
+      "ci_excludes_zero": true,
+      "passes": false
+    },
+    "passes_on": [],
+    "verdict": "NO-GO",
+    "m1_m2_disagree_in_sign": true,
+    "best_single_fixed_on_validation": "s2",
+    "validation_auc": {
+      "s1": 0.9502720354482671,
+      "s2": 0.9997326763710913,
+      "s3_lr": 0.9973286869024884,
+      "s3_set": 0.9934957660937479,
+      "aeroblade": 0.6606028436310626
+    },
+    "validation_ties": [
+      "s2"
+    ],
+    "role": "SECONDARY (Amendment 2): reported unchanged, no gate role"
+  },
+  "macro_per_stream": {
+    "s1": {
+      "M1": {
+        "point": 0.689414705445686,
+        "lo": 0.6769154158665633,
+        "hi": 0.7018889565103968,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 68.94147054456859
+      },
+      "M2": {
+        "point": 0.6249764324328301,
+        "lo": 0.6103574052285866,
+        "hi": 0.6400651847323653,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 62.49764324328301
+      }
+    },
+    "s2": {
+      "M1": {
+        "point": 0.8438719660712084,
+        "lo": 0.8359239491185317,
+        "hi": 0.8517534350002833,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 84.38719660712084
+      },
+      "M2": {
+        "point": 0.769874773876575,
+        "lo": 0.7577837644529634,
+        "hi": 0.782109064892348,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 76.98747738765749
+      }
+    },
+    "s3_lr": {
+      "M1": {
+        "point": 0.4344116370704375,
+        "lo": 0.4229526639575872,
+        "hi": 0.4466461753094721,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 43.44116370704375
+      },
+      "M2": {
+        "point": 0.4721313885912635,
+        "lo": 0.45823276602383145,
+        "hi": 0.48469688558511775,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 47.21313885912635
+      }
+    },
+    "s3_set": {
+      "M1": {
+        "point": 0.5993576933770203,
+        "lo": 0.5859188750610914,
+        "hi": 0.6137727581729348,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 59.93576933770203
+      },
+      "M2": {
+        "point": 0.6410669118678974,
+        "lo": 0.6266803876110273,
+        "hi": 0.6556811818798901,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 64.10669118678975
+      }
+    },
+    "aeroblade": {
+      "M1": {
+        "point": 0.6260661802175624,
+        "lo": 0.6129166954372435,
+        "hi": 0.6381959380290877,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 62.60661802175625
+      },
+      "M2": {
+        "point": 0.6021683763038727,
+        "lo": 0.5851076580336617,
+        "hi": 0.6179425133647934,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 60.21683763038727
+      }
+    },
+    "f_mean_rz": {
+      "M1": {
+        "point": 0.9027652910343034,
+        "lo": 0.895585116012997,
+        "hi": 0.909666987010528,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 90.27652910343033
+      },
+      "M2": {
+        "point": 0.711123787571286,
+        "lo": 0.6972559573279087,
+        "hi": 0.7253600556052915,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 71.1123787571286
+      }
+    },
+    "f_mean": {
+      "M1": {
+        "point": 0.7609205672625818,
+        "lo": 0.7521160217495327,
+        "hi": 0.7695649540483624,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 76.09205672625818
+      },
+      "M2": {
+        "point": 0.6576882962261131,
+        "lo": 0.6441537238583069,
+        "hi": 0.6708157605699826,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 65.7688296226113
+      }
+    },
+    "f_stack": {
+      "M1": {
+        "point": 0.8445176130947017,
+        "lo": 0.8370338418555647,
+        "hi": 0.8512524185304867,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 84.45176130947017
+      },
+      "M2": {
+        "point": 0.7243601218338593,
+        "lo": 0.7108504100702768,
+        "hi": 0.7373768787704356,
+        "excludes_zero": true,
+        "resamples": 1000,
+        "confidence": 0.95,
+        "points": 72.43601218338594
+      }
+    }
+  },
+  "note": "A NO-GO is a result: the thesis then studies the best single stream plus calibration for deployment. The criterion was fixed before any panel score was produced; it is reported unchanged either way."
+}

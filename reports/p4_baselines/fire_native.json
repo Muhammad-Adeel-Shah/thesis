@@ -1,0 +1,46 @@
+{
+  "row": "fire_native",
+  "baseline": "fire",
+  "condition": "clean",
+  "crop": null,
+  "preprocessing": "Resize(256, antialias=True) short side -> long side centre-cropped to a multiple of 8 -> ToTensor; batch 1; seed rule",
+  "score": "larger = more likely fake",
+  "fire_sha256": "fabd7a700b8fbcc826407d96cc1afdd86cc2722a72e6300ba558cd0419efe689",
+  "vae_source": "checkpoint",
+  "vae_dtype": "fp16",
+  "versions": {
+    "torch": "2.11.0+cu130",
+    "timm": "1.0.30",
+    "diffusers": "0.42.0",
+    "pillow": "13.0.0"
+  },
+  "device": "cuda",
+  "dry_run": false,
+  "limit": null,
+  "lists": {
+    "panel_b": {
+      "rows": 9405,
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p4_baseline_scores/fire_native/panel_b.csv",
+      "sha256": "3b815969f00dafedf84a2793cb9bbda1cc8b245b7ad46ac47a00485a3c4558a8",
+      "cropped": 4582,
+      "seconds": 2388.5,
+      "seconds_per_image": 0.25396
+    },
+    "luma": {
+      "rows": 700,
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p4_baseline_scores/fire_native/luma.csv",
+      "sha256": "aeb0d05122f2c47afa66dcae32487d62c39e4142abbb4db69116e75fb94d5c44",
+      "cropped": 618,
+      "seconds": 182.2,
+      "seconds_per_image": 0.26023
+    },
+    "threshold_reals": {
+      "rows": 891,
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p4_baseline_scores/fire_native/threshold_reals.csv",
+      "sha256": "6b76a29b654552d05f06a0147eb42691d03efcfa7b997fedd31c6ab28d44bc39",
+      "cropped": 0,
+      "seconds": 166.8,
+      "seconds_per_image": 0.18723
+    }
+  }
+}

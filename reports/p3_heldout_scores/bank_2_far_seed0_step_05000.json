@@ -1,0 +1,40 @@
+{
+  "run_id": "bank_2_far_seed0",
+  "protocol": "bank_2_far",
+  "seed": 0,
+  "step": 5000,
+  "schedule_steps": 6000,
+  "stop_at": 5000,
+  "snapshot": "snapshots/step_05000",
+  "snapshot_sha256": "1443953b52bb7e81c4cb304cb5db12c2016152e9eb369ac0a35fb0830e4094b1",
+  "held_out_members": [
+    "dcae",
+    "flux",
+    "flux2_klein",
+    "movq_k22",
+    "qwen_image",
+    "sd35",
+    "sdxl",
+    "sdxl_fp16fix"
+  ],
+  "crop": 320,
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "scored_by": "p2_train_s2.py, in training (the trainer's own held-out scoring)",
+  "scores_csv": "bank_2_far_seed0_step_05000.csv",
+  "scores_sha256": "deeb2eece523931a5cf2a999bfddf387225cebb18be5666f64e8e92228539bc4",
+  "rows": 4419,
+  "reals": 491,
+  "reconstructions": 3928,
+  "heldout_auc": 0.91798,
+  "heldout_auc_by_member": {
+    "dcae": 0.99703,
+    "flux": 0.91541,
+    "flux2_klein": 0.59822,
+    "movq_k22": 0.99961,
+    "qwen_image": 0.86646,
+    "sd35": 0.97208,
+    "sdxl": 0.99833,
+    "sdxl_fp16fix": 0.99672
+  }
+}

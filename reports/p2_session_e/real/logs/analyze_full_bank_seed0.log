@@ -1,0 +1,9 @@
+2026-10-05 09:29:35 INFO    p2_analyze | full_bank_seed0: 12753 rows, protocol full_bank
+2026-10-05 09:29:35 INFO    p2_analyze | gate slices: 9 for M1, 4 for M2
+2026-10-05 09:29:42 INFO    p2_analyze | ========================================================================
+2026-10-05 09:29:42 INFO    p2_analyze | full_bank_seed0 VERDICT (governing, Amendment 2): GO on ['M1']
+2026-10-05 09:29:42 INFO    p2_analyze |   M1: F-mean(A2) 0.9533 vs max single 0.8914 (s2) -> +6.19 [+5.41, +6.94]
+2026-10-05 09:29:42 INFO    p2_analyze |   M1 (A, secondary): F-stack 0.9291 vs s2 0.8914 -> +3.78 [+3.01, +4.58]
+2026-10-05 09:29:42 INFO    p2_analyze |   M2: F-mean(A2) 0.7314 vs max single 0.7740 (s2) -> -4.26 [-5.93, -2.63]
+2026-10-05 09:29:42 INFO    p2_analyze |   M2 (A, secondary): F-stack 0.7455 vs s2 0.7740 -> -2.85 [-4.59, -1.14]
+2026-10-05 09:29:42 INFO    p2_analyze | ========================================================================

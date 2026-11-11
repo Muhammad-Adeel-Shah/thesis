@@ -1,0 +1,48 @@
+{
+  "stage": "p3_lolo_data",
+  "passed": true,
+  "checks": [
+    {
+      "name": "row counts",
+      "ok": true,
+      "detail": "p1_pairs_manifest.csv=49200, p2_splits.csv=55788, p1_gen_manifest.csv=2488",
+      "seconds": 0.57,
+      "data": {}
+    },
+    {
+      "name": "gpu count",
+      "ok": true,
+      "detail": "2 CUDA device(s) ['Tesla T4', 'Tesla T4']",
+      "seconds": 1.8,
+      "data": {}
+    },
+    {
+      "name": "hf token",
+      "ok": true,
+      "detail": "HF_TOKEN present: true",
+      "seconds": 0.43,
+      "data": {}
+    },
+    {
+      "name": "input hashes",
+      "ok": true,
+      "detail": "4 input file(s) match their sha256",
+      "seconds": 0.06,
+      "data": {}
+    },
+    {
+      "name": "imports",
+      "ok": true,
+      "detail": "peft 0.20.0, transformers 5.16.1, safetensors 0.8.0, huggingface_hub 1.29.0, PIL 12.3.0",
+      "seconds": 6.19,
+      "data": {}
+    },
+    {
+      "name": "gen_matched hashes",
+      "ok": true,
+      "detail": "all 2488 files match the reference sha256",
+      "seconds": 0.74,
+      "data": {}
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+2026-10-05 09:29:02 INFO    p2_analyze | p_a_sd1_seed0: 12753 rows, protocol p_a_sd1
+2026-10-05 09:29:02 INFO    p2_analyze | section 8 substitution: e7_dda_coco/FLUX.1 -> e7_dda_coco_luma/FLUX.1
+2026-10-05 09:29:02 INFO    p2_analyze | gate slices: 12 for M1, 7 for M2
+2026-10-05 09:29:12 INFO    p2_analyze | ========================================================================
+2026-10-05 09:29:12 INFO    p2_analyze | p_a_sd1_seed0 VERDICT (governing, Amendment 2): NO-GO
+2026-10-05 09:29:12 INFO    p2_analyze |   M1: F-mean(A2) 0.8763 vs max single 0.8852 (s2) -> -0.89 [-1.77, -0.08]
+2026-10-05 09:29:12 INFO    p2_analyze |   M1 (A, secondary): F-stack 0.3588 vs s3_lr 0.3197 -> +3.91 [+3.35, +4.47]
+2026-10-05 09:29:12 INFO    p2_analyze |   M2: F-mean(A2) 0.7446 vs max single 0.8036 (s2) -> -5.89 [-6.96, -4.80]
+2026-10-05 09:29:12 INFO    p2_analyze |   M2 (A, secondary): F-stack 0.5570 vs s3_lr 0.5418 -> +1.52 [+1.45, +1.60]
+2026-10-05 09:29:12 INFO    p2_analyze | ========================================================================

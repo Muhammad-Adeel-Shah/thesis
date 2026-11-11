@@ -1,0 +1,38 @@
+{
+  "set_id": "gen_matched",
+  "issue": "I-023 (b): training-side compression confound",
+  "gen_manifest": "p1_gen_manifest.csv",
+  "reals_manifest": "p1_reals_manifest_t_real.csv",
+  "n_generations": 2488,
+  "n_matched": 2488,
+  "pairing_exact": 2002,
+  "pairing_sampled": 486,
+  "pairing_counts": {
+    "exact": 2002,
+    "sampled": 418,
+    "sampled_after_exclusion": 68
+  },
+  "reference_size": 2417,
+  "reference_excluded": {
+    "not_jpeg_or_no_quality": 0,
+    "excluded_reason": 83,
+    "unmappable_subsampling": 0
+  },
+  "reference_subsampling_policy": [
+    "4:2:0",
+    "4:2:2",
+    "4:4:4"
+  ],
+  "sampling": "joint (quality, subsampling) pair drawn from one observed real",
+  "salt": "gen_matched",
+  "seed_rule": "blake2b(salt + ':' + gen_id), 8 bytes",
+  "quality_min": 90,
+  "quality_max": 96,
+  "subsampling_counts": {
+    "4:4:4": 2488
+  },
+  "png_variant_kept": true,
+  "resized": false,
+  "failures": [],
+  "manifest_sha256": "7d5a6de3c527b696973a76f27e2ab8dbdbab295087191053a507e02411252a15"
+}

@@ -1,0 +1,40 @@
+{
+  "stage": "p2_s2 (Session D: four S2 runs, trained and scored)",
+  "imports": ["peft", "transformers", "safetensors", "huggingface_hub", "PIL"],
+  "gpus": 2,
+  "hf_token": true,
+  "corpus": {"reals": 4100, "generated": 2488, "pairs": 49200},
+  "gen_matched": 2488,
+  "inputs": {
+    "p1_pairs_manifest.csv": {"sha256": "b19b7f5acee49d8848658b5b78b6398d9a1511ae72e688fc81379705aa99c65c", "rows": 49200},
+    "p2_splits.csv": {"sha256": "cc6c3e65f5b0f5a7b966c772fedbac46871006d12a2c82e58ffa17be30cdf10d", "rows": 55788},
+    "p2_splits_summary.json": {"sha256": "be25a948b2926fe883791426509769afd7c85bf2bdbfb4ef9cbe3d79ddda5953"},
+    "p1_gen_manifest.csv": {"sha256": "c86935d39177ba0982b6ff12b129cce872c3e388281406535473a579a217635a", "rows": 2488},
+    "p2_panel_images.csv": {"sha256": "d92ed4771a1981a32403c5db1771b46304f6a2c100d52c4a9ae9ddb6c27595be", "rows": 11775},
+    "p2_luma_images.csv": {"sha256": "230202b88c3948aa50f757e6a8e99012c0fc86739bfdb0eb50a2e945dd5088c8", "rows": 978},
+    "p2_s1_images.csv": {"sha256": "f8a9b6c30d763c9e057cb276b67e061e7ea0bc2088e3edebad5f97f80a0c6e12", "rows": 33909}
+  },
+  "resolve": ["p2_panel_images.csv", "p2_luma_images.csv", "p2_s1_images.csv", "p1_pairs_manifest.csv"],
+  "runs": ["p_a_sd1:0", "p_a_sd1:1", "4ch_only:0", "full_bank:0"],
+  "devices": "0,1",
+  "lists": {
+    "panel": ["p2_panel_images.csv", null],
+    "luma": ["p2_luma_images.csv", null],
+    "val": ["p2_s1_images.csv", "val"]
+  },
+  "train_args": ["--allowance-hours=2.25", "--ceiling=8000", "--calibrate=20"],
+  "infer_args": ["--batch=32"],
+  "smoke_steps": 2,
+  "smoke_deadline_hours": 0.75,
+  "deadline_hours": 9.5,
+  "poll_seconds": 30,
+  "expected": {
+    "setup_wall_hours": 0.4,
+    "per_run_hours": 2.35,
+    "queue_wall_hours": 4.7,
+    "total_wall_hours": 5.1,
+    "quota_hours_if_session_billed": 5.1,
+    "quota_hours_if_billed_per_gpu": 10.2,
+    "basis": "0.8361 s/step measured on a T4 (P2-C) x 8000 steps (the ceiling binds) = 1.86 h; 32 validations x 1,024 images and 19,636 scored images at the S1 rate 0.0267 s/image (LoRA overhead not measured) = 0.39 h; model loads and calibration ~0.1 h. Two rounds of two runs."
+  }
+}

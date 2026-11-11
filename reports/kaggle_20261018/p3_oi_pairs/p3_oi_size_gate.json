@@ -1,0 +1,74 @@
+{
+  "mode": "gate",
+  "ok": true,
+  "problems": [],
+  "n_reals": 4000,
+  "members": {
+    "movq_k22": {
+      "sample_images": 32,
+      "mean_bytes": 236689,
+      "projected_bytes": 946756875
+    },
+    "qwen_image": {
+      "sample_images": 32,
+      "mean_bytes": 214075,
+      "projected_bytes": 856300500
+    },
+    "sd_ft_ema": {
+      "sample_images": 32,
+      "mean_bytes": 235595,
+      "projected_bytes": 942378750
+    },
+    "flux": {
+      "sample_images": 32,
+      "mean_bytes": 230613,
+      "projected_bytes": 922450125
+    },
+    "sd35": {
+      "sample_images": 32,
+      "mean_bytes": 236057,
+      "projected_bytes": 944227625
+    },
+    "realesrgan_x4": {
+      "sample_images": 32,
+      "mean_bytes": 204606,
+      "projected_bytes": 818424000
+    },
+    "sdxl": {
+      "sample_images": 32,
+      "mean_bytes": 221539,
+      "projected_bytes": 886157875
+    },
+    "dcae": {
+      "sample_images": 32,
+      "mean_bytes": 238256,
+      "projected_bytes": 953024250
+    },
+    "sdxl_fp16fix": {
+      "sample_images": 32,
+      "mean_bytes": 220778,
+      "projected_bytes": 883112750
+    },
+    "sd15": {
+      "sample_images": 32,
+      "mean_bytes": 236039,
+      "projected_bytes": 944155500
+    },
+    "flux2_klein": {
+      "sample_images": 32,
+      "mean_bytes": 235947,
+      "projected_bytes": 943788250
+    },
+    "sd21": {
+      "sample_images": 32,
+      "mean_bytes": 228360,
+      "projected_bytes": 913439625
+    }
+  },
+  "projected_bytes": 10954216125,
+  "projected_gb": 10.2,
+  "free_gb": 19.46,
+  "margin_gb": 2.0,
+  "limit_gb": 17.46,
+  "basis": "MEASURED mean PNG size per member on the pre-flight sample x the number of reals"
+}

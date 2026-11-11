@@ -1,0 +1,30 @@
+{
+  "mode": "train+score",
+  "outcome": "COMPLETE",
+  "devices": [
+    "0",
+    "1"
+  ],
+  "deadline_hours": 9.5,
+  "wall_hours": 1.2167,
+  "device_hours": 1.2167,
+  "runs": [
+    {
+      "run_id": "s2d_p35_seed1",
+      "protocol": "s2d_p35",
+      "seed": 1,
+      "state": "complete",
+      "device": "0",
+      "train_rc": 0,
+      "infer_rc": null,
+      "started": 1792838693.3980832,
+      "finished": 1792843073.4265966,
+      "hours": 1.2167,
+      "logs": [
+        "s2_s2d_p35_seed1_gpu0_infer.log",
+        "s2_s2d_p35_seed1_gpu0_train.log"
+      ],
+      "note": "no training report; nothing to restore"
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "generated_at_utc": "2026-10-18T10:50:41Z",
+  "why": "p3_oi_pairs_manifest.csv (step 4a) is 10.9 MB and CLAUDE.md section 2 forbids committing a file over 10 MB, so the manifest stays in kaggle_raw. This file is the tracked reference a later session verifies the Kaggle copy against: same rows, same pairs, same file hashes, same precisions.",
+  "source": "Kaggle step-4a output reports/p3_oi_pairs_manifest.csv, downloaded by the user as p3_oi_pairs_manifest.txt (2026-10-18)",
+  "expected_total_pair_rows": 48000,
+  "expected_rows_per_member": 4000,
+  "manifest": {
+    "sha256_as_downloaded": "b1681633b090a5195f7c253822f5af63fa9a5b414e2c7c2aa53a810f184e171e",
+    "bytes_as_downloaded": 10906886,
+    "line_endings_as_downloaded": "CRLF",
+    "sha256_lf": "14828a7108b982f9347e4616a4a565cf5f1c3c3c84c71c68a90e563fb89a8acc",
+    "content_sha256": "0a4e9a3cb428ecf17d161c9c51905c90bf816e266d69c42f3e10507399cd1dc4",
+    "content_sha256_rule": "sha256 of the sorted lines '<pair_id>\\t<sha256>\\n' over every row (independent of row order and line endings)",
+    "rows": 48000,
+    "members": [
+      "dcae",
+      "flux",
+      "flux2_klein",
+      "movq_k22",
+      "qwen_image",
+      "realesrgan_x4",
+      "sd15",
+      "sd21",
+      "sd35",
+      "sd_ft_ema",
+      "sdxl",
+      "sdxl_fp16fix"
+    ],
+    "rows_per_member": {
+      "dcae": 4000,
+      "flux": 4000,
+      "flux2_klein": 4000,
+      "movq_k22": 4000,
+      "qwen_image": 4000,
+      "realesrgan_x4": 4000,
+      "sd15": 4000,
+      "sd21": 4000,
+      "sd35": 4000,
+      "sd_ft_ema": 4000,
+      "sdxl": 4000,
+      "sdxl_fp16fix": 4000
+    },
+    "precision": {
+      "fp16": 36000,
+      "fp32": 12000
+    },
+    "precision_per_member": {
+      "dcae": "fp16",
+      "flux": "fp16",
+      "flux2_klein": "fp16",
+      "movq_k22": "fp32",
+      "qwen_image": "fp16",
+      "realesrgan_x4": "fp32",
+      "sd15": "fp16",
+      "sd21": "fp16",
+      "sd35": "fp16",
+      "sd_ft_ema": "fp16",
+      "sdxl": "fp32",
+      "sdxl_fp16fix": "fp16"
+    },
+    "revision_per_member": {
+      "dcae": "ca69e17e9760",
+      "flux": "741f7c3ce8b3",
+      "flux2_klein": "e7b7dc27f91d",
+      "movq_k22": "9ae140d347fe",
+      "qwen_image": "75e0b4be04f6",
+      "realesrgan_x4": "4fa0d38905f7",
+      "sd15": "451f4fe16113",
+      "sd21": "bb2154823665",
+      "sd35": "ceddf0a7fdf2",
+      "sd_ft_ema": "f04b2c4b9831",
+      "sdxl": "6f5909a7e596",
+      "sdxl_fp16fix": "207b116dae70"
+    }
+  },
+  "descriptive_psnr_db_median": {
+    "dcae": {
+      "t_oi": 27.07,
+      "t_real_p1": 22.61
+    },
+    "flux": {
+      "t_oi": 36.09,
+      "t_real_p1": 29.38
+    },
+    "flux2_klein": {
+      "t_oi": 37.13,
+      "t_real_p1": 31.03
+    },
+    "movq_k22": {
+      "t_oi": 29.41,
+      "t_real_p1": 24.78
+    },
+    "qwen_image": {
+      "t_oi": 35.19,
+      "t_real_p1": 28.41
+    },
+    "realesrgan_x4": {
+      "t_oi": 25.63,
+      "t_real_p1": 22.92
+    },
+    "sd15": {
+      "t_oi": 28.4,
+      "t_real_p1": 23.56
+    },
+    "sd21": {
+      "t_oi": 29.43,
+      "t_real_p1": 24.57
+    },
+    "sd35": {
+      "t_oi": 34.11,
+      "t_real_p1": 28.02
+    },
+    "sd_ft_ema": {
+      "t_oi": 28.9,
+      "t_real_p1": 23.9
+    },
+    "sdxl": {
+      "t_oi": 29.99,
+      "t_real_p1": 24.89
+    },
+    "sdxl_fp16fix": {
+      "t_oi": 29.98,
+      "t_real_p1": 24.89
+    }
+  }
+}

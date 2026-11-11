@@ -1,0 +1,58 @@
+{
+  "run_id": "4ch_only_seed0",
+  "synthetic": false,
+  "panel_rows": 11775,
+  "luma_rows": 978,
+  "panel_digest": "bff608c3d8e00ea834532cd541849b4f21de803c8f8e27a55ca5e70424c51116",
+  "luma_digest": "190279cc889da9c4d879c4d7ffd18afae42949c58896a983a94f1bd6ec9c2303",
+  "views": {
+    "e3_matched": 1477,
+    "e4_wildrf_matched": 1492,
+    "e5_chameleon_pipeline": 3748,
+    "e7_dda_coco": 3408,
+    "e8_evalgen": 1250,
+    "t_ctrl_diagnostic": 400
+  },
+  "shapes": {
+    "s1": [
+      12753,
+      1536
+    ],
+    "s2": [
+      12753
+    ],
+    "s3": [
+      12753,
+      12,
+      20
+    ]
+  },
+  "inputs_sha256": {
+    "heads_report": "a1c427672273036eb7876f007ca10faaead7cc77da60936eb714dc810fe75d02",
+    "luma_ids": "230202b88c3948aa50f757e6a8e99012c0fc86739bfdb0eb50a2e945dd5088c8",
+    "luma_list": "0490be0e98d66a6e115b8d6ced711f3f256be4bdfa65069d8767761fae4eedbe",
+    "panel_list": "5def431e756b79c6fccd3ee86e9653dbd0f849358bb306706bb257f11f8181f6",
+    "probe_dcae": "b6bc8927cfc70b176f4c1f3283a3adcdc827f7c6a18a86d584804e3fd38881e9",
+    "probe_flux": "cfa2fc5a99337920834c46429f0e3e65a86a8f24da060c259c5c0b097cd0bd52",
+    "probe_flux2_klein": "5c7b30aa8bd54ebeee8936e3fe24513cf177da073a45f961877644703637f611",
+    "probe_movq_k22": "231bcec7de6f7916c64ef897fa30b15a77774886358bfe8347d8fc2b3ce2f132",
+    "probe_qwen_image": "f51883fea22339205c6ba049040fedcca082be64cbc00a7f6d0849a50f97b1ef",
+    "probe_realesrgan_x4": "b698b4c6ff0648f1bc0f5c208821c1cd8367b6b7e608f9987abd9a970eaba3f6",
+    "probe_sd15": "900e193c6d45a8a8a0da3b239cddf0d30d3c263d968d083be14423ad6196ae6a",
+    "probe_sd21": "958f353c56d3ee8519663d4fe1cc87f9d9b2ce9402c748ac5efbbc0f159786ed",
+    "probe_sd35": "26624bfcabf64c564531d88a3d7a8d1f07bfb1691e99c0611f5ffb3bd5f0f7a2",
+    "probe_sd_ft_ema": "97cfe68c5de06c1c2844ad76e063d9a7aede6e3837d10db39de1a4fe492031f2",
+    "probe_sdxl": "d072c1bca46f36d1b772badf9acc0e2e9ec05c483a37766bab1cd31d3316e48c",
+    "probe_sdxl_fp16fix": "89eb0bb99ddfb746183c1ee5d4b74297f4a779d8933fc9522d2915ce138ae3e9",
+    "s1_luma": "99e52c3c08e70f0fb849aa112cc027f9cbdc9f21ba17314ff97af28d26c4e5a0",
+    "s1_panel": "06360ed9b7d48d2571db039e04c6642198121421402cb62fdfdf17ffdf7c7093",
+    "s1_probe": "986d1e2b94416b46d313f55d820bbb58e027e3f58c56cbf00f8a08e0c6d7e694",
+    "s2_luma": "272bd4c144bb27e9da164d95bf80decec738b18ff94cb8b993e238bfbb118484",
+    "s2_panel": "c90a1654408905d45ea8fc12d37125aa726e0c34a0e55d9d342647904531a541",
+    "s3_lr": "f136640a4ac447d5d6baede13fa9d559bc4c0e3e18478a3419d4fda8e929deb1",
+    "s3_set": "d4db605a0c7c01dc4b43680e1aef6378ae94d17d858b25f9586c2ab76c1a2f7f"
+  },
+  "labels_read": false,
+  "result": "PASSED",
+  "note": "ids, counts, digests, paths and shapes only; no label read, no head applied, no score written"
+}

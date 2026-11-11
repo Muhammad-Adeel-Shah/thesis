@@ -1,0 +1,34 @@
+{
+  "set_id": "t_real",
+  "label": "real",
+  "source_root": "/kaggle/input/datasets/awsaf49/coco-2017-dataset/coco2017/train2017",
+  "crop": 384,
+  "requested": 2500,
+  "kept": 2500,
+  "crops_per_image": 1,
+  "distinct_source_images": 2500,
+  "split_grouping_column": "source_image_id",
+  "skipped_too_small": 498,
+  "unreadable": [],
+  "near_duplicate_groups": [],
+  "near_duplicates_dropped": [],
+  "compression_table": {
+    "real": {
+      "n": 2500,
+      "jpeg": 2500,
+      "non_jpeg": 0,
+      "formats": {
+        "JPEG": 2500
+      },
+      "subsampling": {
+        "4:4:4": 2489,
+        "unknown(-1)": 11
+      },
+      "quality_min": 80,
+      "quality_median": 96,
+      "quality_max": 96
+    }
+  },
+  "manifest": "p1_reals_manifest_t_real.csv",
+  "manifest_sha256": "676f1fc8b094ddb1de2d10858c6bc39dc9e566d0401ee9e1a3edde64f60d04e9"
+}

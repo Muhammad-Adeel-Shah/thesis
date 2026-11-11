@@ -1,0 +1,287 @@
+# ===========================================================================
+# Decoder-Bank Probing (DBP) -- bank registry
+# ===========================================================================
+# Every `revision` is a commit SHA resolved against the Hugging Face Hub during
+# P0 (2026-09-19) and pinned here. Never load a bank member from a floating ref:
+# an upstream re-upload would silently change the decoder fingerprint that the
+# whole method is built on.
+#
+# `dtype_policy: fp32_default` means: run in fp32. fp16 is permitted for a member
+# only once the P0 smoke test has recorded fp16_allowed=true for it, i.e.
+# PSNR(recon_fp32, recon_fp16) >= 45 dB with no NaN/Inf (guardrail D-003).
+#
+# `crop_multiple` follows the kind: 8 for vae_kl / vae_kl_flux2 / vae_kl_5d / vq,
+# 32 for vae_dc, 4 for sr_gan. Images are ALWAYS centre-cropped to a multiple,
+# NEVER resized (D-001).
+#
+# `alias_of` marks a member whose decoder weights are byte-identical to another
+# member's (P0 measured sd_ft_mse == sd21). Aliases are listed so the registry stays
+# a faithful record of what exists upstream, but they are skipped by
+# BankConfig.distinct_members() and therefore never reconstructed twice (D-016).
+#
+# `resolved_on` below is the P0 resolution date for the first ten members. The three
+# members added in P1-B3 carry their own resolution date in `notes`.
+# ===========================================================================
+
+schema_version: 2
+resolved_on: "2026-09-19"
+seed: 2026
+
+members:
+
+  # ---- SD1 lineage (4-channel KL-f8) ------------------------------------
+  - key: sd15
+    tier: core
+    kind: vae_kl
+    repo: stable-diffusion-v1-5/stable-diffusion-v1-5
+    subfolder: vae
+    revision: 451f4fe16113bff5a5d2269ed5ad43b0592e9a14
+    latent_channels: 4
+    downsample: 8
+    gated: false
+    license: creativeml-openrail-m
+    dtype_policy: fp32_default
+    crop_multiple: 8
+    generators: [SD1.4, SD1.5]
+    refs: [R1]
+    notes: "Original KL-f8 decoder of the SD1 lineage, the most common open generator family."
+
+  - key: sd21
+    tier: core
+    kind: vae_kl
+    repo: sd2-community/stable-diffusion-2-1
+    subfolder: vae
+    revision: bb2154823665391b4fb29b0b9cf82a198964ee05
+    latent_channels: 4
+    downsample: 8
+    gated: false
+    license: openrail++
+    dtype_policy: fp32_default
+    crop_multiple: 8
+    generators: [SD2.0, SD2.1]
+    refs: [R11, R12]
+    notes: >-
+      Community mirror. The official stabilityai/stable-diffusion-2-1 was deleted and
+      returns 401 RepositoryNotFound (verified P0-A4). This is the VAE used to build the
+      DDA and SEF training data, so it is required for baseline parity.
+
+  - key: sd_ft_ema
+    tier: optional
+    kind: vae_kl
+    repo: stabilityai/sd-vae-ft-ema
+    subfolder: ""
+    revision: f04b2c4b98319346dad8c65879f680b1997b204a
+    latent_channels: 4
+    downsample: 8
+    gated: false
+    license: mit
+    dtype_policy: fp32_default
+    crop_multiple: 8
+    generators: [PixArt-alpha]
+    refs: [R1]
+    notes: "Decoder variant within the SD1 lineage (EMA fine-tune)."
+
+  - key: sd_ft_mse
+    tier: optional
+    kind: vae_kl
+    repo: stabilityai/sd-vae-ft-mse
+    subfolder: ""
+    revision: 31f26fdeee1355a5c34592e401dd41e45d25a493
+    latent_channels: 4
+    downsample: 8
+    gated: false
+    license: mit
+    dtype_policy: fp32_default
+    crop_multiple: 8
+    generators: [many SD fine-tunes]
+    refs: [R1]
+    alias_of: sd21
+    notes: >-
+      Decoder variant within the SD1 lineage (MSE fine-tune). P0 on the T4 measured its
+      decoder state-dict digest as identical to sd21's
+      (reports/kaggle_20260920/p0_decoder_identity.json), so it is an alias and is never
+      reconstructed separately (D-016).
+
+  # ---- SDXL lineage (4-channel, retrained weights) ----------------------
+  - key: sdxl
+    tier: core
+    kind: vae_kl
+    repo: stabilityai/sdxl-vae
+    subfolder: ""
+    revision: 6f5909a7e596173e25d4e97b07fd19cdf9611c76
+    latent_channels: 4
+    downsample: 8
+    gated: false
+    license: mit
+    dtype_policy: fp32_default
+    crop_multiple: 8
+    generators: [SDXL, "Playground v2.5"]
+    refs: [R2]
+    notes: >-
+      Same architecture as SD1 with retrained weights, so it isolates
+      within-architecture / cross-weights transfer. Known to overflow in fp16.
+
+  - key: sdxl_fp16fix
+    tier: optional
+    kind: vae_kl
+    repo: madebyollin/sdxl-vae-fp16-fix
+    subfolder: ""
+    revision: 207b116dae70ace3637169f1ddd2434b91b3a8cd
+    latent_channels: 4
+    downsample: 8
+    gated: false
+    license: mit
+    dtype_policy: fp32_default
+    crop_multiple: 8
+    generators: ["HunyuanDiT 1.2"]
+    refs: [R2]
+    notes: "HunyuanDiT 1.2 ships this exact VAE. Rescaled to survive fp16."
+
+  # ---- 16-channel lineages ----------------------------------------------
+  - key: sd35
+    tier: core
+    kind: vae_kl
+    repo: stabilityai/stable-diffusion-3.5-large
+    subfolder: vae
+    revision: ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f
+    latent_channels: 16
+    downsample: 8
+    gated: true
+    license: other
+    dtype_policy: fp32_default
+    crop_multiple: 8
+    generators: [SD3, SD3.5]
+    refs: [R3]
+    notes: "First 16-channel lineage. SEF's second-worst case (DDA-COCO 88.2). Access verified P0."
+
+  - key: flux
+    tier: core
+    kind: vae_kl
+    repo: black-forest-labs/FLUX.1-schnell
+    subfolder: vae
+    revision: 741f7c3ce8b383c54771c7003378a50191e9efe9
+    latent_channels: 16
+    downsample: 8
+    gated: true
+    license: apache-2.0
+    dtype_policy: fp32_default
+    crop_multiple: 8
+    generators: [FLUX.1-schnell, FLUX.1-dev]
+    refs: [R4]
+    notes: "Second 16-channel lineage. SEF's worst case (DDA-COCO 82.8). Access verified P0."
+
+  # ---- Deep-compression lineage -----------------------------------------
+  - key: dcae
+    tier: core
+    kind: vae_dc
+    repo: mit-han-lab/dc-ae-f32c32-sana-1.0-diffusers
+    subfolder: ""
+    revision: ca69e17e97609e64ce055115a6515215109b1f50
+    latent_channels: 32
+    downsample: 32
+    gated: false
+    license: "Hub tag: none; MIT per model card"
+    dtype_policy: fp32_default
+    crop_multiple: 32
+    generators: [SANA]
+    refs: [R5]
+    notes: >-
+      Deep-compression f32 lineage with a very different spatial structure.
+      LICENCE FLAG: the Hub exposes no license tag for this repo; the model card
+      states MIT. Confirm before any redistribution of derived artefacts.
+
+  # ---- GAN super-resolution ---------------------------------------------
+  - key: realesrgan_x4
+    tier: core
+    kind: sr_gan
+    url: https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth
+    sha256: 4fa0d38905f75ac06eb49a7951b426670021be3018265fd191d2125df9d682f1
+    latent_channels: null
+    downsample: 4
+    gated: false
+    license: bsd-3-clause
+    dtype_policy: fp32_default
+    crop_multiple: 4
+    generators: [GAN upsampling traces]
+    refs: [R6, R12]
+    notes: >-
+      SEF's second artefact source. SEF used an SRGAN; we use the more widely available
+      Real-ESRGAN and document the deviation. Loaded via spandrel (restricted
+      deserialization), never basicsr. sha256 is resolved and pinned during P0-B4.
+
+  # ---- P1-B3 extension (audited and pinned 2026-09-20) -------------------
+  # Each revision below is the repository SHA returned by HfApi.model_info in the
+  # P1-B3 session; each config fact was read from the pinned <subfolder>/config.json.
+  # `refs: [P1-B3]` points at the IMPLEMENTATION_LOG entry that records that audit;
+  # a bibliography key is assigned when the thesis reference list is next revised.
+
+  - key: flux2_klein
+    tier: core
+    kind: vae_kl_flux2
+    repo: black-forest-labs/FLUX.2-klein-4B
+    subfolder: vae
+    revision: e7b7dc27f91deacad38e78976d1f2b499d76a294
+    latent_channels: 32
+    downsample: 8
+    gated: false
+    license: apache-2.0
+    dtype_policy: fp32_default
+    crop_multiple: 8
+    generators: [FLUX.2-klein]
+    refs: [P1-B3]
+    notes: >-
+      32-channel KL-f8 decoder, diffusers class AutoencoderKLFlux2. A fourth latent
+      width in the bank (4 / 16 / 32 channels at f8, plus f32 deep-compression).
+      FLUX.2-dev was rejected for this slot: its Hub license tag is `other` and the
+      repo is gated `auto`, which its 403 on config.json confirmed in the same
+      session. This repo is tagged apache-2.0 and is not gated. Its `vae/config.json`
+      carries `_name_or_path: black-forest-labs/FLUX.2-dev`, and the two vae weight
+      files differ in size (168120878 vs 336213556 bytes); whether the weights are
+      the same tensors is UNVERIFIED, because FLUX.2-dev cannot be read with this
+      token. No identity claim is made in either direction.
+      The `patch_size: [2, 2]` in the config is applied by the FLUX.2 pipeline outside
+      encode/decode, so the probe path is a plain 4D f8 encode -> decode and the crop
+      multiple is 8.
+
+  - key: qwen_image
+    tier: core
+    kind: vae_kl_5d
+    repo: Qwen/Qwen-Image
+    subfolder: vae
+    revision: 75e0b4be04f60ec59a75f475837eced720f823b6
+    latent_channels: 16
+    downsample: 8
+    gated: false
+    license: apache-2.0
+    dtype_policy: fp32_default
+    crop_multiple: 8
+    generators: [Qwen-Image]
+    refs: [P1-B3]
+    notes: >-
+      16-channel KL decoder, diffusers class AutoencoderKLQwenImage. Its encoder is
+      causal-3D: `_encode` unpacks `(B, C, T, H, W)`, so the protocol feeds a single
+      frame with T = 1 and squeezes the temporal axis back out. `z_dim: 16` and
+      `dim_mult: [1, 2, 4, 4]` give spatial f8. A second, independently trained
+      16-channel lineage next to sd35/flux, and the only bank member whose decoder was
+      trained with a temporal axis -- directly relevant to the S4 video stream.
+
+  - key: movq_k22
+    tier: core
+    kind: vq
+    repo: kandinsky-community/kandinsky-2-2-decoder
+    subfolder: movq
+    revision: 9ae140d347fed8ce6e8bb3005dcc1f48543bb8e3
+    latent_channels: 4
+    downsample: 8
+    gated: false
+    license: apache-2.0
+    dtype_policy: fp32_default
+    crop_multiple: 8
+    generators: [Kandinsky 2.2]
+    refs: [P1-B3]
+    notes: >-
+      Vector-quantised de-tokenizer (MoVQ), diffusers class VQModel, 16384 codes at
+      vq_embed_dim 4, spatial norm, f8. The one bank member that is not a continuous
+      autoencoder: `decode` re-quantises to the codebook by default, so the residual
+      carries a quantisation lattice rather than a Gaussian bottleneck. This is the
+      de-tokenizer family the P0 bank had no representative of.

@@ -1,0 +1,193 @@
+# ===========================================================================
+# P2 run configurations -- which lineages each run may train on
+# ===========================================================================
+# Decision D-034, the SEF fairness rule.
+#
+# SEF trained on the SD2.1 VAE alone. Our bank also contains SD3.5, FLUX, Qwen
+# and FLUX.2. Placing a full-bank number next to SEF's published DDA-COCO
+# figures (FLUX.1 82.8, SD3.5 88.2) would not be a comparison -- it would be a
+# better-resourced system beating a smaller one, reported as a win.
+#
+# So every number compared against SEF comes from `4ch_only`, and the full-bank
+# number is reported separately under its own label. `excluded_lineages` is
+# validated against configs/decoder_bank.yaml, so a typo cannot silently exclude
+# nothing, and the evaluation report prints the block for every run.
+#
+# Every E7 (DDA-COCO) table additionally states, per subset, whether that
+# subset's VAE was in the training bank -- see RunConfig.subset_status().
+# ===========================================================================
+
+# ---------------------------------------------------------------------------
+# D-041 -- black-and-white robustness, for whoever implements the P2 loader.
+#
+# The corpus contains no greyscale reals: B4 rejects them and the 11 that had
+# already reached T-real are flagged `excluded_reason=greyscale` (D-039). That
+# is deliberate. A greyscale image in one class and not the other is a shortcut
+# a detector can learn instead of learning anything about decoders.
+#
+# Robustness to black-and-white input is therefore an AUGMENTATION, applied
+# SYNCHRONIZED: when a pair is converted to greyscale, BOTH members are
+# converted, with p ~ 0.05-0.1, and the realised probability is recorded per
+# run. Converting one side only would put the shortcut straight back.
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# D-044 -- reporting rules the evaluation report must honour. These are not
+# style preferences; each one exists because a measured shortcut would
+# otherwise be invisible in the table.
+#
+#   E7 / FLUX.1 : print the trivial-rule baseline in the adjacent column.
+#                 `4:2:0 -> fake` scores 100.00% on that subset (lift +49.85);
+#                 quality adds +14.35. P2 additionally runs a chroma
+#                 sensitivity check there -- luma-only or common-chroma -- and
+#                 reports both numbers. An unchecked FLUX.1 number is not
+#                 claimable.
+#   E4          : red flag on every table, matched view included. Quality
+#                 separability +11.39, so ~61% of the set is reachable without
+#                 a generative artefact. Upper bounds only.
+#   E5          : the PRIMARY view is `pipeline_matched` (D-043), not the
+#                 compression-only matched view, which leaves
+#                 `width == 500 -> real` at 100.00%.
+#   E3          : report from the matched view; state the +6.47 residual on the
+#                 Nano-Banana2 subset.
+#   E8          : detection rate at thresholds fitted elsewhere (D-035). It has
+#                 no real class, so AUC on it alone is undefined.
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# D-045 -- every run evaluates at 320, and P-A exists.
+#
+# `eval_crop` was 384 on the three non-Chameleon runs and 320 on the two
+# Chameleon ones. P2 fixes one input size for all three streams: 320 is a
+# multiple of 16 (DINOv3 patches), 32 (DC-AE), 8 (the KL VAEs) and 4 (the SR
+# model), it is already D-037's Chameleon crop, and it cuts the S3 bank cost to
+# 69.4 % of 384. Two sizes would have meant two S3 feature sets.
+#
+# This is a DELIBERATE CHANGE TO EXISTING VALUES, not an append. The pair
+# images on disk are 384 crops; a 320 input is a crop *of* the pair -- random
+# and synchronized during training (B2), centred at evaluation. S3's residual
+# statistics are therefore computed on a different crop than P1's pair PSNRs
+# and will not reproduce them. That is by design, not a regression.
+#
+# `p_a_sd1` is the PRIMARY protocol for RQ1 and the go/no-go gate: the SD1
+# lineage alone, so SDXL, the 16-channel families, DC-AE, MoVQ and the GAN
+# super-resolver are all genuinely unseen. `4ch_only_strict` could not serve --
+# it retains `kl_4ch_sdxl`, which would have made SDXL an in-bank lineage while
+# §7 listed its E7 subset as unseen. It is kept unchanged as a robustness
+# check and is not used by the gate.
+# ---------------------------------------------------------------------------
+
+runs:
+
+  - run_id: p_a_sd1
+    label: "P-A -- single family: the SD1 lineage only (PRIMARY for RQ1)"
+    comparable_to: null
+    excluded_lineages:
+      - kl_4ch_sdxl      # sdxl, sdxl_fp16fix
+      - kl_16ch          # sd35, flux
+      - kl_16ch_qwen     # qwen_image
+      - kl_32ch_flux2    # flux2_klein
+      - dc_ae_f32        # dcae
+      - vq_movq_4ch      # movq_k22
+      - gan_sr           # realesrgan_x4
+    eval_crop: 320
+    eval_crops_per_image: 1
+    notes: >-
+      Trains on kl_4ch_sd1 and nothing else: sd15, sd21, sd_ft_ema (sd_ft_mse is the
+      byte-identical alias of sd21 and is not a separate member), plus the SD1.5
+      gen_matched rows. Everything else in every evaluation set is unseen, which is what
+      RQ1 asks about and what the go/no-go gate is decided on. The three streams share
+      this training data exactly, so any difference between them comes from the
+      representation rather than the data.
+
+  - run_id: p_a_sd1_chameleon
+    label: "P-A -- single family, Chameleon"
+    comparable_to: null
+    excluded_lineages:
+      - kl_4ch_sdxl
+      - kl_16ch
+      - kl_16ch_qwen
+      - kl_32ch_flux2
+      - dc_ae_f32
+      - vq_movq_4ch
+      - gan_sr
+    eval_crop: 320
+    eval_crops_per_image: 1
+    notes: >-
+      The P-A bank on Chameleon. Since D-045 every run evaluates at 320, so this differs
+      from `p_a_sd1` in nothing but its name; it exists so the Chameleon tables name a
+      run id like every other table, and so a later change to Chameleon's crop cannot
+      silently move the primary protocol with it.
+
+  - run_id: 4ch_only
+    label: "SEF-comparable -- 4-channel lineages only"
+    comparable_to: SEF
+    excluded_lineages:
+      - kl_16ch          # sd35, flux      -- SEF never trained on these
+      - kl_16ch_qwen     # qwen_image
+      - kl_32ch_flux2    # flux2_klein
+    eval_crop: 320
+    eval_crops_per_image: 1
+    notes: >-
+      The only configuration whose numbers may sit beside SEF's published DDA-COCO
+      figures. Trains on kl_4ch_sd1, kl_4ch_sdxl, dc_ae_f32, vq_movq_4ch and gan_sr.
+      dc_ae_f32 and vq_movq_4ch are kept because SEF's limitation was the 16-channel
+      families specifically; if a reviewer objects, the narrower variant is
+      `4ch_only_strict` below.
+
+  - run_id: 4ch_only_strict
+    label: "SEF-comparable, strict -- SD1/SDXL KL lineages only"
+    comparable_to: null
+    excluded_lineages:
+      - kl_16ch
+      - kl_16ch_qwen
+      - kl_32ch_flux2
+      - dc_ae_f32
+      - vq_movq_4ch
+      - gan_sr
+    eval_crop: 320
+    eval_crops_per_image: 1
+    notes: >-
+      The most conservative reading of "what SEF had": KL autoencoders at 4 latent
+      channels and nothing else. Reported as a robustness check on 4ch_only, never as
+      the headline.
+
+  - run_id: full_bank
+    label: "deployment configuration -- in-bank decoders"
+    comparable_to: null
+    excluded_lineages: []
+    eval_crop: 320
+    eval_crops_per_image: 1
+    notes: >-
+      All 8 lineages. Reported separately from every SEF comparison and always carrying
+      the label above, so a reader cannot mistake it for a like-for-like result.
+
+  # Chameleon needs its own crop. Measured on the archive (P1-R2): every one of the
+  # 14 863 reals is exactly 500 px wide, while the fakes are native resolution. At a
+  # 384 crop only 44.0 % of reals survive against 94.5 % of fakes, which rewrites the
+  # class balance and selects only the taller reals. At 320 it is 93.1 % / 95.9 %.
+  - run_id: full_bank_chameleon
+    label: "deployment configuration -- Chameleon, 320 px crop"
+    comparable_to: null
+    excluded_lineages: []
+    eval_crop: 320
+    eval_crops_per_image: 1
+    notes: >-
+      Chameleon only. 320 rather than 384 because the size filter is otherwise a
+      class-dependent filter: 44.0 % of reals vs 94.5 % of fakes survive at 384.
+      Single crop: two non-overlapping crops at 320 would retain 5 211 reals against
+      9 200 fakes, reintroducing the same bias.
+
+  - run_id: 4ch_only_chameleon
+    label: "SEF-comparable -- Chameleon, 320 px crop"
+    comparable_to: null
+    excluded_lineages:
+      - kl_16ch
+      - kl_16ch_qwen
+      - kl_32ch_flux2
+    eval_crop: 320
+    eval_crops_per_image: 1
+    notes: >-
+      The 4ch_only exclusions at Chameleon's crop. `comparable_to` is null because SEF
+      published no Chameleon figure; the exclusions are kept so the two Chameleon
+      numbers differ only in the bank, not in the crop.

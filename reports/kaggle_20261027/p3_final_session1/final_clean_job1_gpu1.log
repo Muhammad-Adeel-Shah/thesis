@@ -1,0 +1,48 @@
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 3183.56it/s]
+2026-10-27 09:12:38 INFO    p3_final_score | lolo_f2_seed0 clean panel_b: 9405 rows in 169.6 s (0.0180 s/image)
+2026-10-27 09:12:50 INFO    p3_final_score | lolo_f2_seed0 clean luma: 700 rows in 11.8 s (0.0169 s/image)
+2026-10-27 09:13:04 INFO    p3_final_score | lolo_f2_seed0 clean threshold_reals: 891 rows in 14.4 s (0.0162 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2805.75it/s]
+2026-10-27 09:16:01 INFO    p3_final_score | lolo_f4_seed0 clean panel_b: 9405 rows in 175.7 s (0.0187 s/image)
+2026-10-27 09:16:13 INFO    p3_final_score | lolo_f4_seed0 clean luma: 700 rows in 12.2 s (0.0174 s/image)
+2026-10-27 09:16:27 INFO    p3_final_score | lolo_f4_seed0 clean threshold_reals: 891 rows in 14.4 s (0.0162 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2598.81it/s]
+2026-10-27 09:19:25 INFO    p3_final_score | lolo_f6_seed0 clean panel_b: 9405 rows in 176.9 s (0.0188 s/image)
+2026-10-27 09:19:37 INFO    p3_final_score | lolo_f6_seed0 clean luma: 700 rows in 12.0 s (0.0171 s/image)
+2026-10-27 09:19:51 INFO    p3_final_score | lolo_f6_seed0 clean threshold_reals: 891 rows in 14.0 s (0.0157 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2779.54it/s]
+2026-10-27 09:22:46 INFO    p3_final_score | lolo_f8_seed0 clean panel_b: 9405 rows in 174.0 s (0.0185 s/image)
+2026-10-27 09:22:57 INFO    p3_final_score | lolo_f8_seed0 clean luma: 700 rows in 11.8 s (0.0169 s/image)
+2026-10-27 09:23:12 INFO    p3_final_score | lolo_f8_seed0 clean threshold_reals: 891 rows in 14.2 s (0.0160 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 3375.87it/s]
+2026-10-27 09:26:06 INFO    p3_final_score | bank_2_near_seed0 clean panel_b: 9405 rows in 173.4 s (0.0184 s/image)
+2026-10-27 09:26:18 INFO    p3_final_score | bank_2_near_seed0 clean luma: 700 rows in 12.6 s (0.0180 s/image)
+2026-10-27 09:26:32 INFO    p3_final_score | bank_2_near_seed0 clean threshold_reals: 891 rows in 13.9 s (0.0156 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2709.13it/s]
+2026-10-27 09:29:26 INFO    p3_final_score | bank_4_near_seed0 clean panel_b: 9405 rows in 173.0 s (0.0184 s/image)
+2026-10-27 09:29:38 INFO    p3_final_score | bank_4_near_seed0 clean luma: 700 rows in 12.0 s (0.0171 s/image)
+2026-10-27 09:29:52 INFO    p3_final_score | bank_4_near_seed0 clean threshold_reals: 891 rows in 14.2 s (0.0159 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2579.85it/s]
+2026-10-27 09:32:46 INFO    p3_final_score | bank_6_near_seed0 clean panel_b: 9405 rows in 173.1 s (0.0184 s/image)
+2026-10-27 09:32:58 INFO    p3_final_score | bank_6_near_seed0 clean luma: 700 rows in 12.1 s (0.0172 s/image)
+2026-10-27 09:33:12 INFO    p3_final_score | bank_6_near_seed0 clean threshold_reals: 891 rows in 14.5 s (0.0163 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2502.41it/s]
+2026-10-27 09:36:07 INFO    p3_final_score | bank_1l_seed0 clean panel_b: 9405 rows in 174.2 s (0.0185 s/image)
+2026-10-27 09:36:19 INFO    p3_final_score | bank_1l_seed0 clean luma: 700 rows in 12.1 s (0.0172 s/image)
+2026-10-27 09:36:35 INFO    p3_final_score | bank_1l_seed0 clean threshold_reals: 891 rows in 15.5 s (0.0174 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 5476.30it/s]
+2026-10-27 09:39:29 INFO    p3_final_score | s2b_seed1 clean panel_b: 9405 rows in 173.7 s (0.0185 s/image)
+2026-10-27 09:39:41 INFO    p3_final_score | s2b_seed1 clean luma: 700 rows in 12.1 s (0.0173 s/image)
+2026-10-27 09:39:55 INFO    p3_final_score | s2b_seed1 clean threshold_reals: 891 rows in 14.0 s (0.0157 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2764.31it/s]
+2026-10-27 09:42:49 INFO    p3_final_score | s2b_reals_seed0 clean panel_b: 9405 rows in 173.3 s (0.0184 s/image)
+2026-10-27 09:43:01 INFO    p3_final_score | s2b_reals_seed0 clean luma: 700 rows in 12.1 s (0.0172 s/image)
+2026-10-27 09:43:16 INFO    p3_final_score | s2b_reals_seed0 clean threshold_reals: 891 rows in 14.9 s (0.0167 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 4490.05it/s]
+2026-10-27 09:46:12 INFO    p3_final_score | s2d_p35_seed1 clean panel_b: 9405 rows in 174.5 s (0.0186 s/image)
+2026-10-27 09:46:24 INFO    p3_final_score | s2d_p35_seed1 clean luma: 700 rows in 12.0 s (0.0172 s/image)
+2026-10-27 09:46:39 INFO    p3_final_score | s2d_p35_seed1 clean threshold_reals: 891 rows in 15.4 s (0.0172 s/image)
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 21736.42it/s]
+2026-10-27 09:49:36 INFO    p3_final_score | p_a_sd1_seed0 clean panel_b: 9405 rows in 175.9 s (0.0187 s/image)
+2026-10-27 09:49:48 INFO    p3_final_score | p_a_sd1_seed0 clean luma: 700 rows in 12.4 s (0.0177 s/image)
+2026-10-27 09:50:03 INFO    p3_final_score | p_a_sd1_seed0 clean threshold_reals: 891 rows in 14.7 s (0.0165 s/image)

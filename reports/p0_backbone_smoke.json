@@ -1,0 +1,78 @@
+{
+  "generated_at_utc": "2026-09-19T18:20:38+00:00",
+  "device": "cpu",
+  "input_size": 336,
+  "hf_token_present": true,
+  "backbones": [
+    {
+      "name": "dinov2-base",
+      "repo": "facebook/dinov2-base",
+      "revision": "f9e44c814b77203eaa57a6bdbbd535f21ede1415",
+      "gated": false,
+      "license": "apache-2.0",
+      "status": "OK",
+      "hidden_size": 768,
+      "patch_size": 14,
+      "num_parameters": 86580480,
+      "config": {
+        "model_type": "dinov2",
+        "num_hidden_layers": 12,
+        "num_attention_heads": 12,
+        "num_register_tokens": 0,
+        "image_size": 518
+      },
+      "forward": {
+        "input_size": 336,
+        "output_shape": [
+          1,
+          577,
+          768
+        ],
+        "num_tokens": 577,
+        "hidden_size": 768,
+        "peak_gpu_mb": "PENDING-GPU",
+        "fp16_autocast": false,
+        "cpu_forward_ms": 902.07,
+        "forward_ms": "PENDING-GPU"
+      },
+      "token_breakdown": {
+        "total": 577,
+        "patch_tokens_expected": 576,
+        "cls_plus_registers": 1,
+        "num_register_tokens_config": 0
+      },
+      "attention_projection_modules_present": [
+        "key",
+        "query",
+        "value"
+      ],
+      "lora": {
+        "r": 8,
+        "lora_alpha": 8,
+        "target_modules_found": [
+          "key",
+          "query",
+          "value"
+        ],
+        "params_total_before": 86580480,
+        "params_total_after": 87022848,
+        "params_trainable": 442368,
+        "trainable_pct": 0.5083,
+        "forward_after_attach": {
+          "input_size": 336,
+          "output_shape": [
+            1,
+            577,
+            768
+          ],
+          "num_tokens": 577,
+          "hidden_size": 768,
+          "forward_ms": 1248.3,
+          "peak_gpu_mb": null,
+          "fp16_autocast": false
+        },
+        "note": "dry-run only: no optimizer, no training step"
+      }
+    }
+  ]
+}

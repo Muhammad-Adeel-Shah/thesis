@@ -1,0 +1,17 @@
+# H4: bank-size curve
+
+The decision is k = 8 minus k = 1 (Table 1); the curve and the held-out-lineage validation AUC are descriptive.
+
+| order | k_lineages | decoders | model | panel_b_macro_auc | heldout_lineage_val_auc | status |
+|---|---|---|---|---|---|---|
+| near | 1 | 1 | bank_1_seed0 | 0.6268 [0.5943, 0.6583] | 0.9271 | decision (pre-registered) (k = 8 - k = 1) |
+| near | 2 | 5 | bank_2_near_seed0 | 0.7180 [0.6883, 0.7468] | 0.9143 | descriptive |
+| near | 4 | 8 | bank_4_near_seed0 | 0.7332 [0.7035, 0.7607] | 0.9200 | descriptive |
+| near | 6 | 10 | bank_6_near_seed0 | 0.7655 [0.7388, 0.7912] | 0.9966 | descriptive |
+| near | 8 | 12 | s2b_seed0 | 0.7632 [0.7351, 0.7902] | none held out | decision (pre-registered) (k = 8 - k = 1) |
+| far | 1 | 1 | bank_1_seed0 | 0.6268 [0.5943, 0.6583] | 0.9271 | decision (pre-registered) (k = 8 - k = 1) |
+| far | 2 | 4 | bank_2_far_seed0 | 0.6914 [0.6612, 0.7219] | 0.9180 | descriptive |
+| far | 4 | 6 | bank_4_far_seed0 | 0.7213 [0.6923, 0.7487] | 0.9930 | descriptive |
+| far | 6 | 9 | bank_6_far_seed0 | 0.7555 [0.7269, 0.7823] | 0.9987 | descriptive |
+| far | 8 | 12 | s2b_seed0 | 0.7632 [0.7351, 0.7902] | none held out | decision (pre-registered) (k = 8 - k = 1) |
+| BANK-1L | 1 | 1 | bank_1l_seed0 | 0.6974 [0.6674, 0.7260] | 0.9269 | descriptive |

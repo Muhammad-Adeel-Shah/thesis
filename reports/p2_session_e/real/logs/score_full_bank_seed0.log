@@ -1,0 +1,11 @@
+2026-10-05 09:28:57 INFO    p2_score | panel list: 11775 rows, digest bff608c3d8e00ea8 OK
+2026-10-05 09:28:57 INFO    p2_score | luma list: 978 rows, digest 190279cc889da9c4 OK
+2026-10-05 09:28:57 INFO    p2_score | metadata e3_matched                1477 row(s) joined of 1500
+2026-10-05 09:28:57 INFO    p2_score | metadata e4_wildrf_matched         1492 row(s) joined of 1500
+2026-10-05 09:28:57 INFO    p2_score | metadata e5_chameleon_pipeline     3748 row(s) joined of 4000
+2026-10-05 09:28:57 INFO    p2_score | metadata e7_dda_coco               3408 row(s) joined of 3500
+2026-10-05 09:28:57 INFO    p2_score | metadata e8_evalgen                1250 row(s) joined of 1250
+2026-10-05 09:28:57 INFO    p2_score | metadata t_ctrl_diagnostic          400 row(s) joined of 400
+2026-10-05 09:28:57 INFO    p2_score | e7_dda_coco_luma: 978 luma rows = the e7_dda_coco rows of source_vae ['FLUX.1', 'real']
+2026-10-05 09:28:58 INFO    p2_score | inputs joined by id for 12753 rows (11775 panel + 978 luma): {'s1': [12753, 1536], 's2': [12753], 's3': [12753, 12, 20]}
+2026-10-05 09:29:00 INFO    p2_score | wrote scores_full_bank_seed0.csv (12753 rows)

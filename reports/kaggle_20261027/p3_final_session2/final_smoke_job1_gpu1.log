@@ -1,0 +1,13 @@
+Loading weights:   0%|          | 0/211 [00:00<?, ?it/s]Loading weights: 100%|██████████| 211/211 [00:00<00:00, 2463.73it/s]
+2026-10-27 19:08:51 INFO    p3_final_score | full_bank_seed0 robust jpeg95: 2 rows in 1.5 s (0.7252 s/image)
+2026-10-27 19:08:51 INFO    p3_final_score | full_bank_seed0 robust jpeg75: 2 rows in 0.1 s (0.0488 s/image)
+2026-10-27 19:08:51 INFO    p3_final_score | full_bank_seed0 robust jpeg50: 2 rows in 0.1 s (0.0440 s/image)
+2026-10-27 19:08:51 INFO    p3_final_score | full_bank_seed0 robust jpeg30: 2 rows in 0.1 s (0.0462 s/image)
+2026-10-27 19:08:52 INFO    p3_final_score | full_bank_seed0 robust webp90: 2 rows in 0.7 s (0.3416 s/image)
+2026-10-27 19:08:52 INFO    p3_final_score | full_bank_seed0 robust webp70: 2 rows in 0.4 s (0.1854 s/image)
+2026-10-27 19:08:53 INFO    p3_final_score | full_bank_seed0 robust webp50: 2 rows in 0.4 s (0.1841 s/image)
+2026-10-27 19:08:53 INFO    p3_final_score | full_bank_seed0 robust resize075: 2 rows in 0.1 s (0.0703 s/image)
+2026-10-27 19:08:53 INFO    p3_final_score | full_bank_seed0 robust resize050: 2 rows in 0.1 s (0.0611 s/image)
+2026-10-27 19:08:53 INFO    p3_final_score | full_bank_seed0 robust blur05: 2 rows in 0.2 s (0.0778 s/image)
+2026-10-27 19:08:53 INFO    p3_final_score | full_bank_seed0 robust blur1: 2 rows in 0.2 s (0.0797 s/image)
+2026-10-27 19:08:53 INFO    p3_final_score | full_bank_seed0 robust blur2: 2 rows in 0.2 s (0.0875 s/image)

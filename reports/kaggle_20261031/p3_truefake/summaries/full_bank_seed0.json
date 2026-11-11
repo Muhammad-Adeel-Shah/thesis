@@ -1,0 +1,30 @@
+{
+  "model": "full_bank_seed0",
+  "stage": "truefake",
+  "protocol": "full_bank",
+  "seed": 0,
+  "step": null,
+  "kind": "lora_head",
+  "snapshot_sha256": null,
+  "lora_sha256": "4cd74c92a2c1ca4f387a44554205fd2821fa09fbaa429c65d05635c7961a6082",
+  "head_sha256": "ed47b1400fc1c6690e4ac3dc9bf2c54f50ce34a8e76d1add6342f919ba563806",
+  "crop": 320,
+  "crop_policy": "centre",
+  "score": "head logit",
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "dry_run_random_init": false,
+  "pillow": "13.0.0",
+  "limit": null,
+  "lists": {
+    "truefake": {
+      "rows": 15999,
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_truefake_scores/full_bank_seed0/truefake.csv",
+      "sha256": "3d74c9272f6a03e9454454687926cde4f2d502b859f819ffa387d0f3ebe489f8",
+      "seconds": 425.9,
+      "seconds_per_image": 0.02662
+    }
+  },
+  "list_sha256": "6c3002e10c46058bf08267576966d6dee959fddc732577a794234beeb28fa1df",
+  "sample_sha256": "a8954c2f63e81d95173cbec99e3f7c1ee2dd3d49527fac5ff7075de5e1ac8fd6"
+}

@@ -1,0 +1,54 @@
+{
+  "coco_root": "/kaggle/input/datasets/awsaf49/coco-2017-dataset/coco2017",
+  "counts": {
+    "val2017": 5000,
+    "train2017": 118287
+  },
+  "index_rows": 123287,
+  "seconds": 685.6,
+  "workers": 4,
+  "ms_per_image_wall": 5.56,
+  "phash_function": "dbp.data.phash.phash_file (whole image), as in the eval manifests",
+  "e3_reals_with_coco_phash_match": {
+    "e3_reals": 726,
+    "matched": 1,
+    "threshold_bits": 6,
+    "note": "descriptive only, not a gate (P3_PLAN.md section 4a)"
+  },
+  "disk": [
+    {
+      "stage": "coco index: start",
+      "filesystems": [
+        {
+          "path": "/tmp",
+          "total_gb": 8156.88,
+          "used_gb": 7087.0,
+          "free_gb": 1069.86
+        },
+        {
+          "path": "/kaggle/working/Implementation/thesis_dbp/reports",
+          "total_gb": 19.52,
+          "used_gb": 0.05,
+          "free_gb": 19.45
+        }
+      ]
+    },
+    {
+      "stage": "coco index: end",
+      "filesystems": [
+        {
+          "path": "/tmp",
+          "total_gb": 8156.88,
+          "used_gb": 7087.02,
+          "free_gb": 1069.85
+        },
+        {
+          "path": "/kaggle/working/Implementation/thesis_dbp/reports",
+          "total_gb": 19.52,
+          "used_gb": 0.05,
+          "free_gb": 19.45
+        }
+      ]
+    }
+  ]
+}

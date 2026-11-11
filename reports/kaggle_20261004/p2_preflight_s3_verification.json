@@ -1,0 +1,121 @@
+{
+  "stage": "s3_verification",
+  "passed": true,
+  "checks": [
+    {
+      "name": "list digest",
+      "ok": true,
+      "detail": "digest 522115667bc498b7..., 12 sidecar(s) agree",
+      "seconds": 0.2,
+      "data": {}
+    },
+    {
+      "name": "probe caches",
+      "ok": true,
+      "detail": "12 cache(s) complete on 18614 rows, digest 522115667bc498b7...",
+      "seconds": 0.89,
+      "data": {
+        "list_rows": 18614,
+        "list_digest": "522115667bc498b745cf6a562a8d5b0e1a17cc491dcfda9f71cc97ef60788010",
+        "members": {
+          "sd15": {
+            "sha256": "900e193c6d45a8a8a0da3b239cddf0d30d3c263d968d083be14423ad6196ae6a",
+            "bytes": 1519203,
+            "rows": 18614,
+            "ok": true,
+            "mean_psnr_db": 26.58,
+            "mean_lpips_vgg": 0.1256
+          },
+          "sd21": {
+            "sha256": "958f353c56d3ee8519663d4fe1cc87f9d9b2ce9402c748ac5efbbc0f159786ed",
+            "bytes": 1520426,
+            "rows": 18614,
+            "ok": true,
+            "mean_psnr_db": 28.0,
+            "mean_lpips_vgg": 0.107
+          },
+          "sd_ft_ema": {
+            "sha256": "97cfe68c5de06c1c2844ad76e063d9a7aede6e3837d10db39de1a4fe492031f2",
+            "bytes": 1519242,
+            "rows": 18614,
+            "ok": true,
+            "mean_psnr_db": 27.27,
+            "mean_lpips_vgg": 0.111
+          },
+          "sdxl": {
+            "sha256": "d072c1bca46f36d1b772badf9acc0e2e9ec05c483a37766bab1cd31d3316e48c",
+            "bytes": 1521577,
+            "rows": 18614,
+            "ok": true,
+            "mean_psnr_db": 28.2,
+            "mean_lpips_vgg": 0.1066
+          },
+          "sdxl_fp16fix": {
+            "sha256": "89eb0bb99ddfb746183c1ee5d4b74297f4a779d8933fc9522d2915ce138ae3e9",
+            "bytes": 1521318,
+            "rows": 18614,
+            "ok": true,
+            "mean_psnr_db": 28.18,
+            "mean_lpips_vgg": 0.1084
+          },
+          "sd35": {
+            "sha256": "26624bfcabf64c564531d88a3d7a8d1f07bfb1691e99c0611f5ffb3bd5f0f7a2",
+            "bytes": 1533916,
+            "rows": 18614,
+            "ok": true,
+            "mean_psnr_db": 31.63,
+            "mean_lpips_vgg": 0.0578
+          },
+          "flux": {
+            "sha256": "cfa2fc5a99337920834c46429f0e3e65a86a8f24da060c259c5c0b097cd0bd52",
+            "bytes": 1537677,
+            "rows": 18614,
+            "ok": true,
+            "mean_psnr_db": 33.58,
+            "mean_lpips_vgg": 0.0375
+          },
+          "dcae": {
+            "sha256": "b6bc8927cfc70b176f4c1f3283a3adcdc827f7c6a18a86d584804e3fd38881e9",
+            "bytes": 1517228,
+            "rows": 18614,
+            "ok": true,
+            "mean_psnr_db": 25.39,
+            "mean_lpips_vgg": 0.1517
+          },
+          "realesrgan_x4": {
+            "sha256": "b698b4c6ff0648f1bc0f5c208821c1cd8367b6b7e608f9987abd9a970eaba3f6",
+            "bytes": 1514706,
+            "rows": 18614,
+            "ok": true,
+            "mean_psnr_db": 24.32,
+            "mean_lpips_vgg": 0.3007
+          },
+          "flux2_klein": {
+            "sha256": "5c7b30aa8bd54ebeee8936e3fe24513cf177da073a45f961877644703637f611",
+            "bytes": 1537256,
+            "rows": 18614,
+            "ok": true,
+            "mean_psnr_db": 34.31,
+            "mean_lpips_vgg": 0.0296
+          },
+          "qwen_image": {
+            "sha256": "f51883fea22339205c6ba049040fedcca082be64cbc00a7f6d0849a50f97b1ef",
+            "bytes": 1535447,
+            "rows": 18614,
+            "ok": true,
+            "mean_psnr_db": 32.18,
+            "mean_lpips_vgg": 0.0562
+          },
+          "movq_k22": {
+            "sha256": "231bcec7de6f7916c64ef897fa30b15a77774886358bfe8347d8fc2b3ce2f132",
+            "bytes": 1519164,
+            "rows": 18614,
+            "ok": true,
+            "mean_psnr_db": 27.59,
+            "mean_lpips_vgg": 0.1333
+          }
+        }
+      }
+    }
+  ]
+}

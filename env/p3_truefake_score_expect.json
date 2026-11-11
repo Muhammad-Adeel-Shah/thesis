@@ -1,0 +1,41 @@
+{
+  "stage": "p3_truefake_score (secondary, descriptive social-media test: 4 frozen models, once)",
+  "imports": [
+    "peft",
+    "transformers",
+    "safetensors",
+    "huggingface_hub",
+    "PIL"
+  ],
+  "gpus": 2,
+  "hf_token": true,
+  "final_expect": "env/p3_final_expect.json",
+  "sample": "reports/truefake/truefake_sample.csv",
+  "sample_sha256": "a8954c2f63e81d95173cbec99e3f7c1ee2dd3d49527fac5ff7075de5e1ac8fd6",
+  "manifest": "reports/truefake/truefake_fetch_manifest.csv",
+  "manifest_sha256": "f8dd9adadf93ae9ee6e890eb79ef147ce3f58f24ea5cf638a7995f0df6338c54",
+  "members": 16000,
+  "models": [
+    "s2b_seed0",
+    "s2b_deg_p35_seed0",
+    "s2d_p35_seed0",
+    "full_bank_seed0"
+  ],
+  "t_real_manifest": "reports/p1_reals_manifest_t_real.csv",
+  "oi_manifest": "reports/kaggle_20261017/p3_open_images/p3_open_images_manifest.csv",
+  "coco_splits": [
+    "train2017"
+  ],
+  "devices": "0,1",
+  "batch": 32,
+  "workers": 16,
+  "margin_gb": 2.0,
+  "smoke_deadline_hours": 0.5,
+  "deadline_hours": 3.0,
+  "poll_seconds": 30,
+  "expected": {
+    "wall_hours": "about 0.8-1.5 (ESTIMATED): staging 16,000 files / 8.6 GB from the attached dataset 5-20 min (NOT-MEASURED for this dataset); header reads + pHash of 8,000 reals + sha256 and pHash of 2,417 COCO originals 3-10 min; smoke 4 model loads about 5 min; scoring 4 x up to 16,000 images: 0.019 s/image MEASURED on Panel B (p3_final clean summaries) is a lower bound, since TrueFake decodes larger files (FORLAB originals up to 5 MB); at the plan's 0.064 s/image cap 1.14 device-h, two T4s in parallel = 0.3-0.6 h",
+    "quota": "Kaggle bills session wall time (I-042): 1 quota hour per session hour; GPU T4 x2",
+    "outputs": "p3_truefake_reports.zip (reports/: the plan, the scoring list, 4 summaries, the per-image scores -- private, kept in kaggle_raw, never committed)"
+  }
+}

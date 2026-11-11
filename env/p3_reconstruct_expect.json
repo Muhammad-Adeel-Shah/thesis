@@ -1,0 +1,35 @@
+{
+  "stage": "p3_reconstruct (step 4a: 4,000 Open Images reals x 12 distinct members, T4 x2)",
+  "imports": [
+    "diffusers",
+    "transformers",
+    "safetensors",
+    "huggingface_hub",
+    "spandrel",
+    "PIL"
+  ],
+  "gpus": 2,
+  "hf_token": true,
+  "reals_manifest": "reports/kaggle_20261017/p3_open_images/p3_open_images_manifest.csv",
+  "reals_manifest_sha256": "37bfc7db545798b043c0eb908f7911d7d9e10fc2fc1622b22006c2354f1b34e2",
+  "throughput_csv": "reports/kaggle_20260926/p1_throughput.csv",
+  "throughput_csv_sha256": "93e33160f04204c031e2496b035dbf4d59917cbe18c02edca209020a0b3a57f6",
+  "n_reals": 4000,
+  "name": "p3_oi_pairs",
+  "jobs": [
+    "0:movq_k22,qwen_image,sd_ft_ema,flux,sd35,realesrgan_x4",
+    "1:sdxl,dcae,sdxl_fp16fix,sd15,flux2_klein,sd21"
+  ],
+  "sample_reals": 32,
+  "margin_gb": 2.0,
+  "sample_deadline_hours": 1.0,
+  "deadline_hours": 6.0,
+  "poll_seconds": 30,
+  "expected": {
+    "wall_hours": "about 2.0-2.6 (ESTIMATED): setup + pin checks + sample about 0.3 h; reconstruction about 1.5-1.6 h of decoder time per job plus PNG writing",
+    "quota_hours": "about 2.0-2.6 (wall time is billed, I-042)",
+    "output": "about 10.5 GB (ESTIMATED; range about 9-14 GB); MEASURED on the sample by the gate before the long job",
+    "output_disk": "19.52 GB total on /kaggle/working (MEASURED, Open Images session 2026-10-17); 19.45 GB free at its start",
+    "basis": "decoder time: P1's MEASURED ms_per_img for the 2,500 T-real reals (dbp-p2-s2-inputs/p1_pairs_manifest.csv) = 0.762 GPU-h per 1,000 reals over the 12 members -> 3.05 GPU-h for 4,000; job 0 (movq_k22, qwen_image, sd_ft_ema, flux, sd35, realesrgan_x4) 0.963 h and job 1 (sdxl, dcae, sdxl_fp16fix, sd15, flux2_klein, sd21) 0.943 h per 2,500 -> 1.54 and 1.51 h for 4,000. Output: 48,000 PNGs x 218,133 B (the MEASURED mean of the 4,000 Open Images crops, 872,531,042 B) = 10.5 GB, assuming a reconstruction's PNG is about its real's size; NOT measured for reconstructions until the gate runs."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "queue": [
+    "s2d_p35:0",
+    "s2b_reals:0",
+    "s2d_p35:1"
+  ],
+  "complete": [
+    "s2d_p35:0",
+    "s2b_reals:0"
+  ],
+  "remaining": [
+    "s2d_p35:1"
+  ],
+  "selected": [
+    "s2d_p35:1"
+  ],
+  "all_complete": false,
+  "lolo_rescore_due": false,
+  "lolo_score_files_carried": 0
+}

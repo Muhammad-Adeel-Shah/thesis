@@ -1,0 +1,161 @@
+{
+  "run_id": "p_a_sd1_seed1",
+  "protocol": "p_a_sd1",
+  "seed": 1,
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "crop": 320,
+  "active_members": [
+    "sd15",
+    "sd21",
+    "sd_ft_ema"
+  ],
+  "excluded_lineages": [
+    "kl_4ch_sdxl",
+    "kl_16ch",
+    "kl_16ch_qwen",
+    "kl_32ch_flux2",
+    "dc_ae_f32",
+    "vq_movq_4ch",
+    "gan_sr"
+  ],
+  "lora": {
+    "target_modules": [
+      "k_proj",
+      "o_proj",
+      "q_proj",
+      "v_proj"
+    ],
+    "params_trainable": 589824,
+    "params_total": 86250240,
+    "trainable_pct": 0.6839
+  },
+  "batch": 16,
+  "batch_plan": {
+    "pairs": 6,
+    "reals": 8,
+    "reconstruction_fakes": 6,
+    "gen_matched_fakes": 2
+  },
+  "optimiser": {
+    "lr": 0.0001,
+    "weight_decay": 0.01,
+    "warmup_steps": 300,
+    "schedule": "cosine"
+  },
+  "step_budget": {
+    "allowance_hours": 2.25,
+    "measured_step_seconds": 1.06844,
+    "steps": 7581,
+    "ceiling": 8000,
+    "undertrained": false,
+    "min_steps_per_run": 2000
+  },
+  "mode": "train",
+  "status": "OK",
+  "steps_run": 4750,
+  "resumed_from_step": null,
+  "best_val_auc": 0.99989,
+  "best_step": 3750,
+  "val_curve": [
+    {
+      "step": 250,
+      "loss": 0.55231,
+      "val_auc": 0.89799
+    },
+    {
+      "step": 500,
+      "loss": 0.05363,
+      "val_auc": 0.99244
+    },
+    {
+      "step": 750,
+      "loss": 0.20644,
+      "val_auc": 0.99719
+    },
+    {
+      "step": 1000,
+      "loss": 0.17003,
+      "val_auc": 0.99857
+    },
+    {
+      "step": 1250,
+      "loss": 0.00536,
+      "val_auc": 0.99936
+    },
+    {
+      "step": 1500,
+      "loss": 0.01648,
+      "val_auc": 0.9994
+    },
+    {
+      "step": 1750,
+      "loss": 0.01369,
+      "val_auc": 0.99878
+    },
+    {
+      "step": 2000,
+      "loss": 0.00321,
+      "val_auc": 0.99969
+    },
+    {
+      "step": 2250,
+      "loss": 0.01105,
+      "val_auc": 0.99958
+    },
+    {
+      "step": 2500,
+      "loss": 0.00869,
+      "val_auc": 0.99977
+    },
+    {
+      "step": 2750,
+      "loss": 0.00462,
+      "val_auc": 0.99974
+    },
+    {
+      "step": 3000,
+      "loss": 0.04778,
+      "val_auc": 0.99967
+    },
+    {
+      "step": 3250,
+      "loss": 0.00428,
+      "val_auc": 0.99982
+    },
+    {
+      "step": 3500,
+      "loss": 0.00041,
+      "val_auc": 0.99984
+    },
+    {
+      "step": 3750,
+      "loss": 0.16544,
+      "val_auc": 0.99989
+    },
+    {
+      "step": 4000,
+      "loss": 0.00122,
+      "val_auc": 0.99987
+    },
+    {
+      "step": 4250,
+      "loss": 0.13463,
+      "val_auc": 0.99988
+    },
+    {
+      "step": 4500,
+      "loss": 0.01131,
+      "val_auc": 0.99982
+    },
+    {
+      "step": 4750,
+      "loss": 0.01309,
+      "val_auc": 0.99987
+    }
+  ],
+  "gpu_hours": 1.169,
+  "checkpoint_every": 500,
+  "checkpoint": "checkpoint.pt",
+  "determinism": "seeds recorded; CUDA nondeterminism means no bit-exactness claim"
+}

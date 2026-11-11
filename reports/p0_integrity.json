@@ -1,0 +1,17 @@
+{
+  "generated_at_utc": "2026-09-28T10:09:40+00:00",
+  "algo_version": 1,
+  "baseline": "p0_protected_manifest_before.json",
+  "baseline_generated_at_utc": "2026-09-19T00:00:00+00:00",
+  "files_checked": 0,
+  "files_in_baseline": 0,
+  "files_changed": 0,
+  "differences": {
+    "added": [],
+    "removed": [],
+    "content_changed": [],
+    "mtime_only": []
+  },
+  "algorithm_self_test": null,
+  "verdict": "CLEAN"
+}

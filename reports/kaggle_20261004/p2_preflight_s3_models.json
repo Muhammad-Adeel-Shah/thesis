@@ -1,0 +1,30 @@
+{
+  "stage": "s3_models",
+  "passed": true,
+  "checks": [
+    {
+      "name": "imports",
+      "ok": true,
+      "detail": "spandrel 0.4.2, lpips ?, peft 0.20.0, diffusers 0.40.0, transformers 5.16.1",
+      "seconds": 10.59
+    },
+    {
+      "name": "smoke movq_k22",
+      "ok": true,
+      "detail": "movq_k22: 2 image(s) in 2.9 s = 1.4450 s/image (reconstruct + LPIPS)",
+      "seconds": 22.98
+    },
+    {
+      "name": "smoke qwen_image",
+      "ok": true,
+      "detail": "qwen_image: 2 image(s) in 1.1 s = 0.5429 s/image (reconstruct + LPIPS)",
+      "seconds": 18.6
+    },
+    {
+      "name": "smoke realesrgan_x4",
+      "ok": true,
+      "detail": "realesrgan_x4: 2 image(s) in 0.6 s = 0.3115 s/image (reconstruct + LPIPS)",
+      "seconds": 7.7
+    }
+  ]
+}

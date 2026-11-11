@@ -1,0 +1,66 @@
+{
+  "e3_matched": {
+    "rows": 2178,
+    "labels": {
+      "fake": 1452,
+      "real": 726
+    },
+    "p2_rows_reproduced": 1500,
+    "manifest": "p1_eval_e3_raw_jpeg_matched_manifest.csv",
+    "manifest_sha256": "d5b4d6b9dd103bb7443de1c62d86ec7ec338ddb35204e2db2c10cf806c774429",
+    "p1_manifest_sha256": "d5b4d6b9dd103bb7443de1c62d86ec7ec338ddb35204e2db2c10cf806c774429",
+    "identical_to_p1": true,
+    "base_manifest_sha256": "1ee6d9e10c614ff2467da507554363a5e0ddde00affd9a15595705960555fb3e"
+  },
+  "e4_wildrf_matched": {
+    "rows": 2503,
+    "labels": {
+      "real": 1251,
+      "fake": 1252
+    },
+    "p2_rows_reproduced": 1500,
+    "manifest": "p1_eval_e4_wildrf_test_jpeg_matched_manifest.csv",
+    "manifest_sha256": "a508573f66237aac227e1f685c63f9ea1a2852b4d959abfde7d01a60e57a3d55",
+    "p1_manifest_sha256": "a508573f66237aac227e1f685c63f9ea1a2852b4d959abfde7d01a60e57a3d55",
+    "identical_to_p1": true,
+    "base_manifest_sha256": "e887238b46be99bb29f1b9d1317e48ff503c2d5f4d5c7b16c21477e63ae03809"
+  },
+  "e5_chameleon_pipeline": {
+    "rows": 26033,
+    "labels": {
+      "real": 14863,
+      "fake": 11170
+    },
+    "p2_rows_reproduced": 4000,
+    "manifest": "p1_eval_e5_chameleon_pipeline_matched_manifest.csv",
+    "manifest_sha256": "3642844b00d132d7c46c451dded91013a6d6df37d8d24c79dd780cdedb3c3889",
+    "p1_manifest_sha256": "3642844b00d132d7c46c451dded91013a6d6df37d8d24c79dd780cdedb3c3889",
+    "identical_to_p1": true,
+    "base_manifest_sha256": "7c043ba75d802c0ccd45610b6d2246d0ca42b5f67d09ae4e62605849dc6ceaf3"
+  },
+  "e7_dda_coco": {
+    "rows": 34969,
+    "labels": {
+      "fake": 29969,
+      "real": 5000
+    },
+    "p2_rows_reproduced": 3500,
+    "manifest": "p1_eval_e7_dda_coco_manifest.csv",
+    "manifest_sha256": "376a0f1a2a49b7c0ee22efe99b026b7158c09071ac1cceb0ba9c8ba2582bce26",
+    "p1_manifest_sha256": "376a0f1a2a49b7c0ee22efe99b026b7158c09071ac1cceb0ba9c8ba2582bce26",
+    "identical_to_p1": true,
+    "base_manifest_sha256": "376a0f1a2a49b7c0ee22efe99b026b7158c09071ac1cceb0ba9c8ba2582bce26"
+  },
+  "e8_evalgen": {
+    "rows": 5000,
+    "labels": {
+      "fake": 5000
+    },
+    "p2_rows_reproduced": 1250,
+    "manifest": "p1_eval_e8_evalgen_manifest.csv",
+    "manifest_sha256": "aeb8e2216c6cab80e95cc203d0c26bdce620c860b04d808c2c7bcb29dc638ee2",
+    "p1_manifest_sha256": "aeb8e2216c6cab80e95cc203d0c26bdce620c860b04d808c2c7bcb29dc638ee2",
+    "identical_to_p1": true,
+    "base_manifest_sha256": "aeb8e2216c6cab80e95cc203d0c26bdce620c860b04d808c2c7bcb29dc638ee2"
+  }
+}

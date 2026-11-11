@@ -1,0 +1,37 @@
+{
+  "run_id": "s2b_seed0",
+  "protocol": "s2b",
+  "seed": 0,
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "dry_run_random_init": false,
+  "crop": 320,
+  "crop_policy": "centre",
+  "score": "head logit",
+  "model": "selected at best validation AUC",
+  "best_step": null,
+  "best_val_auc": null,
+  "lora_sha256": "6b8c6e68d9a6458e7a24084acb0ec99c9e4bc05fcec3a03b5dca29c8e1f751b1",
+  "head_sha256": "4d41d09a2088ae0b3d0b93970f8e7b5b7b2fcca845ed4f42202aecb735085e70",
+  "limit": null,
+  "lists": {
+    "panel": {
+      "source": "p3_tune_panel_rows.csv",
+      "view": null,
+      "rows": 6717,
+      "scores": "scores/panel.csv",
+      "sha256": "d0d5e0deacf2536a6eaa38b00e8ddda85a44a6c77750fe158043d0153557a657",
+      "seconds": 208.7,
+      "seconds_per_image": 0.03107
+    },
+    "val": {
+      "source": "p3_tune_val_reals.csv",
+      "view": null,
+      "rows": 491,
+      "scores": "scores/val.csv",
+      "sha256": "4d1bf11a39267e1911060f9d0cfba064b452a31167b73271657c480ea819b957",
+      "seconds": 160.4,
+      "seconds_per_image": 0.32671
+    }
+  }
+}

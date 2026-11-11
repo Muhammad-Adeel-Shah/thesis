@@ -1,0 +1,71 @@
+{
+  "nstar": "/kaggle/working/Implementation/thesis_dbp/reports/p3_nstar.json",
+  "lolo_root": "/kaggle/input/datasets/muhammadadeelshah/dbp-p3-lolo-output/Implementation/thesis_dbp",
+  "limit": null,
+  "folds": [
+    {
+      "protocol": "lolo_f1",
+      "step": 5000,
+      "csv": "lolo_f1_seed0_step_05000.csv",
+      "heldout_auc": 0.99943,
+      "reported": 0.99943,
+      "diff": 0.0
+    },
+    {
+      "protocol": "lolo_f2",
+      "step": 5000,
+      "csv": "lolo_f2_seed0_step_05000.csv",
+      "heldout_auc": 0.99827,
+      "reported": 0.99827,
+      "diff": 0.0
+    },
+    {
+      "protocol": "lolo_f3",
+      "step": 5000,
+      "csv": "lolo_f3_seed0_step_05000.csv",
+      "heldout_auc": 0.98798,
+      "reported": 0.98798,
+      "diff": 0.0
+    },
+    {
+      "protocol": "lolo_f4",
+      "step": 5000,
+      "csv": "lolo_f4_seed0_step_05000.csv",
+      "heldout_auc": 0.9934,
+      "reported": 0.9934,
+      "diff": 0.0
+    },
+    {
+      "protocol": "lolo_f5",
+      "step": 5000,
+      "csv": "lolo_f5_seed0_step_05000.csv",
+      "heldout_auc": 0.99999,
+      "reported": 0.99999,
+      "diff": 0.0
+    },
+    {
+      "protocol": "lolo_f6",
+      "step": 4500,
+      "csv": "lolo_f6_seed0_step_04500.csv",
+      "heldout_auc": 0.76551,
+      "reported": 0.76551,
+      "diff": 0.0
+    },
+    {
+      "protocol": "lolo_f7",
+      "step": 5000,
+      "csv": "lolo_f7_seed0_step_05000.csv",
+      "heldout_auc": 0.98586,
+      "reported": 0.98586,
+      "diff": 0.0
+    },
+    {
+      "protocol": "lolo_f8",
+      "step": 5000,
+      "csv": "lolo_f8_seed0_step_05000.csv",
+      "heldout_auc": 0.99938,
+      "reported": 0.99938,
+      "diff": 0.0
+    }
+  ]
+}

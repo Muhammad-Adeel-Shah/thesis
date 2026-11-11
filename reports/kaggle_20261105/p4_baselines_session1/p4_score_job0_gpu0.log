@@ -1,0 +1,16 @@
+2026-11-05 09:20:15 INFO    p4_score | dda_native panel_b: 9405 rows in 1391.1 s (0.1479 s/image); padded 1281
+2026-11-05 09:21:58 INFO    p4_score | dda_native luma: 700 rows in 102.7 s (0.1467 s/image); padded 31
+2026-11-05 09:24:08 INFO    p4_score | dda_native threshold_reals: 891 rows in 130.2 s (0.1461 s/image); padded 0
+2026-11-05 09:42:32 INFO    p4_score | dda_crop308 panel_b: 9405 rows in 1101.4 s (0.1171 s/image); padded 0
+2026-11-05 09:43:54 INFO    p4_score | dda_crop308 luma: 700 rows in 81.1 s (0.1159 s/image); padded 0
+2026-11-05 09:45:36 INFO    p4_score | dda_crop308 threshold_reals: 891 rows in 102.0 s (0.1145 s/image); padded 0
+2026-11-05 10:08:05 INFO    p4_score | dda_jpeg50 panel_b_test: 8655 rows in 1349.1 s (0.1559 s/image); padded 1050
+2026-11-05 10:31:47 INFO    p4_score | dda_resize050 panel_b_test: 8655 rows in 1422.2 s (0.1643 s/image); padded 1050
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_validators.py:206: UserWarning: The `local_dir_use_symlinks` argument is deprecated and ignored in `hf_hub_download`. Downloading to a local directory does not use symlinks anymore.
+  warnings.warn(
+2026-11-05 11:41:11 INFO    p4_score | cospy_native panel_b: 9405 rows in 4132.0 s (0.4393 s/image); upscaled 1942
+2026-11-05 11:46:16 INFO    p4_score | cospy_native luma: 700 rows in 305.0 s (0.4357 s/image); upscaled 120
+2026-11-05 11:52:42 INFO    p4_score | cospy_native threshold_reals: 891 rows in 386.6 s (0.4339 s/image); upscaled 0
+2026-11-05 12:32:33 INFO    p4_score | fire_native panel_b: 9405 rows in 2388.5 s (0.2540 s/image); cropped 4582
+2026-11-05 12:35:35 INFO    p4_score | fire_native luma: 700 rows in 182.2 s (0.2602 s/image); cropped 618
+2026-11-05 12:38:22 INFO    p4_score | fire_native threshold_reals: 891 rows in 166.8 s (0.1872 s/image); cropped 0

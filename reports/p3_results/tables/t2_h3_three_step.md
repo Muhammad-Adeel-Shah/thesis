@@ -1,0 +1,14 @@
+# H3 three-step table: FPR with TPR beside it
+
+k = 0. FPR over each pool's Panel B test reals; TPR over its test fakes (E3: both slices pooled). Union TPRs are read from the committed analysis; the COCO-only TPRs are computed from the committed scores after the stored union FPRs and TPRs were reproduced exactly. Every TPR is descriptive.
+
+| seed | pool | full_bank_coco_only_fpr | full_bank_coco_only_tpr | full_bank_union_fpr | full_bank_union_tpr | s2d_union_fpr | s2d_union_tpr | status |
+|---|---|---|---|---|---|---|---|---|
+| S2-D s0 | E3 (descriptive) | 37.2% | 62.4% | 6.6% | 18.3% | 13.2% | 28.4% | descriptive |
+| S2-D s0 | E4 | 62.8% | 98.3% | 15.8% | 90.1% | 15.8% | 86.9% | decision (pre-registered) (S2-D union FPR, via the macro) |
+| S2-D s0 | E5 | 48.5% | 73.4% | 13.7% | 31.9% | 12.0% | 27.5% | decision (pre-registered) (S2-D union FPR, via the macro) |
+| S2-D s0 | macro E4/E5 | 55.7% | 85.8% | 14.8% | 61.0% | 13.9% | 57.2% | decision (pre-registered) (S2-D macro FPR); TPR descriptive |
+| S2-D s1 | E3 (descriptive) | 37.2% | 62.4% | 6.6% | 18.3% | 5.8% | 21.4% | descriptive |
+| S2-D s1 | E4 | 62.8% | 98.3% | 15.8% | 90.1% | 16.3% | 86.7% | decision (pre-registered) (S2-D union FPR, via the macro) |
+| S2-D s1 | E5 | 48.5% | 73.4% | 13.7% | 31.9% | 11.8% | 34.4% | decision (pre-registered) (S2-D union FPR, via the macro) |
+| S2-D s1 | macro E4/E5 | 55.7% | 85.8% | 14.8% | 61.0% | 14.1% | 60.5% | decision (pre-registered) (S2-D macro FPR); TPR descriptive |

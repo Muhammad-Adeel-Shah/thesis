@@ -1,0 +1,97 @@
+# EXPLORATORY (post-verdict): X1. Generation-only DINOv3-B probe (trained on real COCO vs SD1.5 full generations only) vs S2, AUC / AP / slice-calibrated TPR@5%FPR, 95% CI.
+test,head,n_fake,n_real,auc,ap,tpr_slice,fpr_reals_at_val_threshold,note
+gen_matched (SD1.5 full),gen-only probe,500,491,"0.999 [0.999, 1.000]","0.999 [0.999, 1.000]","0.998 [0.992, 1.000]",,slice = the 491 val reals (= validation threshold)
+gen_matched (SD1.5 full),S2 P-A s0,500,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+gen_matched (SD1.5 full),S2 P-A s1,500,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+gen_matched (SD1.5 full),S2 4ch_only,500,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+gen_matched (SD1.5 full),S2 full_bank,500,491,"0.999 [0.999, 1.000]","0.999 [0.999, 1.000]","0.998 [0.990, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon dcae,gen-only probe,491,491,"0.783 [0.766, 0.803]","0.769 [0.749, 0.791]","0.236 [0.179, 0.287]",,slice = the 491 val reals (= validation threshold)
+recon dcae,S2 P-A s0,491,491,"0.997 [0.996, 0.999]","0.997 [0.996, 0.999]","0.990 [0.978, 0.998]",,slice = the 491 val reals (= validation threshold)
+recon dcae,S2 P-A s1,491,491,"0.997 [0.995, 0.999]","0.997 [0.995, 0.999]","0.984 [0.969, 0.998]",,slice = the 491 val reals (= validation threshold)
+recon dcae,S2 4ch_only,491,491,"0.999 [0.999, 1.000]","0.999 [0.999, 1.000]","1.000 [0.994, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon dcae,S2 full_bank,491,491,"0.998 [0.997, 0.999]","0.998 [0.997, 0.999]","0.992 [0.976, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon flux,gen-only probe,491,491,"0.708 [0.692, 0.727]","0.701 [0.684, 0.724]","0.157 [0.128, 0.210]",,slice = the 491 val reals (= validation threshold)
+recon flux,S2 P-A s0,491,491,"0.929 [0.916, 0.942]","0.917 [0.900, 0.935]","0.566 [0.460, 0.656]",,slice = the 491 val reals (= validation threshold)
+recon flux,S2 P-A s1,491,491,"0.925 [0.912, 0.938]","0.913 [0.895, 0.932]","0.558 [0.446, 0.652]",,slice = the 491 val reals (= validation threshold)
+recon flux,S2 4ch_only,491,491,"0.934 [0.922, 0.947]","0.925 [0.909, 0.942]","0.615 [0.495, 0.680]",,slice = the 491 val reals (= validation threshold)
+recon flux,S2 full_bank,491,491,"0.995 [0.992, 0.997]","0.995 [0.992, 0.997]","0.978 [0.959, 0.992]",,slice = the 491 val reals (= validation threshold)
+recon flux2_klein,gen-only probe,491,491,"0.546 [0.539, 0.554]","0.542 [0.537, 0.551]","0.059 [0.049, 0.075]",,slice = the 491 val reals (= validation threshold)
+recon flux2_klein,S2 P-A s0,491,491,"0.598 [0.586, 0.610]","0.575 [0.567, 0.589]","0.071 [0.055, 0.092]",,slice = the 491 val reals (= validation threshold)
+recon flux2_klein,S2 P-A s1,491,491,"0.611 [0.600, 0.624]","0.584 [0.575, 0.599]","0.084 [0.053, 0.102]",,slice = the 491 val reals (= validation threshold)
+recon flux2_klein,S2 4ch_only,491,491,"0.595 [0.584, 0.608]","0.577 [0.567, 0.592]","0.077 [0.049, 0.096]",,slice = the 491 val reals (= validation threshold)
+recon flux2_klein,S2 full_bank,491,491,"0.982 [0.976, 0.988]","0.981 [0.974, 0.987]","0.902 [0.833, 0.939]",,slice = the 491 val reals (= validation threshold)
+recon movq_k22,gen-only probe,491,491,"0.887 [0.871, 0.905]","0.878 [0.858, 0.898]","0.422 [0.338, 0.532]",,slice = the 491 val reals (= validation threshold)
+recon movq_k22,S2 P-A s0,491,491,"0.999 [0.999, 1.000]","0.999 [0.999, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon movq_k22,S2 P-A s1,491,491,"0.999 [0.998, 1.000]","0.999 [0.998, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon movq_k22,S2 4ch_only,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon movq_k22,S2 full_bank,491,491,"1.000 [0.999, 1.000]","1.000 [0.999, 1.000]","0.998 [0.994, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon qwen_image,gen-only probe,491,491,"0.854 [0.836, 0.871]","0.838 [0.816, 0.860]","0.322 [0.251, 0.405]",,slice = the 491 val reals (= validation threshold)
+recon qwen_image,S2 P-A s0,491,491,"0.855 [0.837, 0.874]","0.815 [0.788, 0.846]","0.271 [0.206, 0.342]",,slice = the 491 val reals (= validation threshold)
+recon qwen_image,S2 P-A s1,491,491,"0.832 [0.813, 0.852]","0.795 [0.770, 0.825]","0.259 [0.193, 0.328]",,slice = the 491 val reals (= validation threshold)
+recon qwen_image,S2 4ch_only,491,491,"0.875 [0.858, 0.893]","0.855 [0.832, 0.879]","0.377 [0.287, 0.458]",,slice = the 491 val reals (= validation threshold)
+recon qwen_image,S2 full_bank,491,491,"0.999 [0.998, 1.000]","0.999 [0.998, 1.000]","0.994 [0.986, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon realesrgan_x4,gen-only probe,491,491,"0.996 [0.993, 0.998]","0.996 [0.994, 0.998]","0.974 [0.955, 0.990]",,slice = the 491 val reals (= validation threshold)
+recon realesrgan_x4,S2 P-A s0,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon realesrgan_x4,S2 P-A s1,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon realesrgan_x4,S2 4ch_only,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon realesrgan_x4,S2 full_bank,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd15,gen-only probe,491,491,"0.893 [0.876, 0.909]","0.887 [0.868, 0.906]","0.458 [0.367, 0.558]",,slice = the 491 val reals (= validation threshold)
+recon sd15,S2 P-A s0,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd15,S2 P-A s1,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd15,S2 4ch_only,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd15,S2 full_bank,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd21,gen-only probe,491,491,"0.813 [0.794, 0.831]","0.819 [0.800, 0.839]","0.336 [0.275, 0.415]",,slice = the 491 val reals (= validation threshold)
+recon sd21,S2 P-A s0,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd21,S2 P-A s1,491,491,"1.000 [0.999, 1.000]","1.000 [0.999, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd21,S2 4ch_only,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd21,S2 full_bank,491,491,"0.999 [0.999, 1.000]","0.999 [0.999, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd35,gen-only probe,491,491,"0.721 [0.704, 0.742]","0.711 [0.692, 0.735]","0.165 [0.126, 0.222]",,slice = the 491 val reals (= validation threshold)
+recon sd35,S2 P-A s0,491,491,"0.974 [0.966, 0.981]","0.971 [0.962, 0.980]","0.813 [0.739, 0.882]",,slice = the 491 val reals (= validation threshold)
+recon sd35,S2 P-A s1,491,491,"0.971 [0.963, 0.978]","0.967 [0.956, 0.977]","0.798 [0.729, 0.864]",,slice = the 491 val reals (= validation threshold)
+recon sd35,S2 4ch_only,491,491,"0.977 [0.970, 0.984]","0.975 [0.968, 0.983]","0.845 [0.768, 0.882]",,slice = the 491 val reals (= validation threshold)
+recon sd35,S2 full_bank,491,491,"0.999 [0.998, 1.000]","0.999 [0.998, 1.000]","0.998 [0.992, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd_ft_ema,gen-only probe,491,491,"0.819 [0.800, 0.838]","0.826 [0.806, 0.845]","0.369 [0.283, 0.430]",,slice = the 491 val reals (= validation threshold)
+recon sd_ft_ema,S2 P-A s0,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd_ft_ema,S2 P-A s1,491,491,"1.000 [0.999, 1.000]","1.000 [0.999, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd_ft_ema,S2 4ch_only,491,491,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sd_ft_ema,S2 full_bank,491,491,"1.000 [0.999, 1.000]","1.000 [0.999, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sdxl,gen-only probe,491,491,"0.796 [0.778, 0.816]","0.790 [0.769, 0.814]","0.263 [0.212, 0.360]",,slice = the 491 val reals (= validation threshold)
+recon sdxl,S2 P-A s0,491,491,"0.998 [0.997, 0.999]","0.998 [0.996, 0.999]","0.996 [0.986, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sdxl,S2 P-A s1,491,491,"0.998 [0.996, 1.000]","0.998 [0.995, 1.000]","0.996 [0.988, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sdxl,S2 4ch_only,491,491,"1.000 [0.999, 1.000]","1.000 [0.999, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sdxl,S2 full_bank,491,491,"0.999 [0.999, 1.000]","0.999 [0.998, 1.000]","0.998 [0.992, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sdxl_fp16fix,gen-only probe,491,491,"0.796 [0.778, 0.817]","0.792 [0.771, 0.815]","0.261 [0.214, 0.358]",,slice = the 491 val reals (= validation threshold)
+recon sdxl_fp16fix,S2 P-A s0,491,491,"0.997 [0.995, 0.999]","0.997 [0.995, 0.999]","0.992 [0.978, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sdxl_fp16fix,S2 P-A s1,491,491,"0.997 [0.995, 0.999]","0.997 [0.994, 0.999]","0.994 [0.980, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sdxl_fp16fix,S2 4ch_only,491,491,"0.999 [0.999, 1.000]","0.999 [0.999, 1.000]","1.000 [1.000, 1.000]",,slice = the 491 val reals (= validation threshold)
+recon sdxl_fp16fix,S2 full_bank,491,491,"0.999 [0.998, 1.000]","0.999 [0.998, 1.000]","0.998 [0.994, 1.000]",,slice = the 491 val reals (= validation threshold)
+E7 FLUX.1,gen-only probe,492,486,"0.881 [0.861, 0.903]","0.876 [0.848, 0.903]","0.555 [0.415, 0.606]",0.037,"FLUX.1: chroma shortcut, upper bound"
+E7 FLUX.1,S2 P-A s0,492,486,"0.935 [0.919, 0.950]","0.926 [0.906, 0.944]","0.577 [0.463, 0.709]",0.051,"FLUX.1: chroma shortcut, upper bound"
+E7 FLUX.1,S2 P-A s1,492,486,"0.934 [0.919, 0.949]","0.927 [0.908, 0.945]","0.600 [0.502, 0.713]",0.045,"FLUX.1: chroma shortcut, upper bound"
+E7 FLUX.1,S2 4ch_only,492,486,"0.933 [0.918, 0.948]","0.925 [0.905, 0.944]","0.573 [0.478, 0.734]",0.041,"FLUX.1: chroma shortcut, upper bound"
+E7 FLUX.1,S2 full_bank,492,486,"0.988 [0.982, 0.993]","0.988 [0.982, 0.993]","0.949 [0.907, 0.972]",0.041,"FLUX.1: chroma shortcut, upper bound"
+E7 sd-vae-ft-ema,gen-only probe,489,486,"0.809 [0.782, 0.836]","0.813 [0.783, 0.846]","0.442 [0.335, 0.493]",0.037,
+E7 sd-vae-ft-ema,S2 P-A s0,489,486,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",0.051,
+E7 sd-vae-ft-ema,S2 P-A s1,489,486,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",0.045,
+E7 sd-vae-ft-ema,S2 4ch_only,489,486,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",0.041,
+E7 sd-vae-ft-ema,S2 full_bank,489,486,"0.999 [0.998, 1.000]","0.999 [0.998, 1.000]","0.998 [0.988, 1.000]",0.041,
+E7 sd-vae-ft-mse,gen-only probe,481,486,"0.772 [0.742, 0.800]","0.770 [0.735, 0.806]","0.358 [0.254, 0.405]",0.037,
+E7 sd-vae-ft-mse,S2 P-A s0,481,486,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",0.051,
+E7 sd-vae-ft-mse,S2 P-A s1,481,486,"1.000 [0.999, 1.000]","1.000 [0.999, 1.000]","0.998 [0.994, 1.000]",0.045,
+E7 sd-vae-ft-mse,S2 4ch_only,481,486,"1.000 [0.999, 1.000]","1.000 [0.999, 1.000]","1.000 [1.000, 1.000]",0.041,
+E7 sd-vae-ft-mse,S2 full_bank,481,486,"0.998 [0.997, 0.999]","0.998 [0.997, 0.999]","0.994 [0.983, 1.000]",0.041,
+E7 sdxl-vae,gen-only probe,491,486,"0.732 [0.701, 0.764]","0.730 [0.694, 0.770]","0.279 [0.181, 0.348]",0.037,
+E7 sdxl-vae,S2 P-A s0,491,486,"0.998 [0.997, 0.999]","0.998 [0.997, 0.999]","0.996 [0.984, 1.000]",0.051,
+E7 sdxl-vae,S2 P-A s1,491,486,"0.999 [0.998, 1.000]","0.999 [0.998, 1.000]","0.994 [0.986, 1.000]",0.045,
+E7 sdxl-vae,S2 4ch_only,491,486,"0.999 [0.999, 1.000]","0.999 [0.999, 1.000]","1.000 [0.998, 1.000]",0.041,
+E7 sdxl-vae,S2 full_bank,491,486,"0.997 [0.996, 0.999]","0.998 [0.996, 0.999]","0.988 [0.978, 0.996]",0.041,
+E7 stable-diffusion-2-1,gen-only probe,482,486,"0.784 [0.753, 0.815]","0.784 [0.752, 0.819]","0.369 [0.270, 0.427]",0.037,
+E7 stable-diffusion-2-1,S2 P-A s0,482,486,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",0.051,
+E7 stable-diffusion-2-1,S2 P-A s1,482,486,"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",0.045,
+E7 stable-diffusion-2-1,S2 4ch_only,482,486,"1.000 [0.999, 1.000]","1.000 [0.999, 1.000]","1.000 [1.000, 1.000]",0.041,
+E7 stable-diffusion-2-1,S2 full_bank,482,486,"0.998 [0.997, 0.999]","0.998 [0.997, 0.999]","0.998 [0.988, 1.000]",0.041,
+E7 stable-diffusion-3.5-large,gen-only probe,487,486,"0.689 [0.658, 0.721]","0.683 [0.647, 0.724]","0.222 [0.131, 0.261]",0.037,
+E7 stable-diffusion-3.5-large,S2 P-A s0,487,486,"0.969 [0.960, 0.977]","0.968 [0.957, 0.977]","0.786 [0.708, 0.856]",0.051,
+E7 stable-diffusion-3.5-large,S2 P-A s1,487,486,"0.968 [0.957, 0.976]","0.967 [0.956, 0.976]","0.786 [0.710, 0.854]",0.045,
+E7 stable-diffusion-3.5-large,S2 4ch_only,487,486,"0.969 [0.959, 0.978]","0.968 [0.957, 0.977]","0.807 [0.729, 0.885]",0.041,
+E7 stable-diffusion-3.5-large,S2 full_bank,487,486,"0.992 [0.988, 0.996]","0.993 [0.989, 0.996]","0.965 [0.936, 0.984]",0.041,

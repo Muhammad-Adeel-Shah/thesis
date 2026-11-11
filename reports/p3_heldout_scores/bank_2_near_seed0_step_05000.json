@@ -1,0 +1,38 @@
+{
+  "run_id": "bank_2_near_seed0",
+  "protocol": "bank_2_near",
+  "seed": 0,
+  "step": 5000,
+  "schedule_steps": 6000,
+  "stop_at": 5000,
+  "snapshot": "snapshots/step_05000",
+  "snapshot_sha256": "8358babee526ed4773c1fcba662df90e42499cea3813eea989387ce3d9e3c38f",
+  "held_out_members": [
+    "dcae",
+    "flux",
+    "flux2_klein",
+    "movq_k22",
+    "qwen_image",
+    "realesrgan_x4",
+    "sd35"
+  ],
+  "crop": 320,
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "scored_by": "p2_train_s2.py, in training (the trainer's own held-out scoring)",
+  "scores_csv": "bank_2_near_seed0_step_05000.csv",
+  "scores_sha256": "cc528002b197a95e9b334a1294d15d7841d343769e3f9e7158e705bee02e172b",
+  "rows": 3928,
+  "reals": 491,
+  "reconstructions": 3437,
+  "heldout_auc": 0.91434,
+  "heldout_auc_by_member": {
+    "dcae": 0.99654,
+    "flux": 0.9355,
+    "flux2_klein": 0.61762,
+    "movq_k22": 0.99914,
+    "qwen_image": 0.872,
+    "realesrgan_x4": 1.0,
+    "sd35": 0.97958
+  }
+}
