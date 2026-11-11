@@ -7453,3 +7453,96 @@ dry-run and the hand-over.
   six items.
 - `0ae429b` stays in the history.
 - The external timestamp is the user's push, which comes before any training session.
+
+### P3b — the ViT-L training session built; `p3b_analyze.py` reproduces P3/P4 exactly; no ViT-L score exists — 2026-11-11
+
+**Asked (review of `7fbb06d`):**
+- Build the training runbook: the S2-D session, `--backbone dinov3-vitl16`, queue `s2d:0`,
+  `s2d:1`.
+- Commit `p3b_analyze.py` before any score exists; it must first reproduce the committed
+  P3/P4 numbers.
+- Dry-run at HEAD and give the hand-over.
+- The pre-flight records the runtime (prereg section 1, "Run record").
+
+**Built:**
+- **`env/kaggle_run_p3b_vitl_train.py` and `env/p3b_vitl_train_expect.json`:**
+  - the S2-D session's inputs, staging, pre-flight and held-out check, unchanged;
+  - `train_args` = S2-D's + `--backbone=dinov3-vitl16`; the test pins that this is the only
+    difference;
+  - both seeds in parallel, one per T4, into **`outputs/p3b/s2`**.
+  - **Not used:** `p3_train_next.py`. It treats any OK report under `outputs/p3/s2` in an
+    attached output as complete, so an attached ViT-B S2-D output would have been carried
+    forward as a finished ViT-L run.
+  - **Resume:** only from this notebook's own previous versions (`outputs/p3b/s2`).
+  - **The hardware line** now includes the driver version.
+- **`scripts/p2_preflight.py --runtime`:**
+  - records `torch.__version__`, `torch.version.cuda`, cuDNN, every GPU's name and the
+    driver (nvidia-smi) into the pre-flight record;
+  - with `--expect-gpus` > 0 it also requires a CUDA runtime;
+  - additive: no other stage passes the flag.
+- **`scripts/p3b_train_check.py`:** the section 5 failure path.
+  - **Reads the recipe from the session's expect file:** backbone, `--stop-at`, and the
+    ViT-B reports it compares against, which are the committed ones.
+  - **A seed fails on any of:**
+    - no report;
+    - status not `OK`;
+    - the wrong backbone or revision;
+    - `steps_run` not equal to the stop step;
+    - any non-finite loss or validation AUC;
+    - a validation AUC at the stop step more than 5 points below ViT-B's (floors 0.94453 /
+      0.94423).
+  - **Runs in the report cell;** a failed seed is never scored.
+- **`scripts/p3b_analyze.py`:** prereg section 4.
+  - **Reused unchanged:** P3's loaders, bootstrap, thresholds and `kshot_view`; P4's task
+    labels, `run_task` and `assemble`.
+  - **The questions:** Q1 (primary) to Q6, with the seed rule ("seed-dependent", "not
+    answered").
+  - **The descriptives** of section 4, the reading of a failed "matches", and the
+    limitation line.
+- **The dry-run fixture `p3b_vitl_train`:**
+  - **session 1:** both seeds on the ViT-L stand-in, killed after the step-4 checkpoints;
+  - **session 2:** session 1 attached, both resume to step 5;
+  - **throughout:** a decoy ViT-B output (OK `s2d_p35_seed0` under `outputs/p3/s2`) stays
+    attached and must not be used.
+- **Tests:** `tests/test_p3b_vitl.py` gains 13. They cover:
+  - the failure-path cases, including the 5-point boundary;
+  - the committed ViT-B reports failing only on their backbone;
+  - the expect file changing only the backbone;
+  - the runbook never resuming from a ViT-B output;
+  - the runtime record;
+  - the seed rule;
+  - the committed reproduction being exact against the current reference files.
+
+**Reproduction (MEASURED):**
+- **The command:** `p3b_analyze.py --reproduce`, with S2-D ViT-B seeds 0 and 1 in ViT-L's
+  place, 2,000 resamples, 8 workers, 13 min 15 s.
+- **The result: EXACT MATCH on all 20 checks.** Compared against
+  `reports/p3_results/p3_analysis_full.json` (sha256 `81b8c506…7383`) and
+  `reports/p4_results/p4_analysis.json` (`4719106f…e1ee`):
+  - per seed:
+    - P4's reference block;
+    - the paired blocks against DDA and CO-SPY (Q1, Q2, ΔFPR);
+    - P3 H3's threshold and FPRs (Q4);
+    - P3 H3-k (Q5);
+    - Q3 against itself (exactly 0);
+  - for seed 0:
+    - P3 H5's decision (Q6);
+    - the curves;
+    - P4's H5 block.
+- **The record:** `reports/p3b_results/p3b_reproduce.json`, 74,170 B, sha256
+  `6f5bc83ecc040afea921d965b8b2b3ccb9b744a7b4a62da1f41843b171017fb5`.
+- **ViT-B seed 1 has no robust scores,** so Q6 is reproduced for seed 0 only. ViT-L is
+  scored under both conditions for both seeds.
+
+**Checks:**
+- **Local dry-run (index): PASSED** in 731 s, 2 sessions.
+  - Session 1 was killed as rehearsed (exit 137 per run) and its failure path failed.
+  - Session 2 resumed both seeds from step 5 (`resumed_from_step` 5), and the failure path
+    passed for seeds 0 and 1.
+  - The decoy was not used, and nothing was written under `outputs/p3/s2`.
+  - The runtime was recorded (CPU: torch 2.11.0+cpu, CUDA None, driver None).
+- **pytest:** 1,289 passed, 7 skipped, 0 failed in 9 min 25 s, with --durations=20 (slowest: 49.25 s, test_h3k_quantile_controls_fpr_and_fails_when_the_pool_is_off_target).
+- **ruff:** clean.
+
+**NOT-RUN:** ViT-L training, which awaits the user's push and the Kaggle run. No ViT-L Panel B
+score exists.
