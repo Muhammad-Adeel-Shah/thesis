@@ -39,6 +39,17 @@ BACKBONES: dict[str, dict[str, Any]] = {
         "license": "other",
         "default": False,
     },
+    # P3b (the ViT-L follow-up, docs/P3b_VITL_PREREG.md): resolved 2026-11-11 by
+    # HfApi.model_info; model.safetensors 1,212,559,808 B, sha256 dcb2e451...8179. Same
+    # patch size, register tokens and preprocessor as ViT-B/16; hidden 1024, 24 layers.
+    "dinov3-vitl16": {
+        "repo": "facebook/dinov3-vitl16-pretrain-lvd1689m",
+        "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+        "patch_size": 16,
+        "gated": True,
+        "license": "other",
+        "default": False,
+    },
 }
 
 #: 336 is divisible by both 14 (DINOv2) and 16 (DINOv3), so the two backbones can be
@@ -64,6 +75,12 @@ DRYRUN_DINOV3_CONFIG: dict[str, Any] = {
     "rope_theta": 100.0, "pos_embed_rescale": 2.0, "query_bias": True,
     "key_bias": False, "value_bias": True, "proj_bias": True, "mlp_bias": True,
     "use_gated_mlp": False,
+}
+#: The dry-run stand-in of each DINOv3 backbone: its widths, two layers.
+DRYRUN_CONFIGS: dict[str, dict[str, Any]] = {
+    "dinov3-vitb16": DRYRUN_DINOV3_CONFIG,
+    "dinov3-vitl16": {**DRYRUN_DINOV3_CONFIG, "hidden_size": 1024, "intermediate_size": 4096,
+                      "num_attention_heads": 16},
 }
 
 
@@ -118,13 +135,13 @@ def load_backbone(
     from transformers import AutoConfig, AutoModel
 
     if dryrun_enabled():
-        if str(device).startswith("cuda") or name != "dinov3-vitb16":
+        if str(device).startswith("cuda") or name not in DRYRUN_CONFIGS:
             raise BackboneLoadError(
                 "DBP_DRYRUN=1 builds a random-init DINOv3 for CPU dry-runs only; it never "
                 f"stands in on {device!r} or for {name!r}"
             )
         model = AutoModel.from_config(
-            AutoConfig.for_model("dinov3_vit", **DRYRUN_DINOV3_CONFIG)
+            AutoConfig.for_model("dinov3_vit", **DRYRUN_CONFIGS[name])
         )
     else:
         try:

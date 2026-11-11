@@ -581,7 +581,7 @@ def test_a_preflight_runs_before_any_long_job(runbook: Path) -> None:
                'codes = {tag: py("p2_extract_s1.py"', 'py("p3_fetch_eval_sets.py"',
                'py("p3_coco_index.py"', 'py("p3_probe_flickr.py"',
                'code = py("p3_fetch_truefake.py"', 'code = py("p4_weights.py"',
-               'code = py("p4_dda_equivalence.py"')
+               'code = py("p4_dda_equivalence.py"', 'recipe_code = smoke(')
     found = [code.index(m) for m in markers if m in code]
     assert found, f"{runbook.name}: no recognised long job (add its marker here)"
     long_job = min(found)

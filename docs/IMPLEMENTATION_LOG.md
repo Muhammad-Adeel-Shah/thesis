@@ -7259,3 +7259,68 @@ and one figure. Every row is descriptive.
   home benchmark (t9d).
 - **Tests:** `tests/test_p4_analyze.py` (4) and `tests/test_p4_thesis_tables.py` (4).
 
+### P3b — ViT-L follow-up planned: pre-registration DRAFT (not frozen) and the Kaggle smoke built; no training — 2026-11-11
+
+**User decision (2026-11-11):** plan a same-size comparison with DDA.
+- **Model:** the S2-D recipe unchanged, with only the backbone changed (DINOv3 ViT-B/16 to
+  ViT-L/16); seeds 0 and 1; no tuning on Panel B.
+- **Questions:** fixed pass rules before training.
+- **Panel B:** scored once per frozen ViT-L model, with the P3/P4 analysis code reused
+  unchanged.
+- **First a Kaggle smoke:** load ViT-L, 50 steps, peak memory, s/step, the projected hours
+  for 5,000 steps, and whether gradient checkpointing is needed.
+- **No training and no push** until approved.
+
+**Pinned (Hub API, 2026-11-11, token present, not printed):**
+`facebook/dinov3-vitl16-pretrain-lvd1689m` @ `ea8dc2863c51be0a264bab82070e3e8836b02d51`,
+gated, licence other.
+- **Weights:** `model.safetensors` 1,212,559,808 B, sha256
+  `dcb2e45127cccbf1601e5f42fef165eea275c8e5213197e8dcf3f48822718179`.
+- **Cross-check:** the same query returned our ViT-B/16 pin `5931719e…`.
+- **Configs read at both revisions:** they differ only in `hidden_size` (768 vs 1024),
+  `intermediate_size` (3072 vs 4096), `num_attention_heads` (12 vs 16) and
+  `num_hidden_layers` (12 vs 24). The `preprocessor_config.json` files are identical.
+- **Added** to `BACKBONES` as `dinov3-vitl16`; `p0_verify_pins.py` checks it with the
+  others. The dry-run stand-in has ViT-L's widths and 2 layers.
+
+**The trainer stays byte-identical:**
+- **What happened:** I first added timing fields and a `--gradient-checkpointing` switch to
+  `scripts/p2_train_s2.py`. The full suite then failed `test_the_trainer_is_byte_identical`
+  (user decision 2026-10-21).
+- **The fix:** I reverted those edits by hand, so the file equals its committed bytes
+  (`git diff` empty; guard sha256 `6b9c30c4…b7b6`). The smoke instead measures from
+  outside, with `scripts/p3b_smoke_probe.py`:
+  - it runs the trainer's own `--smoke` in-process;
+  - it timestamps `torch.optim.AdamW.step`; the trainer reads the loss every step, which
+    synchronises the GPU;
+  - it reads `torch.cuda.max_memory_*`;
+  - for the measurement run only, it makes transformers'
+    `PreTrainedModel.gradient_checkpointing_enable` a no-op;
+  - it records the trainer's sha256, which the dry-run checks against the guard.
+- **That failed run** also took 2 h 35 min for no reason found. The rerun took 9 min 55 s,
+  and no test took more than 42 s.
+
+**Built:**
+- `docs/P3b_VITL_PREREG.md` (DRAFT): the recipe table with sources, the one change, scoring
+  once (clean + `jpeg50` + `resize050`), comparators, pass rules Q1–Q6, the analysis
+  driver to be committed before any score, and a smoke and time plan with PENDING-GPU
+  values.
+- `env/kaggle_run_p3b_vitl_smoke.py` and `env/p3b_vitl_smoke_expect.json`: the S2-D
+  session's inputs, staging and pre-flight, unchanged. Then two 50-step smokes on the
+  first T4 (checkpointing on, the recipe; off, a measurement that may run out of memory),
+  and a report.
+- `scripts/p3b_smoke_probe.py` and `scripts/p3b_smoke_report.py`. The report always exits 0
+  and projects `steps x s/step x` S2-D ViT-B's MEASURED overhead factor; the overhead part
+  is ESTIMATED.
+- **Tests:** `tests/test_p3b_vitl.py` (7); `test_runbook_tooling.py` gains the long-job
+  marker. A dry-run fixture `p3b_vitl_smoke` is added.
+
+**Checks:**
+- **pytest:** 1,268 passed, 7 skipped (GPU-only), 0 failed.
+- **ruff:** clean.
+- **Local dry-run** (index): PASSED in 183 s. Both smokes completed on the ViT-L stand-in;
+  the trainer was byte-identical.
+
+**NOT-RUN:** the Kaggle smoke, and every ViT-L number. The pre-registration is not frozen;
+it waits for the user's approval and the smoke's numbers.
+

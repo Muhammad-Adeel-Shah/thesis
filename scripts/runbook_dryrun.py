@@ -2130,6 +2130,60 @@ def fixture_p3_s2d(work: Path, ref: str) -> Fixture:
     )
 
 
+def fixture_p3b_vitl_smoke(work: Path, ref: str) -> Fixture:
+    """The P3b ViT-L smoke in miniature: the S2-D fixture's inputs, two smokes on the CPU.
+
+    The backbone is ``dinov3-vitl16``'s dry-run stand-in (its widths, two layers). Smoke 1
+    keeps gradient checkpointing on (the recipe), smoke 2 switches it off through the probe
+    (a measurement); each runs the unchanged trainer's smoke of 3 steps of S2-D seed 0 into
+    its own scratch directory. The check reads the session's report and proves the trainer
+    the probe ran is byte-identical (the guard of ``tests/test_p3_s2d.py``).
+    """
+    base = fixture_p3_s2d(work, ref)
+    inputs = work / "input"
+    code = inputs / "datasets/muhammadadeelshah/dbp-code-fixture/thesis_dbp"
+    s2d = json.loads(Path(base.env["DBP_EXPECT"]).read_text(encoding="utf-8"))
+    real = json.loads((code / "env" / "p3b_vitl_smoke_expect.json").read_text("utf-8"))
+    expect = {**s2d, **{k: real[k] for k in ("backbone", "queue_template", "runs_per_session",
+                                             "projection")},
+              "stage": "p3b_vitl_smoke (dry-run fixture)", "smoke_steps": 3,
+              "smoke_runs": [{**r, "device": "cpu"} for r in real["smoke_runs"]],
+              "smoke_deadline_hours": 0.5}
+    expect_path = work / "p3b_vitl_smoke_expect.json"
+    expect_path.write_text(json.dumps(expect, indent=2) + "\n", encoding="utf-8")
+
+    def check(work_dir: Path) -> list[str]:
+        problems: list[str] = []
+        try:
+            dbp = work_dir / "working/Implementation/thesis_dbp"
+            report = json.loads((dbp / "reports/p3b_vitl_smoke.json").read_text("utf-8"))
+            smokes = {s["gradient_checkpointing"]: s for s in report["smokes"]}
+            import re
+
+            guard = re.search(r'TRAINER_SHA256 = "([0-9a-f]{64})"', (
+                dbp / "tests" / "test_p3_s2d.py").read_text("utf-8")).group(1)
+            for mode in ("on", "off"):
+                probe = smokes[mode]["probe"] or {}
+                if smokes[mode]["trainer_status"] != "SMOKE-OK" or probe.get("exit_code") or \
+                        probe.get("optimiser_steps") != 3 or \
+                        probe.get("trainer_sha256") != guard or \
+                        "dinov3-vitl16" not in probe.get("trainer_args", []) or \
+                        probe.get("gradient_checkpointing_enable_calls", 0) < 1:
+                    problems.append(f"smoke {mode}: {smokes[mode]}")
+            if report["projection"] is not None:   # 3 steps < the warm-up: no steady rate
+                problems.append(f"projection from 3 steps: {report['projection']}")
+            print(f"  check: both smokes SMOKE-OK on dinov3-vitl16 (dry-run stand-in), "
+                  f"gradient checkpointing on and off through the probe, 3 steps each; the "
+                  f"trainer run is the byte-identical one ({guard[:12]}...)")
+        except (OSError, KeyError, ValueError) as exc:
+            problems.append(f"the session did not leave the expected results: "
+                            f"{type(exc).__name__}: {exc}")
+        return problems
+
+    return Fixture({**base.env, "DBP_EXPECT": str(expect_path)}, base.commit,
+                   [Session("session 1: S2-D inputs verified; two ViT-L smokes")], check=check)
+
+
 FINAL_STEP, FINAL_N_MAX = 2, 3
 
 
@@ -2967,6 +3021,7 @@ FIXTURES: dict[str, Callable[[Path, str], Fixture]] = {
     "p4_weights": fixture_p4_weights,
     "p4_dda_equivalence": fixture_p4_dda_equivalence,
     "p4_baselines": fixture_p4_baselines,
+    "p3b_vitl_smoke": fixture_p3b_vitl_smoke,
 }
 
 
