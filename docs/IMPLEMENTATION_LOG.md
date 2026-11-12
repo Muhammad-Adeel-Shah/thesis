@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P3b (2026-11-11)**: pre-registration `docs/P3b_VITL_PREREG.md` **FROZEN** (tag `p3b-vitl-prereg-frozen`) after the user's review of `8800801`; the Kaggle ViT-L smoke passed (recipe 1.7126 s/step, 2.136 GiB; projected 2.49 GPU-h per run). No ViT-L training yet. Earlier: P3 decided (`reports/p3_results/tables/t1_verdicts.md`); P4 baselines scored and analysed (`reports/p4_results/`) |
+| Last prompt | **P3b (2026-11-12)**: ViT-L S2-D seeds 0 and 1 **trained** on Kaggle (5,000 steps each; validation AUC 0.99981 / 0.99960); the failure path (prereg section 5) **PASSED for both seeds**, so both are cleared for the single Panel B scoring. No Panel B score exists yet. Repository re-rooted locally to one commit `17e9c6e` (old history in `git_archive`), not yet pushed |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -7589,3 +7589,78 @@ score exists.
 - **The code zip** `dbp-code-d5e56dc.zip` is stamped with the old hash. It is rebuilt at the
   new commit, and the HEAD dry-run is re-run, before the Kaggle hand-over.
 - **From now on,** commits carry no Claude attribution line.
+
+### P3b — the ViT-L training session: both seeds trained to 5,000 steps; the failure path PASSES for both — 2026-11-12
+
+**Run:**
+- **Where:** Kaggle T4 x 2, account `muhammadadeelshah`.
+- **When:** the queue ran 2026-11-11 20:09:02 to 23:04:33 UTC, i.e. 2026-11-12 01:09 to 04:04
+  PKT.
+- **Code:** `dbp-code-d5e56dc.zip`. Its `COMMIT.txt` reads `d5e56dc`, and it is the only zip
+  holding this runbook. The commit is INFERRED from the zip; the notebook's Cell 2 line
+  "code commit:" is not in the archive.
+  - `scripts/`, `env/`, `src/` and the prereg are byte-identical between `d5e56dc` and the
+    new root `17e9c6e` (git tree hashes).
+  - The run started 17 s before `17e9c6e` was created.
+- **The pre-registration:**
+  - frozen at `6b6f7d2` (2026-11-11 16:28 PKT, in the history bundle), 8.7 h before training;
+  - no GitHub push of it was made before training;
+  - the earliest external copy is the Kaggle `dbp-code` dataset version made from
+    `dbp-code-d5e56dc.zip`, which holds the frozen text and was uploaded before the session.
+
+**Archive and commit:**
+- **Archive:** `F:\thesis-2\kaggle_raw\p3b_vitl_train_reports.zip`, 25,072,604 B, sha256
+  `54ee382d1bd6580e4146a7cf72ebddc577eca414b36f787fe5633ddfd9f75677`, `testzip` clean, 863
+  entries, no unsafe path. Extracted to `F:\thesis-2\kaggle_raw\p3b_vitl_train_x\`.
+- **Against HEAD's bytes:** 687 files identical. `p1_gen_matched_manifest.csv` differs in
+  `png_path` / `jpg_path` only (2,488 rows; every hash equal).
+- **Committed:** `reports/kaggle_20261111/p3b_train/`, 16 files, 95 KB, including the 6 logs.
+
+**Checks:**
+- **Pre-flight PASSED** (7 checks, `HF_TOKEN present: true`).
+- **The run record (prereg section 1), MEASURED:**
+  - torch `2.11.0+cu130`, `torch.version.cuda` `13.0`, cuDNN 92700;
+  - GPUs `Tesla T4`, `Tesla T4`; driver `580.178.04`.
+  - The Kaggle image has changed since the snapshot row: torch 2.10.0+cu128 then. The
+    bootstrap installs no torch.
+- **Inputs equal S2-D session 1's:** the merged files' sha256, the pools, and the Open Images
+  pairs' content sha256.
+- **Held-out check PASSED:** 0 held-out rows in every merged file and in the local copy.
+- **Staging:** 80,709 files, 17.681 GB in 343.0 s (235.3 files/s, 52.8 MB/s); 46,800
+  hash-verified, 0 mismatched, 0 missing.
+- **Pre-flight smokes:** each seed on each T4, all 4 complete.
+- **The recipe:** every field of both training reports equals S2-D ViT-B's for the same seed,
+  except these:
+  - the backbone and revision: `dinov3-vitl16` @ `ea8dc286…`;
+  - the LoRA counts: 1,572,864 of 304,702,464 parameters trainable;
+  - timing.
+
+  The degradation streams `[0, 417]` / `[1, 417]` and their operation counts are identical.
+- **Logs:** no error, traceback or NaN. The only matches are the 11 known peft warnings per
+  training log.
+
+**MEASURED (`reports/kaggle_20261111/p3b_train/`):**
+
+| seed | status | steps | train-loop s/step | GPU-h | val AUC at 5,000 | ViT-B val AUC | failure path |
+|---|---|---|---|---|---|---|---|
+| 0 | OK | 5,000 | 1.92892 | 2.791 | **0.99981** | 0.99453 | **PASS** (floor 0.94453) |
+| 1 | OK | 5,000 | 2.01787 | 2.918 | **0.99960** | 0.99423 | **PASS** (floor 0.94423) |
+
+- **Queue:** 2.925 h wall (5.725 device-h), deadline 9.5 h, outcome COMPLETE.
+- **Validation curves:**
+  - seed 0: 0.96115 at step 500 to 0.99981;
+  - seed 1: 0.96867 to 0.99960;
+  - every loss and AUC finite.
+- **Against the projection** (prereg section 6, ESTIMATED 2.49 GPU-h, 2.5–2.8 h wall):
+  - per step: 1.93 / 2.02 s against the smoke's 1.7126 s, i.e. 13% and 18% slower with two
+    jobs sharing 4 CPU cores;
+  - the wall stayed inside the planned 2.7–3.0 h.
+- **This validation set is the trainer's in-protocol one** (512 pairs). It is not Panel B and
+  supports no Panel B claim.
+
+**Next:** both seeds are cleared for scoring.
+- Panel B is scored **once** per frozen model: clean + `jpeg50` + `resize050` (prereg
+  section 2).
+- Then `p3b_analyze.py` runs.
+- The models are in this notebook version's output (`outputs/p3b/s2`), which the scoring
+  session attaches.

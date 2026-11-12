@@ -1,0 +1,64 @@
+{
+  "stage": "p3b_vitl_train_data",
+  "passed": true,
+  "checks": [
+    {
+      "name": "row counts",
+      "ok": true,
+      "detail": "p1_pairs_manifest.csv=49200, p2_splits.csv=55788, p1_gen_manifest.csv=2488",
+      "seconds": 1.31,
+      "data": {}
+    },
+    {
+      "name": "gpu count",
+      "ok": true,
+      "detail": "2 CUDA device(s) ['Tesla T4', 'Tesla T4']",
+      "seconds": 1.76,
+      "data": {}
+    },
+    {
+      "name": "runtime",
+      "ok": true,
+      "detail": "torch 2.11.0+cu130, CUDA 13.0, cuDNN 92700, GPU ['Tesla T4', 'Tesla T4'], driver 580.178.04",
+      "seconds": 0.04,
+      "data": {
+        "torch": "2.11.0+cu130",
+        "torch_cuda": "13.0",
+        "cudnn": 92700,
+        "gpus": [
+          "Tesla T4",
+          "Tesla T4"
+        ],
+        "driver": "580.178.04"
+      }
+    },
+    {
+      "name": "hf token",
+      "ok": true,
+      "detail": "HF_TOKEN present: true",
+      "seconds": 0.4,
+      "data": {}
+    },
+    {
+      "name": "input hashes",
+      "ok": true,
+      "detail": "7 input file(s) match their sha256",
+      "seconds": 0.24,
+      "data": {}
+    },
+    {
+      "name": "imports",
+      "ok": true,
+      "detail": "peft 0.21.2, transformers 5.20.2, safetensors 0.8.0, huggingface_hub 1.33.0, PIL 13.0.0",
+      "seconds": 5.91,
+      "data": {}
+    },
+    {
+      "name": "gen_matched hashes",
+      "ok": true,
+      "detail": "all 2488 files match the reference sha256",
+      "seconds": 0.72,
+      "data": {}
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "mode": "train+score",
+  "outcome": "COMPLETE",
+  "devices": [
+    "0",
+    "1"
+  ],
+  "deadline_hours": 9.5,
+  "wall_hours": 2.925,
+  "device_hours": 5.725,
+  "runs": [
+    {
+      "run_id": "s2d_p35_seed0",
+      "protocol": "s2d_p35",
+      "seed": 0,
+      "state": "complete",
+      "device": "0",
+      "train_rc": 0,
+      "infer_rc": null,
+      "started": 1794427742.8378,
+      "finished": 1794437822.8964038,
+      "hours": 2.8,
+      "logs": [
+        "s2_s2d_p35_seed0_gpu0_infer.log",
+        "s2_s2d_p35_seed0_gpu0_train.log"
+      ],
+      "note": "no training report; nothing to restore"
+    },
+    {
+      "run_id": "s2d_p35_seed1",
+      "protocol": "s2d_p35",
+      "seed": 1,
+      "state": "complete",
+      "device": "1",
+      "train_rc": 0,
+      "infer_rc": null,
+      "started": 1794427742.8382063,
+      "finished": 1794438272.9006846,
+      "hours": 2.925,
+      "logs": [
+        "s2_s2d_p35_seed1_gpu1_infer.log",
+        "s2_s2d_p35_seed1_gpu1_train.log"
+      ],
+      "note": "no training report; nothing to restore"
+    }
+  ]
+}

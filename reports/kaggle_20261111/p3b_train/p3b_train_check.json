@@ -1,0 +1,36 @@
+{
+  "what": "P3b failure path (docs/P3b_VITL_PREREG.md section 5)",
+  "backbone": "dinov3-vitl16",
+  "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+  "stop_at": 5000,
+  "margin": 0.05,
+  "seeds": {
+    "0": {
+      "verdict": "PASS",
+      "reasons": [],
+      "val_auc": 0.99981,
+      "vitb_val_auc": 0.99453,
+      "floor": 0.94453,
+      "steps_run": 5000,
+      "status": "OK",
+      "report": "p2_s2_s2d_p35_seed0.json",
+      "vitb_report": "reports/kaggle_20261023/p3_s2d_session1/p2_s2_s2d_p35_seed0.json"
+    },
+    "1": {
+      "verdict": "PASS",
+      "reasons": [],
+      "val_auc": 0.9996,
+      "vitb_val_auc": 0.99423,
+      "floor": 0.94423,
+      "steps_run": 5000,
+      "status": "OK",
+      "report": "p2_s2_s2d_p35_seed1.json",
+      "vitb_report": "reports/kaggle_20261024/p3_s2d_session2/p2_s2_s2d_p35_seed1.json"
+    }
+  },
+  "cleared_for_scoring": [
+    "0",
+    "1"
+  ],
+  "all_pass": true
+}
