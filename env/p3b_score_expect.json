@@ -1,0 +1,102 @@
+{
+  "stage": "p3b_score (the two frozen ViT-L models on Panel B, once: clean, then jpeg50 + resize050) -- docs/P3b_VITL_PREREG.md section 2 (tag p3b-vitl-prereg-frozen)",
+  "imports": [
+    "peft",
+    "transformers",
+    "safetensors",
+    "huggingface_hub",
+    "PIL"
+  ],
+  "gpus": 2,
+  "hf_token": true,
+  "section5": {
+    "degradation_choice": "reports/p3_degradation_choice.json",
+    "degradation_choice_sha256": "6cda015100912a99fc3ec8112d49aa06933a3eaddf1fe431a8f9b85a0755e8d5",
+    "chosen": "s2b_deg_p35_seed0",
+    "chosen_p": 0.35,
+    "nstar": "reports/p3_nstar.json",
+    "nstar_sha256": "de30996d05bc0e4fb0408808cc9d4b97b27132d125298d09c991623a6c9ab678",
+    "n_star": 5000,
+    "n_max": 6000,
+    "oi_manifest": "reports/kaggle_20261017/p3_open_images/p3_open_images_manifest.csv",
+    "oi_manifest_sha256": "37bfc7db545798b043c0eb908f7911d7d9e10fc2fc1622b22006c2354f1b34e2",
+    "oi_train": 3600,
+    "oi_held_out": 400,
+    "kshot": {
+      "10": [
+        1,
+        false
+      ],
+      "25": [
+        1,
+        false
+      ],
+      "50": [
+        1,
+        true
+      ],
+      "100": [
+        4,
+        true
+      ]
+    }
+  },
+  "panel_b": {
+    "images": "reports/kaggle_20261011/p3_panel_b_images.csv",
+    "images_sha256": "621626a626094a2e819eb71d1752c66264a63133e2de4c0fa2870003330c53d2",
+    "luma": "reports/kaggle_20261011/p3_panel_b_luma.csv",
+    "luma_sha256": "9faa69b2ec7963a2e1d66e70ae6d042a72bc3a2bfec6a6d23af40fe61298b717",
+    "digest": "267d9fde75d76a23640674fa2fff7e454de23971b8e296323ca4762507c2a551",
+    "test_digest": "af544cc12f37b4b0a31548c4f7e9682fde5da1c5f43adf99aee368344206f3e2",
+    "calibration_digest": "fd5fb95e50fe1ac48ac0d427fb07491e912fdbb45fa85f42d37739ab601694c2",
+    "luma_digest": "41445030ba224f29a8dbd8bc9a2524c10c0e3da902663ac36646d262f6335f62"
+  },
+  "threshold_reals": {
+    "coco_val": "reports/kaggle_20261021/p3_tune/p3_tune_lists/p3_tune_val_reals.csv",
+    "reals_manifest": "reports/p1_reals_manifest_t_real.csv"
+  },
+  "devices": "0,1",
+  "batch": 32,
+  "workers": 32,
+  "margin_gb": 2.0,
+  "poll_seconds": 30,
+  "backbone": "dinov3-vitl16",
+  "n_models": 2,
+  "models": [
+    {
+      "id": "vitl_s2d_p35_seed0",
+      "run": "s2d_p35_seed0",
+      "kind": "snapshot",
+      "protocol": "s2d_p35",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "training_report": "reports/kaggle_20261111/p3b_train/p2_s2_s2d_p35_seed0.json",
+      "vitb_report": "reports/kaggle_20261023/p3_s2d_session1/p2_s2_s2d_p35_seed0.json"
+    },
+    {
+      "id": "vitl_s2d_p35_seed1",
+      "run": "s2d_p35_seed1",
+      "kind": "snapshot",
+      "protocol": "s2d_p35",
+      "seed": 1,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "training_report": "reports/kaggle_20261111/p3b_train/p2_s2_s2d_p35_seed1.json",
+      "vitb_report": "reports/kaggle_20261024/p3_s2d_session2/p2_s2_s2d_p35_seed1.json"
+    }
+  ],
+  "model_record": {
+    "path": "reports/p3b_results/p3b_model_record.json",
+    "sha256": "PENDING-MODEL-RECORD (NOT-VERIFIED: the record is made from the downloaded snapshots before any score)"
+  },
+  "smoke_limit": 64,
+  "smoke_deadline_hours": 1.0,
+  "deadline_hours": 7.0,
+  "session_limit_hours": 12.0,
+  "margin_hours": 0.5,
+  "expected": {
+    "wall": "about 0.9-1.5 h (ESTIMATED): staging Panel B + luma + 891 reals twice (once per stage, about 5-20 min each), two smokes, then per model 0.46-0.76 h of scoring = S2-D ViT-B seed 0's MEASURED 779.5 s (clean 203.1, jpeg50 231.3, resize050 345.1; reports/p3_final/s2d_p35_seed0_{clean,robust}.json) x 2.14 (the measured ViT-L/ViT-B step-time ratio) to 3.53 (the parameter ratio); the two models in parallel, one per T4",
+    "quota": "about 0.9-1.5 quota h (Kaggle bills session wall time, I-042)"
+  }
+}

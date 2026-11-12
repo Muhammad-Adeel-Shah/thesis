@@ -2517,6 +2517,143 @@ def fixture_p3_final(work: Path, ref: str) -> Fixture:
     )
 
 
+def fixture_p3b_score(work: Path, ref: str) -> Fixture:
+    """The P3b scoring in miniature: the final-scoring fixture's Panel B, two ViT-L models.
+
+    The P3 final fixture provides Panel B, its luma companion, the threshold reals and the
+    section-5 records. One run is trained with the committed trainer on the ViT-L stand-in
+    (``--backbone dinov3-vitl16``; schedule 3, stop at 2), laid out as the ViT-L training
+    output for both seeds, with their training reports committed in the fixture's code tree
+    and a model record made by ``p3b_model_record.py`` (snapshot == the trainer's
+    checkpoint). Session 1 is killed right after the first recorded list; session 2 has
+    session 1 attached, keeps that list, scores the rest and then the robust stage.
+    """
+    base = fixture_p3_final(work, ref)
+    inputs = work / "input"
+    code = inputs / "datasets/muhammadadeelshah/dbp-code-fixture/thesis_dbp"
+    s2in = inputs / "datasets/adeelshah29/dbp-p2-s2-inputs"
+    final = json.loads(Path(base.env["DBP_EXPECT"]).read_text(encoding="utf-8"))
+    # Only the ViT-L output is attached: the 24 P3 model sources are removed.
+    for name in ("dbp-p3-train", "dbp-p3-tune", "dbp-p3-s2d"):
+        shutil.rmtree(inputs / "notebooks/muhammadadeelshah" / name)
+    for name in ("dbp-p3-lolo-output", "dbp-p2-reference-models"):
+        shutil.rmtree(inputs / "datasets/muhammadadeelshah" / name)
+    build = work / "final_build"
+    env = dict(os.environ, DBP_DRYRUN="1", PYTHONUTF8="1",
+               HF_HOME=str(build / "hf_home"), TORCH_HOME=str(build / "torch_home"))
+
+    def run(command: list[object]) -> None:
+        done = subprocess.run([sys.executable, *[str(c) for c in command]], cwd=code, env=env,
+                              capture_output=True, text=True, check=False)
+        if done.returncode != 0:
+            raise RuntimeError(f"fixture build step failed: {command[0]}\n"
+                               f"{(done.stdout + done.stderr)[-3000:]}")
+
+    run(["scripts/p2_train_s2.py", "--runs-config", "configs/p3_runs.yaml", "--protocol", "s2b",
+         "--seed", "0", "--root", build / "p1", "--pairs-manifest",
+         s2in / "p1_pairs_manifest.csv", "--splits", s2in / "p2_splits.csv", "--device", "cpu",
+         "--backbone", "dinov3-vitl16", "--fixed-steps", str(FINAL_N_MAX), "--stop-at",
+         str(FINAL_STEP), "--heldout-every", "1", "--checkpoint-every", "1", "--val-pairs", "4",
+         "--out-dir", build / "s2l", "--reports-dir", build / "reports_l"])
+    report = json.loads((build / "reports_l" / "p2_s2_s2b_seed0.json").read_text("utf-8"))
+    train = inputs / "notebooks/muhammadadeelshah/dbp-p3b-vitl-train/Implementation/thesis_dbp"
+    committed = code / "reports" / "dryrun_fixture" / "p3b_train"
+    committed.mkdir(parents=True, exist_ok=True)
+    models = []
+    real = json.loads((code / "env" / "p3b_score_expect.json").read_text(encoding="utf-8"))
+    for seed, spec in enumerate(real["models"]):
+        run_id = f"s2d_p35_seed{seed}"
+        shutil.copytree(build / "s2l" / "s2b_seed0", train / "outputs/p3b/s2" / run_id)
+        text = json.dumps({**report, "run_id": run_id, "protocol": "s2d_p35", "seed": seed})
+        for target in (train / "reports", committed):
+            target.mkdir(parents=True, exist_ok=True)
+            (target / f"p2_s2_{run_id}.json").write_text(text + "\n", encoding="utf-8")
+        vitb = committed / f"vitb_seed{seed}.json"
+        vitb.write_text(json.dumps({"curve": [{"step": FINAL_STEP, "val_auc": 0.0}]}) + "\n",
+                        encoding="utf-8")
+        models.append({**spec, "step": FINAL_STEP,
+                       "training_report": (committed / f"p2_s2_{run_id}.json")
+                       .relative_to(code).as_posix(),
+                       "vitb_report": vitb.relative_to(code).as_posix()})
+    record = code / "reports" / "dryrun_fixture" / "p3b_model_record.json"
+    run(["scripts/p3b_model_record.py", "--step", str(FINAL_STEP), "--reports", committed,
+         *[f"--run=s2d_p35_seed{s}={train / 'outputs/p3b/s2' / f's2d_p35_seed{s}'}"
+           for s in (0, 1)], "--out", record])
+    expect = {**real, **{k: final[k] for k in ("imports", "gpus", "hf_token", "section5",
+                                                "panel_b", "threshold_reals")},
+              "models": models,
+              "model_record": {"path": record.relative_to(code).as_posix(),
+                               "sha256": sha256_file(record)},
+              "devices": "cpu", "batch": 4, "workers": 4, "smoke_limit": 8,
+              "smoke_deadline_hours": 0.5, "deadline_hours": 1.0, "poll_seconds": 2,
+              "expected": {"wall": 0, "basis": "dry-run fixture"}}
+    expect_path = work / "p3b_score_expect.json"
+    expect_path.write_text(json.dumps(expect, indent=2) + "\n", encoding="utf-8")
+    carry_to = inputs / "notebooks/muhammadadeelshah/dbp-p3b-score"
+    ids = [m["id"] for m in models]
+
+    def check(work_dir: Path) -> list[str]:
+        try:
+            return check_results(work_dir)
+        except (OSError, KeyError, ValueError, IndexError, StopIteration) as exc:
+            return [f"the sessions did not leave the expected results: "
+                    f"{type(exc).__name__}: {exc}"]
+
+    def check_results(work_dir: Path) -> list[str]:
+        problems: list[str] = []
+        dbp = work_dir / "working/Implementation/thesis_dbp"
+        session1 = carry_to / "Implementation/thesis_dbp"
+        kept_csv = session1 / "reports/p3_final_scores" / ids[0] / "clean" / "panel_b.csv"
+        round1 = json.loads((dbp / "reports/p3b_score_plan_round1.json").read_text("utf-8"))
+        round2 = json.loads((dbp / "reports/p3b_score_plan_round2.json").read_text("utf-8"))
+        if round1["stage"] != "clean" or round1["resumed"]["clean"] != [ids[0]] or \
+                round2["stage"] != "robust" or round2["due"] != ids:
+            problems.append(f"plans: round 1 {round1['stage']} resumed {round1['resumed']}, "
+                            f"round 2 {round2['stage']} {round2['due']}")
+        for model_id in ids:
+            entry = round1["models"][model_id]
+            recorded = json.loads(record.read_text("utf-8"))["runs"][entry["run"]]
+            if entry["failure_path"] != "PASS" or \
+                    any(entry[k] != recorded[k] for k in ("lora_sha256", "head_sha256",
+                                                          "snapshot_sha256")):
+                problems.append(f"{model_id}: not verified against the model record {entry}")
+            clean = json.loads((dbp / "reports/p3_final" / f"{model_id}_clean.json")
+                               .read_text("utf-8"))
+            robust = json.loads((dbp / "reports/p3_final" / f"{model_id}_robust.json")
+                                .read_text("utf-8"))
+            want_kept = ["panel_b"] if model_id == ids[0] else []
+            if clean["kept_lists"] != want_kept or clean["backbone"] != "dinov3-vitl16" or \
+                    sorted(clean["lists"]) != ["luma", "panel_b", "threshold_reals"]:
+                problems.append(f"{model_id} clean: kept {clean['kept_lists']}, "
+                                f"{clean['backbone']}, {sorted(clean['lists'])}")
+            if sorted(robust["lists"]) != ["jpeg50", "resize050"]:
+                problems.append(f"{model_id} robust: {sorted(robust['lists'])}")
+            print(f"  check {model_id}: clean {sorted(clean['lists'])} (kept "
+                  f"{clean['kept_lists']}), robust {sorted(robust['lists'])}, backbone "
+                  f"{clean['backbone']}, failure path {entry['failure_path']}, hashes = record")
+        here = dbp / "reports/p3_final_scores" / ids[0] / "clean" / "panel_b.csv"
+        if sha256_file(here) != sha256_file(kept_csv):
+            problems.append("the kept panel_b list was scored again (its bytes changed)")
+        for stage in ("clean", "robust"):
+            projection = json.loads((dbp / "reports" / f"p3b_projection_{stage}.json")
+                                    .read_text("utf-8"))
+            if not projection["ok"]:
+                problems.append(f"{stage} projection {projection}")
+        print(f"  check: session 1 killed after one recorded list; session 2 kept it "
+              f"byte-identical ({sha256_file(here)[:12]}...), scored the rest and both "
+              f"conditions; both fail-fast projections passed")
+        return problems
+
+    return Fixture(
+        {"DBP_INPUT_ROOT": str(inputs), "DBP_EXPECT": str(expect_path)}, base.commit,
+        [Session("session 1: models verified against the record; killed after the first "
+                 "recorded list", {"DBP_FAULT_EXIT_AFTER_LISTS": "1"}, "nonzero"),
+         Session("session 2: session 1 attached; the finished list kept; the rest and the "
+                 "robust stage scored")],
+        carry_to=carry_to, check=check,
+    )
+
+
 TF_GROUPS = (("Real", "FFHQ", ""), ("Real", "FORLAB", ""), ("Fake", "FLUX.1", "animals"),
              ("Fake", "StableDiffusion1.5", "faces"), ("Fake", "StableDiffusion2", "general"),
              ("Fake", "StableDiffusion3", "landscapes"), ("Fake", "StableDiffusionXL", "faces"),
@@ -3116,6 +3253,7 @@ FIXTURES: dict[str, Callable[[Path, str], Fixture]] = {
     "p4_baselines": fixture_p4_baselines,
     "p3b_vitl_smoke": fixture_p3b_vitl_smoke,
     "p3b_vitl_train": fixture_p3b_vitl_train,
+    "p3b_score": fixture_p3b_score,
 }
 
 

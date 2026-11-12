@@ -5,6 +5,11 @@
 - **Approval:** the pass rules Q1–Q6 are approved by the user (reviews of `8800801` and
   `7fbb06d`, with their changes folded in).
 - **Section 6** holds the Kaggle smoke's MEASURED numbers.
+- **Section 7** records what was learnt after the freeze. It changes no rule.
+- **External timestamp:** PENDING (NOT-VERIFIED) — the time of the Kaggle `dbp-code`
+  dataset version made from `dbp-code-d5e56dc.zip`, which the user will send.
+  - frozen locally at `6b6f7d2`, 2026-11-11 16:28 PKT;
+  - ViT-L training started 2026-11-12 01:09 PKT.
 
 After the freeze, nothing in sections 1–5 changes.
 
@@ -217,3 +222,35 @@ In fixed-steps mode the trainer records `allowance_hours` 2.25 but never caps st
 - **What was measured:** ViT-L/ViT-B step time is 2.14, below that assumed 2.5–3.5. That
   gives 2.49 GPU-h per seed, about 3.4–4.0 h in total.
 - **Margin:** the review's 5–7 h stays the planning margin, if the quota is short.
+
+## 7. Recorded after the freeze (changes no rule in sections 1–5)
+
+**Training** (`reports/kaggle_20261111/p3b_train/`, 2026-11-12):
+- Both seeds trained to 5,000 steps.
+- **The failure path (section 5) passes for both,** so both are cleared for the single Panel B
+  scoring.
+- **The validation AUC** (0.99981 / 0.99960) is on the trainer's own validation set: its
+  seen-decoder pairs. It supports **no** claim and is **not cited as a result**.
+
+**Environment** (a limitation, recorded; not expected to matter):
+- **ViT-L** was trained, and will be scored, on torch `2.11.0+cu130`, CUDA 13.0, cuDNN 92700,
+  driver 580.178.04. MEASURED: the run record,
+  `reports/kaggle_20261111/p3b_train/p2_preflight_p3b_vitl_train_data.json`.
+- **The P4 comparators,** DDA and CO-SPY, were scored on the same torch `2.11.0+cu130`
+  (MEASURED: `reports/p4_baselines/*.json`, `versions`).
+- **The S2-D ViT-B models** (P3, October 2026) and their P3 scores come from a torch version
+  their records do not hold.
+  - The only Kaggle version recorded before November is `2.10.0+cu128`
+    (`reports/kaggle_20260920/env_report.json`, P0).
+  - That 2.10 applies to the ViT-B runs is NOT-VERIFIED.
+- **So Q3 (ViT-L vs ViT-B)** may compare across a torch version change. Q1 and Q2 (vs DDA and
+  CO-SPY) do not.
+
+**Model hashes:**
+- The training reports hold no hash of the weights: the byte-identical trainer writes one
+  only beside held-out scores, and S2-D holds none out.
+- So before any score, the two final snapshots are hashed and checked to equal the trainer's
+  step-5,000 checkpoint, tensor by tensor (`scripts/p3b_model_record.py`; user decision
+  2026-11-12).
+- The record is committed as `reports/p3b_results/p3b_model_record.json`.
+- The scoring pre-flight refuses any model whose hashes differ from it.

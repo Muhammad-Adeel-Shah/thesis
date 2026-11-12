@@ -7664,3 +7664,99 @@ score exists.
 - Then `p3b_analyze.py` runs.
 - The models are in this notebook version's output (`outputs/p3b/s2`), which the scoring
   session attaches.
+
+### P3b — review of `d3d545c` accepted; the scoring session built (once per model, per-list resume, hash-checked); no Panel B score exists — 2026-11-12
+
+**User review of `d3d545c`:** ACCEPTED. Both seeds are cleared for the single Panel B scoring.
+The validation AUC is the trainer's own seen-decoder set and is not cited as a result.
+1. **The Cell 2 "code commit:" line:** the user will paste it; then MEASURED. Still PENDING.
+2. **The external timestamp:** the user will send the time of the Kaggle `dbp-code` version
+   made from `dbp-code-d5e56dc.zip`. The prereg status line holds it as PENDING.
+3. **The environment limitation:** recorded in prereg section 7 and in `p3b_analyze.py`'s
+   output, **corrected against the records**.
+   - **P4's comparators,** DDA and CO-SPY like every P4 row, were scored on torch
+     `2.11.0+cu130` (`reports/p4_baselines/*.json`, `versions`), as ViT-L was. So Q1 and Q2
+     involve no version change.
+   - **The S2-D ViT-B models'** P3 records hold no torch version. `2.10.0+cu128` (P0,
+     `reports/kaggle_20260920/env_report.json`) is the only earlier Kaggle record, so it is
+     NOT-VERIFIED for them, and the drift bears on Q3 only.
+4. **The scoring session, as specified** (below).
+5. **Commits:** no co-author or session lines. History is never rewritten. The user will say
+   which GitHub repository to push to.
+
+**User decisions (2026-11-12):**
+- **The model hashes.** The training reports hold no hash of the weights: the byte-identical
+  trainer writes one only beside held-out scores, and S2-D holds none out. So they are
+  recorded locally:
+  - the user downloads both final snapshots and `checkpoint.pt` into `kaggle_raw`;
+  - `p3b_model_record.py` hashes them and checks each equals the trainer's step-5,000
+    checkpoint, tensor by tensor;
+  - the record is committed.
+- **Resume is per list and append-only.**
+
+**Built:**
+- **`scripts/p3_final_score.py`** (opt-in; P3 behaviour unchanged without the flags):
+  - **`--resume-lists`:**
+    - each finished list writes `<list>.done.json`: its rows, the CSV's sha256, the model's
+      LoRA, head and snapshot hashes, the list file's sha256, the backbone and the condition;
+    - a re-run **keeps** every list whose record matches and is never scored again;
+    - a record that does not match is refused, never overwritten;
+    - a CSV with no record (a crash between the two writes) is scored again and named in the
+      summary.
+  - **Timing for the fail-fast projection:** the first batch is timed apart (`timing`), plus
+    `load_seconds`.
+  - **A dry-run-only crash seam,** `DBP_FAULT_EXIT_AFTER_LISTS`.
+- **`scripts/p3b_model_record.py`** (local, CPU):
+  - checks the report says a finished ViT-L run, and the checkpoint is at step 5,000;
+  - checks every LoRA and head tensor of the snapshot equals the checkpoint's (`torch.equal`);
+  - records the LoRA, head, config and checkpoint sha256 and the snapshot digest.
+- **`scripts/p3b_score_preflight.py`:**
+  - **Reused from `p3_final_preflight.py`, unchanged:** section 5, Panel B's frozen digests,
+    the lists, the staging and the carry-forward.
+  - **Per model:**
+    - the attached output's training report must be the committed one (sha256);
+    - the failure path must pass;
+    - the LoRA, head and snapshot hashes must equal the committed model record, **or the
+      model is refused**.
+  - **Robust stage:** `jpeg50` and `resize050` only.
+  - **Resume:** an interrupted stage's finished lists are carried, to be kept.
+- **`scripts/p3b_failfast.py`:**
+  - projects each job from its smoke: the warm rate after the first batch, times the rows
+    still to score, plus the load;
+  - refuses the stage if that exceeds `min(deadline, 12 h - elapsed - 0.5 h)`.
+- **`env/kaggle_run_p3b_score.py` and `env/p3b_score_expect.json`:**
+  - model ids `vitl_s2d_p35_seed{0,1}`, distinct from ViT-B's committed P3 summaries;
+  - stage 1 (clean) and stage 2 (robust) in one session, each as plan, smoke (64 rows per
+    list), fail-fast, then scoring with `--resume-lists`;
+  - the runtime record at the pre-flight.
+  - **The expect's model-record sha256 is PENDING** until the record is committed, so the
+    pre-flight refuses to plan before that.
+- **The dry-run fixture `p3b_score`:**
+  - the P3 final fixture's Panel B, plus a ViT-L stand-in trained with the committed trainer
+    and recorded by `p3b_model_record.py`;
+  - **session 1** is killed after the first recorded list;
+  - **session 2** keeps it and scores the rest and the robust stage.
+- **Tests:** `tests/test_p3b_score.py` (18). They cover:
+  - keep and refuse in the scorer, and the seam;
+  - the record's tensor comparison and report check;
+  - the pre-flight refusing on a hash mismatch, a non-committed report and a failed failure
+    path;
+  - the fail-fast's warm rate, finished lists, refusal and the no-warm-image case;
+  - the expect file and the runbook's order.
+
+**Checks:**
+- **Local dry-run (index): PASSED** in 478 s, 2 sessions:
+  - session 1 was killed after the first recorded list;
+  - session 2 kept that list byte-identical (`9aee8930…`), scored luma, the threshold reals
+    and both conditions for both models;
+  - both models were verified against the record, and both fail-fast projections passed.
+- **Prereg:** sections 1–5 are byte-identical to the tag (checked). Section 7 and the status
+  lines were added.
+- **Reproduction, re-run** after `p3b_analyze.py` gained the environment line: EXACT MATCH, 20 of 20 checks (2,000 resamples, 15 min 27 s); the new record differs from the old only by the added environment field (checked); reports/p3b_results/p3b_reproduce.json, 74,527 B, sha256 279f9773de79de094f337ae797eea175ab4ff5e782d836f72293fb8bf80cd3c6.
+- **pytest:** 1,314 passed, 7 skipped, 0 failed in 15 min 27 s, with --durations=20 (slowest 87.13 s, test_h3k_quantile_controls_fpr_and_fails_when_the_pool_is_off_target; the run followed the reproduction directly). After the final edits: test_p3b_vitl, test_p3b_score and test_runbook_tooling re-run, all passed.
+- **ruff:** clean.
+
+**PENDING:**
+- the model record (the user's download);
+- then the HEAD dry-run, the code zip, the pre-push audit and the hand-over;
+- the Cell 2 line and the Kaggle version time (items 1, 2).

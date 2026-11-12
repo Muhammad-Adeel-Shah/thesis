@@ -252,6 +252,11 @@ def run(subjects: dict[str, tuple[Path, str]], workers: int, log: Any) -> dict[s
         "reading": READING,
         "limitation": "DINOv3 ViT-L/16 against DDA's DINOv2 ViT-L/14: the same size, a "
                       "different pretraining and patch size (prereg section 3)",
+        "environment": "ViT-L trained and scored on torch 2.11.0+cu130, as were the P4 "
+                       "comparators DDA and CO-SPY (MEASURED); the S2-D ViT-B models and their "
+                       "P3 scores on a torch version their records do not hold (2.10.0+cu128 "
+                       "is the only earlier Kaggle record: NOT-VERIFIED for them). Recorded, "
+                       "not expected to matter; it bears on Q3 only (prereg section 7)",
         "labels": {"upper_bound": p4.name(p4.UPPER_BOUND) + " (CLAUDE.md section 6d)",
                    "home_benchmark": "E7 is DDA's home benchmark"},
         "seeds_scored": sorted(subjects),

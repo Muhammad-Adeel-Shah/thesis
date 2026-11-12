@@ -17,6 +17,19 @@ after ``p3_final_preflight.py`` has written the plan. For each model in ``--memb
 **Once only:** a model whose stage summary exists is refused (exit 1) -- the pre-flight
 carries complete stages forward and never plans them again. ``--limit N`` (the smoke)
 scores N rows per list into ``--out-root`` and is never a result.
+
+**Per-list resume** (``--resume-lists``, opt-in; P3b, user decision 2026-11-12): every
+finished list is recorded the moment it ends (``<list>.done.json`` beside its CSV: rows,
+the CSV's sha256, the model's hashes, the list file's sha256, the backbone). A later run
+**keeps** every list whose record matches the model, the list and the backbone, and whose
+CSV has the record's hash -- it is never scored again -- and scores only the lists with no
+saved scores. A record that does not match is refused, never overwritten. A CSV with no
+record (a crash between the two writes) holds scores nobody recorded; it is scored again
+and the summary names it. Without the flag nothing changes.
+
+**Timing** for the fail-fast projection: each list times its first batch apart
+(``timing``: the warm images and seconds after it), and the summary records the model's
+``load_seconds``.
 """
 
 from __future__ import annotations
@@ -24,6 +37,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -104,6 +118,55 @@ def verify_weights(model: dict[str, Any]) -> None:
         raise ScoreError(f"{model['id']}: {changed} changed since the pre-flight")
 
 
+def fault_after_lists() -> int | None:
+    """Dry-run only: exit right after this many lists are recorded (rehearses a crash)."""
+    value = os.environ.get("DBP_FAULT_EXIT_AFTER_LISTS", "")
+    return int(value) if value and os.environ.get("DBP_DRYRUN") == "1" else None
+
+
+def list_record_path(csv_path: Path) -> Path:
+    """The per-list record beside a list's CSV (``--resume-lists``)."""
+    return csv_path.with_name(csv_path.stem + ".done.json")
+
+
+def list_identity(model: dict[str, Any], list_sha256: str, backbone: str,
+                  condition: str) -> dict[str, Any]:
+    """What a kept list must have been scored with."""
+    return {"model": model["id"], "lora_sha256": model["lora_sha256"],
+            "head_sha256": model["head_sha256"],
+            "snapshot_sha256": model.get("snapshot_sha256"), "list_sha256": list_sha256,
+            "backbone": backbone, "condition": condition}
+
+
+def kept_list(csv_path: Path, identity: dict[str, Any]) -> dict[str, Any] | None:
+    """A finished list to keep, or None to score it.
+
+    Raises:
+        ScoreError: a record exists that does not match this model, list or backbone, or
+            whose CSV is not the one it recorded -- never overwritten.
+    """
+    record_path = list_record_path(csv_path)
+    if not record_path.is_file():
+        return None
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    differ = [k for k, v in identity.items() if record.get(k) != v]
+    if differ:
+        raise ScoreError(f"{csv_path}: its record was made with a different {differ}; "
+                         f"refused, not overwritten")
+    if not csv_path.is_file() or file_sha256(csv_path) != record.get("sha256"):
+        raise ScoreError(f"{csv_path}: the CSV is missing or not the one its record names")
+    return record
+
+
+def write_list_record(csv_path: Path, identity: dict[str, Any], entry: dict[str, Any]) -> None:
+    """Record a finished list (atomic), after its CSV."""
+    record_path = list_record_path(csv_path)
+    tmp = record_path.with_name(record_path.name + ".tmp")
+    tmp.write_text(json.dumps({**identity, **entry}, indent=2) + "\n", encoding="utf-8",
+                   newline="\n")
+    tmp.replace(record_path)
+
+
 def score_model(model: dict[str, Any], plan: dict[str, Any], args: argparse.Namespace,
                 log: Any) -> dict[str, Any]:
     """Score one model's stage; write its CSVs, then its summary."""
@@ -118,6 +181,7 @@ def score_model(model: dict[str, Any], plan: dict[str, Any], args: argparse.Name
         raise ScoreError(f"{model['id']}: {stage_name} already scored ({summary_file}); "
                          f"Panel B is scored once per frozen model")
     verify_weights(model)
+    loading = time.perf_counter()
     bank = load_bank_config(THESIS_DBP / "configs" / "decoder_bank.yaml")
     run = load_run_configs(THESIS_DBP / model["runs_config"], bank).by_id(model["protocol"])
     token = get_hf_token()
@@ -131,6 +195,8 @@ def score_model(model: dict[str, Any], plan: dict[str, Any], args: argparse.Name
         args.device)
     amp = args.device.startswith("cuda") and torch.cuda.is_available()
     local = Path(plan["local_root"])
+    load_seconds = time.perf_counter() - loading
+    first_batch: dict[str, float] = {}
 
     def crop(row: dict[str, str], condition: str) -> np.ndarray:
         image = load_rgb_uint8(local / row["relative_path"])
@@ -138,8 +204,11 @@ def score_model(model: dict[str, Any], plan: dict[str, Any], args: argparse.Name
 
     def score(rows: list[dict[str, str]], condition: str) -> list[float]:
         out: list[float] = []
+        began = time.perf_counter()
         with ThreadPoolExecutor(max_workers=LOADERS) as pool:
             for start in range(0, len(rows), args.batch):
+                if start == args.batch:   # the first batch (warm-up) is timed apart
+                    first_batch["seconds"] = time.perf_counter() - began
                 chunk = rows[start: start + args.batch]
                 crops = np.stack(list(pool.map(lambda r: crop(r, condition), chunk)))
                 batch = normalise_batch(crops, normalisation["image_mean"],
@@ -161,17 +230,48 @@ def score_model(model: dict[str, Any], plan: dict[str, Any], args: argparse.Name
         test = [r for r in read_list(Path(plan["lists"]["panel_b"]["path"]))
                 if r["role"] == "test"]
         jobs = [(condition, test, condition) for condition in plan["robust"]["conditions"]]
+    list_sha = {name: file_sha256(Path(plan["lists"][name]["path"])) for name in CLEAN_LISTS
+                if name in plan.get("lists", {})}
     results: dict[str, Any] = {}
+    kept, unrecorded = [], []
     for name, rows, condition in jobs:
         rows = rows[: args.limit] if args.limit else rows
+        path = out_root / FINAL / model["id"] / stage_name / f"{name}.csv"
+        source = "panel_b" if stage_name == "robust" else name
+        identity = list_identity(model, list_sha.get(source, ""), args.backbone, condition)
+        if args.resume_lists and not args.limit:
+            record = kept_list(path, identity)
+            if record is not None:
+                results[name] = {k: record[k] for k in ("rows", "condition", "file", "sha256",
+                                                        "seconds", "seconds_per_image",
+                                                        "timing")}
+                kept.append(name)
+                log.info("%s %s %s: KEPT (scored earlier, %d rows; never scored again)",
+                         model["id"], stage_name, name, record["rows"])
+                continue
+            if path.is_file():
+                unrecorded.append(name)
+                log.warning("%s %s %s: a CSV with no record (a crash between two writes) is "
+                            "scored again", model["id"], stage_name, name)
+        first_batch.clear()
         started = time.perf_counter()
         scores = score(rows, condition)
         seconds = time.perf_counter() - started
-        path = out_root / FINAL / model["id"] / stage_name / f"{name}.csv"
+        warm_images = max(0, len(rows) - args.batch)
+        timing = {"first_batch_seconds": round(first_batch.get("seconds", seconds), 3),
+                  "warm_images": warm_images,
+                  "warm_seconds": round(seconds - first_batch["seconds"], 3)
+                  if warm_images else 0.0}
         results[name] = {"rows": len(rows), "condition": condition, "file": str(path),
                          "sha256": write_scores(path, rows, scores),
                          "seconds": round(seconds, 1),
-                         "seconds_per_image": round(seconds / len(rows), 5)}
+                         "seconds_per_image": round(seconds / len(rows), 5), "timing": timing}
+        if args.resume_lists and not args.limit:
+            write_list_record(path, identity, results[name])
+            fault = fault_after_lists()
+            if fault is not None and len(results) - len(kept) >= fault:
+                log.error("dry-run fault: exiting after %d recorded list(s)", fault)
+                os._exit(137)
         log.info("%s %s %s: %d rows in %.1f s (%.4f s/image)", model["id"], stage_name, name,
                  len(rows), seconds, seconds / len(rows))
     from PIL import __version__ as pillow
@@ -186,6 +286,9 @@ def score_model(model: dict[str, Any], plan: dict[str, Any], args: argparse.Name
         "pillow": pillow, "conditions": {c: CONDITIONS[c] for _, _, c in jobs},
         "limit": args.limit or None, "lists": results,
         "panel_b_digest": plan["panel_b"]["digest"],
+        "load_seconds": round(load_seconds, 2),
+        **({"kept_lists": kept, "unrecorded_lists_scored_again": unrecorded}
+           if args.resume_lists else {}),
     }
     summary_file.parent.mkdir(parents=True, exist_ok=True)
     tmp = summary_file.with_name(summary_file.name + ".tmp")
@@ -207,6 +310,8 @@ def main() -> int:
     parser.add_argument("--out-root", type=Path, default=None,
                         help="Where a smoke writes (never the results tree).")
     parser.add_argument("--deadline-hours", type=float, default=0.0)
+    parser.add_argument("--resume-lists", action="store_true",
+                        help="Record each finished list; keep recorded lists on a re-run.")
     args = parser.parse_args()
     log = setup_logging("p3_final_score")
     if args.deadline_hours > 0:
