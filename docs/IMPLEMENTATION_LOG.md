@@ -7966,3 +7966,50 @@ the scoring session.
 - the failed run's `p3b_score_reports.zip`, whose pre-flight record holds the digest Kaggle
   computed, to confirm the listing is complete;
 - then the fix, with a regression test (CLAUDE.md section 12.6).
+
+### P3b — cause of the refusal found: `snapshot_digest` sorted paths case-insensitively on Windows; fixed, record rebuilt and re-pinned — 2026-11-15
+
+**The Kaggle listing** (user, a CPU editor cell over the training output; path, bytes and
+sha256 of every file under both `snapshots/step_05000/`):
+- the same four files as the download, nothing extra;
+- all eight sha256 equal the download's.
+
+**Cause (MEASURED):**
+- `snapshot_digest` hashed the lines `<path>\0<sha256>\n` in `sorted(Path)` order.
+- `WindowsPath` compares case-insensitively, so on Windows `lora/README.md` sorts after
+  `lora/adapter_*`. On Linux it sorts first.
+- The same files in Windows order give `bf91d61f…`, the committed record's value. In Linux
+  order they give `14492b32…` (seed 0) and `b69eb9f4…` (seed 1), computed from the
+  listing.
+- The local record was therefore made in the one order Kaggle never uses.
+- The dry-runs could not catch it: both sides of every dry-run check run on Windows.
+
+**Fix:**
+- **`src/dbp/eval/heldout_scores.py`:**
+  - new `snapshot_files()` returns relative POSIX path → sha256, ordered by path parts
+    compared case-sensitively, as `PurePosixPath` sorts on every platform;
+  - `snapshot_digest()` is built on it.
+  - On Linux the order, and so every digest Kaggle ever computed (P3's included), is
+    unchanged. The trainer is untouched and still byte-identical.
+- **Regression test** `tests/test_p3_recipe.py::test_snapshot_digest_is_the_posix_order_on_every_platform`:
+  the expected digest is built from `PurePosixPath` order, with `README.md` against
+  `adapter_*` and `a/x` against `a-b/x`. The old code fails it on Windows (its order:
+  README last).
+- **Per-file hashes:**
+  - `p3b_model_record.py` records `snapshot_files`;
+  - on a digest mismatch, `p3b_score_preflight.py` names the differing files
+    (`files_differing`);
+  - test `test_p3b_score.py::test_a_refusal_names_the_files_that_differ`.
+
+**The record, rebuilt from the same staged files** (`reports/p3b_results/p3b_model_record.json`,
+3,063 B):
+- sha256 `e26a99855639980cc4ef2a9dc61738c9fc2ae0ae37a9bfbbd0c80618d7e03713`, pinned in
+  `env/p3b_score_expect.json`; git's stored bytes give the same sha256.
+- OK for both seeds; tensors equal the step-5,000 checkpoints.
+- The snapshot digests (`14492b32…`, `b69eb9f4…`) equal those from the Kaggle listing, and
+  all eight per-file hashes equal the listing.
+
+**Checks:**
+- **pytest** (`--durations=20 -rs`): 1,317 passed, 7 skipped, 0 failed, in 422.65 s; slowest
+  test 37.5 s. All 7 skips are `test_gpu_smoke.py`: no CUDA device (PENDING-GPU).
+- **ruff:** clean.

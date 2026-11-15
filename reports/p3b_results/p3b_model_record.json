@@ -9,7 +9,13 @@
       "ok": true,
       "problems": [],
       "snapshot": "outputs/p3b/s2/s2d_p35_seed0/snapshots/step_05000",
-      "snapshot_sha256": "bf91d61f8cfbad20b6004d737b5853766619e520db632446f25f0f28d51e7abf",
+      "snapshot_sha256": "14492b324b9d9fb88f70064bd929d0ebaf7a69299532367a280a6119a916b3b4",
+      "snapshot_files": {
+        "head.pt": "732e9eae440f2162f54cf06009f225d32e45a9b6b904044432bc2761cd0e39ef",
+        "lora/README.md": "2c5d45ca5fdb90e807053128617c37d2b8890344972760e033bd6f0ac77ed6af",
+        "lora/adapter_config.json": "cd0a2b51dd4cfac7c552a203747e67023059a8c5e514bbbb01ba57aeaf473912",
+        "lora/adapter_model.safetensors": "9708a2ceb960724079c3f629677b9638b33023413702a85590200eea819f8067"
+      },
       "lora_sha256": "9708a2ceb960724079c3f629677b9638b33023413702a85590200eea819f8067",
       "adapter_config_sha256": "cd0a2b51dd4cfac7c552a203747e67023059a8c5e514bbbb01ba57aeaf473912",
       "head_sha256": "732e9eae440f2162f54cf06009f225d32e45a9b6b904044432bc2761cd0e39ef",
@@ -30,7 +36,13 @@
       "ok": true,
       "problems": [],
       "snapshot": "outputs/p3b/s2/s2d_p35_seed1/snapshots/step_05000",
-      "snapshot_sha256": "ae1f4ae8fef4d5e5001715f41f1c25f79a2b4f544fbca334bb8ab377d9e09e05",
+      "snapshot_sha256": "b69eb9f40df234eb5d7bddce42b4be4cf4f09a0787d782ed1f9d4289e46ce294",
+      "snapshot_files": {
+        "head.pt": "00f5cf218f81e59b20f686b308aec60c074c5164521947b323578470c1149a71",
+        "lora/README.md": "2c5d45ca5fdb90e807053128617c37d2b8890344972760e033bd6f0ac77ed6af",
+        "lora/adapter_config.json": "b7b928941f4b7e52de896d518a6aa2c3ce24627d5d5bfb4c8336b73e132750fb",
+        "lora/adapter_model.safetensors": "f41ac12fa8462533ebfc347f9e7f867106048bc2dc56039a385ec74292ce87ec"
+      },
       "lora_sha256": "f41ac12fa8462533ebfc347f9e7f867106048bc2dc56039a385ec74292ce87ec",
       "adapter_config_sha256": "b7b928941f4b7e52de896d518a6aa2c3ce24627d5d5bfb4c8336b73e132750fb",
       "head_sha256": "00f5cf218f81e59b20f686b308aec60c074c5164521947b323578470c1149a71",

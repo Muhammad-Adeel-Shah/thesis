@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from dbp.backbones.loader import BACKBONES  # noqa: E402
 from dbp.data.manifest import file_sha256  # noqa: E402
-from dbp.eval.heldout_scores import snapshot_digest  # noqa: E402
+from dbp.eval.heldout_scores import snapshot_digest, snapshot_files  # noqa: E402
 from dbp.eval.perturb import H5_DECISION  # noqa: E402
 
 EXPECT = ROOT / "env" / "p3b_score_expect.json"
@@ -153,6 +153,16 @@ def test_a_model_whose_hash_differs_from_the_record_is_refused(tmp_path: Path) -
     (snapshot / "head.pt").write_bytes(b"another head")
     _, problems = preflight.check_model(spec, train, expect, record)
     assert any("differ from the committed model record" in p for p in problems)
+
+
+def test_a_refusal_names_the_files_that_differ(tmp_path: Path) -> None:
+    """A record with per-file hashes turns a digest mismatch into the files' names."""
+    preflight, spec, train, expect, record, snapshot = _model_case(tmp_path)
+    record["runs"]["s2d_p35_seed0"]["snapshot_files"] = snapshot_files(snapshot)
+    (snapshot / "lora" / "README.md").write_text("model card", encoding="utf-8")
+    _, problems = preflight.check_model(spec, train, expect, record)
+    assert any("['snapshot_sha256']" in p and "files: ['lora/README.md']" in p
+               for p in problems), problems
 
 
 def test_a_report_that_is_not_the_committed_one_is_refused(tmp_path: Path) -> None:

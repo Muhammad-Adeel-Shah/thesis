@@ -153,16 +153,32 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def snapshot_files(snapshot: Path) -> dict[str, str]:
+    """Every file of a snapshot directory: relative posix path -> sha256, in digest order.
+
+    The order is POSIX path order: the path parts compared case-sensitively, as
+    ``PurePosixPath`` sorts them, on every platform. Sorting ``Path`` objects is not
+    portable: ``WindowsPath`` compares case-insensitively, which puts ``lora/README.md``
+    after ``lora/adapter_*`` on Windows and before them on Linux, so the same files gave
+    two digests (P3b scoring session 1, 2026-11-15).
+    """
+    snapshot = Path(snapshot)
+    files = [p for p in snapshot.rglob("*") if p.is_file()]
+    if not files:
+        raise HeldoutScoreError(f"{snapshot}: empty snapshot")
+    named = sorted(((p.relative_to(snapshot).as_posix(), p) for p in files),
+                   key=lambda item: item[0].split("/"))
+    return {name: file_sha256(path) for name, path in named}
+
+
 def snapshot_digest(snapshot: Path) -> str:
     """One sha256 for a snapshot directory (LoRA adapters + head).
 
     The sha256 of the lines ``<relative posix path>\\0<file sha256>\\n`` over every file,
-    sorted by path, so a renamed, added or changed file changes it.
+    in POSIX path order (:func:`snapshot_files`), so a renamed, added or changed file
+    changes it, and the same files give the same digest on every platform.
     """
-    files = sorted(p for p in Path(snapshot).rglob("*") if p.is_file())
-    if not files:
-        raise HeldoutScoreError(f"{snapshot}: empty snapshot")
-    lines = "".join(f"{p.relative_to(snapshot).as_posix()}\0{file_sha256(p)}\n" for p in files)
+    lines = "".join(f"{name}\0{sha}\n" for name, sha in snapshot_files(snapshot).items())
     return hashlib.sha256(lines.encode("utf-8")).hexdigest()
 
 

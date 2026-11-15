@@ -188,6 +188,31 @@ def test_a_tampered_or_malformed_score_file_is_refused(tmp_path: Path) -> None:
                                "score": float("nan")}], {})
 
 
+def test_snapshot_digest_is_the_posix_order_on_every_platform(tmp_path: Path) -> None:
+    """Regression (P3b scoring session 1, 2026-11-15): the same files must give one digest.
+
+    Sorting ``Path`` objects put ``lora/README.md`` after ``lora/adapter_*`` on Windows and
+    before them on Linux, so the model record made locally never matched Kaggle's.
+    The expected digest is built here from ``PurePosixPath`` order, which is the same on
+    every platform, and must equal what Linux always produced.
+    """
+    import hashlib
+    from pathlib import PurePosixPath
+
+    snap = tmp_path / "step_05000"
+    files = {"head.pt": b"head", "lora/README.md": b"card", "lora/adapter_config.json": b"{}",
+             "lora/adapter_model.safetensors": b"weights", "a-b/x": b"1", "a/x": b"2"}
+    for name, data in files.items():
+        (snap / name).parent.mkdir(parents=True, exist_ok=True)
+        (snap / name).write_bytes(data)
+    order = [str(p) for p in sorted(PurePosixPath(n) for n in files)]
+    assert order.index("lora/README.md") < order.index("lora/adapter_config.json")
+    assert order.index("a/x") < order.index("a-b/x")
+    lines = "".join(f"{n}\0{hashlib.sha256(files[n]).hexdigest()}\n" for n in order)
+    assert list(HS.snapshot_files(snap)) == order
+    assert HS.snapshot_digest(snap) == hashlib.sha256(lines.encode("utf-8")).hexdigest()
+
+
 def test_snapshot_digest_sees_any_change(tmp_path: Path) -> None:
     snap = tmp_path / "step_05000"
     (snap / "lora").mkdir(parents=True)

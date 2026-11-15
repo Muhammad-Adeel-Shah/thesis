@@ -41,7 +41,7 @@ sys.path.insert(0, str(THESIS_DBP / "scripts"))
 import p3_final_preflight as p3f  # noqa: E402
 from dbp.backbones.loader import BACKBONES  # noqa: E402
 from dbp.data.manifest import file_sha256  # noqa: E402
-from dbp.eval.heldout_scores import snapshot_digest  # noqa: E402
+from dbp.eval.heldout_scores import snapshot_digest, snapshot_files  # noqa: E402
 from dbp.eval.perturb import H5_DECISION  # noqa: E402
 from dbp.utils.logging import setup_logging  # noqa: E402
 from p3_s2d_inputs import stage, write_rows  # noqa: E402
@@ -90,9 +90,19 @@ def check_model(spec: dict[str, Any], train_root: Path, expect: dict[str, Any],
         differ = [k for k in HASHES if model[k] != recorded.get(k)]
         if differ:
             problems.append(f"{spec['id']}: {differ} differ from the committed model record -- "
-                            f"refused, not scored")
+                            f"refused, not scored{files_differing(weights, recorded)}")
     model["recorded"] = list(HASHES)
     return model, problems
+
+
+def files_differing(weights: Path, recorded: dict[str, Any]) -> str:
+    """Which snapshot files differ from the record's per-file hashes, for the refusal."""
+    want = recorded.get("snapshot_files")
+    if not want:
+        return ""
+    have = snapshot_files(weights)
+    names = sorted(n for n in set(have) | set(want) if have.get(n) != want.get(n))
+    return f"; files: {names}" if names else "; every file matches, the digest order differs"
 
 
 def carry_lists(previous: list[Path], here: Path, models: list[str], stage_name: str,

@@ -37,7 +37,7 @@ sys.path.insert(0, str(THESIS_DBP / "scripts"))
 
 from dbp.backbones.loader import BACKBONES  # noqa: E402
 from dbp.data.manifest import file_sha256  # noqa: E402
-from dbp.eval.heldout_scores import snapshot_digest  # noqa: E402
+from dbp.eval.heldout_scores import snapshot_digest, snapshot_files  # noqa: E402
 from dbp.utils.logging import setup_logging  # noqa: E402
 from p3_s2d_inputs import write_record  # noqa: E402
 
@@ -102,6 +102,7 @@ def record_run(run: str, directory: Path, report_path: Path, step: int) -> dict[
         "run": run, "step": step, "ok": not problems, "problems": problems,
         "snapshot": f"outputs/p3b/s2/{run}/snapshots/step_{step:05d}",
         "snapshot_sha256": snapshot_digest(snapshot),
+        "snapshot_files": snapshot_files(snapshot),
         "lora_sha256": file_sha256(files["adapter"]),
         "adapter_config_sha256": file_sha256(files["config"]),
         "head_sha256": file_sha256(files["head"]),
