@@ -111,6 +111,24 @@ def test_per_image_csvs_are_summarised_not_judged(tmp_path: Path) -> None:
                      "reports/lists/panel_b.csv": "manifest/list"}
 
 
+def test_the_three_id_columns_missed_on_2026_11_15_are_counted(tmp_path: Path) -> None:
+    """The headers of the three files the audit missed, each counted as per-image."""
+    repo = _repo(tmp_path, [{
+        "reports/p3_open_images/oi_validation_cc_by_2.csv":
+            b"ImageID,OriginalURL,License,Author,OriginalSize,OriginalMD5,Rotation\na,u,l,x,1,m,0\n",
+        "reports/k/p3_open_images/p3_open_images_walk.csv":
+            b"position,oi_image_id,host,outcome\n0,a,h,ok\n",
+        "reports/p1_gen_matched_manifest.csv":
+            b"gen_id,source_real_id,pairing,matched_quality\ng,r,p,90\n",
+        "reports/p4_results/tables/t9a_unseen_auc.csv":
+            b"model,group,gpt-image-2 (e3)\nm,g,0.9\n"}])
+    per_image = AUDIT.audit(repo, "HEAD")["c_per_image"]
+    columns = {i["path"].rsplit("/", 1)[1]: i["id_columns"] for i in per_image["list"]}
+    assert columns == {"oi_validation_cc_by_2.csv": ["ImageID"],
+                       "p3_open_images_walk.csv": ["oi_image_id"],
+                       "p1_gen_matched_manifest.csv": ["gen_id", "source_real_id"]}
+
+
 def test_the_exit_code_is_nonzero_on_a_violation_and_2_outside_a_repo(tmp_path: Path) -> None:
     bad = _repo(tmp_path, [{"reports/panel/x.jpg": JPEG}])
     script = ROOT / "scripts" / "prepush_audit.py"

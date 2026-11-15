@@ -54,8 +54,11 @@ SECRET = re.compile(
     rb"|\"key\"\s*:\s*\"[0-9a-f]{32}\"")
 RISKY_NAME = re.compile(r"(^|/)(\.env(\..*)?|kaggle\.json|[^/]*\.pem|id_rsa[^/]*|[^/]*token[^/]*"
                         r"|[^/]*secret[^/]*|credentials[^/]*)$", re.IGNORECASE)
+#: Columns that make a CSV per-image. ``ImageID`` (Open Images metadata), ``oi_image_id``
+#: (the Open Images walk) and ``gen_id`` / ``source_real_id`` (the generated-image manifest)
+#: were added after the 2026-11-15 audit missed three such files (user decision).
 ID_COLUMNS = {"image_id", "id", "member", "pair_id", "source_image_id", "relative_path",
-              "source_path"}
+              "source_path", "ImageID", "oi_image_id", "gen_id", "source_real_id"}
 
 
 class AuditError(RuntimeError):

@@ -13,7 +13,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
 | Other pinned | accelerate 1.15.0, safetensors 0.8.0, huggingface_hub 1.32.0, scikit-learn 1.9.1, **scipy 1.18.1 (declared in `requirements/base.txt` at P2 for McNemar, Spearman and the bootstrap)**, numpy 2.5.2, pandas 3.0.6, ruff 0.16.8, pytest 9.1.1 |
-| Git branch / last commit | **Repository re-rooted at `thesis_dbp/` by the user (2026-11-05):** branch `master`, `origin` = github.com/Muhammad-Adeel-Shah/thesis; the earlier history (183 commits, tags `p3-prereg-frozen`, `p4-baselines-frozen`) was removed with the old `.git`; see the 2026-11-05 entry. Code for the TrueFake run: `218da57` (zip `dbp-code-218da57.zip` in kaggle_raw); the TrueFake analysis ran at `8ea9e56`; see the latest prompt entry for later commits. The commit a given run used is stamped into its upload as `COMMIT.txt` |
+| Git branch / last commit | **`master`** (default branch; never rewritten again, user 2026-11-15), pushed to the new private repository `origin` = github.com/Muhammad-Adeel-Shah/thesis at `2d56cbd` with tags `v1.0-images` and `p3b-vitl-prereg-frozen` (both on the release root `17e9c6e`). Earlier history: `docs/HISTORY_MAP.md` (era B in `archive/pre-release` and the bundle, not pushed; era A gone since 2026-11-05, its code kept as the `dbp-code-<hash>.zip` archives). The commit a given run used is stamped into its upload as `COMMIT.txt` |
 | Protected files integrity | **0 files checked, 0 changed — CLEAN** in both runtimes, algorithm self-test byte-identical. Kaggle verdict at `reports/kaggle_20260920/p0_integrity.json`. Since P1 the report is rewritten only when its content actually changes, so a CLEAN run no longer dirties the working tree |
 
 ## 2. Protected assets (never modified)
@@ -7885,3 +7885,55 @@ and pinned in `env/p3b_score_expect.json`):
 - **A read-only scan of every blob:** 993 blobs; none over 100 MB, none over 10 MB; no
   weight by name or by content (torch archive, safetensors, pickle).
 - Every path in history is present at the tip.
+
+### Repository — `master` pushed to the new private repository; audit taught three id columns; `docs/HISTORY_MAP.md`; the archive audited, its push held on a co-author question — 2026-11-15
+
+**User review of `2d56cbd`:** ACCEPTED. The user pushed `master` and the two tags, then started
+the scoring session.
+- **The push is MEASURED** (`git ls-remote origin`): `refs/heads/master` =
+  `2d56cbd27637167f5c993d71f12968573070eec8`; `p3b-vitl-prereg-frozen` and `v1.0-images` both
+  peel to `17e9c6e832b32f7905e92be08ca6d518c8b857b8`.
+- **Standing rules from the user:** the default branch stays `master`; `master` is never
+  rewritten again; no co-author lines.
+
+**Item 3 — the audit** (`scripts/prepush_audit.py`):
+- **Change:** `ID_COLUMNS` gains `ImageID`, `oi_image_id`, `gen_id` and `source_real_id`, the
+  id columns of the three per-image CSVs it missed.
+- **Test:** `tests/test_prepush_audit.py::test_the_three_id_columns_missed_on_2026_11_15_are_counted`
+  uses the three files' real headers, plus an aggregate table that must stay uncounted.
+  19 passed.
+- **On `master`:** 172 per-image CSVs, 62,359,178 B, 920,453 rows (was 169 / 53,778,193 B).
+
+**Item 2 — `docs/HISTORY_MAP.md`** (new, user-approved):
+- **Three eras:**
+  - **A:** before 2026-11-02, 183 commits; removed with the old `.git` on 2026-11-05.
+  - **B:** `archive/pre-release`, 15 commits, `db2aca9` to `d5e56dc`, also in the bundle.
+  - **C:** the release, from `17e9c6e`.
+- **The release root:** `17e9c6e`'s tree equals `d5e56dc`'s plus 43 log lines.
+- **The bundle:** its path, size, sha256 and refs; `git bundle verify` reports "complete
+  history".
+- **The old tag:** `p3b-vitl-prereg-frozen` on `6b6f7d2` collides with the release tag, so it
+  is `archive/p3b-vitl-prereg-frozen` wherever it is published.
+- **Era A's code:**
+  - 32 code zips are kept in `kaggle_raw`;
+  - every `COMMIT.txt` matches its zip's name;
+  - 5 of those commits exist in git today; the other 27 are era A, and for those runs the
+    zip is the surviving code.
+- **A paragraph for the paper's reproducibility appendix.**
+
+**Item 1 — the archive push: the audit is CLEAN; the push is HELD.**
+- **`prepush_audit.py --ref archive/pre-release`** (whole history):
+  - 15 commits, 1,000 blobs;
+  - 14 images, all allowed charts;
+  - 0 secret hits, 0 risky names;
+  - 172 per-image CSVs, 62,359,178 B.
+- **A read-only blob scan:** none over 100 MB (none over 10 MB); no weight by name or by
+  content. No path is deleted later: every path in history is at the tip.
+- **The old tags.** The only old tag in the bundle or the repository is
+  `p3b-vitl-prereg-frozen` (annotated, on `6b6f7d2`). `p4-baselines-frozen`,
+  `p3-prereg-frozen` and the other pre-2026-11-02 tags were era A and no longer exist
+  anywhere on this machine.
+- **Why it is held:** 14 of the 15 era-B commits carry a co-author trailer naming Claude
+  (`git rev-list --count -i --grep=...`). The new repository was created to leave those
+  out, and rewriting the archive would change the very hashes it exists to preserve. So
+  the user decides. Nothing is fetched, tagged or pushed.
