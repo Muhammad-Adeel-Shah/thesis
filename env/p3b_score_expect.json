@@ -88,7 +88,7 @@
   ],
   "model_record": {
     "path": "reports/p3b_results/p3b_model_record.json",
-    "sha256": "PENDING-MODEL-RECORD (NOT-VERIFIED: the record is made from the downloaded snapshots before any score)"
+    "sha256": "9340074db11a8a74fca6fe2d3c413f2873792acd19c95915962262dd9a85355d"
   },
   "smoke_limit": 64,
   "smoke_deadline_hours": 1.0,

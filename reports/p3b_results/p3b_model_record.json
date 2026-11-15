@@ -1,0 +1,50 @@
+{
+  "what": "P3b frozen ViT-L models: hashes recorded before any Panel B score",
+  "backbone": "dinov3-vitl16",
+  "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+  "runs": {
+    "s2d_p35_seed0": {
+      "run": "s2d_p35_seed0",
+      "step": 5000,
+      "ok": true,
+      "problems": [],
+      "snapshot": "outputs/p3b/s2/s2d_p35_seed0/snapshots/step_05000",
+      "snapshot_sha256": "bf91d61f8cfbad20b6004d737b5853766619e520db632446f25f0f28d51e7abf",
+      "lora_sha256": "9708a2ceb960724079c3f629677b9638b33023413702a85590200eea819f8067",
+      "adapter_config_sha256": "cd0a2b51dd4cfac7c552a203747e67023059a8c5e514bbbb01ba57aeaf473912",
+      "head_sha256": "732e9eae440f2162f54cf06009f225d32e45a9b6b904044432bc2761cd0e39ef",
+      "checkpoint_sha256": "6ebf3ff26583858d81ba168ef4dd23cdb12c3c96b14b02d245ea92b11089e1d1",
+      "bytes": {
+        "adapter": 6316496,
+        "config": 1256,
+        "head": 10157,
+        "checkpoint": 19140689
+      },
+      "report": "reports\\kaggle_20261111\\p3b_train\\p2_s2_s2d_p35_seed0.json",
+      "report_sha256": "1a6d993db5ee75ed4ca80eda8ace192085ef8864bac131014947f3e513673d12",
+      "tensors_equal_to_checkpoint": true
+    },
+    "s2d_p35_seed1": {
+      "run": "s2d_p35_seed1",
+      "step": 5000,
+      "ok": true,
+      "problems": [],
+      "snapshot": "outputs/p3b/s2/s2d_p35_seed1/snapshots/step_05000",
+      "snapshot_sha256": "ae1f4ae8fef4d5e5001715f41f1c25f79a2b4f544fbca334bb8ab377d9e09e05",
+      "lora_sha256": "f41ac12fa8462533ebfc347f9e7f867106048bc2dc56039a385ec74292ce87ec",
+      "adapter_config_sha256": "b7b928941f4b7e52de896d518a6aa2c3ce24627d5d5bfb4c8336b73e132750fb",
+      "head_sha256": "00f5cf218f81e59b20f686b308aec60c074c5164521947b323578470c1149a71",
+      "checkpoint_sha256": "aab1820a64d2d844bb4acad5ff752ba371dfe1f34a8518ad249847f572f87ad0",
+      "bytes": {
+        "adapter": 6316496,
+        "config": 1256,
+        "head": 10157,
+        "checkpoint": 19140689
+      },
+      "report": "reports\\kaggle_20261111\\p3b_train\\p2_s2_s2d_p35_seed1.json",
+      "report_sha256": "720da68fb99c41b52c629f5dcf6bf2579dbad4de4c9d207030714967f83c4a91",
+      "tensors_equal_to_checkpoint": true
+    }
+  },
+  "ok": true
+}
