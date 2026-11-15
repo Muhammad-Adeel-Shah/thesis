@@ -7760,3 +7760,54 @@ The validation AUC is the trainer's own seen-decoder set and is not cited as a r
 - the model record (the user's download);
 - then the HEAD dry-run, the code zip, the pre-push audit and the hand-over;
 - the Cell 2 line and the Kaggle version time (items 1, 2).
+
+### P3b — review of `d841ecb` accepted; items 1–2 recorded; the downloaded models cross-checked; the record waits on `lora/README.md` — 2026-11-15
+
+**User review of `d841ecb`:** ACCEPTED, with the item 3 correction (Q1 and Q2 on the same torch
+2.11; the drift bears on Q3 only).
+
+**Item 1, code provenance:** the training notebook's Cell 2 printed `code commit: d5e56dc`.
+MEASURED (pasted by the user), replacing the INFERRED of the training entry.
+- `17e9c6e` differs from `d5e56dc` only in `docs/IMPLEMENTATION_LOG.md` (+43 lines;
+  `git diff --stat d5e56dc 17e9c6e`), so the code that trained is the released code.
+
+**Item 2, the external timestamp:** Kaggle `dbp-code` **version 1**, its only version (user).
+- Lower bound: the zip was written 2026-11-11 17:05:54 PKT (MEASURED: file time of
+  `F:/thesis-2/kaggle_raw/dbp-code-d5e56dc.zip`).
+- Upper bound: the smoke that attached it started 2026-11-12 01:06:32 PKT, 2026-11-11
+  20:06:32 UTC (MEASURED: `started` in `p3b_vitl_train_smoke_status.json`).
+- The exact creation time Kaggle shows: NOT-VERIFIED. In the prereg status line.
+
+**The download** (`F:/thesis-2/kaggle_raw/p3b_vitl_models/`, 4 files per seed):
+- The browser saved `checkpoint.pt` and `head.pt` as `.zip`; both are torch archives
+  (`checkpoint.tmp/data.pkl`, `head.tmp/data.pkl`). Copied, renamed, into a scratchpad
+  staging tree in the trainer's layout; the download is untouched.
+- **`p3b_model_record.py` on it: OK for both seeds.** The report checks pass, the checkpoint
+  is at step 5,000, and every LoRA and head tensor equals the checkpoint's (`torch.equal`).
+  - seed 0: LoRA `9708a2ce…`, head `732e9eae…`, checkpoint `6ebf3ff2…`
+  - seed 1: LoRA `f41ac12f…`, head `00f5cf21…`, checkpoint `aab1820a…`
+  - (`sha256sum` of the download, and the scratchpad record.)
+- **Not committed.** peft's `save_pretrained` also writes `lora/README.md` into the snapshot
+  (seen in the dry-run's trainer output), and `snapshot_digest` covers every file. Without
+  it the digest cannot equal the one the Kaggle pre-flight computes, which would refuse
+  the model. The record waits for both seeds' README; the expect's sha256 stays PENDING.
+
+**Hand-over requirements (user), checked against the code:**
+- The backbone loads from the Hub at `revision=ea8dc2863c51be0a264bab82070e3e8836b02d51`
+  (`src/dbp/backbones/loader.py`), so Internet on and the `HF_TOKEN` Secret.
+- What the pre-flight checks today: each training report's revision equals that pin
+  (`check_seed`), and every model hash against the record. The revision is first
+  *resolved on the Hub* at the smoke's `from_pretrained`, before any scoring, not in the
+  pre-flight itself.
+- **No fetch from `github.com` or `dl.fbaipublicfiles.com` in the scoring path** (static
+  search of `src/`, the scoring scripts, the runbook and the bootstrap):
+  - `dl.fbaipublicfiles.com` appears only in third-party libraries (timm, open_clip),
+    whose pretrained loaders this path never calls;
+  - `github.com` appears in `env_report.collect_network` and the Real-ESRGAN downloader;
+    neither is called on this path.
+
+**PENDING:**
+- the two `lora/README.md`, then the record, the expect pin, the HEAD dry-run, the code zip,
+  the pre-push audit and the hand-over;
+- the user's answer on an explicit Hub pin check in the pre-flight;
+- the GitHub repository to push to.

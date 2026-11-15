@@ -6,10 +6,16 @@
   `7fbb06d`, with their changes folded in).
 - **Section 6** holds the Kaggle smoke's MEASURED numbers.
 - **Section 7** records what was learnt after the freeze. It changes no rule.
-- **External timestamp:** PENDING (NOT-VERIFIED) — the time of the Kaggle `dbp-code`
-  dataset version made from `dbp-code-d5e56dc.zip`, which the user will send.
+- **External timestamp:** the Kaggle `dbp-code` dataset, **version 1** (its only version;
+  user, 2026-11-15), made from `dbp-code-d5e56dc.zip`.
   - frozen locally at `6b6f7d2`, 2026-11-11 16:28 PKT;
-  - ViT-L training started 2026-11-12 01:09 PKT.
+  - the zip was written 2026-11-11 17:05:54 PKT (MEASURED: its file time in `kaggle_raw`),
+    so version 1 is no earlier than that;
+  - the smoke that attached version 1 started 2026-11-12 01:06:32 PKT (MEASURED:
+    `reports/kaggle_20261111/p3b_train/p3b_vitl_train_smoke_status.json`), so it is no
+    later than that;
+  - ViT-L training started 2026-11-12 01:09 PKT;
+  - the exact creation time Kaggle shows for version 1: NOT-VERIFIED (not yet read off).
 
 After the freeze, nothing in sections 1–5 changes.
 
@@ -254,3 +260,8 @@ In fixed-steps mode the trainer records `allowance_hours` 2.25 but never caps st
   2026-11-12).
 - The record is committed as `reports/p3b_results/p3b_model_record.json`.
 - The scoring pre-flight refuses any model whose hashes differ from it.
+
+**Code provenance:** the training notebook's Cell 2 printed `code commit: d5e56dc`
+(MEASURED: pasted by the user, 2026-11-15). The released `17e9c6e` differs from `d5e56dc`
+only in `docs/IMPLEMENTATION_LOG.md` (+43 lines; `git diff --stat d5e56dc 17e9c6e`), so the
+code that trained is the released code.
