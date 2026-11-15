@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P3b (2026-11-12)**: ViT-L S2-D seeds 0 and 1 **trained** on Kaggle (5,000 steps each; validation AUC 0.99981 / 0.99960); the failure path (prereg section 5) **PASSED for both seeds**, so both are cleared for the single Panel B scoring. No Panel B score exists yet. Repository re-rooted locally to one commit `17e9c6e` (old history in `git_archive`), not yet pushed |
+| Last prompt | **P3b (2026-11-15)**: ViT-L S2-D seeds 0 and 1 trained (5,000 steps; failure path PASSED for both). The **scoring session** is built and dry-run at HEAD (PASSED), and the **model record** of both frozen snapshots is committed and pinned (tensors equal the step-5,000 checkpoints). No Panel B score exists yet. The re-rooted history (`17e9c6e` onward) is audited CLEAN for a first push to the new private repository |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -7811,3 +7811,77 @@ MEASURED (pasted by the user), replacing the INFERRED of the training entry.
   the pre-push audit and the hand-over;
 - the user's answer on an explicit Hub pin check in the pre-flight;
 - the GitHub repository to push to.
+
+### P3b — review of `3772b81` accepted; the model record committed and pinned; the new GitHub repository; HEAD dry-run PASSED — 2026-11-15
+
+**User review of `3772b81`:** ACCEPTED.
+- **No extra Hub-check cell;** the approved plan stays. The backbone loads at the pinned
+  commit during the smoke, before any Panel B scoring: that is the verification.
+- **The external-timestamp bracket is accepted** (after the 16:28 freeze, before the 01:06
+  smoke). The exact Kaggle time stays NOT-VERIFIED: none was given.
+
+**The backbone pin** `ea8dc2863c51be0a264bab82070e3e8836b02d51`:
+- it is 40 lowercase hex characters;
+- the Hub's `model_info(revision=pin).sha` equals it;
+- it is no branch or tag name (`list_repo_refs`: branch `main` points at it; no tags).
+- Run locally, metadata only, 2026-11-15. `p0_verify_pins.py`: 16 pins, 0 failed,
+  0 blocked.
+
+**The model record** (`reports/p3b_results/p3b_model_record.json`, 2,205 B, sha256
+`9340074db11a8a74fca6fe2d3c413f2873792acd19c95915962262dd9a85355d`, committed in `71e09b0`
+and pinned in `env/p3b_score_expect.json`):
+- **The download:** `F:/thesis-2/kaggle_raw/p3b_vitl_models/`, still flat, with `.zip`
+  names for `checkpoint.pt` and `head.pt`, now with `README.md`.
+  - Nothing is missing against the trainer's snapshot layout (`head.pt`,
+    `lora/{adapter_config.json, adapter_model.safetensors, README.md}`, as in the dry-run's
+    trainer output).
+  - Copied into that layout in the scratchpad; the download is untouched.
+- **`p3b_model_record.py`: OK for both seeds.** Every tensor equals the step-5,000
+  checkpoint.
+  - seed 0: snapshot `bf91d61f…`, LoRA `9708a2ce…`, head `732e9eae…`
+  - seed 1: snapshot `ae1f4ae8…`, LoRA `f41ac12f…`, head `00f5cf21…`
+- The sha256 of git's stored bytes equals the pin (`git show :<path> | sha256sum`).
+- Whether Kaggle's snapshot folders hold exactly these four files is checked on Kaggle:
+  the pre-flight refuses on any digest mismatch.
+
+**Checks at `71e09b0`:**
+- **Local dry-run (`p3b_score`, `--ref HEAD`): PASSED in 252 s.**
+  - session 1 was killed after the first recorded list;
+  - session 2 kept it byte-identical (`9aee8930…`), scored the rest and both conditions;
+  - hashes equal the record, and both fail-fast projections passed.
+  - The first attempt failed before any session (`No module named 'peft'`). The cause was
+    the scratchpad keep-awake wrapper: it started the bare `python`, which on Windows
+    resolves to the base interpreter beside the venv launcher. Re-run with the venv's
+    full path. A local tooling slip; no repository code changed.
+- **pytest** (`--durations=20`): 1,314 passed, 7 skipped, 0 failed, in 421 s; slowest test
+  35.7 s.
+- **ruff:** clean.
+
+**The GitHub repository (user, 2026-11-15):**
+- The old repository was deleted, on a date not given (NOT-VERIFIED; on or before
+  2026-11-15). A new, empty, private repository was created at the same URL
+  (`origin`, unchanged). The branch stays `master`.
+- **What the new repository receives is the re-rooted history:** `17e9c6e` "Initial release:
+  image module" and its successors, with tags `p3b-vitl-prereg-frozen` and `v1.0-images`
+  (both on `17e9c6e`).
+  - These commits were never pushed to the old repository, so their hashes are not the
+    old repository's.
+  - The pre-release history (to `d5e56dc`, which documents such as the prereg cite) is
+    kept locally only: branch `archive/pre-release` and the bundle
+    `F:/thesis-2/git_archive/thesis_dbp_history_d5e56dc.bundle`.
+- **GitHub's push dates before 2026-11-15 are no longer available.** The external
+  timestamps of record are the Kaggle dataset versions.
+
+**Pre-push audit (whole history of `master`, as a first push):**
+- `prepush_audit.py --ref master`: CLEAN.
+  - 14 images, all allowed charts;
+  - 0 secret hits, 0 risky names;
+  - 169 per-image CSVs, 53,778,193 B.
+- **Three per-image CSVs it does not count,** because their id columns have other names:
+  - `reports/p3_open_images/oi_validation_cc_by_2.csv` (`ImageID`; 7,309,877 B)
+  - `reports/kaggle_20261017/p3_open_images/p3_open_images_walk.csv` (`oi_image_id`;
+    281,490 B)
+  - `reports/p1_gen_matched_manifest.csv` (`gen_id`; 989,618 B)
+- **A read-only scan of every blob:** 993 blobs; none over 100 MB, none over 10 MB; no
+  weight by name or by content (torch archive, safetensors, pickle).
+- Every path in history is present at the tip.
