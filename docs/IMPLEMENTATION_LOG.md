@@ -7937,3 +7937,32 @@ the scoring session.
   (`git rev-list --count -i --grep=...`). The new repository was created to leave those
   out, and rewriting the archive would change the very hashes it exists to preserve. So
   the user decides. Nothing is fetched, tagged or pushed.
+
+### P3b — scoring session 1 (code `2d56cbd`): both models REFUSED by the pre-flight; nothing scored — 2026-11-15
+
+**What happened** (the notebook log, pasted by the user):
+- **Environment:** the bootstrap, staging and env pre-flight passed:
+  - 2× T4, torch `2.11.0+cu130`, CUDA 13.0, cuDNN 92700, driver 580.178.04;
+  - `HF_TOKEN present: true`;
+  - peft 0.21.2, transformers 5.20.2.
+- **`p3b_score_preflight.py`:** `vitl_s2d_p35_seed{0,1}: ['snapshot_sha256'] differ from the
+  committed model record -- refused, not scored`. FAILED at 16:59:52 UTC, about 206 s into
+  the session.
+- **No plan, smoke or score ran; no Panel B score exists.** Cell 7 failed the notebook, as
+  designed. Each model remains unscored, so "scored once" is intact.
+
+**What it shows:**
+- **The weights are the recorded ones.** `lora_sha256` and `head_sha256` matched the record
+  for both seeds; only the folder digest differs.
+- **The downloaded files look byte-exact.** `README.md` says `PEFT 0.21.2`, Kaggle's version,
+  and both files have Linux line endings.
+- **The difference is therefore in which files the Kaggle snapshot folder holds**
+  (`snapshot_digest` hashes every file under it, hidden ones included, by relative path).
+  The record was made from a four-file reconstruction.
+- **Cause: NOT-VERIFIED.** A per-file listing from Kaggle is requested.
+
+**PENDING:**
+- the listing (path, bytes, sha256 of every file under both `snapshots/step_05000/`);
+- the failed run's `p3b_score_reports.zip`, whose pre-flight record holds the digest Kaggle
+  computed, to confirm the listing is complete;
+- then the fix, with a regression test (CLAUDE.md section 12.6).
