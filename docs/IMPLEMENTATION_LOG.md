@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P3b (2026-11-15)**: ViT-L S2-D seeds 0 and 1 trained (5,000 steps; failure path PASSED for both). The **scoring session** is built and dry-run at HEAD (PASSED), and the **model record** of both frozen snapshots is committed and pinned (tensors equal the step-5,000 checkpoints). No Panel B score exists yet. The re-rooted history (`17e9c6e` onward) is audited CLEAN for a first push to the new private repository |
+| Last prompt | **P3b (2026-11-16)**: ViT-L S2-D seeds 0 and 1 trained (5,000 steps; failure path PASSED for both). **Scoring attempt 1** (code `2d56cbd`) was refused at the pre-flight, so nothing was scored. The cause was a Windows-only path sort in `snapshot_digest`, fixed in `6c94252` (the user accepted it). The model record was rebuilt and re-pinned. The fix leaves P3 intact: the P3/P4 reproduction is EXACT (20/20), and the new digest reproduces 4 committed P3 Kaggle snapshot hashes on Windows. No Panel B score exists yet; the re-run is handed over. `master` up to `2d56cbd` and both release tags are pushed to the new private repository; the archive branch push is held |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -8013,3 +8013,84 @@ sha256 of every file under both `snapshots/step_05000/`):
 - **pytest** (`--durations=20 -rs`): 1,317 passed, 7 skipped, 0 failed, in 422.65 s; slowest
   test 37.5 s. All 7 skips are `test_gpu_smoke.py`: no CUDA device (PENDING-GPU).
 - **ruff:** clean.
+
+### P3b — snapshot-hash fix reviewed: attempt 1 recorded; P3/P4 reproduction EXACT; the new digest reproduces 4 committed P3 Kaggle snapshot hashes on Windows — 2026-11-16
+
+**User, 2026-11-16:**
+- The fix in `6c94252` is ACCEPTED. The diagnosis is right: Windows path ordering is
+  case-insensitive, so the sort now uses the relative POSIX path on every platform.
+- Before the re-run, four things are asked for:
+  - the once-only evidence from the failed run;
+  - proof that the change to the shared `heldout_scores.py` leaves P3 intact;
+  - the status of the previous review;
+  - then the usual suite, commit, dry-run, zip, audit and hand-over.
+
+**Attempt 1: refused at pre-flight, no scoring** (session 1, code `2d56cbd`, 2026-11-15).
+- **The refusal line**, from the notebook log the user pasted (entry above):
+  `vitl_s2d_p35_seed{0,1}: ['snapshot_sha256'] differ from the committed model record --
+  refused, not scored`. FAILED at 16:59:52 UTC.
+- **No plan, smoke or score ran:** 0 Panel B score rows.
+- **The output-file check from the run's `p3b_score_reports.zip`: NOT-RUN.**
+  - The archive is not on this machine. A search found no `p3b_score*` file: `kaggle_raw`
+    recursively; Downloads; `F:\thesis-2`; the user profile and `F:` to depth 3.
+  - PENDING: once it is placed in `F:\thesis-2\kaggle_raw\`, its file list and the
+    pre-flight record are read with `python -I` and logged here.
+
+**`heldout_scores.py` is shared with P3. Three checks:**
+- **(a) The P3/P4 reproduction, at `6c94252`: EXACT MATCH, 20 of 20 checks (MEASURED).**
+  - The command: `p3b_analyze.py --reproduce --workers 8`, with `--out` in the
+    scratchpad. 2,000 resamples; the bootstrap ran 16:58:04 to 17:03:54 PKT.
+  - The record it wrote is byte-identical to the committed
+    `reports/p3b_results/p3b_reproduce.json`: 74,527 B each, both sha256
+    `279f9773de79de094f337ae797eea175ab4ff5e782d836f72293fb8bf80cd3c6`.
+- **(b) The new function on Windows reproduces the committed Kaggle snapshot hash of four
+  P3 models (MEASURED).**
+  - **The weights:** LoRA, `adapter_config.json` and head, from
+    `F:\thesis-2\kaggle_raw\final_hashes\<run>\` (downloaded 2026-10-27).
+  - **The missing file:** peft's `lora/README.md` was not downloaded then. The README of
+    the P2 output `P2_Training-results_x\...\full_bank_seed0\lora\README.md`
+    (sha256 `e5a765d6…b0e9`) was staged in its place. All four local P2 READMEs have
+    this hash; the P3b READMEs are `2c5d45ca…`, a different peft version.
+  - **The test:** each staged folder was hashed with the new `snapshot_digest` and with
+    the old one, read from git at `2d56cbd`. The committed values are
+    `reports/p3_final/<run>_clean.json` `snapshot_sha256`, computed on Kaggle.
+
+| P3 model | committed (Kaggle) | new function | old function |
+|---|---|---|---|
+| `s2d_p35_seed0` | `8356ef38…8449` | EQUAL | `1b80e939…f351`, differs |
+| `s2d_p35_seed1` | `98305d20…2728` | EQUAL | `5c52dfa4…ec6c`, differs |
+| `s2b_seed1` | `1048b063…b323` | EQUAL | `1c54d077…ee4f`, differs |
+| `s2b_reals_seed0` | `7a4ba123…21e3` | EQUAL | `855e902d…d7b0`, differs |
+
+  - **Reading:** four sha256 equalities imply two things.
+    - The Kaggle P3 READMEs had the P2-era hash (INFERRED from the equality; no P3 README
+      was downloaded).
+    - The new order is the one Kaggle used for P3.
+  - **Neither function was ever used locally to record a P3 snapshot hash**, so no
+    committed P3 value is affected. They were all computed on Kaggle (Linux), where old
+    and new code agree.
+  - **The P2 models scored in P3** (`full_bank_seed0`, `p_a_sd1_seed0`) are kind
+    `lora_head`, with `snapshot_sha256: null`, so no digest applies.
+- **(c) Integrity guard: NO.**
+  - `p0_verify_integrity.py` excludes `thesis_dbp/` (`EXCLUDED_DIRS = (".git",
+    "thesis_dbp")`), and the protected set is empty (`counts.total` 0).
+  - Nothing pins the file's bytes: no reference to `heldout_scores.py` outside this log,
+    and the old file's sha256 (`3a1f45e2…5384`) appears nowhere.
+  - Recorded anyway: `6c94252` is a user-approved bug fix (review 2026-11-16). The reason
+    is the case-insensitive Windows path sort in `snapshot_digest`.
+
+**Previous review (2026-11-15), status:**
+- **`archive/pre-release` and the old tag: HELD,** awaiting the user's decision.
+  - The whole-archive audit was CLEAN (`7bbad65` entry).
+  - 14 of its 15 commits carry a Co-Authored-By line.
+  - The commands are listed in `docs/HISTORY_MAP.md`, which says "Published to GitHub:
+    NOT YET".
+- **`docs/HISTORY_MAP.md`:** done, in `7bbad65`.
+- **The audit's three id columns:** done, in `7bbad65`. 172 per-image CSVs are counted.
+
+**Checks:**
+- **pytest** (`--durations=20 -rs`): 1,317 passed, 7 skipped, 0 failed, in 489.46 s;
+  slowest test 40.50 s. All 7 skips are `test_gpu_smoke.py`: no CUDA device (PENDING-GPU).
+  One warning, from `huggingface_hub` (`local_dir_use_symlinks` deprecated).
+- **ruff:** clean.
+- **Snapshot row 11:** refreshed.
