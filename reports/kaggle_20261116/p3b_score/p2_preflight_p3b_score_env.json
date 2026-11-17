@@ -1,0 +1,43 @@
+{
+  "stage": "p3b_score_env",
+  "passed": true,
+  "checks": [
+    {
+      "name": "gpu count",
+      "ok": true,
+      "detail": "2 CUDA device(s) ['Tesla T4', 'Tesla T4']",
+      "seconds": 1.87,
+      "data": {}
+    },
+    {
+      "name": "runtime",
+      "ok": true,
+      "detail": "torch 2.11.0+cu130, CUDA 13.0, cuDNN 92700, GPU ['Tesla T4', 'Tesla T4'], driver 580.178.04",
+      "seconds": 0.04,
+      "data": {
+        "torch": "2.11.0+cu130",
+        "torch_cuda": "13.0",
+        "cudnn": 92700,
+        "gpus": [
+          "Tesla T4",
+          "Tesla T4"
+        ],
+        "driver": "580.178.04"
+      }
+    },
+    {
+      "name": "hf token",
+      "ok": true,
+      "detail": "HF_TOKEN present: true",
+      "seconds": 0.4,
+      "data": {}
+    },
+    {
+      "name": "imports",
+      "ok": true,
+      "detail": "peft 0.21.2, transformers 5.20.2, safetensors 0.8.0, huggingface_hub 1.33.0, PIL 13.0.0",
+      "seconds": 6.38,
+      "data": {}
+    }
+  ]
+}

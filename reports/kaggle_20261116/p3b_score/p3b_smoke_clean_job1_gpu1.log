@@ -1,0 +1,4 @@
+Loading weights:   0%|          | 0/415 [00:00<?, ?it/s]Loading weights:  45%|████▌     | 187/415 [00:00<00:00, 1844.68it/s]Loading weights: 100%|██████████| 415/415 [00:00<00:00, 2256.93it/s]
+2026-11-16 11:28:55 INFO    p3_final_score | vitl_s2d_p35_seed1 clean panel_b: 64 rows in 6.3 s (0.0988 s/image)
+2026-11-16 11:28:58 INFO    p3_final_score | vitl_s2d_p35_seed1 clean luma: 64 rows in 2.2 s (0.0350 s/image)
+2026-11-16 11:29:00 INFO    p3_final_score | vitl_s2d_p35_seed1 clean threshold_reals: 64 rows in 2.0 s (0.0312 s/image)

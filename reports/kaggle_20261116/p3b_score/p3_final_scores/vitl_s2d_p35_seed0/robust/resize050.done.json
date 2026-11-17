@@ -1,0 +1,19 @@
+{
+  "model": "vitl_s2d_p35_seed0",
+  "lora_sha256": "9708a2ceb960724079c3f629677b9638b33023413702a85590200eea819f8067",
+  "head_sha256": "732e9eae440f2162f54cf06009f225d32e45a9b6b904044432bc2761cd0e39ef",
+  "snapshot_sha256": "14492b324b9d9fb88f70064bd929d0ebaf7a69299532367a280a6119a916b3b4",
+  "list_sha256": "5a8eaa0574cf07f7188397d6d0c8b92f06162e26b1017e44740da76174b056b5",
+  "backbone": "dinov3-vitl16",
+  "condition": "resize050",
+  "rows": 8655,
+  "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/vitl_s2d_p35_seed0/robust/resize050.csv",
+  "sha256": "45e73ebbad5bef3440b5cf465441cf654dad514a3e5875cb0b6a7ac1c020ef6a",
+  "seconds": 476.3,
+  "seconds_per_image": 0.05503,
+  "timing": {
+    "first_batch_seconds": 2.132,
+    "warm_images": 8623,
+    "warm_seconds": 474.155
+  }
+}

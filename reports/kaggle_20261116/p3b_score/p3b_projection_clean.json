@@ -1,0 +1,40 @@
+{
+  "what": "P3b fail-fast projection (user rule 2026-11-09)",
+  "stage": "clean",
+  "elapsed_hours": 0.072,
+  "available_hours": 7.0,
+  "deadline_hours": 7.0,
+  "jobs": [
+    {
+      "device": "0",
+      "models": [
+        {
+          "model": "vitl_s2d_p35_seed0",
+          "rate_s_per_image": 0.03313541666666667,
+          "warm_images_timed": 96,
+          "rows_to_score": 10996,
+          "load_seconds": 22.92,
+          "seconds": 387.27704166666666
+        }
+      ],
+      "hours": 0.108,
+      "fits": true
+    },
+    {
+      "device": "1",
+      "models": [
+        {
+          "model": "vitl_s2d_p35_seed1",
+          "rate_s_per_image": 0.03392708333333334,
+          "warm_images_timed": 96,
+          "rows_to_score": 10996,
+          "load_seconds": 22.92,
+          "seconds": 395.9822083333334
+        }
+      ],
+      "hours": 0.11,
+      "fits": true
+    }
+  ],
+  "ok": true
+}

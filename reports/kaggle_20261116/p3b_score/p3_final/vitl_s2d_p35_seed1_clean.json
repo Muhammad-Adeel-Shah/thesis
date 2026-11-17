@@ -1,0 +1,67 @@
+{
+  "model": "vitl_s2d_p35_seed1",
+  "stage": "clean",
+  "protocol": "s2d_p35",
+  "seed": 1,
+  "step": 5000,
+  "kind": "snapshot",
+  "snapshot_sha256": "b69eb9f40df234eb5d7bddce42b4be4cf4f09a0787d782ed1f9d4289e46ce294",
+  "lora_sha256": "f41ac12fa8462533ebfc347f9e7f867106048bc2dc56039a385ec74292ce87ec",
+  "head_sha256": "00f5cf218f81e59b20f686b308aec60c074c5164521947b323578470c1149a71",
+  "crop": 320,
+  "crop_policy": "centre",
+  "score": "head logit",
+  "backbone": "dinov3-vitl16",
+  "revision": "ea8dc2863c51be0a264bab82070e3e8836b02d51",
+  "dry_run_random_init": false,
+  "pillow": "13.0.0",
+  "conditions": {
+    "clean": null
+  },
+  "limit": null,
+  "lists": {
+    "panel_b": {
+      "rows": 9405,
+      "condition": "clean",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/vitl_s2d_p35_seed1/clean/panel_b.csv",
+      "sha256": "baa0041bfa179885232bd6c9519d67e3fc81a7350b1b53ba3c404433f2e322f7",
+      "seconds": 338.3,
+      "seconds_per_image": 0.03597,
+      "timing": {
+        "first_batch_seconds": 1.762,
+        "warm_images": 9373,
+        "warm_seconds": 336.511
+      }
+    },
+    "luma": {
+      "rows": 700,
+      "condition": "clean",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/vitl_s2d_p35_seed1/clean/luma.csv",
+      "sha256": "0a12440215136da99c58bd71d9dd2f9b34a62f52e3bb1ba2068d858f25a7166f",
+      "seconds": 25.2,
+      "seconds_per_image": 0.03606,
+      "timing": {
+        "first_batch_seconds": 1.155,
+        "warm_images": 668,
+        "warm_seconds": 24.089
+      }
+    },
+    "threshold_reals": {
+      "rows": 891,
+      "condition": "clean",
+      "file": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_scores/vitl_s2d_p35_seed1/clean/threshold_reals.csv",
+      "sha256": "e759734932dfe2c51a78930ac6059b12b75d3051596e61858b821df706e2c69d",
+      "seconds": 30.0,
+      "seconds_per_image": 0.03366,
+      "timing": {
+        "first_batch_seconds": 1.11,
+        "warm_images": 859,
+        "warm_seconds": 28.883
+      }
+    }
+  },
+  "panel_b_digest": "267d9fde75d76a23640674fa2fff7e454de23971b8e296323ca4762507c2a551",
+  "load_seconds": 8.13,
+  "kept_lists": [],
+  "unrecorded_lists_scored_again": []
+}

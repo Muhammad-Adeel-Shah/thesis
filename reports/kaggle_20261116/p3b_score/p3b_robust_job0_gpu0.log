@@ -1,0 +1,3 @@
+Loading weights:   0%|          | 0/415 [00:00<?, ?it/s]Loading weights:  47%|████▋     | 196/415 [00:00<00:00, 1951.25it/s]Loading weights: 100%|██████████| 415/415 [00:00<00:00, 2534.78it/s]
+2026-11-16 11:43:41 INFO    p3_final_score | vitl_s2d_p35_seed0 robust jpeg50: 8655 rows in 371.9 s (0.0430 s/image)
+2026-11-16 11:51:37 INFO    p3_final_score | vitl_s2d_p35_seed0 robust resize050: 8655 rows in 476.3 s (0.0550 s/image)

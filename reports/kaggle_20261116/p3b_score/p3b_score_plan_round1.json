@@ -1,0 +1,218 @@
+{
+  "what": "P3b scoring plan (docs/P3b_VITL_PREREG.md section 2)",
+  "backbone": "dinov3-vitl16",
+  "section5": {
+    "degradation_choice": {
+      "path": "reports/p3_degradation_choice.json",
+      "sha256": "6cda015100912a99fc3ec8112d49aa06933a3eaddf1fe431a8f9b85a0755e8d5"
+    },
+    "nstar": {
+      "path": "reports/p3_nstar.json",
+      "sha256": "de30996d05bc0e4fb0408808cc9d4b97b27132d125298d09c991623a6c9ab678"
+    },
+    "oi_manifest": {
+      "path": "reports/kaggle_20261017/p3_open_images/p3_open_images_manifest.csv",
+      "sha256": "37bfc7db545798b043c0eb908f7911d7d9e10fc2fc1622b22006c2354f1b34e2"
+    },
+    "chosen": "s2b_deg_p35_seed0",
+    "chosen_p": 0.35,
+    "n_star": 5000,
+    "n_max": 6000,
+    "oi_split": {
+      "train": 3600,
+      "held_out": 400
+    },
+    "kshot_j": {
+      "10": [
+        1,
+        false
+      ],
+      "25": [
+        1,
+        false
+      ],
+      "50": [
+        1,
+        true
+      ],
+      "100": [
+        4,
+        true
+      ]
+    },
+    "nested": {
+      "1": 5000,
+      "2": 5000,
+      "3": 5000,
+      "4": 5000,
+      "5": 5000,
+      "6": 4500,
+      "7": 5000,
+      "8": 5000
+    }
+  },
+  "panel_b": {
+    "images": {
+      "path": "reports/kaggle_20261011/p3_panel_b_images.csv",
+      "sha256": "621626a626094a2e819eb71d1752c66264a63133e2de4c0fa2870003330c53d2"
+    },
+    "luma": {
+      "path": "reports/kaggle_20261011/p3_panel_b_luma.csv",
+      "sha256": "9faa69b2ec7963a2e1d66e70ae6d042a72bc3a2bfec6a6d23af40fe61298b717"
+    },
+    "rows": 9405,
+    "luma_rows": 700,
+    "digest": "267d9fde75d76a23640674fa2fff7e454de23971b8e296323ca4762507c2a551",
+    "luma_digest": "41445030ba224f29a8dbd8bc9a2524c10c0e3da902663ac36646d262f6335f62",
+    "test_digest": "af544cc12f37b4b0a31548c4f7e9682fde5da1c5f43adf99aee368344206f3e2",
+    "calibration_digest": "fd5fb95e50fe1ac48ac0d427fb07491e912fdbb45fa85f42d37739ab601694c2"
+  },
+  "model_record": {
+    "path": "reports/p3b_results/p3b_model_record.json",
+    "sha256": "e26a99855639980cc4ef2a9dc61738c9fc2ae0ae37a9bfbbd0c80618d7e03713"
+  },
+  "models": {
+    "vitl_s2d_p35_seed0": {
+      "id": "vitl_s2d_p35_seed0",
+      "run": "s2d_p35_seed0",
+      "kind": "snapshot",
+      "protocol": "s2d_p35",
+      "seed": 0,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/p3b-vit-l-training/Implementation/thesis_dbp/outputs/p3b/s2/s2d_p35_seed0/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/p3b-vit-l-training/Implementation/thesis_dbp/outputs/p3b/s2/s2d_p35_seed0/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/p3b-vit-l-training/Implementation/thesis_dbp/outputs/p3b/s2/s2d_p35_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "9708a2ceb960724079c3f629677b9638b33023413702a85590200eea819f8067",
+      "head_sha256": "732e9eae440f2162f54cf06009f225d32e45a9b6b904044432bc2761cd0e39ef",
+      "snapshot_sha256": "14492b324b9d9fb88f70064bd929d0ebaf7a69299532367a280a6119a916b3b4",
+      "failure_path": "PASS",
+      "recorded": [
+        "lora_sha256",
+        "head_sha256",
+        "snapshot_sha256"
+      ]
+    },
+    "vitl_s2d_p35_seed1": {
+      "id": "vitl_s2d_p35_seed1",
+      "run": "s2d_p35_seed1",
+      "kind": "snapshot",
+      "protocol": "s2d_p35",
+      "seed": 1,
+      "runs_config": "configs/p3_runs.yaml",
+      "step": 5000,
+      "source": "train",
+      "weights": "/kaggle/input/notebooks/muhammadadeelshah/p3b-vit-l-training/Implementation/thesis_dbp/outputs/p3b/s2/s2d_p35_seed1/snapshots/step_05000",
+      "lora": "/kaggle/input/notebooks/muhammadadeelshah/p3b-vit-l-training/Implementation/thesis_dbp/outputs/p3b/s2/s2d_p35_seed1/snapshots/step_05000/lora",
+      "head": "/kaggle/input/notebooks/muhammadadeelshah/p3b-vit-l-training/Implementation/thesis_dbp/outputs/p3b/s2/s2d_p35_seed1/snapshots/step_05000/head.pt",
+      "lora_sha256": "f41ac12fa8462533ebfc347f9e7f867106048bc2dc56039a385ec74292ce87ec",
+      "head_sha256": "00f5cf218f81e59b20f686b308aec60c074c5164521947b323578470c1149a71",
+      "snapshot_sha256": "b69eb9f40df234eb5d7bddce42b4be4cf4f09a0787d782ed1f9d4289e46ce294",
+      "failure_path": "PASS",
+      "recorded": [
+        "lora_sha256",
+        "head_sha256",
+        "snapshot_sha256"
+      ]
+    }
+  },
+  "lists": {
+    "panel_b": {
+      "path": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_lists/panel_b.csv",
+      "rows": 9405,
+      "sha256": "5a8eaa0574cf07f7188397d6d0c8b92f06162e26b1017e44740da76174b056b5"
+    },
+    "luma": {
+      "path": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_lists/luma.csv",
+      "rows": 700,
+      "sha256": "e54513462d3d6bc190fb0fa4f052bf08ecf215d2c6b7a9dfa634684faafd34b0"
+    },
+    "threshold_reals": {
+      "path": "/kaggle/working/Implementation/thesis_dbp/reports/p3_final_lists/threshold_reals.csv",
+      "rows": 891,
+      "sha256": "83e5b9c09c9997907c001e42087552ff0f73847f7d47e7bcddae29417b67e4f5"
+    }
+  },
+  "staged": {
+    "local_root": "/tmp/dbp_p3b_score_local",
+    "files": 10996,
+    "bytes": 1951910027,
+    "gb": 1.818,
+    "by_source": {
+      "open_images": {
+        "files": 400,
+        "bytes": 86566940
+      },
+      "coco": {
+        "files": 10596,
+        "bytes": 1865343087
+      }
+    },
+    "workers": 32,
+    "free_gb_before": 966.84,
+    "margin_gb": 2.0,
+    "memory_gb_before": {
+      "MemTotal": 31.35,
+      "MemAvailable": 29.54,
+      "Cached": 4.89
+    },
+    "stat_seconds": 1.6,
+    "n_missing": 0,
+    "missing": [],
+    "seconds": 25.2,
+    "files_per_s": 436.5,
+    "mb_per_s": 73.9,
+    "verified": 10996,
+    "already_local": 0,
+    "n_sha256_mismatch": 0,
+    "sha256_mismatch": [],
+    "memory_gb_after": {
+      "MemTotal": 31.35,
+      "MemAvailable": 29.27,
+      "Cached": 9.44
+    },
+    "free_gb_after": 965.0,
+    "ok": true,
+    "reason": ""
+  },
+  "stage": "clean",
+  "due": [
+    "vitl_s2d_p35_seed0",
+    "vitl_s2d_p35_seed1"
+  ],
+  "complete": {
+    "clean": [],
+    "robust": []
+  },
+  "carried": {
+    "clean": [],
+    "robust": []
+  },
+  "resumed": {
+    "clean": [],
+    "robust": []
+  },
+  "incomplete_previous": {
+    "clean": [],
+    "robust": []
+  },
+  "jobs": [
+    "0:vitl_s2d_p35_seed0",
+    "1:vitl_s2d_p35_seed1"
+  ],
+  "robust": {
+    "models": [
+      "vitl_s2d_p35_seed0",
+      "vitl_s2d_p35_seed1"
+    ],
+    "conditions": [
+      "jpeg50",
+      "resize050"
+    ],
+    "rows": "panel_b test rows"
+  },
+  "local_root": "/tmp/dbp_p3b_score_local",
+  "ok": true,
+  "problems": []
+}
