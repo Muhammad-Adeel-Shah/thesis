@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P3b (2026-11-16)**: ViT-L S2-D seeds 0 and 1 trained (5,000 steps; failure path PASSED for both). **Scoring attempt 1** (code `2d56cbd`) was refused at the pre-flight, so nothing was scored. The cause was a Windows-only path sort in `snapshot_digest`, fixed in `6c94252` (the user accepted it). The model record was rebuilt and re-pinned. The fix leaves P3 intact: the P3/P4 reproduction is EXACT (20/20), and the new digest reproduces 4 committed P3 Kaggle snapshot hashes on Windows. No Panel B score exists yet; the re-run is handed over. `master` up to `2d56cbd` and both release tags are pushed to the new private repository; the archive branch push is held |
+| Last prompt | **P3b (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained (5,000 steps) and **scored once** on Panel B (attempt 2, code `6c94252`; attempt 1 was refused at the pre-flight, 0 rows). The scores were committed (`40e1442`) before the analysis ran **once** (`p3b_analysis.json`). **Q1 (primary) PASS**: matches and beats DDA. Q2 PASS (matches and beats CO-SPY), Q3 PASS (size gain over ViT-B), Q5 PASS (Q and S). **Q4 not passed** (k = 0 FPR) and **Q6 not passed** (jpeg50) |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -8196,3 +8196,66 @@ sha256 of every file under both `snapshots/step_05000/`):
 - 10 commits; 14 images, all allowed charts; 0 secrets;
 - 172 per-image CSVs, 62,359,178 B;
 - blob scan: 0 over 100 MB, 0 over 10 MB, 0 weight-like names or bytes.
+
+### P3b — the analysis, run ONCE on the committed scores: Q1 (primary) PASS; Q2, Q3, Q5 PASS; Q4, Q6 not passed — 2026-11-17
+
+**The run (MEASURED):**
+- **The command:** `p3b_analyze.py --subject 0=reports/kaggle_20261116/p3b_score/p3_final_scores/vitl_s2d_p35_seed0
+  --subject 1=reports/kaggle_20261116/p3b_score/p3_final_scores/vitl_s2d_p35_seed1 --workers 8`.
+- **When:** at HEAD `6ccfd61`, once, from 11:08:53 PKT. 136 bootstrap calls, exit 0.
+- **The basis:** the scores committed in `40e1442`, before the analysis existed.
+- **Unchanged from the pre-registration:** the statistics, the rules and the seed rule of
+  `docs/P3b_VITL_PREREG.md` section 4 (tag `p3b-vitl-prereg-frozen`). The driver is the one
+  whose reproduction is EXACT (20/20; re-run at `6c94252`, entry of 2026-11-16).
+- **Bootstrap:** P3's `bootstrap`, unchanged: B = 2,000, seed 2026, percentile 95%.
+- **The record:** `reports/p3b_results/p3b_analysis.json`, 71,206 B, sha256
+  `5471ef999cadc69b55886329a972df1705781968e2d1093210f80351b94eb281`.
+- **Signs:** every difference is ViT-L minus the comparator, in AUC points.
+
+**The six questions** (all reported, whatever the outcome; seed rule: both seeds must pass):
+
+| # | statistic | seed 0 | seed 1 | rule | verdict |
+|---|---|---|---|---|---|
+| **Q1 (primary)** | macro AUC, ViT-L − DDA | +9.31 [+6.95, +11.52] | +10.05 [+7.85, +12.20] | matches: lower > −2; beats: lower > 0 | **matches PASS; beats PASS** |
+| Q2 | macro AUC, ViT-L − CO-SPY | +10.78 [+7.91, +13.72] | +11.53 [+8.67, +14.44] | as Q1 | matches PASS; beats PASS |
+| Q3 | macro AUC, ViT-L − ViT-B (same seed) | +12.19 [+9.61, +14.77] | +12.44 [+10.13, +14.84] | point ≥ +2 and lower > 0 | gain PASS |
+| Q4 | FPR at k = 0 (own union threshold): E4 / E5 / macro, % | 32.65 / 16.50 / 24.58 | 26.02 / 12.95 / 19.49 | macro ≤ 15 and no pool > 25 | **not passed** (both criteria fail, both seeds) |
+| Q5 | k = 50 share of draws with test FPR ≤ 7.5%: (Q) E4 / E5; (S) E4 / E5 | (Q) 1.000 / 0.964; (S) 1.000 / 0.999 | (Q) 1.000 / 0.966; (S) 1.000 / 1.000 | ≥ 0.80 on each of E4 and E5 | Q PASS; S PASS |
+| Q6 | macro AUC minus clean (test rows), points: jpeg50 / resize050 | −11.56 / −4.42 | −10.69 / −5.25 | both within 5 points | **not passed** (jpeg50 fails both seeds; resize050 fails seed 1) |
+
+- **Q4's CIs** (%): seed 0: E4 [28.06, 37.50], E5 [14.85, 18.10], macro [22.21, 27.15];
+  seed 1: E4 [21.68, 30.61], E5 [11.45, 14.40], macro [17.27, 21.77].
+- **Q6's CIs:**
+  - minus clean, jpeg50: seed 0 [−13.54, −9.80], seed 1 [−12.59, −8.89];
+  - minus clean, resize050: seed 0 [−5.96, −2.97], seed 1 [−6.78, −3.79].
+- **Q3 carries the environment line:** ViT-L ran on torch 2.11.0+cu130; ViT-B's torch is
+  NOT-VERIFIED for it (prereg section 7).
+- **Section 3's limitation:** DINOv3 ViT-L/16 against DDA's DINOv2 ViT-L/14. The same size,
+  a different pretraining and patch size.
+
+**Descriptive (no rule):**
+
+| item | seed 0 | seed 1 |
+|---|---|---|
+| macro AUC, 4 unseen slices | 0.8773 [0.8568, 0.8965] | 0.8848 [0.8640, 0.9032] |
+| ΔFPR E4/E5 macro, ViT-L − DDA (pts) | +11.82 [+9.10, +14.70] | +6.73 [+3.90, +9.48] |
+| ΔFPR, ViT-L − CO-SPY (pts) | −2.93 [−6.23, +0.42] | −8.02 [−11.17, −4.74] |
+| ΔFPR, ViT-L − ViT-B (pts) | +10.64 [+8.08, +13.22] | +5.40 [+2.87, +7.74] |
+| jpeg50 macro AUC; − DDA (`dda_jpeg50`) | 0.7617; +5.74 [+2.74, +8.75] | 0.7779; +7.36 [+4.36, +10.36] |
+| resize050 macro AUC; − DDA (`dda_resize050`) | 0.8331; +9.54 [+6.53, +12.43] | 0.8322; +9.46 [+6.59, +12.33] |
+| jpeg50 / resize050, − ViT-B | +13.98 [+10.68, +17.27] / +12.57 [+9.45, +15.51] | NOT-AVAILABLE (ViT-B seed 1 has no robust scores) |
+| slice AUC: E3 GPT-Image-2 / E3 Nano-Banana-2 / E4 / E5 | 0.8202 / 0.8973 / 0.9791 / 0.8126 | 0.8258 / 0.9058 / 0.9777 / 0.8298 |
+| slice AUC − DDA: E3 GPT / E3 Nano / E4 / E5 (pts) | +34.38 / +5.95 / +2.94 / **−6.06 [−7.33, −4.72]** | +34.94 / +6.81 / +2.80 / **−4.34 [−5.56, −3.07]** |
+| E7 AUC per VAE: FLUX.1 / ema / mse / sdxl / sd-2-1 / sd-3.5 | 0.9954 / 0.9999 / 1.0000 / 0.9999 / 0.9999 / 0.9990 | 0.9929 / 0.9998 / 0.9999 / 0.9998 / 0.9998 / 0.9984 |
+| E7 luma FLUX.1 AUC | 0.9713 | 0.9637 |
+| E8 TPR at k = 0: Flux / GoT / Infinity / NOVA / OmniGen | 0.888 / 1.000 / 1.000 / 1.000 / 0.996 | 0.768 / 1.000 / 1.000 / 0.996 / 0.996 |
+| training validation AUC, step 5,000 (`reports/kaggle_20261111/p3b_train/`) | 0.9998 | 0.9996 |
+
+- **E5 against DDA:** ViT-L is below DDA on the E5 slice, with the CI wholly below 0 on both
+  seeds. It is a descriptive deficit; no rule is attached.
+- **E7:** DDA's home benchmark (record label `home_benchmark`).
+  - `e7_dda_coco/FLUX.1` carries the CLAUDE.md section 6d shortcut caveat: an **upper
+    bound** (record label `upper_bound`).
+- **Every slice's AP** is in the record. The validation curve is not part of the analysis
+  record; the step-5,000 values above come from the committed training reports' `curve`.
+- **Exploratory:** none.
