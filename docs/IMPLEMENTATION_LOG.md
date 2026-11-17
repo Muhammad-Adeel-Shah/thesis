@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P3b (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained (5,000 steps) and **scored once** on Panel B (attempt 2, code `6c94252`; attempt 1 was refused at the pre-flight, 0 rows). The scores were committed (`40e1442`) before the analysis ran **once** (`p3b_analysis.json`). **Q1 (primary) PASS**: matches and beats DDA. Q2 PASS (matches and beats CO-SPY), Q3 PASS (size gain over ViT-B), Q5 PASS (Q and S). **Q4 not passed** (k = 0 FPR) and **Q6 not passed** (jpeg50) |
+| Last prompt | **P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -8273,3 +8273,100 @@ sha256 of every file under both `snapshots/step_05000/`):
     `40e1442`.
 - **Blob scan:** 0 over 100 MB, 0 over 10 MB, 0 weight-like names or bytes.
 - **Co-author lines:** 0 in the unpushed commits.
+
+### P3b — CLOSED: thesis outputs (Table 10, two figures); k = 0 and k = 50 TPR reported; archive branch push prepared — 2026-11-17
+
+**User, 2026-11-17:**
+- The review of `78db7c3` (the P3b analysis) is ACCEPTED, and `master` is pushed
+  (`git ls-remote origin`: `refs/heads/master` = `78db7c3`).
+- Four requests:
+  1. push the archive branch, after the whole-history audit (collisions as `archive/<name>`);
+  2. report ViT-L's TPR on E4 and E5 at k = 0 and k = 50, (Q) and (S), from the committed
+     records;
+  3. the thesis outputs for P3b;
+  4. then P3b is closed, and Kaggle stays free for P5 (video).
+
+**1. The archive branch (approved: "Archive branch: YES, push it"):**
+- **What is pushed:**
+  - `archive/pre-release`: 15 commits, `db2aca9`..`d5e56dc`.
+  - The bundle's only tag, `p3b-vitl-prereg-frozen`, collides with the release tag. It was
+    fetched from the bundle as `refs/tags/archive/p3b-vitl-prereg-frozen`: tag object
+    `43ad831c5484a53d83a6fa8d050562f0d9bb7fc7`, target
+    `6b6f7d248079c38ca836641057f1da0578ca66bc`, which is inside `archive/pre-release`.
+  - The bundle's third ref, `refs/remotes/origin/master` → `47551d4`, is inside the branch
+    (`git merge-base --is-ancestor`), so nothing outside it exists.
+- **The whole-history audit (`prepush_audit.py`):** CLEAN for both.
+  - The branch: 15 commits, 967 paths, 1,000 blobs.
+  - The tag: 13 commits.
+  - Both: 14 images, all allowed charts; 0 secrets; 172 per-image CSVs, 62,359,178 B.
+- **Blob scan:** 0 over 100 MB, 0 over 10 MB, 0 weight-like names or bytes.
+- **Co-author trailers:** 14 of the 15 commits carry one (`git log --format=%B | grep -ci`);
+  the tag message has none. They are published as they are, by the user's decision;
+  history is not rewritten.
+- **The default branch stays `master`.**
+- `docs/HISTORY_MAP.md` section 3 is updated. The push is the user's, and is recorded when
+  confirmed.
+
+**2. ViT-L TPR at k = 0 and k = 50:**
+- **Already in `p3b_analysis.json`,** so nothing is post-hoc. Each Q5 view stores `k0`
+  (FPR, TPR) and, per method and k, `mean_fpr`, `mean_tpr` and the share.
+- **The ViT-B rows** are from `p3_analysis_full.json` H3-k. They equal the committed table t3
+  (s0 E4: 86.9 / 39.2 / 61.7; E5: 27.5 / 9.9 / 7.9).
+- **All k = 50 cells are 1,000 draws.**
+
+| model | pool | k = 0 FPR / TPR | (Q) k = 50 mean FPR / TPR (share) | (S) k = 50 mean FPR / TPR (share) |
+|---|---|---|---|---|
+| ViT-L s0 | E4 | 32.7% / 98.7% | 1.8% / 79.9% (1.000) | 3.9% / 89.6% (1.000) |
+| ViT-L s0 | E5 | 16.5% / 59.2% | 2.9% / 19.9% (0.964) | 4.6% / 27.3% (0.999) |
+| ViT-L s1 | E4 | 26.0% / 98.1% | 1.6% / 78.2% (1.000) | 3.0% / 86.1% (1.000) |
+| ViT-L s1 | E5 | 13.0% / 54.5% | 2.4% / 17.6% (0.966) | 3.2% / 22.4% (1.000) |
+| ViT-B s0 | E4 | 15.8% / 86.9% | 0.6% / 39.2% (0.987) | 1.7% / 61.7% (1.000) |
+| ViT-B s0 | E5 | 12.0% / 27.5% | 3.2% / 9.9% (0.963) | 2.4% / 7.9% (1.000) |
+| ViT-B s1 | E4 | 16.3% / 86.7% | 1.0% / 41.7% (0.993) | 2.0% / 61.6% (1.000) |
+| ViT-B s1 | E5 | 11.8% / 34.4% | 3.1% / 11.3% (0.968) | 2.3% / 9.6% (1.000) |
+
+- **Reading (descriptive):**
+  - At k = 50, ViT-L keeps 79.9–89.6% TPR on E4, against ViT-B's 39.2–61.7%, at FPRs of
+    1.6–3.9%.
+  - On E5 it keeps 17.6–27.3%, against 7.9–11.3%.
+  - At k = 0, ViT-L's higher TPR comes with a higher FPR (Q4 not passed).
+
+**3. The thesis outputs (requested by the user, 2026-11-17):**
+- **`scripts/p3b_thesis_outputs.py`:**
+  - It reads only the committed records: `p3b_analysis.json`, `p4_analysis.json`, and
+    `p3_analysis_full.json` (ViT-B s0's H5 curve). Nothing is re-scored.
+  - It imports `p3_thesis_figures`' palette, `style`, `save` and `write_table`, the style of
+    `reports/p4_results`.
+  - Two runs gave byte-identical files.
+- **`reports/p3b_results/tables/t10_p3b_questions.csv|md`** (1,961 / 2,973 B):
+  - Q1–Q6, both seeds, with the statistic and its 95% CI, the per-seed rule outcome, the
+    verdict and the pre-registered rule.
+  - The note carries the seed rule, the reading of a failed "matches", the section 3
+    limitation and the Q3 environment line.
+- **`fig_p3b_macro_auc.png|svg`** (69,054 / 56,217 B): macro AUC with 95% CI for DDA,
+  CO-SPY, S2-D ViT-B s0/s1 and S2-D ViT-L s0/s1. Coloured by family, with a legend and
+  direct value labels.
+- **`fig_p3b_robustness.png|svg`** (117,821 / 61,645 B): clean, JPEG q50 and resize 0.5 for
+  DDA, S2-D ViT-B s0 (ViT-B s1 has no robust scores) and S2-D ViT-L s0/s1. Seeds are told
+  apart by marker, and every series is direct-labelled.
+- **Every chart is ≤ 1 MB** (CLAUDE.md section 2b).
+- **sha256:**
+  - t10 csv `79a856dc…d088`, md `189932bd…2701`;
+  - fig_p3b_macro_auc png `23b2aceb…362c`, svg `e8dc6277…050f`;
+  - fig_p3b_robustness png `d5d4f438…e615`, svg `c1e3b621…fd0b`.
+- **`tests/test_p3b_thesis_outputs.py`** (4 tests):
+  - Table 10 restates every question and verdict;
+  - figure (a)'s values are the records', and ViT-L − DDA equals Q1's paired point;
+  - figure (b) uses DDA's H5 rows, ViT-B s0's curve and both ViT-L seeds;
+  - the figures stay within the chart rule.
+
+**4. P3b is CLOSED.** No further Kaggle use for P3b; Kaggle is kept free for the video
+track (P5).
+
+**Checks:**
+- **pytest** (`--durations=20 -rs`): 1,321 passed (1,317 + 4 new), 7 skipped, 0 failed, in
+  456.37 s; slowest test 37.33 s. The 7 skips are `test_gpu_smoke.py`, no CUDA device
+  (PENDING-GPU).
+  - Run alone, the suite is back to its usual time. That supports the CPU-contention reading
+    of the 1,075.69 s run.
+- **ruff:** clean.

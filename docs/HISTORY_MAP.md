@@ -39,8 +39,17 @@ So any file at `d5e56dc`, other than the log, is byte-identical at `17e9c6e`.
   `archive/p3b-vitl-prereg-frozen`.
 - **To restore era B anywhere:**
   `git fetch <bundle> 'refs/heads/master:refs/heads/archive/pre-release'`.
-- **Published to GitHub:** NOT YET. Pending a user decision. 14 of the 15 commits carry a
-  co-author trailer, which the release history was created to leave out.
+- **Published to GitHub:** approved by the user on 2026-11-17 ("Archive branch: YES, push
+  it"), as a non-default branch, with the default branch staying `master`.
+  - **The co-author trailers:** 14 of the 15 commits carry one, which the release history was
+    created to leave out. They are published as they are; history is never rewritten.
+  - **The old tag:** fetched from the bundle into the local ref
+    `refs/tags/archive/p3b-vitl-prereg-frozen` (tag object `43ad831c`, target
+    `6b6f7d2`, inside `archive/pre-release`). The tag object keeps its internal name
+    `p3b-vitl-prereg-frozen`.
+  - **Audit (`scripts/prepush_audit.py`):** CLEAN for the branch and for the tag.
+  - **Blob scan:** CLEAN; no file over 10 MB and no weights.
+  - **The push is the user's.** Whether it landed is recorded in `IMPLEMENTATION_LOG.md`.
 
 ## 4. Era A: the Kaggle code zips
 

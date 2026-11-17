@@ -1,0 +1,10 @@
+question,role,rule,statistic,seed 0,seed 1,seed 0 rule,seed 1 rule,verdict,pass rule (pre-registered)
+Q1,primary,matches,"macro AUC, ViT-L - DDA (points)","+9.31 [+6.95, +11.52]","+10.05 [+7.85, +12.20]",pass,pass,PASS,"CI lower bound > -2 points, on both seeds (P3 H2's margin)"
+Q1,primary,beats,"macro AUC, ViT-L - DDA (points)","+9.31 [+6.95, +11.52]","+10.05 [+7.85, +12.20]",pass,pass,PASS,"CI lower bound > 0, on both seeds"
+Q2,secondary,matches,"macro AUC, ViT-L - CO-SPY (points)","+10.78 [+7.91, +13.72]","+11.53 [+8.67, +14.44]",pass,pass,PASS,"CI lower bound > -2 points, on both seeds"
+Q2,secondary,beats,"macro AUC, ViT-L - CO-SPY (points)","+10.78 [+7.91, +13.72]","+11.53 [+8.67, +14.44]",pass,pass,PASS,"CI lower bound > 0, on both seeds"
+Q3,secondary,gain,"macro AUC, ViT-L - S2-D ViT-B same seed (points)","+12.19 [+9.61, +14.77]","+12.44 [+10.13, +14.84]",pass,pass,PASS,"point >= +2 points and CI lower bound > 0, on both seeds (P3 H4)"
+Q4,secondary,pass,"FPR at k = 0, own union threshold","E4 32.7% [28.1%, 37.5%]; E5 16.5% [14.8%, 18.1%]; macro 24.6% [22.2%, 27.1%]","E4 26.0% [21.7%, 30.6%]; E5 13.0% [11.5%, 14.4%]; macro 19.5% [17.3%, 21.8%]",fail,fail,not passed,"macro FPR (E4, E5) <= 15% and neither pool > 25%, on both seeds (P3 H3)"
+Q5,secondary,method (Q),share of k = 50 draws with test FPR <= 7.5%,E4 1.000; E5 0.964,E4 1.000; E5 0.966,pass,pass,PASS,"test FPR <= 7.5% in >= 80% of draws on each of E4 and E5, both seeds (P3 H3-k)"
+Q5,secondary,method (S),share of k = 50 draws with test FPR <= 7.5%,E4 1.000; E5 0.999,E4 1.000; E5 1.000,pass,pass,PASS,"test FPR <= 7.5% in >= 80% of draws on each of E4 and E5, both seeds (P3 H3-k)"
+Q6,secondary,pass,"macro AUC minus clean, test rows (points)","JPEG q50 -11.56 [-13.54, -9.80]; resize 0.5 -4.42 [-5.96, -2.97]","JPEG q50 -10.69 [-12.59, -8.89]; resize 0.5 -5.25 [-6.78, -3.79]",fail,fail,not passed,"jpeg50 and resize050 both within 5 points of clean, on both seeds (P3 H5)"
