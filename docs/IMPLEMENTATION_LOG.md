@@ -8094,3 +8094,105 @@ sha256 of every file under both `snapshots/step_05000/`):
   One warning, from `huggingface_hub` (`local_dir_use_symlinks` deprecated).
 - **ruff:** clean.
 - **Snapshot row 11:** refreshed.
+
+### P3b — Panel B scored once: both frozen ViT-L models COMPLETE (attempt 2, Kaggle 2026-11-16, code `6c94252`); scores committed before any analysis — 2026-11-17
+
+**User, 2026-11-17:**
+- The 16 November scoring archive is ACCEPTED. The `a09b92a` re-run is withdrawn: ViT-L is
+  scored.
+- "dbp-code-6c94252 this code run the scores sucessfully and there is no other scoring
+  present."
+- Approved order:
+  - code provenance;
+  - attempt 1 and the correction;
+  - the 46 score files as their own commit;
+  - the analysis once, committed separately;
+  - then suite, integrity, audit and the push command.
+
+**The attempts:**
+- **Attempt 1** (2026-11-15, code `2d56cbd`): **refused at pre-flight, 0 rows scored.**
+  - The evidence is the notebook log the user pasted on 2026-11-15 (entry "scoring session
+    1", above): `vitl_s2d_p35_seed{0,1}: ['snapshot_sha256'] differ from the committed model
+    record -- refused, not scored`, FAILED at 16:59:52 UTC.
+  - Its `p3b_score_reports.zip` is **not available.** Attempt 2 writes the same output name
+    and replaced it; the user reports no other scoring.
+- **Attempt 2** (2026-11-16, code `dbp-code-6c94252`, user statement): **COMPLETE.** Both
+  models were scored once, on Panel B, luma and the threshold reals, and under jpeg50 and
+  resize050.
+
+**Correction to the `a09b92a` entry:**
+- That entry says the failed run's archive was not on disk and its check was PENDING.
+- The archive the user saved afterwards, `F:\thesis-2\kaggle_raw\p3b_score_reports.zip`, is
+  **attempt 2's**, not attempt 1's.
+- Attempt 1's evidence stays the pasted notebook log.
+- Extracted to `F:\thesis-2\kaggle_raw\p3b_score_attempt2_x\`. It was first named
+  `..._attempt1_x` and renamed at the user's instruction.
+- The `a09b92a` hand-over is withdrawn. Its dry-run (PASSED, 329 s, 2 sessions) and its
+  code zip `dbp-code-a09b92a.zip` (26,614,060 B, sha256
+  `74cbc42cf7c9493ac7330ae3294662a210d013b395db56faa8e59ea6d2ebfec7`) were never used.
+
+**Code provenance:**
+- **The user's statement:** the run used `dbp-code-6c94252`.
+- **Cell 2's verbatim `code commit:` line was not pasted: NOT-VERIFIED.**
+- **Consistent with it:**
+  - the run's plan pins the model record sha256 `e26a9985…3713`, which first appears in
+    `6c94252`;
+  - the run ended 11:52 UTC, before `a09b92a` existed.
+- **`git diff --stat 6c94252..a09b92a`:** only `docs/IMPLEMENTATION_LOG.md` (+82, −1).
+  Nothing in `env/`, `scripts/`, `src/`, `configs/` or `tests/` differs, so the scoring path
+  of `6c94252` equals HEAD's.
+
+**The archive (MEASURED):**
+- `p3b_score_reports.zip`: 26,548,104 B, sha256
+  `16c35deb9835a3db3669bf57975a1e5e930c2c788dbf74705543499c92572f83`. 917 entries, all dated
+  2026-11-16 (11:19–11:52), no unsafe paths.
+- **Against `reports/` at HEAD:** 705 files are byte-identical, **0 changed**. 46 are new,
+  all of them this run's outputs.
+- **Environment pre-flight:** passed.
+  - 2× T4, driver 580.178.04;
+  - torch `2.11.0+cu130`, CUDA 13.0, cuDNN 92700;
+  - `HF_TOKEN present: true`;
+  - peft 0.21.2, transformers 5.20.2, safetensors 0.8.0, huggingface_hub 1.33.0, PIL 13.0.0.
+- **The plan** (`p3b_score_plan.json`): `ok`, no problems.
+  - Both models `failure_path` PASS, with `lora_sha256`, `head_sha256` and `snapshot_sha256`
+    checked against the record.
+  - Nothing was carried, resumed or left incomplete from a previous version.
+- **Staging:** 10,996 files (1.818 GB) verified, 0 missing.
+- **The lists** the run built (`panel_b`, `luma`, `threshold_reals`) are byte-identical to
+  the committed `reports/kaggle_20261027/p3_final_session1/p3_final_lists/`, which the
+  analysis reads.
+- **Smoke:** COMPLETE, 0.0167 h.
+- **Fail-fast projections:** fit. Clean was projected at 0.108 and 0.110 h per GPU.
+- **Clean stage:** COMPLETE, both jobs exit 0, 0.1167 h wall.
+- **Robust stage:** COMPLETE, both jobs exit 0, 0.25 h wall.
+
+| model | panel_b (9,405) | luma (700) | threshold_reals (891) | jpeg50 (8,655) | resize050 (8,655) |
+|---|---|---|---|---|---|
+| `vitl_s2d_p35_seed0` | 324.8 s | 23.8 s | 29.1 s | 371.9 s | 476.3 s |
+| `vitl_s2d_p35_seed1` | 338.3 s | 25.2 s | 30.0 s | 397.5 s | 488.0 s |
+
+**Per-file checks** (scratchpad `verify_p3b_scores.py`, `python -I`): PROBLEMS none.
+- **The 20 score CSVs:**
+  - every CSV's sha256 equals its sidecar;
+  - rows as in the table;
+  - columns `image_id, score`;
+  - ids unique, and in the same order as the committed S2-D ViT-B files of the same seed
+    (seed 0's for the robust lists, as ViT-B seed 1 has no robust scores);
+  - 0 non-finite scores.
+- **The 4 sidecars:**
+  - snapshot, LoRA and head sha256 equal the model record;
+  - backbone `dinov3-vitl16` at `ea8dc2863c51be0a264bab82070e3e8836b02d51`;
+  - `dry_run_random_init` false;
+  - `panel_b_digest` `267d9fde…a551` = `env/p3b_score_expect.json`;
+  - no kept lists, nothing scored again.
+
+**Committed first, before any analysis output exists:** `40e1442`.
+- The 46 files, 3,418,666 B, under `reports/kaggle_20261116/p3b_score/`, at the archive's
+  relative paths. Largest: `p3_final_lists/panel_b.csv`, 1.5 MB.
+- All 46 of git's stored blobs are byte-identical to the archive. Staged by name.
+- Integrity CLEAN before the commit.
+
+**Pre-push audit at `a09b92a` (2026-11-16):** CLEAN.
+- 10 commits; 14 images, all allowed charts; 0 secrets;
+- 172 per-image CSVs, 62,359,178 B;
+- blob scan: 0 over 100 MB, 0 over 10 MB, 0 weight-like names or bytes.
