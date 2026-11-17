@@ -8259,3 +8259,17 @@ sha256 of every file under both `snapshots/step_05000/`):
 - **Every slice's AP** is in the record. The validation curve is not part of the analysis
   record; the step-5,000 values above come from the committed training reports' `curve`.
 - **Exploratory:** none.
+
+**Checks (at `f6bf14f`):**
+- **pytest** (`--durations=20 -rs`): 1,317 passed, 7 skipped, 0 failed, in 1,075.69 s.
+  - All 7 skips are `test_gpu_smoke.py`: no CUDA device (PENDING-GPU).
+  - Slower than the 489.46 s of 2026-11-16, but the slowest tests are the same and in the
+    same order, each about 2.4× slower. The pre-push audit and the blob scan ran alongside
+    for part of it (CPU contention, INFERRED); no code changed.
+- **ruff:** clean.
+- **Pre-push audit of `master` at `f6bf14f`:** CLEAN.
+  - 13 commits; 14 images, all allowed charts; 0 secrets;
+  - 185 per-image CSVs, 65,654,900 B: the previous 172, plus 10 score CSVs and 3 lists from
+    `40e1442`.
+- **Blob scan:** 0 over 100 MB, 0 over 10 MB, 0 weight-like names or bytes.
+- **Co-author lines:** 0 in the unpushed commits.
