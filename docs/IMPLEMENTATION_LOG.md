@@ -8,12 +8,12 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
+| Last prompt | **P5-A (2026-11-20, branch `p5-video`)**: video-module plan `docs/P5_PLAN.md` (DRAFT, no training, no download). Hub metadata audited for 8 video-VAE candidates and the datasets; approval items A1–A8 open. Nothing frozen. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
 | Other pinned | accelerate 1.15.0, safetensors 0.8.0, huggingface_hub 1.32.0, scikit-learn 1.9.1, **scipy 1.18.1 (declared in `requirements/base.txt` at P2 for McNemar, Spearman and the bootstrap)**, numpy 2.5.2, pandas 3.0.6, ruff 0.16.8, pytest 9.1.1 |
-| Git branch / last commit | **`master`** (default branch; never rewritten again, user 2026-11-15), pushed to the new private repository `origin` = github.com/Muhammad-Adeel-Shah/thesis at `2d56cbd` with tags `v1.0-images` and `p3b-vitl-prereg-frozen` (both on the release root `17e9c6e`). Earlier history: `docs/HISTORY_MAP.md` (era B in `archive/pre-release` and the bundle, not pushed; era A gone since 2026-11-05, its code kept as the `dbp-code-<hash>.zip` archives). The commit a given run used is stamped into its upload as `COMMIT.txt` |
+| Git branch / last commit | **P5 work: branch `p5-video`** in the worktree `F:/thesis-2/worktrees/p5-video/thesis_dbp` (outside `REPO_ROOT`), from `master` at `54180d3`; not pushed. **`master`** (default branch; never rewritten again, user 2026-11-15), pushed to the new private repository `origin` = github.com/Muhammad-Adeel-Shah/thesis at `2d56cbd` with tags `v1.0-images` and `p3b-vitl-prereg-frozen` (both on the release root `17e9c6e`). Earlier history: `docs/HISTORY_MAP.md` (era B in `archive/pre-release` and the bundle, not pushed; era A gone since 2026-11-05, its code kept as the `dbp-code-<hash>.zip` archives). The commit a given run used is stamped into its upload as `COMMIT.txt` |
 | Protected files integrity | **0 files checked, 0 changed — CLEAN** in both runtimes, algorithm self-test byte-identical. Kaggle verdict at `reports/kaggle_20260920/p0_integrity.json`. Since P1 the report is rewritten only when its content actually changes, so a CLEAN run no longer dirties the working tree |
 
 ## 2. Protected assets (never modified)
@@ -8370,3 +8370,75 @@ track (P5).
   - Run alone, the suite is back to its usual time. That supports the CPU-contention reading
     of the 1,075.69 s run.
 - **ruff:** clean.
+
+### P5-A — video module: plan and Hub audit (metadata only; no training, no download) — 2026-11-20
+
+**User, 2026-11-20:**
+- New module P5 (video), in a separate worktree on branch `p5-video`.
+- The same rules as the image work, and a pre-declared fallback order:
+  1. LOLO 5 → 3 folds;
+  2. drop k-shot;
+  3. robustness H.264 only;
+  4. baselines D3 + S2-D per frame.
+- Today: a plan only. Downloads start when the user approves the source list.
+
+**Done:**
+- **The worktree:** `git worktree add -b p5-video F:/thesis-2/worktrees/p5-video/thesis_dbp master`.
+  - It is outside `REPO_ROOT`, so the protected set is untouched.
+  - `master` and its history are unchanged, and no P3b file was touched.
+- **The plan:** `docs/P5_PLAN.md`.
+  - Data sources, the bank, the clip protocol, the panel and leak checks, models,
+    V1–V6 with proposed values, fallback triggers, compute, the schedule to 22 and 27 Nov,
+    the pilot design, and approval items A1–A8.
+- **The Hub audit (metadata only):** `HfApi.model_info` / `dataset_info` with
+  `files_metadata=True`, `list_repo_tree`, and `hf_hub_download` of `config.json`, README,
+  index and licence files at pinned SHAs.
+  - No weights or videos were fetched.
+  - The scripts ran from the session scratchpad and are not committed (approval item A6).
+
+**MEASURED (commands this session):**
+- **Bank candidates:** full revisions, VAE file bytes and LFS sha256 for wan21, hunyuan,
+  cogvx, ltx090, mochi, sd15 (`docs/P5_PLAN.md` §2.1), and for the reserves allegro and
+  wan22_5b.
+- **Shared VAE files (byte-identical LFS sha256):**
+  - Wan2.1-1.3B = Wan2.1-14B = **Wan2.2-T2V-A14B** = SkyReels-V2 Diffusers repos
+    (`d6e524b3…`);
+  - CogVideoX-2b = 5b = 1.5-5B (`a410e48d…`);
+  - HunyuanVideo = HunyuanVideo-I2V (`7c68a629…`);
+  - all four Allegro repos (`47871a69…`).
+- **Qwen-Image's VAE** has the same architecture config as wan21, in a different file
+  (253,806,966 B against 507,591,892 B). The image S2-D bank includes `qwen_image`, so the
+  pilot checks tensor identity.
+- **Access refused (403):**
+  - **BLOCKED-ACCESS:** Cosmos-1.0 / Predict2 (gated) and LTX-2.5 (gated);
+  - **VBench sampled videos:** gated, so 403 until the user accepts the gate.
+- **Licences read:**
+  - HunyuanVideo: tencent-hunyuan-community ("DOES NOT APPLY IN THE EUROPEAN UNION, UNITED
+    KINGDOM AND SOUTH KOREA");
+  - LTX-Video 0.9: RAIL-M;
+  - AEGIS: custom academic-only, with no redistribution and no modification;
+  - AIGVDBench: Hub tag cc-by-4.0, and a 30-byte README.
+- **Datasets:**
+  - **AIGVDBench:** 32 per-generator zips, 378.32 GB in total (11 closed-source 94.5 GB,
+    20 open-source 189.59 GB, Real 94.24 GB); `Split/test.jsonl` has 3,000 rows.
+  - **AEGIS hard test:** 436 videos (kling 111, sora 107, youtube 109, dvf 109), in a
+    2.84 GB tar.
+  - **Pexels subset:** 124 tars, mean 1.08 GB; 2,400 videos → 31 shards ≈ 33.6 GB (using
+    the README's stated 9,750 videos).
+  - **Mixkit-Src index:** 6,145 clips, all 1080p (1920×1080 or 1080×1920) at 30 fps; no
+    licence tag.
+- **The environment:**
+  - No video decoder in the venv: `av`, `decord`, `cv2`, `imageio_ffmpeg`, `torchcodec`
+    and `pyarrow` are absent, and there is no `ffmpeg` on PATH.
+  - `pip install --dry-run av pyarrow` resolves only `av 19.0.2` and `pyarrow 26.0.1`;
+    torch, torchvision and numpy are untouched. Nothing was installed.
+
+**NOT-VERIFIED / PENDING-GPU:**
+- the AIGVDBench citation;
+- Pexels' upstream terms;
+- the LTX and Mochi compression ratios (smoke shape check);
+- every peak-VRAM and s/clip value (the pilot);
+- the per-zip member counts (Kaggle fetch, first cell).
+
+**Waiting on the user:** approval items A1–A8; the uni PC details; the Kaggle quota; the
+VBench gate; AWS yes or no.
