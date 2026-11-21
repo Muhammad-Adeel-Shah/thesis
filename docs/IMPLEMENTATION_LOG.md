@@ -8702,3 +8702,15 @@ standing rules in CLAUDE.md section 14.
 - the AWS test launch result;
 - the full suite in the LF worktree (it started at `cadeb4b` + the LF fix; it is run again at
   the final commit before the AWS stage).
+
+**The full suite in the LF worktree, MEASURED** (`--durations=20 -rs`):
+- **at `cadeb4b`:** 1,352 passed, 10 skipped, **0 failed**, in 469.4 s;
+- **at `16350ca`** (with the 14 AWS tests): **1,366 passed, 10 skipped, 0 failed**, in
+  473.1 s; the slowest test is 34.7 s.
+- **The skips:**
+  - 7 are `test_gpu_smoke.py`: no CUDA (PENDING-GPU).
+  - 3 are `test_reconstruct_regression.py`. It holds image-bank digests for diffusers 0.40.0
+    only and skips under the pinned 0.42.0, because the digests are not portable across
+    versions.
+  - **Capturing 0.42.0 digests is an open item for the user.**
+- **The 4 CRLF failures of P5-B are gone.**
