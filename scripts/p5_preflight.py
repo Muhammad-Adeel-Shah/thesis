@@ -64,6 +64,9 @@ def check_imports(problems: list[str], bank: Any, names: list[str]) -> dict[str,
     if "diffusers" in found:
         import diffusers
 
+        if found["diffusers"] != bank.diffusers:
+            problems.append(f"diffusers {found['diffusers']} installed; the video bank is "
+                            f"pinned to {bank.diffusers}")
         for spec in bank.select(("bank", "reserve")):
             if not hasattr(diffusers, spec.cls):
                 problems.append(f"diffusers {found['diffusers']} has no {spec.cls} ({spec.key})")

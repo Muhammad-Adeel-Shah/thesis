@@ -439,13 +439,37 @@ def assert_video_splitting_disabled(model: Any, key: str) -> dict[str, bool]:
     return state
 
 
+def require_diffusers_version(expected: str) -> str:
+    """Refuse unless the installed diffusers is exactly the bank's pinned version.
+
+    One version serves the pilot, the AWS reconstruction and every Kaggle scoring (user,
+    2026-11-21), so a reconstruction can never come from a different diffusers than the one
+    the protocol was checked against.
+
+    Returns:
+        The installed version (equal to ``expected``).
+
+    Raises:
+        MemberLoadError: On any other version, or when no version is pinned.
+    """
+    import diffusers
+
+    if not expected:
+        raise MemberLoadError("the video bank pins no diffusers version")
+    if diffusers.__version__ != expected:
+        raise MemberLoadError(f"diffusers {diffusers.__version__} is installed; the video bank "
+                              f"is pinned to {expected} (configs/video_bank.yaml). Refused.")
+    return diffusers.__version__
+
+
 def load_video_member(spec: Any, device: torch.device | str = "cpu",
                       precision: Precision = "fp32") -> VideoMember:
     """Load one video-bank member, pinned, safetensors only, no remote code.
 
     Raises:
-        MemberLoadError: For an excluded member, a gated-access denial, a latent width that
-            differs from the registry, or a splitting flag that stays on.
+        MemberLoadError: For a diffusers version other than the bank's, an excluded member,
+            a gated-access denial, a latent width that differs from the registry, or a
+            splitting flag that stays on.
     """
     import os
 
@@ -453,6 +477,7 @@ def load_video_member(spec: Any, device: torch.device | str = "cpu",
 
     from dbp.decoders.registry import VIDEO_CLASSES
 
+    require_diffusers_version(spec.diffusers)
     if spec.role == "excluded":
         raise MemberLoadError(f"{spec.key}: excluded ({spec.excluded_reason.strip()})")
     if spec.cls not in VIDEO_CLASSES:

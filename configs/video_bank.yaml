@@ -19,6 +19,12 @@
 
 schema_version: 1
 resolved_on: "2026-11-20"
+# ONE diffusers version for the pilot, the AWS reconstruction and every Kaggle scoring
+# (user, 2026-11-21): the version the pilot runs with (Kaggle pre-flight, 2026-11-21:
+# diffusers 0.42.0). The loader refuses any other. 0.40.0 -> 0.42.0: no run-time default
+# of any bank class differs, and the only source change in the six classes' modules is
+# Wan's resample check (assert -> ValueError) plus type hints (log, P5-B review).
+diffusers: "0.42.0"
 clip:
   frames: 25
   crop: 320

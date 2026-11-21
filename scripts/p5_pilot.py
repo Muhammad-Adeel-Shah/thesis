@@ -452,6 +452,10 @@ def main() -> int:
     if args.phase == "summary":
         return phase_summary(args, expect)
     bank = load_video_bank(THESIS_DBP / "configs" / "video_bank.yaml")
+    if args.phase in ("smoke", "lineage", "reconstruct"):
+        from dbp.decoders.loaders import require_diffusers_version
+
+        print("diffusers", require_diffusers_version(bank.diffusers), "(pinned)", flush=True)
     if args.phase == "lineage":
         phase_lineage(args, bank)
         return 0

@@ -51,6 +51,7 @@ def make_mp4(path: Path, frames: int = 30, size: tuple[int, int] = (360, 640),
 def test_shipped_video_bank_is_valid_and_complete():
     bank = load_video_bank(BANK_PATH)
     assert (bank.frames, bank.crop, bank.min_short_side) == (25, 320, 320)
+    assert bank.diffusers == "0.42.0" and {s.diffusers for s in bank.members} == {"0.42.0"}
     assert [s.key for s in bank.select(("bank",))] == ["wan21", "hunyuan", "cogvx", "ltx090",
                                                         "mochi", "sd15_pf"]
     assert [s.key for s in bank.select(("reserve",))] == ["wan22_5b"]
@@ -342,6 +343,29 @@ def test_requirements_pin_av_only():
     text = (ROOT / "requirements" / "base.txt").read_text(encoding="utf-8")
     lines = [line.split("#")[0].strip() for line in text.splitlines()]
     assert "av==19.0.2" in lines and not any(line.startswith("pyarrow") for line in lines)
+
+
+def test_one_diffusers_version_everywhere(monkeypatch, tmp_path):
+    """User, 2026-11-21: one diffusers for the pilot, AWS and all Kaggle scoring; the loader
+    refuses any other version."""
+    import diffusers
+
+    from dbp.decoders.loaders import MemberLoadError, load_video_member
+
+    text = (ROOT / "requirements" / "base.txt").read_text(encoding="utf-8")
+    lines = [line.split("#")[0].strip() for line in text.splitlines()]
+    bank = load_video_bank(BANK_PATH)
+    assert f"diffusers=={bank.diffusers}" in lines
+    monkeypatch.setenv("DBP_DRYRUN", "1")
+    monkeypatch.setattr(diffusers, "__version__", "0.41.9")
+    with pytest.raises(MemberLoadError, match="pinned to 0.42.0"):
+        load_video_member(bank.by_key("wan21"), "cpu")
+    raw = yaml.safe_load(BANK_PATH.read_text(encoding="utf-8"))
+    raw["diffusers"] = ">=0.42"
+    path = tmp_path / "bank.yaml"
+    path.write_text(yaml.safe_dump(raw), encoding="utf-8")
+    with pytest.raises(BankConfigError, match="exact X.Y.Z"):
+        load_video_bank(path)
 
 
 def test_encoder_inventory_reports_both_encoders():

@@ -18,7 +18,7 @@ Schema version 2 (P1) adds three things:
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, Literal
 
@@ -428,6 +428,8 @@ class VideoDecoderSpec:
     lineage: str
     notes: str = ""
     excluded_reason: str = ""
+    #: The bank's pinned diffusers version, copied onto every member by the loader.
+    diffusers: str = ""
 
     def accepts_frames(self, frames: int) -> bool:
         """Whether a clip of ``frames`` frames is a native length (``1 + k * t``)."""
@@ -444,6 +446,7 @@ class VideoBankConfig:
     crop: int
     min_short_side: int
     members: list[VideoDecoderSpec] = field(default_factory=list)
+    diffusers: str = ""
 
     def by_key(self, key: str) -> VideoDecoderSpec:
         """The member called ``key``.
@@ -508,19 +511,23 @@ def load_video_bank(path: str | Path) -> VideoBankConfig:
     if not config_path.is_file():
         raise BankConfigError(f"video bank config not found: {config_path}")
     raw = yaml.safe_load(config_path.read_text(encoding="utf-8"))
-    if not isinstance(raw, dict) or set(raw) != {"schema_version", "resolved_on", "clip",
-                                                 "members"}:
+    if not isinstance(raw, dict) or set(raw) != {"schema_version", "resolved_on", "diffusers",
+                                                 "clip", "members"}:
         raise BankConfigError(f"{config_path}: top level must be exactly schema_version, "
-                              f"resolved_on, clip, members")
+                              f"resolved_on, diffusers, clip, members")
+    pinned = str(raw["diffusers"])
+    if pinned.count(".") != 2 or not all(p.isdigit() for p in pinned.split(".")):
+        raise BankConfigError(f"{config_path}: diffusers must be an exact X.Y.Z, got {pinned!r}")
     clip = raw["clip"]
     if not isinstance(clip, dict) or set(clip) != {"frames", "crop", "min_short_side"}:
         raise BankConfigError(f"{config_path}: clip must be exactly frames, crop, min_short_side")
     frames, crop = int(clip["frames"]), int(clip["crop"])
     if int(clip["min_short_side"]) < crop:
         raise BankConfigError(f"{config_path}: min_short_side below the crop would force a resize")
-    members = [_validate_video_member(m, i, frames, crop) for i, m in enumerate(raw["members"])]
+    members = [replace(_validate_video_member(m, i, frames, crop), diffusers=pinned)
+               for i, m in enumerate(raw["members"])]
     keys = [m.key for m in members]
     if len(set(keys)) != len(keys):
         raise BankConfigError(f"{config_path}: duplicate member keys {keys}")
     return VideoBankConfig(int(raw["schema_version"]), str(raw["resolved_on"]), frames, crop,
-                           int(clip["min_short_side"]), members)
+                           int(clip["min_short_side"]), members, pinned)

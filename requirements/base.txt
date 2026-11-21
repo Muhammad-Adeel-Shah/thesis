@@ -5,7 +5,10 @@
 # are installed into .venv from the official PyTorch CPU index. Every bound below
 # was checked with `pip install --dry-run` to confirm it cannot pull or change them.
 
-diffusers>=0.32.0        # AutoencoderKL (SD1/2/XL/3.5/FLUX) + AutoencoderDC (DC-AE, added 0.32) [R20]
+# P5 (user, 2026-11-21): ONE diffusers for the pilot, the AWS reconstruction and all Kaggle
+# scoring -- the version the pilot runs with on Kaggle (0.42.0). Exact pin; the video-bank
+# loader refuses any other. `pip install --dry-run diffusers==0.42.0` resolved diffusers alone.
+diffusers==0.42.0        # AutoencoderKL (SD1/2/XL/3.5/FLUX) + AutoencoderDC (DC-AE, added 0.32) [R20]
 transformers>=4.56.0     # native DINOv2 and DINOv3 via AutoModel; no trust_remote_code [R13]
 peft>=0.11.0             # LoRA r=8, the setting used by DDA and SEF [R11][R12][R14]
 accelerate>=0.30.0       # device placement helpers used by diffusers/transformers loaders
