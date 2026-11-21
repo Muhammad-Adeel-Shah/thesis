@@ -325,3 +325,166 @@ def load_member(
     model.eval()
     assert_tiling_disabled(model, spec.key)
     return BankMember(spec=spec, model=model, device=torch_device, precision=precision)
+
+
+# ---------------------------------------------------------------------------
+# P5: video members (configs/video_bank.yaml)
+# ---------------------------------------------------------------------------
+
+#: The flags of a diffusers video autoencoder that would split a clip in time or space
+#: with overlap blending. Every one is switched off and then asserted off.
+_VIDEO_SPLIT_FLAGS = ("use_tiling", "use_framewise_encoding", "use_framewise_decoding")
+
+#: DBP_DRYRUN=1 only (local CPU): tiny random-init instances of the pinned classes, the
+#: same code paths at a fraction of the width. Never on CUDA, never on Kaggle data.
+DRYRUN_VIDEO_CONFIGS: dict[str, dict[str, Any]] = {
+    "AutoencoderKLWan": {"base_dim": 8, "z_dim": 16, "num_res_blocks": 1},
+    "AutoencoderKLHunyuanVideo": {"block_out_channels": (8, 8, 8, 8), "layers_per_block": 1,
+                                  "norm_num_groups": 4, "mid_block_add_attention": False},
+    "AutoencoderKLCogVideoX": {"block_out_channels": (8, 8, 8, 8), "layers_per_block": 1,
+                               "norm_num_groups": 4},
+    "AutoencoderKLLTXVideo": {"block_out_channels": (8, 8, 8, 8),
+                              "decoder_block_out_channels": (8, 8, 8, 8),
+                              "layers_per_block": (1, 1, 1, 1, 1),
+                              "decoder_layers_per_block": (1, 1, 1, 1, 1)},
+    "AutoencoderKLMochi": {"encoder_block_out_channels": (32, 32, 32, 32),
+                           "decoder_block_out_channels": (32, 32, 32, 32),
+                           "layers_per_block": (1, 1, 1, 1, 1),
+                           "add_attention_block": (False, False, False, False, False)},
+    "AutoencoderKL": {"block_out_channels": (8, 8, 8, 8), "norm_num_groups": 4,
+                      "down_block_types": ("DownEncoderBlock2D",) * 4,
+                      "up_block_types": ("UpDecoderBlock2D",) * 4, "layers_per_block": 1},
+}
+#: Extra dry-run kwargs for a member whose architecture differs from its class default.
+DRYRUN_MEMBER_EXTRA: dict[str, dict[str, Any]] = {
+    "wan22_5b": {"z_dim": 48, "is_residual": True, "patch_size": 2, "in_channels": 12,
+                 "out_channels": 12, "scale_factor_spatial": 16},
+}
+
+
+def module_sha256(module: Any) -> str:
+    """SHA-256 over a module's state dict (sorted names, fp32 bytes): lineage identity."""
+    digest = hashlib.sha256()
+    for name, tensor in sorted(module.state_dict().items()):
+        digest.update(name.encode("utf-8"))
+        digest.update(tensor.detach().to("cpu", torch.float32).numpy().tobytes())
+    return digest.hexdigest()
+
+
+@dataclass
+class VideoMember:
+    """A loaded video-bank member: ``reconstruct((T, H, W, 3) uint8) -> same shape``."""
+
+    spec: Any  # dbp.decoders.registry.VideoDecoderSpec
+    model: Any
+    device: torch.device
+    precision: Precision
+    dry_run_random_init: bool = False
+
+    def reconstruct(self, frames_uint8: np.ndarray) -> np.ndarray:
+        """Reconstruct one clip. ``T`` must be native and ``H``/``W`` multiples of the
+        member's spatial factor; the caller has already centre-cropped (never resized)."""
+        from dbp.decoders.reconstruct import (
+            reconstruct_per_frame,
+            reconstruct_video_kl,
+            video_to_tensor,
+            video_to_uint8,
+        )
+
+        frames, height, width = frames_uint8.shape[:3]
+        if not self.spec.accepts_frames(frames):
+            raise MemberLoadError(f"{self.spec.key}: {frames} frames is not native "
+                                  f"(1 + k x {self.spec.temporal_factor})")
+        if height % self.spec.spatial_factor or width % self.spec.spatial_factor:
+            raise MemberLoadError(f"{self.spec.key}: {height}x{width} is not a multiple of "
+                                  f"{self.spec.spatial_factor}; crop, never resize")
+        x = video_to_tensor(frames_uint8, self.device, torch_dtype(self.precision))
+        if self.spec.kind == "vae_kl_per_frame":
+            return video_to_uint8(reconstruct_per_frame(self.model, x))
+        return video_to_uint8(reconstruct_video_kl(self.model, x))
+
+    def submodule_sha256(self) -> dict[str, str]:
+        """State-dict digests of ``encoder``, ``decoder`` and the quant convs, when present."""
+        return {name: module_sha256(getattr(self.model, name))
+                for name in ("encoder", "decoder", "quant_conv", "post_quant_conv")
+                if getattr(self.model, name, None) is not None}
+
+    def free(self) -> None:
+        """Release the model and empty the CUDA cache."""
+        self.model = None
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+
+def assert_video_splitting_disabled(model: Any, key: str) -> dict[str, bool]:
+    """Switch every tiling / frame-wise flag off, then assert it is off.
+
+    HunyuanVideo's diffusers default is ``use_framewise_encoding = True``: any clip over
+    16 frames would be temporal-tiled with blending, an artificial temporal trace. Native
+    causal caches (Wan's ``feat_cache``, CogVideoX's conv cache) are the architecture and
+    are not touched.
+
+    Returns:
+        Each flag the model has, after the change (all False).
+    """
+    if hasattr(model, "disable_tiling"):
+        model.disable_tiling()
+    state = {}
+    for flag in _VIDEO_SPLIT_FLAGS:
+        if hasattr(model, flag):
+            setattr(model, flag, False)
+            state[flag] = bool(getattr(model, flag))
+    if any(state.values()):
+        raise MemberLoadError(f"{key}: splitting flags still on after disabling: {state}")
+    return state
+
+
+def load_video_member(spec: Any, device: torch.device | str = "cpu",
+                      precision: Precision = "fp32") -> VideoMember:
+    """Load one video-bank member, pinned, safetensors only, no remote code.
+
+    Raises:
+        MemberLoadError: For an excluded member, a gated-access denial, a latent width that
+            differs from the registry, or a splitting flag that stays on.
+    """
+    import os
+
+    import diffusers
+
+    from dbp.decoders.registry import VIDEO_CLASSES
+
+    if spec.role == "excluded":
+        raise MemberLoadError(f"{spec.key}: excluded ({spec.excluded_reason.strip()})")
+    if spec.cls not in VIDEO_CLASSES:
+        raise MemberLoadError(f"{spec.key}: class {spec.cls!r} is not allowed")
+    torch_device = torch.device(device)
+    dtype = torch_dtype(precision)
+    cls = getattr(diffusers, spec.cls)
+    dry = os.environ.get("DBP_DRYRUN") == "1"
+    try:
+        if dry:
+            if torch_device.type == "cuda":
+                raise MemberLoadError("DBP_DRYRUN=1 builds random-init stand-ins for CPU only")
+            torch.manual_seed(0)
+            kwargs = {**DRYRUN_VIDEO_CONFIGS[spec.cls], **DRYRUN_MEMBER_EXTRA.get(spec.key, {})}
+            if spec.latent_attr == "latent_channels":
+                kwargs.setdefault("latent_channels", spec.latent_channels)
+            model = cls(**kwargs)
+            if dtype != torch.float32:
+                model = model.to(dtype)
+        else:
+            model = cls.from_pretrained(spec.repo, subfolder=spec.subfolder,
+                                        revision=spec.revision, use_safetensors=True,
+                                        torch_dtype=dtype, token=get_hf_token())
+    except MemberLoadError:
+        raise
+    except Exception as exc:
+        raise MemberLoadError(f"{spec.key}: {type(exc).__name__}: {exc}") from exc
+    reported = getattr(model.config, spec.latent_attr, None)
+    if reported != spec.latent_channels:
+        raise MemberLoadError(f"{spec.key}: registry latent_channels={spec.latent_channels} but "
+                              f"the model reports {spec.latent_attr}={reported}")
+    model.to(torch_device)
+    model.eval()
+    assert_video_splitting_disabled(model, spec.key)
+    return VideoMember(spec, model, torch_device, precision, dry_run_random_init=dry)

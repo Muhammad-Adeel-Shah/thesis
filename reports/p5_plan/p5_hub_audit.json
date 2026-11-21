@@ -1,0 +1,402 @@
+{
+ "datasets": {
+  "AIGVDBench/AIGVDBench": {
+   "bytes_listed": 378392961213,
+   "card": {
+    "license": "cc-by-4.0"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:cc-by-4.0"
+   ],
+   "listing_note": "",
+   "n_files_listed": 38,
+   "sha": "bf48acaa4920990af3dd2a511ea88e63354df305"
+  },
+  "Clarifiedfish/AEGIS": {
+   "bytes_listed": 4349670492,
+   "card": {},
+   "gated": false,
+   "license_tags": [],
+   "listing_note": "",
+   "n_files_listed": 10,
+   "sha": "d2ad8bd38def2945d5fb7d988f2fda0099953296"
+  },
+  "FastVideo/Mixkit-Src": {
+   "bytes_listed": 25401963853,
+   "card": {},
+   "gated": false,
+   "license_tags": [],
+   "listing_note": "",
+   "n_files_listed": 8360,
+   "sha": "b5fff04254af8bbf716b1c166e85b8fe4000bb0e"
+  },
+  "Vchitect/VBench_sampled_video": {
+   "bytes_listed": 177984658310,
+   "card": {
+    "license": "mit"
+   },
+   "gated": "auto",
+   "license_tags": [
+    "license:mit"
+   ],
+   "listing_note": "the API listing is capped at 100,000 files",
+   "n_files_listed": 100000,
+   "sha": "8c89bb0218a12323d04821d11ec03c780d0dfb9c"
+  },
+  "zengxianyu/open-sora-pexels-subset": {
+   "bytes_listed": 134401123925,
+   "card": {
+    "license": "apache-2.0"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:apache-2.0"
+   ],
+   "listing_note": "",
+   "n_files_listed": 128,
+   "sha": "c595493c834ec2c47ceee5d18ecca002aa646540"
+  }
+ },
+ "generated_utc": "2026-11-21T06:31:29Z",
+ "models": {
+  "Lightricks/LTX-2.5-Diffusers": {
+   "card": {
+    "license": "other",
+    "license_link": "https://github.com/Lightricks/LTX-2/blob/main/LICENSE-2_x",
+    "license_name": "ltx-2.x-community-license-agreement"
+   },
+   "gated": "auto",
+   "license_tags": [
+    "license:other"
+   ],
+   "sha": "4791a1100e0cf97f7ed5c55c12dd71dce13f9dd3",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 1480
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "425f0dfa227dee5d0ff3d9720563370810409a439c302ca74f0f944057ce55c5",
+     "size": 1452233194
+    }
+   }
+  },
+  "Lightricks/LTX-Video": {
+   "card": {
+    "license": "other"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:other"
+   ],
+   "sha": "8984fa25007f376c1a299016d0957a37a2f797bb",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 501
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "265ca87cb5dff5e37f924286e957324e282fe7710a952a7dafc0df43883e2010",
+     "size": 1676798532
+    }
+   }
+  },
+  "Qwen/Qwen-Image": {
+   "card": {
+    "license": "apache-2.0"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:apache-2.0"
+   ],
+   "sha": "75e0b4be04f60ec59a75f475837eced720f823b6",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 730
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "0c8bc8b758c649abef9ea407b95408389a3b2f610d0d10fcb054fe171d0a8344",
+     "size": 253806966
+    }
+   }
+  },
+  "Wan-AI/Wan2.1-T2V-1.3B-Diffusers": {
+   "card": {
+    "license": "apache-2.0"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:apache-2.0"
+   ],
+   "sha": "0fad780a534b6463e45facd96134c9f345acfa5b",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 724
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "d6e524b3fffede1787a74e81b30976dce5400c4439ba64222168e607ed19e793",
+     "size": 507591892
+    }
+   }
+  },
+  "Wan-AI/Wan2.1-T2V-14B-Diffusers": {
+   "card": {
+    "license": "apache-2.0"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:apache-2.0"
+   ],
+   "sha": "38ec498cb3208fb688890f8cc7e94ede2cbd7f68",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 724
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "d6e524b3fffede1787a74e81b30976dce5400c4439ba64222168e607ed19e793",
+     "size": 507591892
+    }
+   }
+  },
+  "Wan-AI/Wan2.2-T2V-A14B-Diffusers": {
+   "card": {
+    "license": "apache-2.0"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:apache-2.0"
+   ],
+   "sha": "5be7df9619b54f4e2667b2755bc6a756675b5cd7",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 724
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "d6e524b3fffede1787a74e81b30976dce5400c4439ba64222168e607ed19e793",
+     "size": 507591892
+    }
+   }
+  },
+  "Wan-AI/Wan2.2-TI2V-5B-Diffusers": {
+   "card": {
+    "license": "apache-2.0"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:apache-2.0"
+   ],
+   "sha": "b8fff7315c768468a5333511427288870b2e9635",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 1701
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "62cd18f19438e35b32ac63020e2852f566e9b02f46b6cdbd87972a356e3c6f4b",
+     "size": 2818777808
+    }
+   }
+  },
+  "genmo/mochi-1-preview": {
+   "card": {
+    "license": "apache-2.0"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:apache-2.0"
+   ],
+   "sha": "cd1d0fe89aa8382fcd9ae760bc3d7afe6183579f",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 1234
+    },
+    "vae/diffusion_pytorch_model.bf16.safetensors": {
+     "lfs_sha256": "fecceadc048487f07cad99f6f5fbbf691f7385573d53cea2f06e461b3a9721ea",
+     "size": 919549966
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "0d74f617ddcaa1b4a53884581d8d21b6836761f6175b20e3df177d4a12ed77df",
+     "size": 1839047460
+    }
+   }
+  },
+  "hunyuanvideo-community/HunyuanVideo": {
+   "card": {},
+   "gated": false,
+   "license_tags": [],
+   "sha": "e8c2aaa66fe3742a32c11a6766aecbf07c56e773",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 718
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "7c68a6295f9034a88225fbafb1f3258291a08d57a1fdb938233fa57b1b8f4883",
+     "size": 985943868
+    }
+   }
+  },
+  "hunyuanvideo-community/HunyuanVideo-I2V": {
+   "card": {},
+   "gated": false,
+   "license_tags": [],
+   "sha": "fb9d287ef02fe6d39f2e23df6dcec1294e6c28d2",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 718
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "7c68a6295f9034a88225fbafb1f3258291a08d57a1fdb938233fa57b1b8f4883",
+     "size": 985943868
+    }
+   }
+  },
+  "nvidia/Cosmos-1.0-Diffusion-7B-Text2World": {
+   "card": {
+    "license": "other",
+    "license_link": "https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-open-model-license",
+    "license_name": "nvidia-open-model-license"
+   },
+   "gated": "auto",
+   "license_tags": [
+    "license:other"
+   ],
+   "sha": "749ad047f60de0ab405ed078fd050ab2d35856f7",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 13258
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "59dca00bd6d3f20b8201d54dd6697da63cbcf768513004acd4216bd45a56a241",
+     "size": 211344392
+    }
+   }
+  },
+  "rhymes-ai/Allegro": {
+   "card": {
+    "license": "apache-2.0"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:apache-2.0"
+   ],
+   "sha": "c1b9207bb5cb79e2aa08f3d139c17d26c0de55b6",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 803
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "47871a698b18f92f15019d361a81cbc8af4676f8eef9a47fd2b95354a39f831a",
+     "size": 699904972
+    }
+   }
+  },
+  "stable-diffusion-v1-5/stable-diffusion-v1-5": {
+   "card": {
+    "license": "creativeml-openrail-m"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:creativeml-openrail-m"
+   ],
+   "sha": "451f4fe16113bff5a5d2269ed5ad43b0592e9a14",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 547
+    },
+    "vae/diffusion_pytorch_model.fp16.safetensors": {
+     "lfs_sha256": "4fbcf0ebe55a0984f5a5e00d8c4521d52359af7229bb4d81890039d2aa16dd7c",
+     "size": 167335342
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "a2b5134f4dbc140d9c11f11cba3233099e00af40f262f136c691fb7d38d2194c",
+     "size": 334643276
+    }
+   }
+  },
+  "tencent/HunyuanVideo": {
+   "card": {
+    "license": "other",
+    "license_link": "LICENSE",
+    "license_name": "tencent-hunyuan-community"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:other"
+   ],
+   "sha": "6204ad6aea1a77ff5aba337c88278bb9500eb37d",
+   "vae_files": {}
+  },
+  "zai-org/CogVideoX-2b": {
+   "card": {
+    "license": "apache-2.0"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:apache-2.0"
+   ],
+   "sha": "1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 879
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "a410e48d988c8224cef392b68db0654485cfd41f345f4a3a81d3e6b765bb995e",
+     "size": 862388596
+    }
+   }
+  },
+  "zai-org/CogVideoX-5b": {
+   "card": {
+    "license": "other",
+    "license_link": "https://huggingface.co/THUDM/CogVideoX-5b/blob/main/LICENSE"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:other"
+   ],
+   "sha": "8fc5b281006c82b82d34fd2543d2f0ebb4e7e321",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 872
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "a410e48d988c8224cef392b68db0654485cfd41f345f4a3a81d3e6b765bb995e",
+     "size": 862388596
+    }
+   }
+  },
+  "zai-org/CogVideoX1.5-5B": {
+   "card": {
+    "license": "other"
+   },
+   "gated": false,
+   "license_tags": [
+    "license:other"
+   ],
+   "sha": "fdc5267c90b5c06492985b966e43aae984e189e0",
+   "vae_files": {
+    "vae/config.json": {
+     "lfs_sha256": null,
+     "size": 871
+    },
+    "vae/diffusion_pytorch_model.safetensors": {
+     "lfs_sha256": "a410e48d988c8224cef392b68db0654485cfd41f345f4a3a81d3e6b765bb995e",
+     "size": 862388596
+    }
+   }
+  }
+ }
+}

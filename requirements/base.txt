@@ -28,3 +28,10 @@ scikit-image>=0.22       # public-domain smoke-test images only (astronaut/coffe
 # torch / torchvision / numpy untouched.
 open_clip_torch==3.3.0
 timm==1.0.30
+
+# P5 video (approval A3, 2026-11-21): av only, exact pin. PyAV decodes the clips and its
+# bundled FFmpeg provides libx264/libx265 for the re-encodes (checked by p5_preflight.py,
+# which also records the FFmpeg build). `pip install --dry-run av==19.0.2` (2026-11-21)
+# resolves av alone and leaves torch / torchvision / numpy untouched. pyarrow is NOT
+# listed: Kaggle's preinstalled one is used.
+av==19.0.2

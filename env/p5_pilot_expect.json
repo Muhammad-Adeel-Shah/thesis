@@ -1,0 +1,45 @@
+{
+  "stage": "p5_pilot (EXPLORATORY) -- docs/P5_PLAN.md section 8, approved 2026-11-21: image S2-D per frame on 200 Pexels clips x wan21 / hunyuan / ltx090; the 7-member bank smoke; Qwen-Image vs wan21 weights",
+  "imports": ["av", "pyarrow", "peft", "transformers", "safetensors", "huggingface_hub", "PIL", "diffusers"],
+  "gpus": 2,
+  "hf_token": true,
+  "pexels_source": "hub",
+  "pilot_shards": "0:4",
+  "pilot_clips": 200,
+  "fetch_workers": 4,
+  "smoke_clips": 3,
+  "smoke_jobs": ["0:wan21,hunyuan,ltx090,sd15_pf", "1:cogvx,mochi,wan22_5b"],
+  "reconstruct_jobs": ["0:wan21,ltx090", "1:hunyuan"],
+  "score_jobs": ["0:s2d_p35_seed0", "1:s2d_p35_seed1"],
+  "score_smoke_clips": 2,
+  "disk": {"working_gb": 6, "tmp_gb": 25, "basis": "tmp: video VAE weights 9.03 GB (registry vae_bytes) + 4 pilot shards about 4.3 GB (1.08 GB mean) + 600 reconstructions + headroom; working: 200 PNG clips + reports"},
+  "deadlines_hours": {"smoke": 1.5, "reconstruct": 4.0, "score_smoke": 0.5, "score": 3.0},
+  "poll_seconds": 30,
+  "thresholds": {
+    "path": "reports/p3_results/p3_analysis_full.json",
+    "sha256": "81b8c506b15f80829e1b47ad5af2bfd1c5f39f5211804449fd2518889ec87383",
+    "note": "S2-D k = 0 union thresholds: descriptive.s2d_p35_seed{0,1}.threshold_union. sha256 of git's bytes (`git show HEAD:<path> | sha256sum`, 2026-11-21), which is what the code zip carries; the Windows working tree's CRLF copy hashes differently (cef11eb9...), as the first dry-run's pre-flight caught"
+  },
+  "models": [
+    {
+      "id": "s2d_p35_seed0",
+      "seed": 0,
+      "lora": "outputs/p3/s2/s2d_p35_seed0/snapshots/step_05000/lora",
+      "head": "outputs/p3/s2/s2d_p35_seed0/snapshots/step_05000/head.pt",
+      "lora_sha256": "d7148267c2457daa3585162c38abc8dacfdada4f4fc05b82441f2829ade51689",
+      "head_sha256": "638447e6b41608796c27d48d29ddb59927fbf85ba1ffc9d4b6fcac20d8077b27"
+    },
+    {
+      "id": "s2d_p35_seed1",
+      "seed": 1,
+      "lora": "outputs/p3/s2/s2d_p35_seed1/snapshots/step_05000/lora",
+      "head": "outputs/p3/s2/s2d_p35_seed1/snapshots/step_05000/head.pt",
+      "lora_sha256": "ad7aaa417116cecb95e04a299318ad971082f950b4a8bfbf571d680b8f412c05",
+      "head_sha256": "937491ef70226b26e77a241c26c60632597be3130200c55aa12cc015c6ef0639"
+    }
+  ],
+  "expected": {
+    "wall": "about 2-4 h (ESTIMATED): Pexels fetch of 4 shards (4.3 GB) + clips about 20-40 min; smoke of 7 members about 20-40 min incl. weight downloads (about 8.7 GB); 600 reconstructions on two T4s, PENDING (the smoke measures s/clip); scoring 2 x 38,400 frames at about 0.0185 s/frame (P3 S2-D ViT-B clean: 203.1 s for 10,996 images) about 12 min per seed, plus H.264 round-trips",
+    "quota": "about 2-4 quota h (Kaggle bills session wall time, I-042)"
+  }
+}

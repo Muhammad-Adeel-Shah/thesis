@@ -310,6 +310,84 @@ def max_abs_diff(a: np.ndarray, b: np.ndarray) -> int:
     return int(np.max(np.abs(a.astype(np.int16) - b.astype(np.int16))))
 
 
+# ---------------------------------------------------------------------------
+# P5: video kinds (CLAUDE.md section 7 extended, approval A5, 2026-11-21)
+#
+# - ``vae_video_kl``: one clip ``(1, 3, T, H, W)`` through a video autoencoder,
+#   ``latent_dist.mode()``, no scaling/shift factor. T must be native for the member
+#   (``1 + k * temporal_factor``); the decode must return exactly ``(T, H, W)`` or this
+#   raises -- a member that silently drops or pads a frame would misalign every pair.
+# - ``vae_kl_per_frame``: an image KL autoencoder applied to each frame independently,
+#   through :func:`reconstruct_vae_kl` itself.
+# - Frames are centre-cropped by the caller (``dbp.data.video``), never resized; the
+#   output is clamped, rounded to uint8 exactly as :func:`to_uint8` does, and stored
+#   lossless (PNG) by the caller.
+# ---------------------------------------------------------------------------
+
+
+def video_to_tensor(frames_uint8: np.ndarray, device: torch.device | str,
+                    dtype: torch.dtype = torch.float32) -> torch.Tensor:
+    """``(T, H, W, 3)`` uint8 frames to a ``(1, 3, T, H, W)`` tensor in ``[-1, 1]``."""
+    if frames_uint8.dtype != np.uint8 or frames_uint8.ndim != 4 or frames_uint8.shape[3] != 3:
+        raise ValueError(f"video_to_tensor expects (T, H, W, 3) uint8, got "
+                         f"{frames_uint8.shape} {frames_uint8.dtype}")
+    arr = torch.from_numpy(np.array(frames_uint8, dtype=np.uint8, copy=True))
+    arr = arr.permute(3, 0, 1, 2).unsqueeze(0).to(device=device, dtype=torch.float32)
+    return (arr / 127.5 - 1.0).to(dtype=dtype)
+
+
+def video_to_uint8(x: torch.Tensor) -> np.ndarray:
+    """``(1, 3, T, H, W)`` in ``[-1, 1]`` to ``(T, H, W, 3)`` uint8: clamp, then round."""
+    if x.ndim != 5 or x.shape[0] != 1 or x.shape[1] != 3:
+        raise ValueError(f"video_to_uint8 expects (1, 3, T, H, W), got {tuple(x.shape)}")
+    x = x.detach().to(torch.float32).cpu().clamp(-1.0, 1.0)
+    arr = ((x + 1.0) * 127.5).round().clamp(0, 255).squeeze(0).permute(1, 2, 3, 0).numpy()
+    return arr.astype(np.uint8)
+
+
+@torch.no_grad()
+def reconstruct_video_kl(vae: Any, x: torch.Tensor) -> torch.Tensor:
+    """Encode/decode one clip through a video KL autoencoder, deterministically.
+
+    Args:
+        vae: A diffusers video autoencoder whose tiling and frame-wise (temporal-tiled)
+            paths the loader has switched off and asserted off.
+        x: ``(1, 3, T, H, W)`` in ``[-1, 1]``.
+
+    Returns:
+        ``(1, 3, T, H, W)``, the same shape as ``x``.
+
+    Raises:
+        RuntimeError: If the decode does not return exactly the input's shape.
+    """
+    if x.ndim != 5:
+        raise ValueError(f"reconstruct_video_kl expects (1, 3, T, H, W), got {tuple(x.shape)}")
+    z = vae.encode(x).latent_dist.mode()
+    y = vae.decode(z).sample
+    if tuple(y.shape) != tuple(x.shape):
+        raise RuntimeError(f"decode returned {tuple(y.shape)} for input {tuple(x.shape)}; a "
+                           f"member must return every frame at the input size")
+    return y
+
+
+@torch.no_grad()
+def reconstruct_per_frame(vae: Any, x: torch.Tensor, frames_per_batch: int = 5) -> torch.Tensor:
+    """Apply an image KL autoencoder to every frame of ``(1, 3, T, H, W)`` independently.
+
+    Frames go through :func:`reconstruct_vae_kl` in batches of ``frames_per_batch`` (the
+    autoencoder is per-sample: GroupNorm and convolutions never mix batch items).
+    """
+    if x.ndim != 5:
+        raise ValueError(f"reconstruct_per_frame expects (1, 3, T, H, W), got {tuple(x.shape)}")
+    frames = x[0].permute(1, 0, 2, 3)  # (T, 3, H, W)
+    out = [reconstruct_vae_kl(vae, frames[i: i + frames_per_batch])
+           for i in range(0, frames.shape[0], frames_per_batch)]
+    y = torch.cat(out, dim=0).permute(1, 0, 2, 3).unsqueeze(0)
+    if tuple(y.shape) != tuple(x.shape):
+        raise RuntimeError(f"per-frame decode returned {tuple(y.shape)} for {tuple(x.shape)}")
+    return y
+
+
 def fp16_verdict(recon_fp32: np.ndarray, recon_fp16: np.ndarray | None) -> dict[str, Any]:
     """Decide whether fp16 is safe for a member (decision D-003).
 

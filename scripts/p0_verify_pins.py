@@ -163,6 +163,83 @@ def verify_pins(
     return results
 
 
+#: P5: the pinned VAE file's LFS sha256 or size differs from the registry. Fatal: the
+#: commit exists but does not hold the decoder the registry names.
+STATUS_HASH_MISMATCH = "VAE-HASH-MISMATCH"
+FATAL_STATUSES = FATAL_STATUSES | {STATUS_HASH_MISMATCH}
+
+
+def verify_video_pins(video_bank: Any, api: Any, token: str | None = None) -> list[PinResult]:
+    """P5: every non-excluded video-bank member's commit exists AND its VAE file is the one
+    the registry pins (LFS sha256 and size at that commit). Pure: no printing, no exit."""
+    from huggingface_hub.utils import GatedRepoError, RevisionNotFoundError
+
+    results = []
+    for spec in video_bank.select(("bank", "reserve")):
+        target = f"{spec.repo}/{spec.subfolder}/{spec.vae_file}"
+        try:
+            info = api.model_info(spec.repo, revision=spec.revision, token=token,
+                                  files_metadata=True)
+        except RevisionNotFoundError as exc:
+            results.append(PinResult(spec.key, spec.kind, target, spec.revision,
+                                     STATUS_REVISION_NOT_FOUND, str(exc)[:160]))
+            continue
+        except GatedRepoError as exc:
+            results.append(PinResult(spec.key, spec.kind, target, spec.revision,
+                                     STATUS_BLOCKED, str(exc)[:160]))
+            continue
+        except Exception as exc:
+            results.append(PinResult(spec.key, spec.kind, target, spec.revision, STATUS_ERROR,
+                                     f"{type(exc).__name__}: {str(exc)[:160]}"))
+            continue
+        wanted = f"{spec.subfolder}/{spec.vae_file}" if spec.subfolder else spec.vae_file
+        found = [s for s in (info.siblings or []) if s.rfilename == wanted]
+        lfs = found[0].lfs if found else None
+        sha = getattr(lfs, "sha256", None) if lfs is not None else None
+        size = found[0].size if found else None
+        if sha != spec.vae_sha256 or size != spec.vae_bytes:
+            results.append(PinResult(spec.key, spec.kind, target, spec.revision,
+                                     STATUS_HASH_MISMATCH,
+                                     f"hub sha256={sha} size={size}; registry "
+                                     f"{spec.vae_sha256[:12]}... {spec.vae_bytes}"))
+            continue
+        results.append(PinResult(spec.key, spec.kind, target, spec.revision, STATUS_RESOLVES,
+                                 f"vae {size} B sha256 {sha[:12]}... matches"))
+    return results
+
+
+def require_video_pins(config_path: Path | None = None, strict: bool = False,
+                       printer: Callable[[str], None] = print) -> list[PinResult]:
+    """P5 entry point (CLAUDE.md 7a): every video-bank pin and VAE file, plus the backbones,
+    verified before any P5 script writes data.
+
+    Raises:
+        PinVerificationError: If any pin is fatal (including a VAE hash mismatch), or --
+            with ``strict`` -- blocked.
+    """
+    from huggingface_hub import HfApi
+
+    from dbp.decoders.registry import load_video_bank
+
+    bank = load_video_bank(config_path or THESIS_DBP / "configs" / "video_bank.yaml")
+    token = get_hf_token()
+    printer(f"HF_TOKEN present: {token is not None}")
+    api = HfApi()
+    results = verify_video_pins(bank, api, token) + [
+        verify_hub_pin(api, name, "backbone", entry["repo"], entry["revision"], token)
+        for name, entry in BACKBONES.items()]
+    printer(format_table(results))
+    fatal = [r for r in results if r.is_fatal]
+    blocked = [r for r in results if r.is_blocked]
+    if fatal or (strict and blocked):
+        failures = fatal + (blocked if strict else [])
+        raise PinVerificationError(
+            f"{len(failures)} pin(s) did not resolve, refusing to write data: "
+            + "; ".join(f"{r.key}: {r.status} ({r.detail})" for r in failures))
+    printer(f"video pin check OK: {len(results)} pins, 0 fatal, {len(blocked)} blocked")
+    return results
+
+
 def format_table(results: list[PinResult]) -> str:
     """Render the results as a fixed-width table."""
     lines = [f"{'key':16s}{'kind':14s}{'pinned':14s}result", "-" * 80]
@@ -235,6 +312,8 @@ def main(argv: list[str] | None = None) -> int:
         help="Treat BLOCKED-ACCESS as fatal too (default: reported but non-fatal).",
     )
     parser.add_argument("--json", type=Path, default=None, help="Also write results as JSON.")
+    parser.add_argument("--video-bank", type=Path, default=None,
+                        help="P5: verify this video bank (commits + VAE file hashes) instead.")
     args = parser.parse_args(argv)
 
     from huggingface_hub import HfApi
@@ -243,12 +322,23 @@ def main(argv: list[str] | None = None) -> int:
     print(f"HF_TOKEN present: {token is not None}\n")
 
     try:
-        bank = load_bank_config(args.config)
+        if args.video_bank is not None:
+            from dbp.decoders.registry import load_video_bank
+
+            video_bank = load_video_bank(args.video_bank)
+        else:
+            bank = load_bank_config(args.config)
     except Exception as exc:
-        print(f"FATAL: cannot load {args.config}: {type(exc).__name__}: {exc}", file=sys.stderr)
+        print(f"FATAL: cannot load the bank: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 2
 
-    results = verify_pins(bank, BACKBONES, HfApi(), token)
+    if args.video_bank is not None:
+        api = HfApi()
+        results = verify_video_pins(video_bank, api, token) + [
+            verify_hub_pin(api, name, "backbone", entry["repo"], entry["revision"], token)
+            for name, entry in BACKBONES.items()]
+    else:
+        results = verify_pins(bank, BACKBONES, HfApi(), token)
     print(format_table(results))
 
     fatal = [r for r in results if r.is_fatal]

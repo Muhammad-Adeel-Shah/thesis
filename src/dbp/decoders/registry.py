@@ -384,3 +384,143 @@ def load_bank_config(path: str | Path) -> BankConfig:
         seed=int(raw.get("seed", 2026)),
         members=members,
     )
+
+
+# ---------------------------------------------------------------------------
+# P5: the video decoder bank (configs/video_bank.yaml). A separate schema, so the
+# image bank above -- and every frozen P2/P3 result that depends on it -- is unchanged.
+# ---------------------------------------------------------------------------
+
+#: The video kinds: a 5D video autoencoder, or an image autoencoder applied per frame.
+VIDEO_KINDS: frozenset[str] = frozenset({"vae_video_kl", "vae_kl_per_frame"})
+#: The only diffusers classes a video member may name (no string reaches getattr unchecked).
+VIDEO_CLASSES: frozenset[str] = frozenset({
+    "AutoencoderKLWan", "AutoencoderKLHunyuanVideo", "AutoencoderKLCogVideoX",
+    "AutoencoderKLLTXVideo", "AutoencoderKLMochi", "AutoencoderKLAllegro", "AutoencoderKL",
+})
+VIDEO_ROLES: frozenset[str] = frozenset({"bank", "reserve", "excluded"})
+_VIDEO_REQUIRED = ("key", "role", "kind", "cls", "repo", "subfolder", "revision", "vae_file",
+                   "vae_bytes", "vae_sha256", "latent_channels", "latent_attr",
+                   "temporal_factor", "spatial_factor", "license", "gated", "lineage")
+_VIDEO_OPTIONAL = ("notes", "excluded_reason")
+
+
+@dataclass(frozen=True)
+class VideoDecoderSpec:
+    """One validated entry of ``configs/video_bank.yaml``."""
+
+    key: str
+    role: str
+    kind: str
+    cls: str
+    repo: str
+    subfolder: str
+    revision: str
+    vae_file: str
+    vae_bytes: int
+    vae_sha256: str
+    latent_channels: int
+    latent_attr: str
+    temporal_factor: int
+    spatial_factor: int
+    license: str
+    gated: bool
+    lineage: str
+    notes: str = ""
+    excluded_reason: str = ""
+
+    def accepts_frames(self, frames: int) -> bool:
+        """Whether a clip of ``frames`` frames is a native length (``1 + k * t``)."""
+        return frames >= 1 and (frames - 1) % self.temporal_factor == 0
+
+
+@dataclass(frozen=True)
+class VideoBankConfig:
+    """The validated video bank and its clip protocol."""
+
+    schema_version: int
+    resolved_on: str
+    frames: int
+    crop: int
+    min_short_side: int
+    members: list[VideoDecoderSpec] = field(default_factory=list)
+
+    def by_key(self, key: str) -> VideoDecoderSpec:
+        """The member called ``key``.
+
+        Raises:
+            BankConfigError: If no member has that key.
+        """
+        for spec in self.members:
+            if spec.key == key:
+                return spec
+        raise BankConfigError(f"no video-bank member {key!r}; have {[s.key for s in self.members]}")
+
+    def select(self, roles: tuple[str, ...] = ("bank",)) -> list[VideoDecoderSpec]:
+        """Members with one of ``roles``, in file order."""
+        return [s for s in self.members if s.role in roles]
+
+
+def _validate_video_member(raw: Any, index: int, frames: int, crop: int) -> VideoDecoderSpec:
+    where = f"video member #{index}"
+    if not isinstance(raw, dict):
+        raise BankConfigError(f"{where}: must be a mapping")
+    where = f"video member #{index} ({raw.get('key', '?')})"
+    unknown = set(raw) - set(_VIDEO_REQUIRED) - set(_VIDEO_OPTIONAL)
+    missing = [k for k in _VIDEO_REQUIRED if k not in raw]
+    if unknown or missing:
+        raise BankConfigError(f"{where}: unknown keys {sorted(unknown)}, missing {missing}")
+    spec = VideoDecoderSpec(**{k: raw[k] for k in (*_VIDEO_REQUIRED, *_VIDEO_OPTIONAL) if k in raw})
+    if (spec.role not in VIDEO_ROLES or spec.kind not in VIDEO_KINDS
+            or spec.cls not in VIDEO_CLASSES):
+        raise BankConfigError(f"{where}: role/kind/cls {spec.role!r}/{spec.kind!r}/{spec.cls!r} "
+                              f"not in {sorted(VIDEO_ROLES)}/{sorted(VIDEO_KINDS)}/"
+                              f"{sorted(VIDEO_CLASSES)}")
+    if not _is_full_sha(spec.revision, 40) or not _is_full_sha(spec.vae_sha256, 64):
+        raise BankConfigError(f"{where}: revision must be a full 40-hex commit and vae_sha256 a "
+                              f"full 64-hex digest")
+    if spec.role == "excluded" and not spec.excluded_reason.strip():
+        raise BankConfigError(f"{where}: an excluded member must state excluded_reason")
+    if spec.kind == "vae_kl_per_frame" and spec.temporal_factor != 1:
+        raise BankConfigError(f"{where}: a per-frame member has temporal_factor 1")
+    if not spec.accepts_frames(frames):
+        raise BankConfigError(f"{where}: {frames} frames is not 1 + k x {spec.temporal_factor}")
+    if crop % spec.spatial_factor:
+        raise BankConfigError(f"{where}: crop {crop} is not a multiple of {spec.spatial_factor}")
+    return spec
+
+
+def _is_full_sha(value: Any, length: int) -> bool:
+    text = str(value)
+    return len(text) == length and all(c in "0123456789abcdef" for c in text)
+
+
+def load_video_bank(path: str | Path) -> VideoBankConfig:
+    """Load and validate ``configs/video_bank.yaml``.
+
+    Raises:
+        BankConfigError: On an unknown or missing key, an unpinned revision or digest, a
+            class outside :data:`VIDEO_CLASSES`, a clip length that is not native for a
+            member, a crop that is not a multiple of a member's spatial factor, a duplicate
+            key, or an exclusion without a reason.
+    """
+    config_path = Path(path)
+    if not config_path.is_file():
+        raise BankConfigError(f"video bank config not found: {config_path}")
+    raw = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict) or set(raw) != {"schema_version", "resolved_on", "clip",
+                                                 "members"}:
+        raise BankConfigError(f"{config_path}: top level must be exactly schema_version, "
+                              f"resolved_on, clip, members")
+    clip = raw["clip"]
+    if not isinstance(clip, dict) or set(clip) != {"frames", "crop", "min_short_side"}:
+        raise BankConfigError(f"{config_path}: clip must be exactly frames, crop, min_short_side")
+    frames, crop = int(clip["frames"]), int(clip["crop"])
+    if int(clip["min_short_side"]) < crop:
+        raise BankConfigError(f"{config_path}: min_short_side below the crop would force a resize")
+    members = [_validate_video_member(m, i, frames, crop) for i, m in enumerate(raw["members"])]
+    keys = [m.key for m in members]
+    if len(set(keys)) != len(keys):
+        raise BankConfigError(f"{config_path}: duplicate member keys {keys}")
+    return VideoBankConfig(int(raw["schema_version"]), str(raw["resolved_on"]), frames, crop,
+                           int(clip["min_short_side"]), members)

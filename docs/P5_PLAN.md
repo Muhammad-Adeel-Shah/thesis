@@ -6,6 +6,71 @@ frozen. The pre-registration (`docs/P5_PREREGISTRATION.md`, not yet written) is 
 this plan after the pilot (section 8) and frozen on **2026-11-22**, before any P5 model
 trains and after the test panel is frozen.
 
+> **Decisions of 2026-11-21 (the user's review of `0f0d5a4`; they override the text below
+> wherever the two differ; the pre-registration consolidates them):**
+>
+> - **A1:**
+>   - **Sources:** Pexels (training), AIGVDBench (the main test set) and the AEGIS hard
+>     test (clean, descriptive only).
+>   - **Rejected:** Mixkit, GenVideo and VBench.
+>   - **Licence:** Pexels is treated as the Pexels License (research, private, no
+>     redistribution); the Hub's apache tag is recorded beside it.
+>   - **Citation:** AIGVDBench is cited as Ma et al., "Your One-Stop Solution for
+>     AI-Generated Video Detection", CVPR 2026, arXiv:2601.11035.
+>   - **Calibration pool:** a YouTube calibration pool for V4 k-shot is reserved from the
+>     AIGVDBench reals, disjoint from the test reals.
+> - **A2:**
+>   - **Where:** D3 and DeCoF code and weights are fetched only in an isolated Kaggle session
+>     (no Secrets, no private data), with pinned commits and recorded hashes.
+>   - **If DeCoF's weights are unavailable:** it is dropped, and the baselines become D3 +
+>     image S2-D per frame + DDA per frame.
+> - **A3:**
+>   - **Dependencies:** `av==19.0.2` only. On Kaggle, the preinstalled pyarrow is used.
+>   - **Encoders:** libx264/libx265 are verified and the FFmpeg build is recorded.
+>   - **Re-encodes:** every test-panel re-encode runs on Kaggle.
+> - **A4 / compute:**
+>   - **Kaggle:** the pilot; the panel and its shortcut gate; the baseline fetch; all
+>     scoring.
+>   - **AWS g5.2xlarge (us-east-2):** Pexels, the reconstruction and training, under a
+>     **$80** budget.
+>   - **RunPod:** LOLO overflow.
+>   - **The uni PC:** 5-hour resumable jobs only.
+>   - **Test data never leaves Kaggle.**
+> - **A5:**
+>   - **Clips:** **25 consecutive native frames**, crop 320, no resize, no temporal
+>     resampling. The pre-declared minimum-size rule and exclusions are in
+>     `src/dbp/data/video.py`.
+>   - **Pairs:** a real and its reconstruction share the decode/crop path and are stored
+>     lossless.
+>   - **Degradation:** p = 0.35, plus H.264/H.265 re-encodes (a CRF range), applied
+>     identically to both clips of a pair.
+>   - **Timing:** the training-data reconstruction may start before the freeze.
+> - **A7:**
+>   - **Thresholds:** P3's.
+>   - **Primary:** V1 (LOLO) and V2 (bank vs single, on unseen AIGVDBench generators), with
+>     97.5% CIs.
+>   - **Secondary:** V3–V5. **V6 baselines:** descriptive.
+>   - **V5:** H.264 CRF 28 and resize 0.5, within 5 points.
+>   - **The shortcut gate:** before the panel freeze, a metadata-only AUC (fps, resolution,
+>     duration, codec/bitrate). If any is > 0.70, the reals and fakes are
+>     stratified/rebalanced, then frozen.
+>   - **The primary view is format-matched:** reals and fakes re-encoded identically. Raw is
+>     secondary.
+> - **Pilot:** bank membership may change **only for technical failure**. The Qwen-Image vs
+>   Wan2.1 weight comparison is reported; if they are identical, Wan results are flagged
+>   "seen decoder".
+> - **Schedule:**
+>   - **Sat 21:** P5-B and the Kaggle pilot.
+>   - **Sun 22:** AWS reconstruction; the panel fetch and gate.
+>   - **Mon 23:** pre-registration and panel frozen and pushed (if missed: LOLO 5 → 3).
+>   - **Tue 24–Wed 25:** training.
+>   - **Thu 26:** scoring. **Fri 27:** baselines. **Sat 28:** analysis, once.
+>   - **All of P5 by Sat 29.**
+>   - **Cut order** (every control kept): (1) LOLO 5 → 3; (2) robustness H.264 only;
+>     (3) baselines D3 + image S2-D per frame; (4) k-shot → k = 0 only.
+> - **Technical exclusion (2026-11-21, not a pilot outcome):** **Allegro**. diffusers
+>   implements its encode/decode only with tiling, which the protocol forbids.
+
 **Method:** the image method on video, at reduced scale, without reduced rigour. The
 rules are the image module's: a frozen pre-registration pushed before training; a test
 panel frozen and scored once per frozen model; leak and dedup checks; two seeds for the

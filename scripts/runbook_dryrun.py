@@ -3231,7 +3231,150 @@ def fixture_p4_baselines(work: Path, ref: str) -> Fixture:
         carry_to=carry_to, check=check)
 
 
+P5_PILOT_CLIPS, P5_SHARD_VIDEOS = 4, 3
+
+
+def p5_mp4(path: Path, seed: int, size: tuple[int, int] = (360, 640), frames: int = 32) -> None:
+    """A small H.264 clip with seeded moving texture (enough frames for the 25 window)."""
+    import av
+
+    rng = np.random.default_rng(seed)
+    base = rng.integers(0, 256, (size[0] + 64, size[1] + 64, 3), dtype=np.uint8)
+    with av.open(str(path), "w") as container:
+        stream = container.add_stream("libx264", rate=30)
+        stream.width, stream.height, stream.pix_fmt = size[1], size[0], "yuv420p"
+        for t in range(frames):
+            img = np.ascontiguousarray(base[t: t + size[0], 2 * t: 2 * t + size[1]])
+            for packet in stream.encode(av.VideoFrame.from_ndarray(img, format="rgb24")):
+                container.mux(packet)
+        for packet in stream.encode():
+            container.mux(packet)
+
+
+def fixture_p5_pilot(work: Path, ref: str) -> Fixture:
+    """The P5 pilot in miniature, every cell verbatim on CPU.
+
+    - **Pexels** is a local directory laid out as the Hub repo (``videos/*.tar`` and a
+      manifest, CSV here because the venv has no pyarrow): 3 shards of 3 seeded H.264 clips,
+      one of them 240 px tall (the ``short_side`` exclusion must fire).
+    - **S2-D**: a notebook output holding ``s2d_p35_seed{0,1}/snapshots/step_05000`` --
+      LoRA adapters attached by the committed ``attach_lora`` to the dry-run DINOv3 and a
+      ``build_head`` head, per seed, with their hashes in the fixture's expectation.
+    - **Video VAEs** are the loader's dry-run stand-ins (tiny random-init, same classes);
+      the pin check is skipped (``--skip-pins``, refused outside DBP_DRYRUN=1).
+    """
+    import tarfile
+
+    import torch
+
+    inputs = work / "input"
+    code = inputs / "datasets/muhammadadeelshah/dbp-code-fixture/thesis_dbp"
+    commit = copy_code(code, ref)
+    sys.path.insert(0, str(code / "src"))
+    os.environ["DBP_DRYRUN"] = "1"
+    from dbp.backbones.loader import load_backbone
+    from dbp.streams.s2_artifact import attach_lora, build_head
+
+    s2d = inputs / "notebooks/muhammadadeelshah/dbp-p3-s2d/Implementation/thesis_dbp"
+    expect = json.loads((code / "env" / "p5_pilot_expect.json").read_text("utf-8"))
+    for model in expect["models"]:
+        torch.manual_seed(int(model["seed"]))
+        backbone = load_backbone("dinov3-vitb16", "cpu", None)
+        wrapped = attach_lora(backbone.model)["model"]
+        lora = s2d / model["lora"]
+        wrapped.save_pretrained(str(lora))
+        head = build_head(backbone.hidden_size)
+        torch.save(head.state_dict(), s2d / model["head"])
+        model["lora_sha256"] = sha256_file(lora / "adapter_model.safetensors")
+        model["head_sha256"] = sha256_file(s2d / model["head"])
+
+    source = work / "pexels_source"
+    (source / "videos").mkdir(parents=True)
+    rows = []
+    for s in range(3):
+        name = f"5000_0_shard_{s:04d}.tar"
+        with tarfile.open(source / "videos" / name, "w") as tar:
+            for k in range(P5_SHARD_VIDEOS):
+                sample = f"5000_0_9{s}{k:02d}"
+                mp4 = work / f"{sample}.mp4"
+                p5_mp4(mp4, 10 * s + k, (240, 320) if (s, k) == (1, 0) else (360, 640))
+                tar.add(mp4, arcname=f"{sample}.mp4")
+                mp4.unlink()
+                rows.append({"sample_id": sample, "video_id": f"pexels_{s}{k}", "shard": name})
+    write_csv(source / "manifest.csv", ["sample_id", "video_id", "shard"], rows)
+
+    expect.update({
+        "stage": "p5_pilot (dry-run fixture)", "gpus": 0, "hf_token": False,
+        "imports": ["av", "peft", "transformers", "safetensors", "huggingface_hub", "PIL",
+                    "diffusers"],
+        "pexels_source": str(source), "pilot_shards": "0:3", "pilot_clips": P5_PILOT_CLIPS,
+        "fetch_workers": 2, "smoke_clips": 2, "score_smoke_clips": 1,
+        "smoke_jobs": ["cpu:wan21,hunyuan,ltx090,sd15_pf", "cpu:cogvx,mochi,wan22_5b"],
+        "reconstruct_jobs": ["cpu:wan21,ltx090", "cpu:hunyuan"],
+        "score_jobs": ["cpu:s2d_p35_seed0", "cpu:s2d_p35_seed1"],
+        "disk": {"working_gb": 1, "tmp_gb": 1}, "poll_seconds": 2, "dryrun_fixture": True,
+        "deadlines_hours": {"smoke": 1.0, "reconstruct": 1.0, "score_smoke": 0.5, "score": 1.0},
+        "expected": {"wall": "dry-run fixture", "quota": "none"},
+    })
+    expect_path = work / "p5_pilot_expect.json"
+    expect_path.write_text(json.dumps(expect, indent=2) + "\n", encoding="utf-8")
+
+    def check(work_dir: Path) -> list[str]:
+        try:
+            return check_results(work_dir)
+        except (OSError, KeyError, ValueError, IndexError, TypeError) as exc:
+            return [f"the session did not leave the expected results: "
+                    f"{type(exc).__name__}: {exc}"]
+
+    def check_results(work_dir: Path) -> list[str]:
+        problems: list[str] = []
+        dbp = work_dir / "working/Implementation/thesis_dbp"
+        pilot = dbp / "reports/p5_pilot"
+        pre = json.loads((pilot / "preflight.json").read_text("utf-8"))
+        if not pre["ok"] or not pre["encoders"]["libx264"] or not pre["encoders"]["libx265"]:
+            problems.append(f"preflight {pre.get('problems')}")
+        reals = json.loads((dbp / "reports/p5_reals/p5_reals_pilot_summary.json").read_text())
+        if reals["kept"] != P5_PILOT_CLIPS or "short_side" not in reals["exclusions"]:
+            problems.append(f"reals {reals['kept']} kept, exclusions {reals['exclusions']}")
+        smoke = {p.stem[6:]: json.loads(p.read_text("utf-8"))["status"]
+                 for p in pilot.glob("smoke_*.json")}
+        if smoke != {k: "OK" for k in ("wan21", "hunyuan", "cogvx", "ltx090", "mochi",
+                                       "sd15_pf", "wan22_5b")}:
+            problems.append(f"smoke {smoke}")
+        for key in ("wan21", "hunyuan", "ltx090"):
+            lines = (pilot / f"recon_{key}.jsonl").read_text("utf-8").splitlines()
+            if len(lines) != P5_PILOT_CLIPS:
+                problems.append(f"recon {key}: {len(lines)} clips")
+        lineage = json.loads((pilot / "lineage_qwen_vs_wan21.json").read_text("utf-8"))
+        if not lineage["decoder_identical"]:
+            problems.append("lineage self-comparison did not report identical decoders")
+        summary = json.loads((pilot / "p5_pilot_summary.json").read_text("utf-8"))
+        for model in ("s2d_p35_seed0", "s2d_p35_seed1"):
+            views = summary["scores"][model]
+            for view in ("raw", "h264"):
+                if set(views[view]) < {"wan21", "hunyuan", "ltx090", "real_fpr_clip"}:
+                    problems.append(f"{model} {view}: {sorted(views[view])}")
+            if "already_caught" not in views["h264"]["wan21"]:
+                problems.append(f"{model}: no already_caught reading on the h264 view")
+            if "flag" not in views["raw"]["wan21"]:
+                problems.append(f"{model}: identical decoders but no 'seen decoder' flag")
+        rows = sum(1 for _ in (pilot / "scores/s2d_p35_seed0.csv").open(encoding="utf-8")) - 1
+        if rows != P5_PILOT_CLIPS * 4 * 2 * 24:
+            problems.append(f"score rows {rows}")
+        if not (work_dir / "working/p5_pilot_reports.zip").is_file():
+            problems.append("no archive")
+        print(f"  check: preflight ok, {reals['kept']} clips kept "
+              f"(exclusions {reals['exclusions']}), smoke {sorted(smoke)}, {rows} score rows "
+              f"per model, lineage {lineage['flag']}")
+        return problems
+
+    return Fixture({"DBP_INPUT_ROOT": str(inputs), "DBP_EXPECT": str(expect_path)}, commit,
+                   [Session("session 1: pre-flight, pool, smoke, lineage, reconstruct, score, "
+                            "summary")], check=check)
+
+
 FIXTURES: dict[str, Callable[[Path, str], Fixture]] = {
+    "p5_pilot": fixture_p5_pilot,
     "p2_s3_recovery": fixture_p2_s3_recovery,
     "p2_s2": fixture_p2_s2,
     "x1_format": fixture_x1_format,

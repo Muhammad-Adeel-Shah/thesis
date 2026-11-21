@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P5-A (2026-11-20, branch `p5-video`)**: video-module plan `docs/P5_PLAN.md` (DRAFT, no training, no download). Hub metadata audited for 8 video-VAE candidates and the datasets; approval items A1–A8 open. Nothing frozen. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
+| Last prompt | **P5-B (2026-11-21, branch `p5-video`)**: A1–A8 approved with conditions; the compute plan changed (AWS g5.2xlarge, $80 budget). Built: the video bank (`configs/video_bank.yaml`, 6 bank + 1 reserve, Allegro excluded), the video reconstruction kinds, video I/O (`av==19.0.2`), the Pexels fetch, the pilot (`scripts/p5_pilot.py`) and its Kaggle runbook, the cloud runbook and guard. Hand-over of the Kaggle pilot. Nothing trained, no test data fetched. **P5-A (2026-11-20)**: the plan. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -8442,3 +8442,97 @@ track (P5).
 
 **Waiting on the user:** approval items A1–A8; the uni PC details; the Kaggle quota; the
 VBench gate; AWS yes or no.
+
+### P5-B — approvals applied; video bank, video I/O, Pexels fetch and the pilot built; cloud runbook — 2026-11-21
+
+**User, 2026-11-21 (review of `0f0d5a4`):** A1–A8 approved with conditions. They are
+recorded verbatim in substance in `docs/P5_PLAN.md` ("Decisions of 2026-11-21") and as
+standing rules in CLAUDE.md section 14.
+- **Sources:** Pexels, AIGVDBench (cite Ma et al., CVPR 2026, arXiv:2601.11035) and the AEGIS
+  hard test (clean, descriptive only). Mixkit, GenVideo and VBench are out.
+- **Dependencies:** `av` only; Kaggle's pyarrow is used.
+- **Clips:** 25 native frames.
+- **Rules:** primary V1 and V2; the format-matched primary view; the metadata-shortcut gate
+  (AUC > 0.70 → rebalance before the freeze).
+- **Pilot:** bank changes for technical failure only.
+- **Compute change** (overrides the plan):
+  - **Kaggle:** the pilot, the panel, all scoring.
+  - **AWS g5.2xlarge, us-east-2:** Pexels, the reconstruction, training; stop and tell the
+    user before $80.
+  - **RunPod:** LOLO overflow.
+  - **The uni PC:** 5-hour resumable jobs.
+  - **Deadline:** all of P5 by Sat 29 Nov.
+
+**Built (branch `p5-video`):**
+- **Config:** `configs/video_bank.yaml`.
+  - Bank: wan21, hunyuan, cogvx, ltx090, mochi, sd15_pf. Reserve: wan22_5b.
+  - **Allegro excluded:** diffusers 0.40.0 `AutoencoderKLAllegro._encode` and `._decode` raise
+    `NotImplementedError` unless tiling is on, and the protocol forbids tiling.
+- **Registry:** `load_video_bank` and `VideoDecoderSpec` in `registry.py`. A separate
+  schema; the image bank is unchanged.
+- **The video reconstruction kinds** in `reconstruct.py`: `reconstruct_video_kl` (the decode
+  must return the input's exact shape) and `reconstruct_per_frame`.
+- **The loader:** `load_video_member` / `VideoMember` in `loaders.py`.
+  - It switches off and asserts off `use_tiling`, `use_framewise_encoding` and
+    `use_framewise_decoding`.
+  - **Finding:** diffusers' HunyuanVideo **defaults both frame-wise flags to True**. That
+    temporal-tiles, with blending, any clip over 16 frames.
+  - Dry-run stand-ins are tiny random-init instances of the same classes, CPU only.
+- **Video I/O:** `src/dbp/data/video.py`, with the pre-declared rules.
+  - The window start is a hash of the id, within the first 150 frames.
+  - Exclusions: decode_error, rotated, not_8bit, short_side < 320, too_few_frames, static.
+  - PNG clips are written atomically and once.
+  - `encode_roundtrip` (libx264/libx265) is the only re-encode.
+- **Scripts:**
+  - `p0_verify_pins.py --video-bank`: commits **and** VAE-file LFS sha256/size; a mismatch is
+    fatal (§7a).
+  - `scripts/p5_fetch_reals.py`: a shard plan ordered by `sha256("2026:<name>")`; the pilot
+    pool is 0:4 and training 4:35, disjoint by construction and by video id.
+  - `scripts/p5_pilot.py` (smoke / lineage / reconstruct / score / summary) and
+    `scripts/p5_preflight.py`.
+  - `scripts/p5_hub_audit.py` → `reports/p5_plan/p5_hub_audit.json`.
+- **Runbook:** `env/kaggle_run_p5_pilot.py` + `env/p5_pilot_expect.json`, and the
+  `runbook_dryrun.py` fixture `p5_pilot`.
+- **Cloud:** `env/cloud_p5_runbook.md`, `env/cloud_p5_setup.sh` and
+  `scripts/p5_cloud_guard.py` (stops on finish, on idle, or at the $75 cap).
+- **Tests and requirements:** `tests/test_p5_video.py`; `requirements/base.txt` gains
+  `av==19.0.2`.
+
+**MEASURED this session:**
+- **`av`:**
+  - `pip install --dry-run av==19.0.2` resolved `av 19.0.2` only.
+  - Installed in the venv: torch 2.11.0+cpu, torchvision 0.26.0+cpu and numpy 2.5.2 are
+    unchanged before and after.
+  - The local PyAV wheel has `libx264` and `libx265`; libavcodec is 63.1.102.
+- **The video pin check:** all 10 pins RESOLVE (7 video members with matching VAE hashes,
+  3 backbones), and every Hub head equals the 2026-11-20 audit.
+- **Stand-ins:** all 7 stand-ins return 25 frames at the input shape, with re-run
+  determinism 0. That includes Mochi, whose native `drop_last_temporal_frames` keeps 6k + 1.
+- **Two encoding facts fixed in code:**
+  - **libx265 was non-deterministic:** the same bytes count but different pixels across two
+    identical calls. It is now pinned with `pools=1:frame-threads=1`.
+  - **A still decodes non-identically after H.264**, so `static` is now "every frame within
+    a mean absolute difference of 1.0 grey levels of frame 0", not exact equality.
+- **A pre-flight refusal in the first dry-run:** the expectation held the threshold file's
+  sha256 of the **CRLF working copy** (`cef11eb9…`). The code zip carries git's bytes:
+  `81b8c506b15f80829e1b47ad5af2bfd1c5f39f5211804449fd2518889ec87383`
+  (`git show HEAD:reports/p3_results/p3_analysis_full.json | sha256sum`).
+  - Fixed, with a regression test.
+  - The rule is in CLAUDE.md section 14.
+
+**Disk and cost (for the AWS volume and the $80 guard):**
+- **The training clips:** at most **129.02 GB raw** (2,400 × 7 × 25 × 320² × 3 B). PNG is
+  smaller; the pilot measures the PNG bytes per clip. Also on the volume:
+  - VAE weights 9.03 GB;
+  - a shard working set (1.08 GB per shard);
+  - feature caches 5.6 GB (9 models).
+- **The proposed volume is 200 GB gp3.** Its price is NOT-VERIFIED and is entered by the
+  user as the guard's `--fixed-usd`.
+- **Compute at $1.21/h** (the user's rate), ESTIMATE:
+  - setup 0.5 h, the Pexels pool about 1 h, the smoke 0.3 h;
+  - training at most 9 × 1.212 h = 10.9 h. That is P3 S2-D's T4 GPU-h; the A10G is assumed
+    no faster, an upper bound;
+  - features and heads about 1.5 h;
+  - **about $17 before the reconstruction**;
+  - the reconstruction is PENDING the pilot's s/clip. It has about $55 (about 45 instance
+    hours) of room under the $75 cap, before the volume.

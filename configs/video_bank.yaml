@@ -1,0 +1,191 @@
+# ===========================================================================
+# DBP P5 -- the video decoder bank (docs/P5_PLAN.md section 2; approved 2026-11-21)
+# ===========================================================================
+# Every `revision` is the full commit SHA returned by HfApi.model_info on 2026-11-20
+# (scripts/p5_hub_audit.py -> reports/p5_plan/p5_hub_audit.json). `vae_sha256` is the
+# LFS sha256 of `<subfolder>/<vae_file>` at that revision: the identity of the decoder
+# weights, checked again by scripts/p0_verify_pins.py --video-bank before data is written.
+#
+# Roles:
+#   bank     -- trained on (the five video lineages + the image lineage per frame)
+#   reserve  -- never trained on; unseen-VAE reconstruction tests (V1-c)
+#   excluded -- recorded with the reason, never loaded
+#
+# The clip protocol (approval A5): 25 consecutive native frames (25 = 4*6+1 = 6*4+1 =
+# 8*3+1 fits every temporal factor), centre crop 320, no resize, no temporal
+# resampling; fp32 unless the smoke records fp16_build_allowed. No spatial tiling and no
+# frame-wise (temporal-tiled) encode/decode: the loader switches both off and asserts it.
+# ===========================================================================
+
+schema_version: 1
+resolved_on: "2026-11-20"
+clip:
+  frames: 25
+  crop: 320
+  min_short_side: 320
+
+members:
+
+  - key: wan21
+    role: bank
+    kind: vae_video_kl
+    cls: AutoencoderKLWan
+    repo: Wan-AI/Wan2.1-T2V-1.3B-Diffusers
+    subfolder: vae
+    revision: 0fad780a534b6463e45facd96134c9f345acfa5b
+    vae_file: diffusion_pytorch_model.safetensors
+    vae_bytes: 507591892
+    vae_sha256: d6e524b3fffede1787a74e81b30976dce5400c4439ba64222168e607ed19e793
+    latent_channels: 16
+    latent_attr: z_dim
+    temporal_factor: 4
+    spatial_factor: 8
+    license: apache-2.0
+    gated: false
+    lineage: wan21
+    notes: >-
+      The same file (LFS sha256) ships in Wan2.1-T2V-14B, Wan2.2-T2V-A14B and the
+      SkyReels-V2 Diffusers repos. Same architecture config as Qwen-Image's VAE, which the
+      image S2-D bank holds; the pilot compares the weights.
+
+  - key: hunyuan
+    role: bank
+    kind: vae_video_kl
+    cls: AutoencoderKLHunyuanVideo
+    repo: hunyuanvideo-community/HunyuanVideo
+    subfolder: vae
+    revision: e8c2aaa66fe3742a32c11a6766aecbf07c56e773
+    vae_file: diffusion_pytorch_model.safetensors
+    vae_bytes: 985943868
+    vae_sha256: 7c68a6295f9034a88225fbafb1f3258291a08d57a1fdb938233fa57b1b8f4883
+    latent_channels: 16
+    latent_attr: latent_channels
+    temporal_factor: 4
+    spatial_factor: 8
+    license: "tencent-hunyuan-community (from tencent/HunyuanVideo @ 6204ad6aea1a77ff5aba337c88278bb9500eb37d); OK for research in Pakistan (user, 2026-11-21)"
+    gated: false
+    lineage: hunyuan
+    notes: >-
+      diffusers defaults use_framewise_encoding/decoding to True, which temporal-tiles any
+      clip over 16 frames with blending; the loader turns both off. Same file in
+      HunyuanVideo-I2V.
+
+  - key: cogvx
+    role: bank
+    kind: vae_video_kl
+    cls: AutoencoderKLCogVideoX
+    repo: zai-org/CogVideoX-2b
+    subfolder: vae
+    revision: 1137dacfc2c9c012bed6a0793f4ecf2ca8e7ba01
+    vae_file: diffusion_pytorch_model.safetensors
+    vae_bytes: 862388596
+    vae_sha256: a410e48d988c8224cef392b68db0654485cfd41f345f4a3a81d3e6b765bb995e
+    latent_channels: 16
+    latent_attr: latent_channels
+    temporal_factor: 4
+    spatial_factor: 8
+    license: apache-2.0
+    gated: false
+    lineage: cogvx
+    notes: >-
+      Native 8-frame batches with a causal conv cache (diffusers _encode/_decode) are the
+      model's own path, not tiling. Same file in CogVideoX-5b and CogVideoX1.5-5B.
+
+  - key: ltx090
+    role: bank
+    kind: vae_video_kl
+    cls: AutoencoderKLLTXVideo
+    repo: Lightricks/LTX-Video
+    subfolder: vae
+    revision: 8984fa25007f376c1a299016d0957a37a2f797bb
+    vae_file: diffusion_pytorch_model.safetensors
+    vae_bytes: 1676798532
+    vae_sha256: 265ca87cb5dff5e37f924286e957324e282fe7710a952a7dafc0df43883e2010
+    latent_channels: 128
+    latent_attr: latent_channels
+    temporal_factor: 8
+    spatial_factor: 32
+    license: "LTX Video 0.9 RAIL-M; OK for detection research (user, 2026-11-21)"
+    gated: false
+    lineage: ltx
+    notes: "Factors 8 x 32 are checked against the decode shape in the smoke."
+
+  - key: mochi
+    role: bank
+    kind: vae_video_kl
+    cls: AutoencoderKLMochi
+    repo: genmo/mochi-1-preview
+    subfolder: vae
+    revision: cd1d0fe89aa8382fcd9ae760bc3d7afe6183579f
+    vae_file: diffusion_pytorch_model.safetensors
+    vae_bytes: 1839047460
+    vae_sha256: 0d74f617ddcaa1b4a53884581d8d21b6836761f6175b20e3df177d4a12ed77df
+    latent_channels: 12
+    latent_attr: latent_channels
+    temporal_factor: 6
+    spatial_factor: 8
+    license: apache-2.0
+    gated: false
+    lineage: mochi
+    notes: "drop_last_temporal_frames (native) keeps 6k+1 frames in and out."
+
+  - key: sd15_pf
+    role: bank
+    kind: vae_kl_per_frame
+    cls: AutoencoderKL
+    repo: stable-diffusion-v1-5/stable-diffusion-v1-5
+    subfolder: vae
+    revision: 451f4fe16113bff5a5d2269ed5ad43b0592e9a14
+    vae_file: diffusion_pytorch_model.safetensors
+    vae_bytes: 334643276
+    vae_sha256: a2b5134f4dbc140d9c11f11cba3233099e00af40f262f136c691fb7d38d2194c
+    latent_channels: 4
+    latent_attr: latent_channels
+    temporal_factor: 1
+    spatial_factor: 8
+    license: creativeml-openrail-m
+    gated: false
+    lineage: sd1
+    notes: "The image bank's sd15, applied to each frame independently."
+
+  - key: wan22_5b
+    role: reserve
+    kind: vae_video_kl
+    cls: AutoencoderKLWan
+    repo: Wan-AI/Wan2.2-TI2V-5B-Diffusers
+    subfolder: vae
+    revision: b8fff7315c768468a5333511427288870b2e9635
+    vae_file: diffusion_pytorch_model.safetensors
+    vae_bytes: 2818777808
+    vae_sha256: 62cd18f19438e35b32ac63020e2852f566e9b02f46b6cdbd87972a356e3c6f4b
+    latent_channels: 48
+    latent_attr: z_dim
+    temporal_factor: 4
+    spatial_factor: 16
+    license: apache-2.0
+    gated: false
+    lineage: wan22
+    notes: "A different lineage from wan21 (48 ch, patch 2, f16). Never trained on."
+
+  - key: allegro
+    role: excluded
+    kind: vae_video_kl
+    cls: AutoencoderKLAllegro
+    repo: rhymes-ai/Allegro
+    subfolder: vae
+    revision: c1b9207bb5cb79e2aa08f3d139c17d26c0de55b6
+    vae_file: diffusion_pytorch_model.safetensors
+    vae_bytes: 699904972
+    vae_sha256: 47871a698b18f92f15019d361a81cbc8af4676f8eef9a47fd2b95354a39f831a
+    latent_channels: 4
+    latent_attr: latent_channels
+    temporal_factor: 4
+    spatial_factor: 8
+    license: apache-2.0
+    gated: false
+    lineage: allegro
+    excluded_reason: >-
+      diffusers 0.40.0 AutoencoderKLAllegro._encode and ._decode raise NotImplementedError
+      unless tiling is on ("Encoding without tiling has not been implemented yet"), and the
+      protocol forbids tiling. Technical exclusion, read from the installed source
+      2026-11-21; not a pilot outcome.
