@@ -8613,3 +8613,92 @@ standing rules in CLAUDE.md section 14.
   measured version, instead of the 2.10.0 / cu128 taken from the snapshot.
   `TORCH_INDEX=cu128` is the fallback for a driver older than R580.
 - **Checks:** P5 tests 26 passed; ruff clean.
+- **Hand-over:** code `f8669b3`.
+  - The `--ref HEAD` dry-run PASSED in 717 s.
+  - The zip: `dbp-code-f8669b3.zip`, 28,386,604 B, sha256
+    `9dea76e4c1ee059bf4f9bb5e46c251b4f6862d67700209e9907721b93923a51e`.
+  - The user is re-running the pilot with only that code dataset attached.
+
+### P5-B review round (`4bed7c0`, `f8669b3` ACCEPTED): one diffusers, LF worktree, the AWS rules wired in — 2026-11-21
+
+**User, 2026-11-21:**
+- **Accepted:** the extra additions (the registry loader, `--video-bank`, the dry-run fixture,
+  CLAUDE.md §14); the Hunyuan frame-wise-off rule, with a limitation line; Allegro's
+  technical exclusion.
+- **Asked for:**
+  - an LF worktree and a full suite with 0 failed before the AWS stage;
+  - one diffusers version, asserted at start-up;
+  - the pilot report's contents (the Qwen/Wan comparison; per-VAE T4 s/clip, peak VRAM
+    and PNG bytes; the projected AWS reconstruction hours and cost);
+  - **no AWS launch** until that projection is approved;
+  - EBS at about $0.08/GB-month.
+- **The AWS rules** are CLAUDE.md §14 and `docs/P5_PLAN.md`.
+- **Kaggle quota left: 29 h** (user). The AWS test launch is not yet reported.
+
+**1. One diffusers version: 0.42.0** (the pilot's, from the Kaggle pre-flight).
+- **Pinned** in `configs/video_bank.yaml` (`diffusers:`, copied onto every member) and in
+  `requirements/base.txt` (`diffusers==0.42.0`).
+- **Asserted:** `require_diffusers_version` refuses any other version in `load_video_member`,
+  at the start of the pilot's VAE phases, and in `p5_preflight`. There is a test.
+- **Local venv:**
+  - `pip install --dry-run diffusers==0.42.0` resolved diffusers alone, and it was
+    installed.
+  - torch 2.11.0+cpu, torchvision 0.26.0+cpu and numpy 2.5.2 are unchanged.
+- **0.40.0 against 0.42.0, MEASURED** (each class built as a dry-run stand-in, its run-time
+  attributes recorded, and the module sources diffed):
+  - **No default differs.** That covers `use_tiling`, `use_slicing`,
+    `use_framewise_encoding/decoding`, the tile sizes and strides, the native frame-batch
+    sizes, `drop_last_temporal_frames` and the compression ratios.
+  - HunyuanVideo's frame-wise flags are True in both versions, and are switched off by the
+    loader.
+  - **Source:** the HunyuanVideo, CogVideoX, LTX, Mochi and `AutoencoderKL` modules have 0
+    changed lines. `autoencoder_kl_wan.py` has 35, all an assert → ValueError in its
+    resample check plus return-type hints. Nothing numerical changed.
+- **The pilot now running uses code `f8669b3`,** which predates this assertion. Its
+  pre-flight recorded diffusers 0.42.0, so it ran the pinned version.
+
+**2. The worktree is LF.**
+- **Config:** `git config extensions.worktreeConfig true` (the shared `.git/config`), then
+  `git config --worktree core.autocrlf false`. The system gitconfig of Git for Windows sets
+  `true`.
+- **Re-checkout,** with the worktree clean and committed: the tracked files were removed,
+  `git checkout-index --all` wrote them back, and `git add -u` refreshed the stale stat
+  data.
+- **Result:**
+  - status 0 and staged 0: **no committed byte changed**;
+  - `p3_analysis_full.json` is `81b8c506…`, git's bytes;
+  - the 9 tracked files still containing `\r\n` are binary PNG charts.
+- The main checkout is untouched (status 0).
+
+**3. The AWS rules, wired in:**
+- **`env/aws_p5_session.sh`:** every job runs through it.
+  - The hard cap is scheduled first: `shutdown -h +ceil(estimate × 1.5 × 60)`.
+  - The guard is armed beside the job.
+  - The trap on EXIT/ERR/INT/TERM writes the session record, runs the optional Drive backup,
+    then stops the instance.
+- **`scripts/p5_cloud_guard.py`:**
+  - spend = instance hours × $1.21 + the data volume's calendar days × the EBS daily rate
+    (billed while stopped);
+  - a $75 cap;
+  - an idle rule of GPU 0% and no job for 20 min.
+- **`scripts/p5_aws_check.py`** (the user's PC; read-only `describe-*` calls only):
+  - `prelaunch` refuses for another P5 instance, a wrong type, shutdown ≠ stop, a data
+    volume not attached or with DeleteOnTermination=true, or a projection over its stage's
+    share;
+  - `postsession` reports instances, volumes, EIPs, snapshots and spend.
+- **`env/cloud_p5_runbook.md`** is rewritten to the rules.
+- **`tests/test_p5_cloud.py`** (14) runs the wrapper and the guard with a recorder in place
+  of `shutdown`.
+- **Three defects found by these tests and fixed:**
+  - an apostrophe inside `${VAR:?message}` swallowed the wrapper's next lines;
+  - on Windows, `os.kill(pid, 0)` terminates the process instead of probing it, so `alive`
+    uses `tasklist` there (on AWS, Linux, signal 0 is a probe);
+  - the tests' recorder lacked the `now` argument.
+- **Limitation line** (`docs/P5_PLAN.md`): in-the-wild HunyuanVideo videos are often
+  chunk-decoded; our pairs decode the full 25-frame clip in one pass.
+
+**Waiting on:**
+- the pilot's archive;
+- the AWS test launch result;
+- the full suite in the LF worktree (it started at `cadeb4b` + the LF fix; it is run again at
+  the final commit before the AWS stage).

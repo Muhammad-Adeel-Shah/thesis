@@ -70,6 +70,28 @@ trains and after the test panel is frozen.
 >     (3) baselines D3 + image S2-D per frame; (4) k-shot → k = 0 only.
 > - **Technical exclusion (2026-11-21, not a pilot outcome):** **Allegro**. diffusers
 >   implements its encode/decode only with tiling, which the protocol forbids.
+> - **Limitation (user, review of `4bed7c0`):** in-the-wild HunyuanVideo videos are often
+>   chunk-decoded. diffusers' default frame-wise path temporal-tiles anything over 16
+>   frames, with blending. Our training pairs decode the full 25-frame clip in one pass, so
+>   the Hunyuan reconstructions do not carry chunk seams that real Hunyuan outputs may
+>   carry.
+> - **One diffusers version** (user, 2026-11-21) for the pilot, the AWS reconstruction and
+>   all Kaggle scoring: **0.42.0**, the pilot's.
+>   - It is pinned in `configs/video_bank.yaml` and `requirements/base.txt`, and asserted by
+>     the loader.
+>   - From 0.40.0 to 0.42.0, no run-time default of any bank class differs. The only source
+>     change in their modules is Wan's resample check (assert → ValueError) and type hints.
+> - **AWS rules (user, 2026-11-21):**
+>   - **Budget:** setup + Pexels 5, reconstruction ≤ 45, training 15, features/heads 3,
+>     EBS 5, reserve 27; hard stop 75.
+>   - **Data:** downloaded once to one 200 GB gp3 data volume with
+>     DeleteOnTermination=false.
+>   - **Shutdown:** a trap on exit and on error, a 20-minute idle watchdog, and a hard cap of
+>     estimate × 1.5; shutdown = stop.
+>   - **Instances:** one at a time.
+>   - **Backups:** Google Drive, small files only.
+>   - **Launches:** a launch only after the user's OK, behind `p5_aws_check.py prelaunch`.
+>   - The runbook is `env/cloud_p5_runbook.md`.
 
 **Method:** the image method on video, at reduced scale, without reduced rigour. The
 rules are the image module's: a frozen pre-registration pushed before training; a test
