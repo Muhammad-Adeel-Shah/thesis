@@ -110,7 +110,8 @@ def phase_smoke(args: argparse.Namespace, bank: Any, clips: list[dict[str, str]]
     for key in args.members.split(","):
         spec, out = bank.by_key(key), args.reports / f"smoke_{key}.json"
         record: dict[str, Any] = {"member": key, "role": spec.role, "device": args.device,
-                                  "clips": [c["sample_id"] for c in sample]}
+                                  "clips": [c["sample_id"] for c in sample],
+                                  "numerics": args.numerics}
         try:
             reset_peak(args.device)
             began = time.perf_counter()
@@ -432,6 +433,22 @@ def phase_summary(args: argparse.Namespace, expect: dict[str, Any]) -> int:
     return 0
 
 
+def vae_numerics() -> dict[str, Any]:
+    """The reconstruction contract for every VAE phase: seeded, deterministic kernels
+    (as in every image data-building script), and true fp32 -- no TF32 on Ampere (the
+    A10G), where cuDNN would otherwise use it for convolutions by default (section 7)."""
+    import torch
+
+    from dbp.utils.seed import seed_everything
+
+    record = seed_everything(2026, deterministic=True)
+    torch.backends.cudnn.allow_tf32 = False
+    torch.backends.cuda.matmul.allow_tf32 = False
+    record.update({"cudnn_allow_tf32": torch.backends.cudnn.allow_tf32,
+                   "matmul_allow_tf32": torch.backends.cuda.matmul.allow_tf32})
+    return record
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--phase", required=True,
@@ -456,6 +473,8 @@ def main() -> int:
         from dbp.decoders.loaders import require_diffusers_version
 
         print("diffusers", require_diffusers_version(bank.diffusers), "(pinned)", flush=True)
+        args.numerics = vae_numerics()
+        print("numerics", json.dumps(args.numerics), flush=True)
     if args.phase == "lineage":
         phase_lineage(args, bank)
         return 0

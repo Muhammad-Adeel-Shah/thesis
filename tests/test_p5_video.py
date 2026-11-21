@@ -339,6 +339,47 @@ def test_pilot_expect_hashes_git_bytes_not_the_crlf_working_tree():
                                           "head_sha256": model["head_sha256"]}
 
 
+@pytest.mark.parametrize("phase", ["smoke", "reconstruct"])
+def test_vae_phases_run_deterministic_true_fp32(monkeypatch, phase):
+    """Kaggle pilot 2026-11-21: cogvx's smoke was 1 grey level off between two runs
+    ('FAILED: non-deterministic'). The VAE phases never applied the determinism contract
+    every image data-building script applies (seed_everything(2026, deterministic=True)).
+    On the A10G, cuDNN would also use TF32 for convolutions unless switched off."""
+    import torch
+
+    import p5_pilot as P
+
+    saved = (torch.backends.cudnn.benchmark, torch.backends.cudnn.deterministic,
+             torch.are_deterministic_algorithms_enabled(),
+             torch.is_deterministic_algorithms_warn_only_enabled(),
+             torch.backends.cudnn.allow_tf32, torch.backends.cuda.matmul.allow_tf32)
+    seen = {}
+
+    def capture(args, bank, clips):
+        seen.update(deterministic=torch.backends.cudnn.deterministic,
+                    benchmark=torch.backends.cudnn.benchmark,
+                    algorithms=torch.are_deterministic_algorithms_enabled(),
+                    cudnn_tf32=torch.backends.cudnn.allow_tf32,
+                    matmul_tf32=torch.backends.cuda.matmul.allow_tf32,
+                    recorded=args.numerics)
+
+    torch.backends.cudnn.deterministic, torch.backends.cudnn.allow_tf32 = False, True
+    monkeypatch.setattr(P, f"phase_{phase}", capture)
+    monkeypatch.setattr(P, "kept_clips", lambda manifest: [{"sample_id": "x"}])
+    monkeypatch.setattr(sys, "argv", ["p5_pilot.py", "--phase", phase, "--expect",
+                                      str(ROOT / "env" / "p5_pilot_expect.json")])
+    try:
+        assert P.main() == 0
+    finally:
+        (torch.backends.cudnn.benchmark, torch.backends.cudnn.deterministic, algorithms,
+         warn_only, torch.backends.cudnn.allow_tf32,
+         torch.backends.cuda.matmul.allow_tf32) = saved
+        torch.use_deterministic_algorithms(algorithms, warn_only=warn_only)
+    assert seen["deterministic"] and not seen["benchmark"] and seen["algorithms"]
+    assert not seen["cudnn_tf32"] and not seen["matmul_tf32"]
+    assert seen["recorded"]["seed"] == 2026 and seen["recorded"]["cudnn_allow_tf32"] is False
+
+
 def test_requirements_pin_av_only():
     text = (ROOT / "requirements" / "base.txt").read_text(encoding="utf-8")
     lines = [line.split("#")[0].strip() for line in text.splitlines()]

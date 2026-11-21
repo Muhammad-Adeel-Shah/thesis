@@ -1,0 +1,51 @@
+{
+  "model": "s2d_p35_seed0",
+  "lora_sha256": "d7148267c2457daa3585162c38abc8dacfdada4f4fc05b82441f2829ade51689",
+  "head_sha256": "638447e6b41608796c27d48d29ddb59927fbf85ba1ffc9d4b6fcac20d8077b27",
+  "backbone": "dinov3-vitb16",
+  "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+  "normalisation": "facebook/dinov3-vitb16-pretrain-lvd1689m@5931719e67bbdb9737e363e781fb0c67687896bc",
+  "dry_run_random_init": false,
+  "sources": [
+    "real",
+    "wan21",
+    "ltx090"
+  ],
+  "views": {
+    "raw": null,
+    "h264": {
+      "codec": "libx264",
+      "crf": 23,
+      "preset": "medium"
+    }
+  },
+  "frames": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ],
+  "clips": 200,
+  "frames_scored": 28800,
+  "seconds": 545.4
+}

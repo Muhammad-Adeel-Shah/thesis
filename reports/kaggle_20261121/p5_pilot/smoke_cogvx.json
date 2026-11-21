@@ -1,0 +1,62 @@
+{
+  "member": "cogvx",
+  "role": "bank",
+  "device": "cuda",
+  "clips": [
+    "5000_0_10303923",
+    "5000_0_11995457",
+    "5000_0_12029013"
+  ],
+  "load_seconds": 18.81,
+  "dry_run_random_init": false,
+  "determinism_max_abs_delta": 1,
+  "status": "FAILED: non-deterministic",
+  "per_clip": [
+    {
+      "sample_id": "5000_0_10303923",
+      "seconds": 28.185,
+      "psnr_db": 29.862,
+      "peak_mb": 13784.0,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    },
+    {
+      "sample_id": "5000_0_11995457",
+      "seconds": 25.756,
+      "psnr_db": 29.393,
+      "peak_mb": 11192.8,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    },
+    {
+      "sample_id": "5000_0_12029013",
+      "seconds": 26.34,
+      "psnr_db": 32.303,
+      "peak_mb": 11192.8,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    }
+  ],
+  "fp16_psnr_db": {
+    "0": 62.12,
+    "1": 62.805,
+    "2": 63.771
+  },
+  "fp16_build_allowed": true,
+  "fp16_reason": "min parity 62.12 dB >= 55.0 dB",
+  "fp16_threshold_db": 55.0,
+  "warm_seconds_per_clip": 26.048,
+  "peak_mb_max": 13784.0
+}

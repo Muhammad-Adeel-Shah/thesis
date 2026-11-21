@@ -1,0 +1,62 @@
+{
+  "member": "mochi",
+  "role": "bank",
+  "device": "cuda",
+  "clips": [
+    "5000_0_10303923",
+    "5000_0_11995457",
+    "5000_0_12029013"
+  ],
+  "load_seconds": 13.48,
+  "dry_run_random_init": false,
+  "determinism_max_abs_delta": 0,
+  "status": "OK",
+  "per_clip": [
+    {
+      "sample_id": "5000_0_10303923",
+      "seconds": 28.609,
+      "psnr_db": 25.203,
+      "peak_mb": 9437.5,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    },
+    {
+      "sample_id": "5000_0_11995457",
+      "seconds": 28.946,
+      "psnr_db": 26.305,
+      "peak_mb": 9436.8,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    },
+    {
+      "sample_id": "5000_0_12029013",
+      "seconds": 27.268,
+      "psnr_db": 28.754,
+      "peak_mb": 9436.8,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    }
+  ],
+  "fp16_psnr_db": {
+    "0": 45.091,
+    "1": 53.134,
+    "2": 51.718
+  },
+  "fp16_build_allowed": false,
+  "fp16_reason": "below 55.0 dB at 0: 45.09 dB, 1: 53.13 dB, 2: 51.72 dB",
+  "fp16_threshold_db": 55.0,
+  "warm_seconds_per_clip": 28.107,
+  "peak_mb_max": 9437.5
+}

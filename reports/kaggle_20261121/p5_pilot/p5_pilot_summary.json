@@ -1,0 +1,294 @@
+{
+  "exploratory": true,
+  "rule_already_caught": {
+    "clip_auc": 0.95,
+    "tpr": 0.8,
+    "fpr": 0.15,
+    "view": "h264"
+  },
+  "smoke": {
+    "cogvx": {
+      "status": "FAILED: non-deterministic",
+      "role": "bank",
+      "load_seconds": 18.81,
+      "warm_seconds_per_clip": 26.048,
+      "peak_mb_max": 13784.0,
+      "determinism_max_abs_delta": 1,
+      "fp16_build_allowed": true,
+      "fp16_reason": "min parity 62.12 dB >= 55.0 dB",
+      "psnr_db": [
+        29.862,
+        29.393,
+        32.303
+      ]
+    },
+    "hunyuan": {
+      "status": "FAILED: OutOfMemoryError: CUDA out of memory. Tried to allocate 2.44 GiB. GPU 0 has a total capacity of 14.56 GiB of which 1.75 GiB is free. Including non-PyTorch memory, this process has 12.81 GiB memory in use. Of the allocated memory 9.49 GiB is allocated by PyTorch, and 3.19 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:Tr",
+      "role": "bank",
+      "load_seconds": 7.24,
+      "warm_seconds_per_clip": null,
+      "peak_mb_max": null,
+      "determinism_max_abs_delta": null,
+      "fp16_build_allowed": null,
+      "fp16_reason": null,
+      "psnr_db": []
+    },
+    "ltx090": {
+      "status": "OK",
+      "role": "bank",
+      "load_seconds": 18.23,
+      "warm_seconds_per_clip": 1.794,
+      "peak_mb_max": 2085.1,
+      "determinism_max_abs_delta": 0,
+      "fp16_build_allowed": true,
+      "fp16_reason": "min parity 59.96 dB >= 55.0 dB",
+      "psnr_db": [
+        27.033,
+        25.678,
+        26.036
+      ]
+    },
+    "mochi": {
+      "status": "OK",
+      "role": "bank",
+      "load_seconds": 13.48,
+      "warm_seconds_per_clip": 28.107,
+      "peak_mb_max": 9437.5,
+      "determinism_max_abs_delta": 0,
+      "fp16_build_allowed": false,
+      "fp16_reason": "below 55.0 dB at 0: 45.09 dB, 1: 53.13 dB, 2: 51.72 dB",
+      "psnr_db": [
+        25.203,
+        26.305,
+        28.754
+      ]
+    },
+    "sd15_pf": {
+      "status": "OK",
+      "role": "bank",
+      "load_seconds": 3.11,
+      "warm_seconds_per_clip": 13.302,
+      "peak_mb_max": 2763.9,
+      "determinism_max_abs_delta": 0,
+      "fp16_build_allowed": true,
+      "fp16_reason": "min parity 61.19 dB >= 55.0 dB",
+      "psnr_db": [
+        38.631,
+        24.939,
+        30.726
+      ]
+    },
+    "wan21": {
+      "status": "OK",
+      "role": "bank",
+      "load_seconds": 14.69,
+      "warm_seconds_per_clip": 16.876,
+      "peak_mb_max": 2472.9,
+      "determinism_max_abs_delta": 0,
+      "fp16_build_allowed": true,
+      "fp16_reason": "min parity 61.86 dB >= 55.0 dB",
+      "psnr_db": [
+        36.33,
+        28.888,
+        32.009
+      ]
+    },
+    "wan22_5b": {
+      "status": "OK",
+      "role": "reserve",
+      "load_seconds": 22.88,
+      "warm_seconds_per_clip": 26.068,
+      "peak_mb_max": 5673.0,
+      "determinism_max_abs_delta": 0,
+      "fp16_build_allowed": true,
+      "fp16_reason": "min parity 61.97 dB >= 55.0 dB",
+      "psnr_db": [
+        40.284,
+        29.213,
+        30.777
+      ]
+    }
+  },
+  "reconstruct": {
+    "ltx090": {
+      "clips": 200,
+      "psnr_db_mean": 34.231,
+      "seconds_per_clip_mean": 1.922,
+      "png_bytes_per_clip_mean": 3554766
+    },
+    "wan21": {
+      "clips": 200,
+      "psnr_db_mean": 37.353,
+      "seconds_per_clip_mean": 18.546,
+      "png_bytes_per_clip_mean": 3193671
+    }
+  },
+  "scores": {
+    "s2d_p35_seed0": {
+      "threshold_union": 0.392948,
+      "raw": {
+        "real_fpr_clip": 0.205,
+        "real_fpr_frame": 0.22208333333333333,
+        "n_real_clips": 200,
+        "wan21": {
+          "n_pairs": 200,
+          "clip_auc": 0.8965,
+          "clip_auc_ci95": [
+            0.8733,
+            0.9216
+          ],
+          "frame_auc": 0.8772,
+          "tpr_clip": 0.84,
+          "fpr_clip_paired_reals": 0.205
+        },
+        "ltx090": {
+          "n_pairs": 200,
+          "clip_auc": 0.91,
+          "clip_auc_ci95": [
+            0.886,
+            0.9341
+          ],
+          "frame_auc": 0.8911,
+          "tpr_clip": 0.86,
+          "fpr_clip_paired_reals": 0.205
+        }
+      },
+      "h264": {
+        "real_fpr_clip": 0.18,
+        "real_fpr_frame": 0.20791666666666667,
+        "n_real_clips": 200,
+        "wan21": {
+          "n_pairs": 200,
+          "clip_auc": 0.6454,
+          "clip_auc_ci95": [
+            0.6191,
+            0.6741
+          ],
+          "frame_auc": 0.6358,
+          "tpr_clip": 0.34,
+          "fpr_clip_paired_reals": 0.18,
+          "already_caught": false
+        },
+        "ltx090": {
+          "n_pairs": 200,
+          "clip_auc": 0.7543,
+          "clip_auc_ci95": [
+            0.7217,
+            0.7877
+          ],
+          "frame_auc": 0.7363,
+          "tpr_clip": 0.54,
+          "fpr_clip_paired_reals": 0.18,
+          "already_caught": false
+        }
+      }
+    },
+    "s2d_p35_seed1": {
+      "threshold_union": 0.366272,
+      "raw": {
+        "real_fpr_clip": 0.27,
+        "real_fpr_frame": 0.28854166666666664,
+        "n_real_clips": 200,
+        "wan21": {
+          "n_pairs": 200,
+          "clip_auc": 0.882,
+          "clip_auc_ci95": [
+            0.8563,
+            0.9079
+          ],
+          "frame_auc": 0.8619,
+          "tpr_clip": 0.85,
+          "fpr_clip_paired_reals": 0.27
+        },
+        "ltx090": {
+          "n_pairs": 200,
+          "clip_auc": 0.8832,
+          "clip_auc_ci95": [
+            0.8567,
+            0.9091
+          ],
+          "frame_auc": 0.8652,
+          "tpr_clip": 0.855,
+          "fpr_clip_paired_reals": 0.27
+        }
+      },
+      "h264": {
+        "real_fpr_clip": 0.275,
+        "real_fpr_frame": 0.29541666666666666,
+        "n_real_clips": 200,
+        "wan21": {
+          "n_pairs": 200,
+          "clip_auc": 0.6425,
+          "clip_auc_ci95": [
+            0.619,
+            0.6707
+          ],
+          "frame_auc": 0.6321,
+          "tpr_clip": 0.45,
+          "fpr_clip_paired_reals": 0.275,
+          "already_caught": false
+        },
+        "ltx090": {
+          "n_pairs": 200,
+          "clip_auc": 0.7514,
+          "clip_auc_ci95": [
+            0.7204,
+            0.7835
+          ],
+          "frame_auc": 0.7353,
+          "tpr_clip": 0.65,
+          "fpr_clip_paired_reals": 0.275,
+          "already_caught": false
+        }
+      }
+    }
+  },
+  "lineage": {
+    "a": "wan21",
+    "b": "Qwen/Qwen-Image@75e0b4be04f60ec59a75f475837eced720f823b6/vae",
+    "parts": {
+      "encoder": {
+        "tensors_a": 84,
+        "tensors_b": 84,
+        "names_equal": true,
+        "shapes_equal": true,
+        "identical_fp32": 0,
+        "identical_after_bf16_rounding": 84,
+        "identical_after_fp16_rounding": 0,
+        "max_abs_diff": 0.0038962364196777344
+      },
+      "decoder": {
+        "tensors_a": 106,
+        "tensors_b": 106,
+        "names_equal": true,
+        "shapes_equal": true,
+        "identical_fp32": 0,
+        "identical_after_bf16_rounding": 4,
+        "identical_after_fp16_rounding": 0,
+        "max_abs_diff": 3.2048263549804688
+      },
+      "quant_conv": {
+        "tensors_a": 2,
+        "tensors_b": 2,
+        "names_equal": true,
+        "shapes_equal": true,
+        "identical_fp32": 0,
+        "identical_after_bf16_rounding": 2,
+        "identical_after_fp16_rounding": 0,
+        "max_abs_diff": 0.007533550262451172
+      },
+      "post_quant_conv": {
+        "tensors_a": 2,
+        "tensors_b": 2,
+        "names_equal": true,
+        "shapes_equal": true,
+        "identical_fp32": 0,
+        "identical_after_bf16_rounding": 0,
+        "identical_after_fp16_rounding": 0,
+        "max_abs_diff": 0.11242584884166718
+      }
+    },
+    "decoder_identical": false,
+    "flag": "decoders differ"
+  }
+}

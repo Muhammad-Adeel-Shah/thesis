@@ -1,0 +1,48 @@
+{
+  "a": "wan21",
+  "b": "Qwen/Qwen-Image@75e0b4be04f60ec59a75f475837eced720f823b6/vae",
+  "parts": {
+    "encoder": {
+      "tensors_a": 84,
+      "tensors_b": 84,
+      "names_equal": true,
+      "shapes_equal": true,
+      "identical_fp32": 0,
+      "identical_after_bf16_rounding": 84,
+      "identical_after_fp16_rounding": 0,
+      "max_abs_diff": 0.0038962364196777344
+    },
+    "decoder": {
+      "tensors_a": 106,
+      "tensors_b": 106,
+      "names_equal": true,
+      "shapes_equal": true,
+      "identical_fp32": 0,
+      "identical_after_bf16_rounding": 4,
+      "identical_after_fp16_rounding": 0,
+      "max_abs_diff": 3.2048263549804688
+    },
+    "quant_conv": {
+      "tensors_a": 2,
+      "tensors_b": 2,
+      "names_equal": true,
+      "shapes_equal": true,
+      "identical_fp32": 0,
+      "identical_after_bf16_rounding": 2,
+      "identical_after_fp16_rounding": 0,
+      "max_abs_diff": 0.007533550262451172
+    },
+    "post_quant_conv": {
+      "tensors_a": 2,
+      "tensors_b": 2,
+      "names_equal": true,
+      "shapes_equal": true,
+      "identical_fp32": 0,
+      "identical_after_bf16_rounding": 0,
+      "identical_after_fp16_rounding": 0,
+      "max_abs_diff": 0.11242584884166718
+    }
+  },
+  "decoder_identical": false,
+  "flag": "decoders differ"
+}

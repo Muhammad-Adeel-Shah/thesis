@@ -1,0 +1,62 @@
+{
+  "member": "sd15_pf",
+  "role": "bank",
+  "device": "cuda",
+  "clips": [
+    "5000_0_10303923",
+    "5000_0_11995457",
+    "5000_0_12029013"
+  ],
+  "load_seconds": 3.11,
+  "dry_run_random_init": false,
+  "determinism_max_abs_delta": 0,
+  "status": "OK",
+  "per_clip": [
+    {
+      "sample_id": "5000_0_10303923",
+      "seconds": 13.281,
+      "psnr_db": 38.631,
+      "peak_mb": 2763.9,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    },
+    {
+      "sample_id": "5000_0_11995457",
+      "seconds": 13.275,
+      "psnr_db": 24.939,
+      "peak_mb": 2763.9,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    },
+    {
+      "sample_id": "5000_0_12029013",
+      "seconds": 13.329,
+      "psnr_db": 30.726,
+      "peak_mb": 2763.9,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    }
+  ],
+  "fp16_psnr_db": {
+    "0": 61.994,
+    "1": 61.187,
+    "2": 62.526
+  },
+  "fp16_build_allowed": true,
+  "fp16_reason": "min parity 61.19 dB >= 55.0 dB",
+  "fp16_threshold_db": 55.0,
+  "warm_seconds_per_clip": 13.302,
+  "peak_mb_max": 2763.9
+}

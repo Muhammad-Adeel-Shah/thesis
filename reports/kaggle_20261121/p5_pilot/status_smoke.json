@@ -1,0 +1,24 @@
+{
+  "outcome": "COMPLETE",
+  "failed_job": null,
+  "jobs": [
+    {
+      "index": 0,
+      "device": "0",
+      "members": "wan21,hunyuan,ltx090,sd15_pf",
+      "returncode": 0,
+      "log": "p5_smoke_job0_gpu0.log"
+    },
+    {
+      "index": 1,
+      "device": "1",
+      "members": "cogvx,mochi,wan22_5b",
+      "returncode": 0,
+      "log": "p5_smoke_job1_gpu1.log"
+    }
+  ],
+  "members_done": [],
+  "deadline_hours": 1.5,
+  "wall_hours": 0.125,
+  "device_hours": 0.25
+}

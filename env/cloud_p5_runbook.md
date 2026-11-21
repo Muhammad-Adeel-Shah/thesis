@@ -97,9 +97,17 @@ export P5_BACKUP_CMD="rclone copy /data/p5/session gdrive:dbp-p5/session"
 bash env/aws_p5_session.sh --label pexels --estimate-hours 1.5 -- \
   python scripts/p5_fetch_reals.py --source hub --pool train --shards 4:35 --n 2200 \
     --out-root /data/p5/reals --cache /data/cache/shards --reports reports/p5_train_reals \
-    --exclude-ids reports/p5_reals/p5_reals_pilot_manifest.csv --workers 8
-# (b) the A10G smoke, then (c) the reconstruction -- resumable per clip; a restart never
-#     redoes a finished clip (each clip is recorded in recon_<member>.jsonl)
+    --exclude-ids reports/kaggle_20261121/p5_reals/p5_reals_pilot_manifest.csv --workers 8
+# (b) the A10G smoke (all six members; deterministic, fp32 without TF32): it measures the
+#     A10G s/clip that replaces the assumed T4 -> A10G factor; the reconstruction projection
+#     is redone from it and sent to the user BEFORE (c) is started
+bash env/aws_p5_session.sh --label smoke --estimate-hours 0.5 -- \
+  python scripts/p5_pilot.py --phase smoke --members wan21,hunyuan,cogvx,ltx090,mochi,sd15_pf \
+    --device cuda --expect env/p5_pilot_expect.json --reals-root /data/p5/reals \
+    --manifest reports/p5_train_reals/p5_reals_train_manifest.csv --reports reports/p5_train_recon
+#     (the same --reports as (c): the reconstruction runs only members whose smoke there is OK)
+# (c) the reconstruction -- resumable per clip; a restart never redoes a finished clip
+#     (each clip is recorded in recon_<member>.jsonl)
 bash env/aws_p5_session.sh --label recon --estimate-hours <projected> -- \
   python scripts/p5_pilot.py --phase reconstruct --members wan21,hunyuan,cogvx,ltx090,mochi,sd15_pf \
     --expect env/p5_pilot_expect.json --reals-root /data/p5/reals \

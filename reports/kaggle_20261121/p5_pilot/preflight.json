@@ -1,0 +1,65 @@
+{
+  "encoders": {
+    "pyav": "19.0.2",
+    "ffmpeg_libraries": {
+      "libavutil": "61.1.102",
+      "libavcodec": "63.1.102",
+      "libavformat": "63.1.102",
+      "libavdevice": "63.1.102",
+      "libavfilter": "12.1.102",
+      "libswscale": "10.1.102",
+      "libswresample": "7.1.102"
+    },
+    "libx264": true,
+    "libx265": true,
+    "libx264_roundtrip": {
+      "frames": 25,
+      "bytes": 30413
+    },
+    "libx265_roundtrip": {
+      "frames": 25,
+      "bytes": 33551
+    }
+  },
+  "imports": {
+    "av": "19.0.2",
+    "diffusers": "0.42.0",
+    "pyarrow": "23.0.1",
+    "peft": "0.21.2",
+    "transformers": "5.20.2",
+    "safetensors": "0.8.0",
+    "huggingface_hub": "1.33.0",
+    "PIL": "13.0.0"
+  },
+  "models": [
+    {
+      "id": "s2d_p35_seed0",
+      "lora_sha256": "d7148267c2457daa3585162c38abc8dacfdada4f4fc05b82441f2829ade51689",
+      "head_sha256": "638447e6b41608796c27d48d29ddb59927fbf85ba1ffc9d4b6fcac20d8077b27"
+    },
+    {
+      "id": "s2d_p35_seed1",
+      "lora_sha256": "ad7aaa417116cecb95e04a299318ad971082f950b4a8bfbf571d680b8f412c05",
+      "head_sha256": "937491ef70226b26e77a241c26c60632597be3130200c55aa12cc015c6ef0639"
+    }
+  ],
+  "thresholds_sha256": "81b8c506b15f80829e1b47ad5af2bfd1c5f39f5211804449fd2518889ec87383",
+  "disk_free_gb": {
+    "/kaggle/working": 20.9,
+    "/tmp": 2699.8
+  },
+  "pins": [
+    "RESOLVES",
+    "RESOLVES",
+    "RESOLVES",
+    "RESOLVES",
+    "RESOLVES",
+    "RESOLVES",
+    "RESOLVES",
+    "RESOLVES",
+    "RESOLVES",
+    "RESOLVES"
+  ],
+  "problems": [],
+  "ok": true
+}

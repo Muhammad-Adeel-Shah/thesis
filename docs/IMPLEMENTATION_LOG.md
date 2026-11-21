@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P5-B (2026-11-21, branch `p5-video`)**: A1–A8 approved with conditions; the compute plan changed (AWS g5.2xlarge, $80 budget). Built: the video bank (`configs/video_bank.yaml`, 6 bank + 1 reserve, Allegro excluded), the video reconstruction kinds, video I/O (`av==19.0.2`), the Pexels fetch, the pilot (`scripts/p5_pilot.py`) and its Kaggle runbook, the cloud runbook and guard. Hand-over of the Kaggle pilot. Nothing trained, no test data fetched. **P5-A (2026-11-20)**: the plan. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
+| Last prompt | **P5-B pilot results (2026-11-21, code `f8669b3`, Kaggle 2× T4)**: tracked under `reports/kaggle_20261121/`. wan21 / ltx090 reconstructed 200 clips; hunyuan OOM on the T4; cogvx nondeterministic by one grey level, a code defect (no determinism contract in the VAE phases), fixed with a test; Qwen-Image vs Wan2.1: decoders differ, the encoder is shared at bf16. The AWS reconstruction projection rests on an assumed T4 → A10G factor ($23–60), so an A10G smoke measures it first; no launch without the user's OK. **P5-B (2026-11-21, branch `p5-video`)**: A1–A8 approved with conditions; the compute plan changed (AWS g5.2xlarge, $80 budget). Built: the video bank (`configs/video_bank.yaml`, 6 bank + 1 reserve, Allegro excluded), the video reconstruction kinds, video I/O (`av==19.0.2`), the Pexels fetch, the pilot (`scripts/p5_pilot.py`) and its Kaggle runbook, the cloud runbook and guard. Hand-over of the Kaggle pilot. Nothing trained, no test data fetched. **P5-A (2026-11-20)**: the plan. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -8714,3 +8714,135 @@ standing rules in CLAUDE.md section 14.
     versions.
   - **Capturing 0.42.0 digests is an open item for the user.**
 - **The 4 CRLF failures of P5-B are gone.**
+
+### P5-B — Kaggle pilot results (2026-11-21, code `f8669b3`, 2× T4)
+
+**Source:** `F:/thesis-2/kaggle_raw/p5_pilot_reports.zip`.
+- sha256 `a40a526fc36485ad44c45d2f42b9cd6e38bd2479a41068aeae6dfccd08abeb11`
+  (`Get-FileHash`).
+- Extracted to `F:/thesis-2/kaggle_raw/p5_pilot_x/`; the reports are tracked under
+  `reports/kaggle_20261121/{p5_pilot,p5_reals}/` (45 files, 2.4 MB, the largest 1.09 MB).
+- Every number below comes from `p5_pilot_summary.json`, the `smoke_*.json` files and the
+  `recon_*.jsonl` files there, or from the projection script
+  (`scratchpad/p5_projection.py <reports> 2200`), whose output is quoted.
+
+**Environment** (`preflight.json`, `hardware.txt`):
+- Tesla T4 ×2, driver 580.178.04, 4 logical CPU cores.
+- diffusers 0.42.0, av 19.0.2 (libx264 and libx265 present, round-trips OK), pyarrow 23.0.1,
+  peft 0.21.2, transformers 5.20.2.
+- The S2-D seed 0 and seed 1 hashes and the threshold hash `81b8c506…` match.
+- All 10 pins RESOLVE.
+
+**Wall time:** smoke 0.125 h, reconstruction 1.30 h, scoring 0.158 h (`status_*.json`).
+
+**Pool:** 4 shards with 302 videos; 200 kept, 101 spare, 1 excluded (static). Real PNGs
+total 485,155,997 B, so 2,425,780 B per clip.
+
+**Smoke per VAE on the T4** (3 clips, 25×320×320, fp32; warm s/clip is the mean of clips 2–3):
+
+| member | status | warm s/clip | peak VRAM MB | PSNR dB (3 clips) | fp16 build |
+|---|---|---|---|---|---|
+| wan21 | OK | 16.876 | 2,472.9 | 36.33 / 28.89 / 32.01 | allowed (min 61.86 dB) |
+| hunyuan | **FAILED: CUDA OOM** (tried +2.44 GiB; 9.49 GiB allocated, 3.19 GiB reserved but unallocated; peak 9,720.8 MB at failure) | — | — | — | — |
+| cogvx | **FAILED: non-deterministic** (max abs delta 1) | 26.048 | 13,784.0 | 29.86 / 29.39 / 32.30 | allowed (min 62.12 dB) |
+| ltx090 | OK | 1.794 | 2,085.1 | 27.03 / 25.68 / 26.04 | allowed (min 59.96 dB) |
+| mochi | OK | 28.107 | 9,437.5 | 25.20 / 26.31 / 28.75 | **not allowed** (45.09 dB on clip 0) |
+| sd15_pf | OK | 13.302 | 2,763.9 | 38.63 / 24.94 / 30.73 | allowed (min 61.19 dB) |
+| wan22_5b (reserve) | OK | 26.068 | 5,673.0 | 40.28 / 29.21 / 30.78 | allowed (min 61.97 dB) |
+
+**Reconstruction, 200 clips** (the pilot's members; hunyuan skipped because its smoke failed):
+
+| member | s/clip mean (median, max) | PSNR dB mean | PNG bytes per clip |
+|---|---|---|---|
+| wan21 | 18.546 (18.612, 18.763) | 37.353 | 3,193,671 |
+| ltx090 | 1.922 (1.928, 2.026) | 34.231 | 3,554,766 |
+
+**Lineage: Qwen-Image's VAE against wan21's — the decoders DIFFER.**
+- Qwen-Image is `Qwen/Qwen-Image@75e0b4be04f60ec59a75f475837eced720f823b6/vae`.
+- **Decoder:** 106 tensors with equal names and shapes. 0 are identical in fp32, 4 after
+  bf16 rounding and 0 after fp16 rounding; the maximum absolute difference is 3.205.
+- **Encoder:** 84 tensors. 0 are identical in fp32 but **all 84 after bf16 rounding**
+  (maximum difference 0.0039). quant_conv: 2 of 2 after bf16 rounding.
+  post_quant_conv: 0 of 2 (maximum difference 0.112).
+- **Flag:** `decoders differ`. So the "seen decoder" flag does **not** apply to S2-D's
+  per-frame wan21 results.
+- **Recorded caveat (my reading of these numbers):** Qwen-Image carries Wan2.1's encoder at
+  bf16 precision with a retrained decoder. S2-D has therefore seen the Wan2.1 *latent space*,
+  though not its decoder. This is stated wherever S2-D's wan21 results are reported.
+
+**Exploratory scores** (frozen image S2-D per frame, frames 1–24; clip = mean; P3 union
+thresholds):
+
+| model | view | real FPR (clip) | wan21 clip AUC [95% CI] | wan21 TPR | ltx090 clip AUC [95% CI] | ltx090 TPR |
+|---|---|---|---|---|---|---|
+| seed 0 | raw | 0.205 | 0.8965 [0.8733, 0.9216] | 0.840 | 0.9100 [0.8860, 0.9341] | 0.860 |
+| seed 0 | h264 | 0.180 | 0.6454 [0.6191, 0.6741] | 0.340 | 0.7543 [0.7217, 0.7877] | 0.540 |
+| seed 1 | raw | 0.270 | 0.8820 [0.8563, 0.9079] | 0.850 | 0.8832 [0.8567, 0.9091] | 0.855 |
+| seed 1 | h264 | 0.275 | 0.6425 [0.6190, 0.6707] | 0.450 | 0.7514 [0.7204, 0.7835] | 0.650 |
+
+- **Already-caught rule** (h264 view: clip AUC ≥ 0.95, TPR ≥ 0.80, FPR ≤ 0.15): neither
+  member meets it under either seed. In any case, bank membership never changes on this rule.
+- The image thresholds flag 18–27.5% of real Pexels clips. They are not calibrated for
+  video; this is an exploratory note, not a result.
+
+**Defect found by the pilot, and fixed** (§12.6; regression test committed with it):
+- **The defect:** the VAE phases of `scripts/p5_pilot.py` never applied the determinism
+  contract. Every image data-building script calls `seed_everything(2026,
+  deterministic=True)`; the video phases did not, so cuDNN ran nondeterministic algorithms.
+  That is cogvx's 1-grey-level difference.
+- **The fix:** `vae_numerics()` runs at the start of every VAE phase (smoke, lineage,
+  reconstruct):
+  - it applies the determinism contract;
+  - it switches off TF32 for both cuDNN and matmul. On the A10G (Ampere), cuDNN uses TF32 for
+    convolutions by default, so without this the AWS reconstructions would not be fp32 (§7).
+    The T4 has no TF32.
+  - It is recorded in each smoke record (`numerics`) and printed to the log.
+- **The test:** `test_vae_phases_run_deterministic_true_fp32[smoke|reconstruct]`.
+- **cogvx is not dropped:** a one-grey-level nondeterminism is a code defect, not a VAE's
+  technical failure. It is smoked again on the A10G with the fix.
+
+**Projection of the AWS reconstruction** (2,200 training clips, `--n 2200` as in the runbook;
+$1.21/h; the T4 → A10G speed-up is an **ASSUMPTION**, given as 1.5 / 2.0 / 3.0):
+- **T4 s/clip:**
+  - wan21 18.546 and ltx090 1.922 are measured reconstruction means.
+  - sd15_pf 14.972, cogvx 27.718 and mochi 29.777 are smoke warm times plus the larger
+    measured write overhead, 1.670 s (wan21's reconstruction mean minus its smoke warm time).
+  - hunyuan: not measured (OOM).
+
+| bank | T4 s/clip | T4-h | A10G-h at 1.5 / 2.0 / 3.0 | USD at 1.5 / 2.0 / 3.0 |
+|---|---|---|---|---|
+| 5 members (no hunyuan) | 92.933 | 56.79 | 37.86 / 28.40 / 18.93 | 45.81 / 34.36 / 22.91 |
+| 6, hunyuan **ASSUMED** = the slowest measured (29.777) | 122.709 | 74.99 | 49.99 / 37.49 / 25.00 | 60.49 / 45.37 / 30.25 |
+
+- **The share is ≤ $45.**
+  - With hunyuan, it fits only at a speed-up of about 2× or more.
+  - The factor is an assumption, and with TF32 off it is a pure-fp32 factor. So **no
+    reconstruction launch rests on this table.**
+  - The runbook's step (b) now measures A10G s/clip for all six members in a 0.5 h smoke
+    session (about $0.61, within setup). The projection is redone from that and sent to the
+    user before step (c).
+- **Disk:** 2,200 clips × (real + 6 reconstructions) ≈ 49.9 GB, against the 200 GB volume.
+  This assumes every reconstruction's PNG size is the wan21/ltx090 mean, 3,374,219 B.
+
+**Runbook (`env/cloud_p5_runbook.md`):**
+- The `--exclude-ids` path now points at the tracked pilot manifest
+  (`reports/kaggle_20261121/p5_reals/…`). The old `reports/p5_reals/…` path exists only
+  inside a Kaggle session.
+- Step (b), the A10G smoke, is written out. It writes to the same `--reports` folder as
+  step (c), because the reconstruction runs only the members whose smoke record there is OK.
+
+**Open for the user:**
+- **hunyuan:** keep it in the bank and decide on the A10G, where 24 GB against a 9.7 GB peak
+  at failure is likely to fit (my recommendation), or drop it now on the T4 OOM.
+- **fp16** for the four members whose fp16 parity is ≥ 59.96 dB (wan21, ltx090, sd15_pf,
+  cogvx; §7 allows fp16 where it is recorded as allowed). This is a lever only if the
+  measured A10G projection exceeds $45.
+- **The AWS test-launch result.**
+- **The 0.42.0 regression digests.**
+- **The rclone hosts.**
+
+**Full suite with the fix, MEASURED** (`--durations=20 -rs`):
+- **1,368 passed, 10 skipped, 0 failed**, in 1,014.1 s.
+- The skips are the same 7 GPU and 3 regression-digest skips as before.
+- The run took twice as long as at `16350ca`. Other local work ran alongside it, and the
+  slowest test took 91.7 s against 34.7 s then.

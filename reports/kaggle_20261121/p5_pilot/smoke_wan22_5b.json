@@ -1,0 +1,62 @@
+{
+  "member": "wan22_5b",
+  "role": "reserve",
+  "device": "cuda",
+  "clips": [
+    "5000_0_10303923",
+    "5000_0_11995457",
+    "5000_0_12029013"
+  ],
+  "load_seconds": 22.88,
+  "dry_run_random_init": false,
+  "determinism_max_abs_delta": 0,
+  "status": "OK",
+  "per_clip": [
+    {
+      "sample_id": "5000_0_10303923",
+      "seconds": 26.399,
+      "psnr_db": 40.284,
+      "peak_mb": 5673.0,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    },
+    {
+      "sample_id": "5000_0_11995457",
+      "seconds": 26.963,
+      "psnr_db": 29.213,
+      "peak_mb": 5672.5,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    },
+    {
+      "sample_id": "5000_0_12029013",
+      "seconds": 25.172,
+      "psnr_db": 30.777,
+      "peak_mb": 5672.5,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    }
+  ],
+  "fp16_psnr_db": {
+    "0": 63.43,
+    "1": 61.97,
+    "2": 62.909
+  },
+  "fp16_build_allowed": true,
+  "fp16_reason": "min parity 61.97 dB >= 55.0 dB",
+  "fp16_threshold_db": 55.0,
+  "warm_seconds_per_clip": 26.068,
+  "peak_mb_max": 5673.0
+}
