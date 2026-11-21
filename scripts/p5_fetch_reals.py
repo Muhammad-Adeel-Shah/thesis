@@ -48,6 +48,7 @@ from dbp.data.video import (  # noqa: E402
     decode_window,
     exclusion,
     is_static,
+    move_clip_dir,
     probe,
     window_start,
     write_png_clip,
@@ -98,8 +99,13 @@ class Source:
         if self.hub:
             from huggingface_hub import HfApi
 
+            from dbp.utils.hf import get_hf_token
+
+            # Kaggle exposes HF_TOKEN through Secrets, not the environment: pass it on
+            # explicitly (the first pilot session fetched unauthenticated).
+            self.token = get_hf_token()
             info = HfApi().dataset_info(PEXELS_REPO, revision=PEXELS_REVISION,
-                                        files_metadata=True)
+                                        files_metadata=True, token=self.token)
             for s in info.siblings or []:
                 self.sizes[s.rfilename] = int(s.size or 0)
                 if s.lfs is not None:
@@ -127,7 +133,8 @@ class Source:
         from huggingface_hub import hf_hub_download
 
         path = Path(hf_hub_download(PEXELS_REPO, name, repo_type="dataset",
-                                    revision=PEXELS_REVISION, cache_dir=str(self.cache)))
+                                    revision=PEXELS_REVISION, cache_dir=str(self.cache),
+                                    token=self.token))
         if name in self.lfs:
             digest = sha256_file(path)
             if digest != self.lfs[name]:
@@ -262,7 +269,7 @@ def main() -> int:
         elif kept < args.n:
             r["status"], kept = "kept", kept + 1
             final = pool_dir / r["sample_id"]
-            Path(r["clip_dir"]).replace(final)
+            move_clip_dir(Path(r["clip_dir"]), final)   # /tmp -> /kaggle/working: two devices
             r["clip_dir"] = f"{args.pool}/{r['sample_id']}"
         else:
             r["status"] = "spare"

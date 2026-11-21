@@ -202,6 +202,37 @@ def test_short_clip_small_frame_and_still_are_excluded(tmp_path):
                        320) == "not_8bit"
 
 
+@pytest.mark.parametrize("same_device", [True, False])
+def test_move_clip_dir_works_across_devices(tmp_path, monkeypatch, same_device):
+    """Kaggle, 2026-11-21: os.replace('/tmp/...', '/kaggle/working/...') raised EXDEV
+    (Invalid cross-device link) and stopped the pilot's fetch after 4 shards."""
+    import errno
+
+    real_replace = os.replace
+
+    def replace(src, dst):
+        if Path(src).parent != Path(dst).parent and not same_device:
+            raise OSError(errno.EXDEV, "Invalid cross-device link")
+        return real_replace(src, dst)
+
+    monkeypatch.setattr(V, "_same_device", lambda a, b: same_device)
+    monkeypatch.setattr(V.os, "replace", replace)
+    clip = np.random.default_rng(5).integers(0, 256, (3, 8, 8, 3), dtype=np.uint8)
+    src = tmp_path / "tmp_device" / "unpacked" / "c1"
+    V.write_png_clip(clip, src)
+    dst = tmp_path / "working" / "pilot" / "c1"
+    V.move_clip_dir(src, dst)
+    assert np.array_equal(V.read_png_clip(dst), clip)
+    assert not src.exists() and not dst.with_name("c1.tmp").exists()
+    with pytest.raises(V.VideoError, match="written once"):
+        V.move_clip_dir(dst, dst)
+
+
+def test_fetch_never_renames_a_clip_across_directories_directly():
+    text = (ROOT / "scripts" / "p5_fetch_reals.py").read_text(encoding="utf-8")
+    assert ".replace(final)" not in text and "move_clip_dir(" in text
+
+
 @pytest.mark.parametrize("codec", ["libx264", "libx265"])
 def test_encode_roundtrip_keeps_frames_and_is_deterministic(codec):
     clip = np.random.default_rng(3).integers(0, 256, (25, 64, 64, 3), dtype=np.uint8)

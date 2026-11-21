@@ -210,6 +210,35 @@ def write_png_clip(frames: np.ndarray, out_dir: Path) -> dict[str, Any]:
     return {"frames": len(hashes), "bytes": size, "digest": clip_digest(hashes)}
 
 
+def move_clip_dir(src: Path, dst: Path) -> None:
+    """Move a finished clip directory to ``dst``, atomically at the destination.
+
+    Same filesystem: one ``os.replace``. Across filesystems (Kaggle's ``/tmp`` and
+    ``/kaggle/working`` are different devices; ``os.replace`` fails there with EXDEV, which
+    stopped the first P5 pilot session): copy to a temp sibling of ``dst`` on the target
+    device, ``os.replace`` it into place, then delete ``src``.
+
+    Raises:
+        VideoError: If ``dst`` already exists (a clip is written once).
+    """
+    if dst.exists():
+        raise VideoError(f"{dst} exists; a clip is written once")
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    if _same_device(src, dst.parent):
+        os.replace(src, dst)
+        return
+    tmp = dst.with_name(dst.name + ".tmp")
+    if tmp.exists():
+        shutil.rmtree(tmp)
+    shutil.copytree(src, tmp)
+    os.replace(tmp, dst)
+    shutil.rmtree(src)
+
+
+def _same_device(a: Path, b: Path) -> bool:
+    return os.stat(a).st_dev == os.stat(b).st_dev
+
+
 def clip_digest(frame_hashes: list[str]) -> str:
     """One digest for a clip: sha256 over its frames' sha256s, in frame order."""
     return hashlib.sha256("\n".join(frame_hashes).encode()).hexdigest()

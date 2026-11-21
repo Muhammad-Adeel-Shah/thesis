@@ -2,8 +2,12 @@
 # P5 cloud setup (AWS g5.2xlarge / RunPod), run ON the instance from the repo checkout:
 #     bash env/cloud_p5_setup.sh /data
 # - a venv on the data volume (never the root disk); caches on the data volume;
-# - torch / torchvision pinned to the versions Kaggle records (snapshot: 2.10.0+cu128 /
-#   0.25.0+cu128), so training (A10G / A5000) and scoring (Kaggle T4) share them;
+# - torch / torchvision pinned to the version Kaggle MEASURED in the P5 pilot pre-flight
+#   (2026-11-21: torch 2.11.0+cu130, CUDA 13.0, driver 580.178.04), so training (A10G /
+#   A5000) and scoring (Kaggle T4) share torch 2.11.0. The CUDA build is TORCH_INDEX
+#   (default cu130, as Kaggle); a driver older than R580 cannot run it -- the CUDA check
+#   below then fails loudly and `TORCH_INDEX=cu128` installs the same torch on CUDA 12.8.
+#   Either way the record states the build used;
 # - requirements/base.txt after torch, refused if it changes torch, torchvision or numpy;
 # - the environment recorded under reports/p5_cloud/ and env/lock/ (no secret in either).
 # Secrets: HF_TOKEN (and later KAGGLE_USERNAME / KAGGLE_KEY) are exported in the
@@ -24,8 +28,10 @@ python3 -m venv "$DATA/venv"
 # shellcheck disable=SC1091
 source "$DATA/venv/bin/activate"
 python -m pip install --quiet --upgrade pip
-python -m pip install --quiet "torch==2.10.0" "torchvision==0.25.0" \
-  --index-url https://download.pytorch.org/whl/cu128
+TORCH_INDEX="${TORCH_INDEX:-cu130}"
+echo "torch 2.11.0 / torchvision 0.26.0 from the ${TORCH_INDEX} index"
+python -m pip install --quiet "torch==2.11.0" "torchvision==0.26.0" \
+  --index-url "https://download.pytorch.org/whl/${TORCH_INDEX}"
 before="$(python -c 'import torch,torchvision,numpy;print(torch.__version__,torchvision.__version__,numpy.__version__)')"
 python -m pip install --quiet --dry-run --report "$DATA/pip_dryrun.json" -r "$REPO/requirements/base.txt"
 python - "$DATA/pip_dryrun.json" <<'PY'

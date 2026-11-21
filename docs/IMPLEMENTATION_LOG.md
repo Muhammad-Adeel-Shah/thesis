@@ -8568,3 +8568,48 @@ standing rules in CLAUDE.md section 14.
     - The 7 P5 runbook-tooling tests now pass.
 - **ruff:** clean.
 - **Integrity:** CLEAN before each commit.
+- **Hand-over:** code `4bed7c0`.
+  - The `--ref HEAD` dry-run PASSED in 487 s; cell 9's body hash `8369f7d8` is unchanged.
+  - The zip: `dbp-code-4bed7c0.zip`, 28,384,383 B, sha256
+    `a80f2362e4f5d246483be757970f82540ddf89e94a8f30c4dcb1464b64317e8b`.
+
+### P5-B — Kaggle pilot session 1 (code `4bed7c0`): stopped in the fetch (cross-device rename); fixed — 2026-11-21
+
+**What the user pasted back:**
+- **Both pre-flights PASSED:**
+  - 2× Tesla T4, driver 580.178.04;
+  - **torch 2.11.0+cu130, CUDA 13.0, cuDNN 92700**;
+  - av 19.0.2, pyarrow 23.0.1, peft 0.21.2, transformers 5.20.2, safetensors 0.8.0,
+    huggingface_hub 1.33.0, PIL 13.0.0, **diffusers 0.42.0**.
+- **The encoders:** libx264 and libx265 both present. The FFmpeg libraries are libavcodec
+  63.1.102 and libavformat 63.1.102; each round-trip returned 25 frames (30,413 / 33,551 B).
+- **The rest of the pre-flight:**
+  - both S2-D models' LoRA and head sha256 equal the record;
+  - the threshold file is `81b8c506…`;
+  - the video pin check: 10 RESOLVES;
+  - disk free: `/kaggle/working` 20.9 GB, `/tmp` 2,699.8 GB.
+- **The fetch:**
+  - the 4 pilot shards (0038, 0039, 0018, 0045) held 74 + 98 + 59 + 71 = 302 videos, 301
+    eligible;
+  - then `os.replace('/tmp/p5_shards/unpacked/...', '/kaggle/working/p5_reals/pilot/...')`
+    raised **`OSError: [Errno 18] Invalid cross-device link`**. `/tmp` and
+    `/kaggle/working` are different filesystems.
+- **Nothing was reconstructed or scored.** Recorded as FAILED (code mistake). The dry-run
+  could not catch it: both of its roots were on one drive.
+- **A second defect in the same log:** "unauthenticated requests to the HF Hub". The fetch
+  did not pass the token, and Kaggle exposes it through Secrets, not the environment. The
+  repo is public, so only speed was affected.
+
+**Fixes:**
+- **`dbp.data.video.move_clip_dir`:** on one device, `os.replace`; across devices, copy to a
+  temp sibling on the target device, `os.replace` it there, then delete the source.
+- **`p5_fetch_reals.py`:** uses `move_clip_dir`, and passes `get_hf_token()` to `HfApi` and
+  `hf_hub_download`.
+- **Regression tests (§12.6):**
+  - `test_move_clip_dir_works_across_devices`: the cross-device path is forced, and
+    `os.replace` raises EXDEV on any cross-directory rename, as on Kaggle;
+  - `test_fetch_never_renames_a_clip_across_directories_directly`.
+- **The cloud setup pins torch 2.11.0 / torchvision 0.26.0** (default index cu130), Kaggle's
+  measured version, instead of the 2.10.0 / cu128 taken from the snapshot.
+  `TORCH_INDEX=cu128` is the fallback for a driver older than R580.
+- **Checks:** P5 tests 26 passed; ruff clean.

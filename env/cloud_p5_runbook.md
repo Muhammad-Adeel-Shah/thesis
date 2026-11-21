@@ -64,7 +64,8 @@ mkdir -p /data/repo && cd /data/repo && unzip -q ~/dbp-code-<hash>.zip && cd the
 cat COMMIT.txt                          # record it
 export HISTCONTROL=ignorespace
  read -rs HF_TOKEN && export HF_TOKEN   # leading space: kept out of the history
-bash env/cloud_p5_setup.sh /data        # venv, pinned torch 2.10.0/cu128, record + lock
+bash env/cloud_p5_setup.sh /data        # venv, torch 2.11.0 (Kaggle's), cu130; record + lock
+# if it stops at "CUDA not available" (driver older than R580): TORCH_INDEX=cu128 bash env/cloud_p5_setup.sh /data
 source /data/venv/bin/activate
 export HF_HOME=/data/cache/hf TORCH_HOME=/data/cache/torch PIP_CACHE_DIR=/data/cache/pip
 ```
