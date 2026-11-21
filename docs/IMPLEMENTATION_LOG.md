@@ -8536,3 +8536,35 @@ standing rules in CLAUDE.md section 14.
   - **about $17 before the reconstruction**;
   - the reconstruction is PENDING the pilot's s/clip. It has about $55 (about 45 instance
     hours) of room under the $75 cap, before the volume.
+
+**Checks:**
+- **The local dry-run** (`runbook_dryrun.py --fixture p5_pilot`):
+  - from the index: PASSED in 732 s;
+  - `--ref HEAD` at `704f490`: **PASSED** in 625 s.
+  - **The check line:** pre-flight ok; 4 clips kept (exclusions `short_side`: 1); smoke OK
+    for all 7 members; 768 score rows per model; the lineage self-comparison flagged "seen
+    decoder".
+  - The AUCs in it come from random-init stand-ins on 4 clips and mean nothing.
+- **The code zip:** `F:/thesis-2/kaggle_raw/dbp-code-704f490.zip`, 28,383,665 B, sha256
+  `2a914cc9450436075e09748f6552c1b30e2a3d6cea18d60b298f9e029f8e7a39`. Every entry is
+  byte-identical to the commit.
+- **pytest, the full suite in the worktree** (`--durations=20 -rs`): 1,346 passed, 7
+  skipped (`test_gpu_smoke.py`, no CUDA: PENDING-GPU), **5 failed**, in 1,271.6 s.
+  - **4 are the worktree's line endings, not code:**
+    - `test_the_committed_metadata_is_the_cc_by_2_extract`,
+      `test_expect_is_the_committed_sample_and_the_four_models`,
+      `test_the_expect_scores_the_two_frozen_models_under_their_own_ids` and
+      `test_the_reproduction_is_exact_and_against_the_current_references` hash working-tree
+      files.
+    - The new worktree was checked out with `core.autocrlf=true` (CRLF); the main checkout
+      is LF.
+    - The evidence: `p3_analysis_full.json` is `81b8c506…` in the main checkout and
+      `cef11eb9…` in the worktree. The same 4 tests **pass in the main checkout** (4 passed).
+    - The worktree files are not rewritten (§2 forbids `git checkout --` on them). The code
+      zip carries git's bytes, so Kaggle is unaffected.
+  - **1 was real:** `test_the_report_cell_cannot_raise[kaggle_run_p5_pilot]` (rule 5 finds
+    the report cell by "report" in its title).
+    - Fixed by retitling cell 9. The cell body is unchanged.
+    - The 7 P5 runbook-tooling tests now pass.
+- **ruff:** clean.
+- **Integrity:** CLEAN before each commit.

@@ -175,7 +175,7 @@ assert shards("score_smoke", EXPECT["score_jobs"], EXPECT["deadlines_hours"]["sc
 assert shards("score", EXPECT["score_jobs"], EXPECT["deadlines_hours"]["score"]) == 0, \
     "scoring FAILED"
 
-# %% Cell 9 — summary and archive (cannot fail the run)
+# %% Cell 9 — report: the summary and the archive (cannot fail the run)
 py("p5_pilot.py", "--phase", "summary", "--expect", EXPECT_PATH, "--zip",
    WORK / "p5_pilot_reports")
 print(f"wall: {(time.time() - START) / 3600:.2f} h")
