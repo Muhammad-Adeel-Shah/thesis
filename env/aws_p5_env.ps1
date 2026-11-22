@@ -76,6 +76,9 @@ $env:AWS_SECRET_ACCESS_KEY = $secret
 $keyId = $null; $secret = $null
 $env:AWS_DEFAULT_REGION = 'us-east-2'
 $env:AWS_REGION = 'us-east-2'
+# Regional STS, so get-caller-identity is a us-east-2 request: dbp-launch denies every
+# request whose aws:RequestedRegion is not us-east-2, and the global STS endpoint is us-east-1.
+$env:AWS_STS_REGIONAL_ENDPOINTS = 'regional'
 $env:AWS_CONFIG_FILE = Join-Path $noFiles 'config'
 $env:AWS_SHARED_CREDENTIALS_FILE = Join-Path $noFiles 'credentials'
 $env:AWS_PAGER = ''

@@ -8931,3 +8931,28 @@ $1.21/h; the T4 → A10G speed-up is an **ASSUMPTION**, given as 1.5 / 2.0 / 3.0
 **Full suite, MEASURED** (`--durations=20 -rs`): **1,379 passed, 10 skipped (the same 7 GPU +
 3 regression-digest skips), 0 failed**, in 477.2 s; ruff clean. After the dry-run line was
 edited, `tests/test_p5_cloud.py` was run again: 25 passed.
+
+### P5-C prep (cont.) — user's AWS setup; regional STS in the key helper (2026-11-22)
+
+**User-side setup (reported by the user, not observed by a command here):**
+- An $80 budget, with IncludeCredit/Refund = false, and alerts at 25/50/75 % actual and 80 %
+  forecasted.
+- Root MFA on, no root keys; account credits $120 (the plan assumed USD 100; the $75 hard
+  stop is unchanged).
+- AWS CLI v2.42.1 installed, with no `aws configure` and nothing in `~/.aws`.
+- IAM user `dbp-agent`: ReadOnlyAccess + inline `dbp-agent-stop` (Stop/Terminate on
+  us-east-2 instances only), console access disabled, access key created and stored
+  outside the repo.
+- `dbp-launch` is not created yet: the user will have the policy reviewed first.
+
+**Observed in this session:** no AWS keys and no `aws` on PATH in Claude Code's process
+(Claude Code was started before the CLI install). So no AWS command has run yet, and the
+prelaunch checklist is **NOT-RUN**.
+
+**Changed:** `env/aws_p5_env.ps1` sets `AWS_STS_REGIONAL_ENDPOINTS=regional`.
+- **Why:** dbp-launch denies every request whose `aws:RequestedRegion` is not us-east-2. A
+  `get-caller-identity` sent to the global STS endpoint would count as us-east-1, so the
+  helper would refuse valid launch keys.
+- **NOT-VERIFIED:** whether CLI v2 already defaults to regional STS. The setting is harmless
+  either way.
+- `tests/test_p5_cloud.py`: 25 passed; ruff clean.
