@@ -133,11 +133,23 @@ def phase_smoke(args: argparse.Namespace, bank: Any, clips: list[dict[str, str]]
             record["determinism_max_abs_delta"] = max_abs_diff(refs[0][1], again)
             member.free()
             fp16: dict[int, float | None] = {}
+            fp16_seconds: list[float] = []
             if args.device == "cuda":
                 member16 = load_video_member(spec, args.device, "fp16")
+                halves = []
                 for i, (clip, ref) in enumerate(refs):
+                    t = time.perf_counter()
                     half, finite = fp16_clip(member16, clip)
+                    fp16_seconds.append(round(time.perf_counter() - t, 3))
                     fp16[i] = round(psnr_uint8(ref, half), 3) if finite else None
+                    halves.append(half)
+                # the fp16 build runs on the AWS bank (user, 2026-11-22): its speed feeds the
+                # projection, and it must be as deterministic as fp32
+                record["fp16_seconds"] = fp16_seconds
+                record["fp16_warm_seconds_per_clip"] = round(float(np.mean(
+                    fp16_seconds[1:] or fp16_seconds)), 3)
+                record["fp16_determinism_max_abs_delta"] = max_abs_diff(
+                    halves[0], fp16_clip(member16, refs[0][0])[0])
                 member16.free()
             allowed, reason = (fp16_build_allowed(fp16) if fp16
                                else (False, "not measured (CPU)"))
@@ -206,24 +218,88 @@ def phase_lineage(args: argparse.Namespace, bank: Any) -> None:
     print("lineage:", out["flag"], flush=True)
 
 
+#: Members kept in fp32 whatever their fp16 check says (user, 2026-11-22).
+FORCE_FP32 = {"mochi": "user, 2026-11-22: fp32 (its pilot fp16 parity check failed)",
+              "cogvx": "user, 2026-11-22: fp32 (determinism)"}
+
+
+def recon_precision(key: str, evidence: Path | None, smoke: dict[str, Any]) -> tuple[str, str]:
+    """fp16 only for a member whose PILOT fp16 check passed and whose smoke in this run
+    passed it again, deterministically (CLAUDE.md 7; user, 2026-11-22). Else fp32."""
+    if key in FORCE_FP32:
+        return "fp32", FORCE_FP32[key]
+    if evidence is None:
+        return "fp32", "no --fp16-evidence given"
+    pilot_path = evidence / f"smoke_{key}.json"
+    if not pilot_path.is_file():
+        return "fp32", f"no pilot record {pilot_path.name}"
+    pilot = json.loads(pilot_path.read_text(encoding="utf-8"))
+    if pilot.get("fp16_build_allowed") is not True:
+        why = pilot.get("fp16_reason") or pilot.get("status")
+        return "fp32", f"pilot fp16 check not passed ({why})"
+    if smoke.get("fp16_build_allowed") is not True:
+        return "fp32", f"this run's smoke fp16 check not passed ({smoke.get('fp16_reason')})"
+    if smoke.get("fp16_determinism_max_abs_delta") != 0:
+        return "fp32", "fp16 not deterministic in this run's smoke"
+    return "fp16", "fp16_build_allowed in the pilot and in this run's smoke, deterministic"
+
+
+def select_splits(args: argparse.Namespace, clips: list[dict[str, str]]) -> list[dict[str, str]]:
+    """With ``--splits``, only the clips of those P5 splits (the training pool's pre-declared
+    split, ``dbp.data.video.p5_splits``); the table is written once and never changes."""
+    if not args.splits:
+        return clips
+    from dbp.data.video import p5_splits
+
+    split_of = p5_splits([c["video_id"] for c in clips])
+    wanted = set(args.splits.split(","))
+    unknown = wanted - set(split_of.values())
+    if unknown:
+        raise SystemExit(f"--splits: unknown {sorted(unknown)}")
+    table = "".join(f"{c['sample_id']},{c['video_id']},{split_of[c['video_id']]}\n"
+                    for c in clips)
+    path = args.reports / "p5_train_splits.csv"
+    text = "sample_id,video_id,split\n" + table
+    if path.is_file() and path.read_text(encoding="utf-8") != text:
+        raise SystemExit(f"{path} exists with a different split: refusing")
+    if not path.is_file():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp = path.with_name(path.name + ".tmp")
+        tmp.write_text(text, encoding="utf-8", newline="\n")
+        tmp.replace(path)
+    chosen = [c for c in clips if split_of[c["video_id"]] in wanted]
+    print(f"splits {sorted(wanted)}: {len(chosen)} of {len(clips)} clips", flush=True)
+    return chosen
+
+
 def phase_reconstruct(args: argparse.Namespace, bank: Any, clips: list[dict[str, str]]) -> None:
     from dbp.decoders.loaders import load_video_member
 
+    clips = select_splits(args, clips)
     for key in args.members.split(","):
         smoke = args.reports / f"smoke_{key}.json"
-        status = json.loads(smoke.read_text(encoding="utf-8")).get("status") \
-            if smoke.is_file() else "no smoke record"
+        smoke_record = json.loads(smoke.read_text(encoding="utf-8")) if smoke.is_file() else {}
+        status = smoke_record.get("status") if smoke.is_file() else "no smoke record"
         record = args.reports / f"recon_{key}.jsonl"
         if status != "OK":
             write_json(args.reports / f"recon_{key}_skipped.json",
                        {"member": key, "reason": f"smoke status: {status}"})
             print(f"reconstruct {key}: SKIPPED ({status})", flush=True)
             continue
+        precision, why = recon_precision(key, args.fp16_evidence, smoke_record)
         done = set()
         if record.is_file():
-            done = {json.loads(line)["sample_id"] for line in
-                    record.read_text(encoding="utf-8").splitlines() if line.strip()}
-        member = load_video_member(bank.by_key(key), args.device, "fp32")
+            rows = [json.loads(line) for line in
+                    record.read_text(encoding="utf-8").splitlines() if line.strip()]
+            mixed = {r.get("precision", "fp32") for r in rows} - {precision}
+            if mixed:
+                raise SystemExit(f"{record}: rows built in {sorted(mixed)}, this run would use "
+                                 f"{precision}: one member is never built in two precisions")
+            done = {r["sample_id"] for r in rows}
+        write_json(args.reports / f"recon_{key}_precision.json",
+                   {"member": key, "precision": precision, "reason": why})
+        print(f"reconstruct {key}: {precision} ({why})", flush=True)
+        member = load_video_member(bank.by_key(key), args.device, precision)
         root = args.recon_root / key
         for c in clips:
             if c["sample_id"] in done:
@@ -237,7 +313,8 @@ def phase_reconstruct(args: argparse.Namespace, bank: Any, clips: list[dict[str,
             seconds = time.perf_counter() - t
             written = write_png_clip(recon, target)
             row = {"sample_id": c["sample_id"], "seconds": round(seconds, 3),
-                   "psnr_db": round(psnr_uint8(clip, recon), 3), **written}
+                   "psnr_db": round(psnr_uint8(clip, recon), 3), "precision": precision,
+                   **written}
             with record.open("a", encoding="utf-8") as handle:
                 handle.write(json.dumps(row) + "\n")
         member.free()
@@ -464,6 +541,10 @@ def main() -> int:
     parser.add_argument("--smoke-clips", type=int, default=3)
     parser.add_argument("--limit", type=int, default=0, help="score: a smoke on N clips")
     parser.add_argument("--zip", type=Path, default=None)
+    parser.add_argument("--splits", default="",
+                        help="reconstruct: only these P5 splits, e.g. train,validation")
+    parser.add_argument("--fp16-evidence", type=Path, default=None,
+                        help="reconstruct: the pilot's smoke records (fp16 needs a pass there)")
     args = parser.parse_args()
     expect = json.loads(args.expect.read_text(encoding="utf-8"))
     if args.phase == "summary":

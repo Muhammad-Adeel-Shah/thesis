@@ -237,9 +237,12 @@ def test_fetch_never_renames_a_clip_across_directories_directly():
 @pytest.mark.parametrize("codec", ["libx264", "libx265"])
 def test_encode_roundtrip_keeps_frames_and_is_deterministic(codec):
     clip = np.random.default_rng(3).integers(0, 256, (25, 64, 64, 3), dtype=np.uint8)
-    a, size_a = V.encode_roundtrip(clip, codec, 28, "30000/1001")
-    b, size_b = V.encode_roundtrip(clip, codec, 28, "30000/1001")
-    assert a.shape == clip.shape and size_a == size_b and np.array_equal(a, b)
+    # five calls, not two: with one pool thread, x265 still differed on some calls only
+    # (2026-11-22: 6 of 6 runs failed, after passing earlier the same day)
+    runs = [V.encode_roundtrip(clip, codec, 28, "30000/1001") for _ in range(5)]
+    a, size_a = runs[0]
+    assert a.shape == clip.shape
+    assert all(size == size_a and np.array_equal(frames, a) for frames, size in runs[1:])
     with pytest.raises(V.VideoError, match="only libx264"):
         V.encode_roundtrip(clip, "mpeg4", 28, 30)
 
@@ -378,6 +381,86 @@ def test_vae_phases_run_deterministic_true_fp32(monkeypatch, phase):
     assert seen["deterministic"] and not seen["benchmark"] and seen["algorithms"]
     assert not seen["cudnn_tf32"] and not seen["matmul_tf32"]
     assert seen["recorded"]["seed"] == 2026 and seen["recorded"]["cudnn_allow_tf32"] is False
+
+
+def test_p5_splits_are_fixed_sized_seeded_and_order_free():
+    ids = [str(10_000_000 + 7 * i) for i in range(2200)]
+    split = V.p5_splits(ids)
+    counts = {name: sum(v == name for v in split.values()) for name in set(split.values())}
+    assert counts == {"threshold": 200, "validation": 200, "train": 1800}
+    assert V.p5_splits(list(reversed(ids))) == split            # the id set decides, not order
+    with pytest.raises(ValueError, match="duplicate"):
+        V.p5_splits(ids + ids[:1])
+    with pytest.raises(ValueError, match="need more than"):
+        V.p5_splits(ids[:400])
+
+
+PILOT = ROOT / "reports" / "kaggle_20261121" / "p5_pilot"
+PASSING_SMOKE = {"status": "OK", "fp16_build_allowed": True, "fp16_reason": "ok",
+                 "fp16_determinism_max_abs_delta": 0}
+
+
+@pytest.mark.parametrize("key, smoke, expected", [
+    ("wan21", PASSING_SMOKE, "fp16"),
+    ("ltx090", PASSING_SMOKE, "fp16"),
+    ("sd15_pf", PASSING_SMOKE, "fp16"),
+    ("mochi", PASSING_SMOKE, "fp32"),     # user, 2026-11-22: its pilot fp16 check failed
+    ("cogvx", PASSING_SMOKE, "fp32"),     # user, 2026-11-22: fp32 for determinism
+    ("hunyuan", PASSING_SMOKE, "fp32"),   # no pilot fp16 check (OOM on the T4)
+    ("wan21", {**PASSING_SMOKE, "fp16_build_allowed": False}, "fp32"),
+    ("wan21", {**PASSING_SMOKE, "fp16_determinism_max_abs_delta": 1}, "fp32"),
+    ("wan21", {**PASSING_SMOKE, "fp16_determinism_max_abs_delta": None}, "fp32"),
+])
+def test_recon_precision_follows_the_pilot_and_this_smoke(key, smoke, expected):
+    import p5_pilot as P
+
+    assert P.recon_precision(key, PILOT, smoke)[0] == expected
+    assert P.recon_precision(key, None, smoke)[0] == "fp32"
+
+
+def test_reconstruct_skips_threshold_reals_and_never_mixes_precision(tmp_path, monkeypatch):
+    import dbp.decoders.loaders as L
+    import p5_pilot as P
+
+    monkeypatch.setattr(V, "P5_SPLIT_SIZES", (("threshold", 2), ("validation", 2)))
+    clips = []
+    for i in range(7):
+        frames = np.full((25, 8, 8, 3), 10 * i, dtype=np.uint8)
+        V.write_png_clip(frames, tmp_path / "reals" / f"c{i}")
+        clips.append({"sample_id": f"s{i}", "video_id": f"v{i}", "clip_dir": f"c{i}"})
+    built = []
+
+    class Fake:
+        def __init__(self, precision):
+            self.precision = precision
+
+        def reconstruct(self, clip):
+            built.append(self.precision)
+            return clip
+
+        def free(self):
+            return None
+
+    monkeypatch.setattr(L, "load_video_member", lambda spec, device, precision: Fake(precision))
+    reports = tmp_path / "reports"
+    reports.mkdir()
+    (reports / "smoke_wan21.json").write_text(json.dumps(PASSING_SMOKE), encoding="utf-8")
+    bank = SimpleNamespace(by_key=lambda key: SimpleNamespace(key=key))
+    args = SimpleNamespace(members="wan21", device="cpu", reports=reports,
+                           reals_root=tmp_path / "reals", recon_root=tmp_path / "recon",
+                           splits="train,validation", fp16_evidence=PILOT)
+    P.phase_reconstruct(args, bank, clips)
+    split = {r.split(",")[0]: r.split(",")[2] for r in
+             (reports / "p5_train_splits.csv").read_text(encoding="utf-8").splitlines()[1:]}
+    rows = [json.loads(x) for x in (reports / "recon_wan21.jsonl").read_text().splitlines()]
+    assert sorted(r["sample_id"] for r in rows) == sorted(
+        s for s, v in split.items() if v in ("train", "validation"))
+    assert len(rows) == 5 and not any(split[r["sample_id"]] == "threshold" for r in rows)
+    assert {r["precision"] for r in rows} == {"fp16"} and set(built) == {"fp16"}
+    # a resume in another precision is refused, not mixed
+    args.fp16_evidence = None
+    with pytest.raises(SystemExit, match="two precisions"):
+        P.phase_reconstruct(args, bank, clips)
 
 
 def test_requirements_pin_av_only():

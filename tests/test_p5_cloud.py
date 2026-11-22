@@ -290,6 +290,17 @@ def test_runbook_gpu_jobs_name_the_device():
         assert "--device cuda" in text[start:start + 300], phase
 
 
+def test_runbook_reconstruction_skips_threshold_reals_and_uses_the_fp16_rule():
+    """User, 2026-11-22: the 200 threshold-held-out reals are never reconstructed, and fp16
+    follows the pilot's records."""
+    text = (ROOT / "env" / "cloud_p5_runbook.md").read_text(encoding="utf-8")
+    start = text.index("--phase reconstruct ")
+    cmd = text[start:start + 500]
+    assert "--splits train,validation" in cmd
+    assert "--fp16-evidence reports/kaggle_20261121/p5_pilot" in cmd
+    assert (ROOT / "reports" / "kaggle_20261121" / "p5_pilot" / "smoke_wan21.json").is_file()
+
+
 def test_check_script_only_describes():
     import p5_aws_check as C
 
@@ -325,6 +336,10 @@ def test_launch_policy_is_closed_and_g5_2xlarge_only():
     allowed = {a for st in sts if st["Effect"] == "Allow" for a in as_list(st["Action"])}
     closed = next(st for st in sts if st["Sid"] == "DenyEverythingNotListed")
     assert allowed | {"sts:GetCallerIdentity"} == set(closed["NotAction"])   # no gap either way
+    # user, 2026-11-22: revoking the old /32 when the public IP changes; it only removes access
+    assert "ec2:RevokeSecurityGroupIngress" in allowed
+    ssh = next(st for st in sts if st["Sid"] == "SshSecurityGroupAndKeyPair")
+    assert "ec2:RevokeSecurityGroupIngress" in ssh["Action"]
     assert not any(a.startswith(("s3:", "iam:")) or a in ("ec2:AllocateAddress",
                    "ec2:CreateSnapshot", "ec2:CreateSnapshots", "ec2:ModifyInstanceAttribute")
                    for a in allowed)

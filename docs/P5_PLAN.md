@@ -122,6 +122,25 @@ trains and after the test panel is frozen.
 >   - rclone is approved, on the AWS instance only (CLAUDE.md §14).
 >   - Regression digests under 0.42.0: identical to 0.40.0.
 >   - Credits are USD 120; the hard stop stays at 75.
+> - **Review of 95b3a25 + 4e10e27 (user, 2026-11-22): accepted.**
+>   - **dbp-launch** also allows `ec2:RevokeSecurityGroupIngress`, so the old /32 can be
+>     removed when the public IP changes. The user creates the policy from that version.
+>   - **The pilot is accepted.**
+>     - Qwen-Image vs Wan2.1: **different decoders, a shared encoder.** This is recorded as
+>       a caveat. There is **no "seen decoder" flag.**
+>     - The cogvx determinism fix and "0.40 = 0.42" for the digests are recorded.
+>   - **The video training recipe**, fixed now, from the pilot, before the freeze (section 3.4
+>     and the `S2V-F` row in section 4). **It was fixed from training-domain pilot data only**
+>     (200 Pexels clips and their reconstructions), **never from test data.**
+>   - **The reconstruction's cost:**
+>     - The 200 threshold-held-out reals are **not reconstructed**: they are only ever used
+>       as reals. The bank builds 2,000 clips (1,800 train + 200 validation).
+>     - **fp16** for every VAE whose pilot fp16 check passed. **fp32** for mochi (its check
+>       failed) and for cogvx (determinism).
+>     - The reconstruction is re-projected for 2,000 clips after the A10G speed test.
+>   - **HunyuanVideo is decided after the speed test,** by the user, against the
+>     reconstruction's $45 share. If it does not fit, the numbers go to the user, who may
+>     re-allocate from the reserve. The agent neither drops nor keeps it alone.
 
 **Method:** the image method on video, at reduced scale, without reduced rigour. The
 rules are the image module's: a frozen pre-registration pushed before training; a test
@@ -384,9 +403,26 @@ separately, as E7 was for the images.
   - **The problem:** a real's frames are H.264-decoded; its reconstruction is clean PNG.
   - **The rule:** each reconstruction is re-encoded with libx264 at the CRF whose
     bits-per-pixel matches its real source clip, seeded, then decoded.
-  - **The degradation chain:** S2-D's chain, extended with an H.264 re-encode, is applied
-    to both classes at p = 0.35, inherited from P3.
-  - **The pilot measures** the raw and matched views to size this shortcut.
+  - **The degradation chain (fixed 2026-11-22, from the pilot; user):**
+    - **The pilot's evidence:** the image S2-D, per frame, on 200 Pexels clips and their
+      wan21 and ltx090 reconstructions. Clip AUC is 0.882–0.910 on the raw view and
+      0.6425–0.7543 after one libx264 CRF 23 re-encode of both clips
+      (`reports/kaggle_20261121/p5_pilot/p5_pilot_summary.json`, both seeds). A single
+      ordinary re-encode removes most of what the image model sees, so the video model must
+      be trained through re-encodes.
+    - **The rule:**
+      - An H.264 or H.265 re-encode, at a random CRF in **the range in the open item
+        below**, is applied to **p = 0.80** of the training pairs.
+      - It is applied **identically to both clips of a pair**: the same codec, CRF, preset
+        and fps, drawn once per pair and seeded.
+      - The other degradations of S2-D's chain keep **p = 0.35**.
+      - The bpp-matched re-encode of each reconstruction (above) stays: it removes the
+        format shortcut. The p = 0.80 re-encode comes on top of it, for both classes.
+    - **Provenance:** fixed from training-domain pilot data only (Pexels reals and their
+      reconstructions), never from test data. No test clip has been fetched.
+    - **OPEN (user):** the CRF range and the codec mix. The plan never fixed a numeric range
+      for training (A5 says only "a CRF range"). V5 tests H.264 CRF 23/28/35 and H.265
+      CRF 28/35.
 
 ---
 
@@ -394,7 +430,7 @@ separately, as E7 was for the images.
 
 | id | what | seeds |
 |---|---|---|
-| `S2V-F` | **frame model:** the S2 recipe per frame. DINOv3 ViT-B/16 + LoRA r = 8, batch 16, LR 1e-4, wd 0.01, warm-up 300, crop 320, degradation p = 0.35, **`N*` = 5,000 inherited from P3** (no new selection) | 0, 1 |
+| `S2V-F` | **frame model:** the S2 recipe per frame. DINOv3 ViT-B/16 + LoRA r = 8, batch 16, LR 1e-4, wd 0.01, warm-up 300, crop 320, degradation p = 0.35 + a pair-identical H.264/H.265 re-encode at p = 0.80 (section 3.4), **`N*` = 5,000 inherited from P3** (no new selection) | 0, 1 |
 | `S2V-T` | **temporal model:** `S2V-F`'s frozen backbone. Per-frame features `f_t` and deltas `f_t − f_{t−1}`, t = 1..16, go to a small temporal head (2-layer transformer, width 256) trained on cached features. Two-stage, so V3 compares the same backbone with and without time | 0, 1 |
 | `S2V-1` | single VAE: `wan21` only, the same recipe and head (V2) | 0, 1 |
 | `LOLO-v` | v ∈ {wan21, hunyuan, cogvx, ltx090, mochi} held out; `sd15_pf` is always in | 0 |

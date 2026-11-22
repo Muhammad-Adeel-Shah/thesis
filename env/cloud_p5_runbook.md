@@ -233,17 +233,24 @@ bash env/aws_p5_session.sh --label setup_pexels --estimate-hours 2.0 -- bash -c 
     --manifest reports/p5_train_reals/p5_reals_train_manifest.csv --reports reports/p5_train_recon'
 # (c) the reconstruction -- resumable per clip; a restart never redoes a finished clip
 #     (each clip is recorded in recon_<member>.jsonl)
+#   --splits train,validation: the 2,000 train + validation clips only; the 200
+#     threshold-held-out reals are never reconstructed (user, 2026-11-22)
+#   --fp16-evidence: fp16 only where the pilot's fp16 check passed AND this run's smoke (b)
+#     passed it again, deterministically; mochi and cogvx always fp32 (user, 2026-11-22)
 bash env/aws_p5_session.sh --label recon --estimate-hours <projected> -- \
-  python scripts/p5_pilot.py --phase reconstruct --members wan21,hunyuan,cogvx,ltx090,mochi,sd15_pf \
+  python scripts/p5_pilot.py --phase reconstruct --members <approved members> \
     --device cuda --expect env/p5_pilot_expect.json --reals-root /data/p5/reals \
     --manifest reports/p5_train_reals/p5_reals_train_manifest.csv \
+    --splits train,validation --fp16-evidence reports/kaggle_20261121/p5_pilot \
     --recon-root /data/p5/recon --reports reports/p5_train_recon
 ```
 
 - **The reconstruction is launched only after the user approves its projection** (P5-C).
   The projection comes from the A10G s/clip measured by (b).
-- **HunyuanVideo** (user, 2026-11-22, pre-declared) stays in the bank for (b). It is dropped
-  only if it fails technically on the A10G, or if it breaks the reconstruction's $45 share.
+- **HunyuanVideo** (user, 2026-11-22) stays in the bank for (b). After (b) the agent shows
+  the user its measured cost against the reconstruction's $45 share; **the user decides**
+  (re-allocating from the reserve is possible). The agent neither drops nor keeps it alone.
+- **`<approved members>`** is the member list the user approves with the projection.
 - **Training (P5-D)** checkpoints every 500 steps on `/data` and resumes from the last one.
 - **Pexels is downloaded once.** If (a) stops midway it restarts after
   `rm -r /data/p5/reals/train`. The shard plan makes the result identical.

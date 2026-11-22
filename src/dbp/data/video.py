@@ -244,6 +244,39 @@ def clip_digest(frame_hashes: list[str]) -> str:
     return hashlib.sha256("\n".join(frame_hashes).encode()).hexdigest()
 
 
+#: The training pool's split (docs/P5_PLAN.md: 1,800 train + 200 validation + 200
+#: threshold-held-out). Fixed 2026-11-22, before any training-pool clip was reconstructed.
+P5_SPLIT_SALT = "2026:p5-split:"
+P5_SPLIT_SIZES: tuple[tuple[str, int], ...] = (("threshold", 200), ("validation", 200))
+
+
+def p5_splits(video_ids: list[str]) -> dict[str, str]:
+    """Each training-pool video id -> ``threshold`` | ``validation`` | ``train``.
+
+    The ids are ordered by ``sha256(P5_SPLIT_SALT + id)``, a salt distinct from the one that
+    chose the kept clips, so the split cannot follow the selection order. The first 200 are
+    the threshold-held-out reals (k = 0, never reconstructed: they are only ever used as
+    reals), the next 200 are validation, the rest train. Depends on the id set only.
+
+    Raises:
+        ValueError: duplicate ids, or too few ids to fill the fixed splits.
+    """
+    if len(set(video_ids)) != len(video_ids):
+        raise ValueError("p5_splits: duplicate video ids (one clip per video)")
+    fixed = sum(n for _, n in P5_SPLIT_SIZES)
+    if len(video_ids) <= fixed:
+        raise ValueError(f"p5_splits: {len(video_ids)} ids, need more than {fixed}")
+    order = sorted(video_ids,
+                   key=lambda v: hashlib.sha256((P5_SPLIT_SALT + v).encode()).hexdigest())
+    out: dict[str, str] = {}
+    start = 0
+    for name, n in P5_SPLIT_SIZES:
+        out.update(dict.fromkeys(order[start:start + n], name))
+        start += n
+    out.update(dict.fromkeys(order[start:], "train"))
+    return out
+
+
 def read_png_clip(clip_dir: Path) -> np.ndarray:
     """Read a clip written by :func:`write_png_clip`: ``(T, H, W, 3)`` uint8.
 
@@ -290,8 +323,12 @@ def encode_roundtrip(frames: np.ndarray, codec: str, crf: int, fps: float | str,
         stream.options = {"crf": str(int(crf)), "preset": preset}
         if codec == "libx265":
             # x265's thread pool and frame threading made two identical calls decode to
-            # different pixels (test_p5_video.py, 2026-11-21); one pool, one frame thread.
-            stream.options["x265-params"] = "log-level=error:pools=1:frame-threads=1"
+            # different pixels (test_p5_video.py, 2026-11-21). One pool thread and one frame
+            # thread were not enough: the sizes still differed between two calls in one
+            # process (2026-11-22). No pool, no wavefront, one frame thread and no lookahead
+            # slicing: single-threaded, so the output cannot depend on thread timing.
+            stream.options["x265-params"] = ("log-level=error:pools=none:frame-threads=1:"
+                                             "no-wpp=1:lookahead-slices=0")
         for frame in frames:
             for packet in stream.encode(av.VideoFrame.from_ndarray(frame, format="rgb24")):
                 container.mux(packet)

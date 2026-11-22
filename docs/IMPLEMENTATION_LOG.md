@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P5-C prep, user review (2026-11-22)**: SSH /32 + gp3-root prelaunch checks, $1.217/h, rclone (AWS only), 0.42.0 digests = 0.40.0. **P5-C prep (2026-11-22)**: AWS access without the Agent Toolkit (two IAM users, policies in `env/aws_iam/`, env-only key helper `env/aws_p5_env.ps1`), prelaunch quota/zone/root/IOPS/spot checks, the first AWS session (setup + Pexels + A10G smoke, approved) written out; the reconstruction command lacked `--device cuda` (fixed, tested). Waiting for the IAM users and keys. **P5-B pilot results (2026-11-21, code `f8669b3`, Kaggle 2× T4)**: tracked under `reports/kaggle_20261121/`. wan21 / ltx090 reconstructed 200 clips; hunyuan OOM on the T4; cogvx nondeterministic by one grey level, a code defect (no determinism contract in the VAE phases), fixed with a test; Qwen-Image vs Wan2.1: decoders differ, the encoder is shared at bf16. The AWS reconstruction projection rests on an assumed T4 → A10G factor ($23–60), so an A10G smoke measures it first; no launch without the user's OK. **P5-B (2026-11-21, branch `p5-video`)**: A1–A8 approved with conditions; the compute plan changed (AWS g5.2xlarge, $80 budget). Built: the video bank (`configs/video_bank.yaml`, 6 bank + 1 reserve, Allegro excluded), the video reconstruction kinds, video I/O (`av==19.0.2`), the Pexels fetch, the pilot (`scripts/p5_pilot.py`) and its Kaggle runbook, the cloud runbook and guard. Hand-over of the Kaggle pilot. Nothing trained, no test data fetched. **P5-A (2026-11-20)**: the plan. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
+| Last prompt | **P5-C prep, second review (2026-11-22)**: revoke rule; video training recipe (re-encode p = 0.80, pair-identical; CRF range OPEN); threshold reals not reconstructed; fp16 rule; x265 determinism fixed. **P5-C prep, user review (2026-11-22)**: SSH /32 + gp3-root prelaunch checks, $1.217/h, rclone (AWS only), 0.42.0 digests = 0.40.0. **P5-C prep (2026-11-22)**: AWS access without the Agent Toolkit (two IAM users, policies in `env/aws_iam/`, env-only key helper `env/aws_p5_env.ps1`), prelaunch quota/zone/root/IOPS/spot checks, the first AWS session (setup + Pexels + A10G smoke, approved) written out; the reconstruction command lacked `--device cuda` (fixed, tested). Waiting for the IAM users and keys. **P5-B pilot results (2026-11-21, code `f8669b3`, Kaggle 2× T4)**: tracked under `reports/kaggle_20261121/`. wan21 / ltx090 reconstructed 200 clips; hunyuan OOM on the T4; cogvx nondeterministic by one grey level, a code defect (no determinism contract in the VAE phases), fixed with a test; Qwen-Image vs Wan2.1: decoders differ, the encoder is shared at bf16. The AWS reconstruction projection rests on an assumed T4 → A10G factor ($23–60), so an A10G smoke measures it first; no launch without the user's OK. **P5-B (2026-11-21, branch `p5-video`)**: A1–A8 approved with conditions; the compute plan changed (AWS g5.2xlarge, $80 budget). Built: the video bank (`configs/video_bank.yaml`, 6 bank + 1 reserve, Allegro excluded), the video reconstruction kinds, video I/O (`av==19.0.2`), the Pexels fetch, the pilot (`scripts/p5_pilot.py`) and its Kaggle runbook, the cloud runbook and guard. Hand-over of the Kaggle pilot. Nothing trained, no test data fetched. **P5-A (2026-11-20)**: the plan. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -9023,3 +9023,77 @@ differ):**
 **Full suite, MEASURED** (`--durations=20 -rs`): **1,397 passed, 7 skipped, 0 failed, 1 warning,
 in 469.7 s.** The 7 skips are the GPU smoke tests (PENDING-GPU). The 3 regression-digest
 skips are gone. ruff: all checks passed.
+
+### P5-C prep (cont.) — the review of 95b3a25 + 4e10e27: revoke rule, training recipe, reconstruction savings; an x265 determinism defect fixed (2026-11-22)
+
+**User decisions** (all recorded in P5_PLAN.md):
+- **Revoke:** `ec2:RevokeSecurityGroupIngress` is added to `DenyEverythingNotListed`
+  (NotAction) and to `SshSecurityGroupAndKeyPair`. The user creates `dbp-launch-policy` from
+  that version. The test checks both places, and that the allow and NotAction sets are still
+  equal. Minified, the policy is 3,309 characters (`json.dumps` with compact separators).
+- **The pilot is accepted.** Qwen-Image vs Wan2.1: different decoders, a shared encoder. This
+  is a caveat; there is no "seen decoder" flag.
+- **The training recipe** is in P5_PLAN §3.4 and in §4's `S2V-F` row.
+  - The pilot's AUCs are read from `reports/kaggle_20261121/p5_pilot/p5_pilot_summary.json`:
+    raw 0.8965 / 0.91 / 0.882 / 0.8832, h264 0.6454 / 0.7543 / 0.6425 / 0.7514.
+  - The recipe was fixed from training-domain pilot data only.
+  - **OPEN:** the numeric CRF range and the codec mix. The plan never had a training range,
+    so it is asked, not chosen.
+- **Savings:** the 200 threshold reals are not reconstructed; fp16 where the pilot's check
+  passed; fp32 for mochi and cogvx; the projection is redone for 2,000 clips after the A10G
+  test.
+- **HunyuanVideo:** the user decides after the speed test.
+
+**Changed:**
+- **`src/dbp/data/video.py`, `p5_splits`:** the training pool's split, which did not exist
+  in code. It was needed to leave the threshold reals out.
+  - Video ids are ordered by `sha256("2026:p5-split:" + id)`. This salt is distinct from
+    the one that chose the kept clips.
+  - The first 200 are threshold, the next 200 validation, the rest train.
+  - **It was fixed before any training-pool clip was reconstructed.**
+- **`scripts/p5_pilot.py`:**
+  - **reconstruct:**
+    - `--splits train,validation` reconstructs only those splits. It writes
+      `p5_train_splits.csv` once, and refuses a later run whose split differs.
+    - `--fp16-evidence` (the pilot's smoke records): fp16 only if the pilot's fp16 check
+      passed AND this run's smoke passed it again with an fp16 re-run delta of 0.
+    - `FORCE_FP32` = {mochi, cogvx}.
+    - The precision is written per member (`recon_<key>_precision.json`) and per row. A
+      resume in another precision is refused, so a member is never built in two precisions.
+  - **smoke:** on CUDA it now also times the fp16 clips (`fp16_warm_seconds_per_clip`, for
+    the projection) and re-runs fp16 once (`fp16_determinism_max_abs_delta`). This code path
+    needs CUDA, so it is **PENDING-GPU** (it first runs in the A10G smoke).
+- **`env/cloud_p5_runbook.md`:**
+  - (c) takes `--splits train,validation --fp16-evidence reports/kaggle_20261121/p5_pilot`
+    and `<approved members>`;
+  - the Hunyuan note: the user decides.
+- **Defect fixed, `encode_roundtrip` (libx265):**
+  - **Symptom:** `test_encode_roundtrip_keeps_frames_and_is_deterministic[libx265]` failed
+    during this prompt in 6 of 6 runs alone. Two calls in one process gave 33,137 B, then
+    33,128 or 33,147 B. It had passed in the full suite earlier the same day.
+  - **Why it matters:** the training recipe needs H.265 applied identically to both clips of
+    a pair.
+  - **The existing setting was not enough:** `pools=1:frame-threads=1` was applied (checked:
+    the option is set) but did not fix it.
+  - **Investigation:** an experiment with 6 encodes each.
+    - `pools=none:frame-threads=1:no-wpp=1` still gave {33,077, 33,133}.
+    - Adding `lookahead-slices=0` gave {33,133}.
+  - **The fix:** `log-level=error:pools=none:frame-threads=1:no-wpp=1:lookahead-slices=0`,
+    i.e. single-threaded x265.
+  - **The test now compares 5 encodes, not 2.** With the fix: 8 of 8 runs passed, then 4 of
+    4 with the 5-encode test.
+  - **No recorded result used H.265:** the pilot's view was libx264.
+- **Tests:**
+  - `tests/test_p5_video.py`:
+    - `test_p5_splits_are_fixed_sized_seeded_and_order_free`;
+    - `test_recon_precision_follows_the_pilot_and_this_smoke` (9 cases, against the
+      committed pilot records: wan21, ltx090 and sd15_pf → fp16; mochi, cogvx and hunyuan →
+      fp32);
+    - `test_reconstruct_skips_threshold_reals_and_never_mixes_precision`.
+  - `tests/test_p5_cloud.py`: the revoke assertion, and
+    `test_runbook_reconstruction_skips_threshold_reals_and_uses_the_fp16_rule`.
+
+**Full suite, MEASURED** (`--durations=20 -rs`): **1,409 passed, 7 skipped (GPU smoke,
+PENDING-GPU), 0 failed, 1 warning, in 999.2 s.** That is twice the 469.7 s of the run before.
+The slowest test took 100.9 s, against 37.6 s then, so the machine was under other load; the
+tests' own runtimes did not change. ruff: all checks passed.
