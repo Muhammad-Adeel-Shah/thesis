@@ -1,4 +1,4 @@
-# P5 AWS runbook (user rules of 2026-11-21; USD 100 credits, zero extra bills)
+# P5 AWS runbook (user rules of 2026-11-21; USD 120 credits since 2026-11-22, zero extra bills)
 
 **On AWS:** the Pexels training pool, the reconstruction bank and training.
 **Never on AWS:** test data (AIGVDBench, AEGIS) and any scoring. Those are Kaggle only.
@@ -15,13 +15,15 @@ at once; the user is told afterwards.
 | reconstruction | **≤ 45** | **from the pilot's measured s/clip, before any launch** |
 | training | 15 | 9 frame models; P3 S2-D: 1.212 T4 GPU-h each |
 | features / temporal heads | 3 | |
-| EBS (200 GB gp3 at about $0.08/GB-month) | 5 | about $0.533/day; billed while stopped |
+| EBS (200 GB data + the root at the AMI's size, gp3 at about $0.08/GB-month) | 5 | about $0.533/day for the data volume, plus the root; billed while stopped |
 | reserve | 27 | |
 
 - **The hard stop is $75.** Three things enforce it: `scripts/p5_cloud_guard.py`
   (`--cap-usd 75`), the user's AWS Budget action, and each session's hard cap.
 - **After every session:** `python scripts/p5_aws_check.py postsession ...` logs
-  instance-h × $1.21 + EBS days.
+  instance-h × $1.217 + EBS days.
+- **$1.217/h** = $1.212 on-demand g5.2xlarge + $0.005 for the public IPv4 address (user,
+  2026-11-22). It is the default of the guard's rate (`P5_RATE`) and of `p5_aws_check.py`.
 
 ## 1. Rules wired into every session (`env/aws_p5_session.sh`; tests in `tests/test_p5_cloud.py`)
 
@@ -42,9 +44,12 @@ at once; the user is told afterwards.
 file, no uv. The AWS CLI v2 is installed by the user from the official `AWSCLIV2.msi`.
 
 **IAM, once, in the console:**
-- **`dbp-agent`**: the AWS managed policy `ReadOnlyAccess`, plus the inline policy
-  `env/aws_iam/dbp-agent-inline.json`. That adds Stop and Terminate in us-east-2 and an
-  explicit deny of every start or create action. Claude Code runs with these keys only.
+- **`dbp-agent`** (exists, user 2026-11-22): the AWS managed policy `ReadOnlyAccess`, plus
+  the user's customer-managed `dbp-agent-stop`: Allow `ec2:StopInstances` and
+  `ec2:TerminateInstances` on `arn:aws:ec2:us-east-2:*:instance/*`. Console access disabled.
+  Claude Code runs with these keys only. `env/aws_iam/dbp-agent-inline.json` (the same allow,
+  plus explicit denies) is kept for reference and is not needed: ReadOnlyAccess grants no
+  write.
 - **`dbp-launch`**: the customer-managed policy `env/aws_iam/dbp-launch.json`, attached to
   the user. It is too large for a user's inline policy. Its scope:
   - us-east-2 only, and g5.2xlarge only;
@@ -76,7 +81,7 @@ then the commands below, then `.\env\aws_p5_env.ps1 -Clear`, then close the wind
 **Permission tests: `--dry-run` is free and creates nothing.**
 - In the `launch` window:
   - expect `DryRunOperation` (allowed):
-    `aws ec2 run-instances --dry-run --image-id <AMI> --instance-type g5.2xlarge --block-device-mappings "DeviceName=/dev/sda1,Ebs={VolumeSize=60,VolumeType=gp3,DeleteOnTermination=true}" --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=dbp-p5}]"`
+    `aws ec2 run-instances --dry-run --image-id <AMI> --instance-type g5.2xlarge --block-device-mappings "DeviceName=<ROOT_DEVICE>,Ebs={VolumeSize=<ROOT_GB>,VolumeType=gp3,DeleteOnTermination=true}" --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=dbp-p5}]"`
     (the gp3 root mapping matters: the policy refuses any other volume type, and an AMI may
     default to gp2)
   - expect `UnauthorizedOperation`: the same with `--instance-type g5.4xlarge`;
@@ -99,6 +104,12 @@ aws ec2 authorize-security-group-ingress --group-name dbp-p5 --protocol tcp --po
 aws ec2 create-volume --availability-zone <AZ> --size 200 --volume-type gp3 --tag-specifications "ResourceType=volume,Tags=[{Key=Name,Value=dbp-p5-data}]"
 ```
 
+**SSH (user, 2026-11-22):** port 22 is opened **only to your current public IP as a /32**,
+never 0.0.0.0/0 and never IPv6. `prelaunch` refuses if the `dbp-p5` group allows 0.0.0.0/0
+or ::/0, any range wider than /32, more than one address, any port but tcp 22, or another
+group or prefix list. It prints only the prefix length, never the address. If your IP has
+changed, the old rule must be revoked before the new one is added.
+
 **Launch, only after the user's OK, and only after `prelaunch` prints OK.** The agent runs
 the check:
 ```powershell
@@ -109,17 +120,20 @@ It checks:
 - region and type;
 - the on-demand G/VT vCPU quota against g5.2xlarge's vCPUs;
 - that g5.2xlarge is offered in the volume's zone;
-- the AMI's root snapshot ≤ 60 GB;
+- the AMI's root device and snapshot size. It prints the exact root mapping to launch with:
+  gp3, at the AMI's size (its minimum), DeleteOnTermination=true;
 - the volume: 200 GB gp3, with no extra IOPS or throughput;
+- the `dbp-p5` SSH group (above);
 - that no other P5 instance exists;
-- the projection against the stage's share.
+- the projection at $1.217/h against the stage's share, and the EBS cost per day of the data
+  + root volumes (`P5_EBS_PER_DAY`, for section 3).
 
 Then the user, in the `launch` window:
 ```powershell
 aws ec2 run-instances --image-id <AMI> --instance-type g5.2xlarge --key-name dbp-p5 `
   --security-groups dbp-p5 --placement AvailabilityZone=<AZ> `
   --instance-initiated-shutdown-behavior stop `
-  --block-device-mappings "DeviceName=/dev/sda1,Ebs={VolumeSize=60,VolumeType=gp3,DeleteOnTermination=true}" `
+  --block-device-mappings "DeviceName=<ROOT_DEVICE>,Ebs={VolumeSize=<ROOT_GB>,VolumeType=gp3,DeleteOnTermination=true}" `
   --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=dbp-p5}]" `
   --user-data "#!/bin/bash`nshutdown -h +180"
 aws ec2 attach-volume --volume-id <VOL> --instance-id <ID> --device /dev/sdf
@@ -128,12 +142,18 @@ aws ec2 attach-volume --volume-id <VOL> --instance-id <ID> --device /dev/sdf
 - **The boot cap:** the `--user-data` line schedules a stop at 180 min (2.0 h × 1.5) from
   the first boot, before anyone logs in. The session wrapper's own cap replaces it when the
   session starts.
-- **The root device:** `/dev/sda1` is what `prelaunch` prints as the AMI's root device name;
-  use that name if it differs.
+- **The root volume (user, 2026-11-22):** gp3, set explicitly, so the AMI's default type
+  (possibly gp2) is never used; the `dbp-launch` policy refuses any other type anyway.
+  `<ROOT_DEVICE>` and `<ROOT_GB>` are the AMI's root device name and snapshot size, exactly as
+  `prelaunch` prints them; the size is the AMI's minimum.
 - **The data volume:** an attached volume defaults to DeleteOnTermination=false.
 
 After the launch, the agent runs `prelaunch` again with `--instance-id <ID>`. It now also
-checks shutdown = stop, that the volume is attached with DoT=false, and on-demand.
+checks:
+- shutdown = stop, and on-demand;
+- the data volume attached with DoT=false;
+- the root volume: gp3, at the AMI's size, DoT=true, with no extra IOPS or throughput;
+- the instance's only security group is `dbp-p5`.
 
 **Each later START** (`aws ec2 start-instances --instance-ids <ID>`, in a `launch` window)
 needs the user's OK, after the agent's `prelaunch --instance-id <ID> --stage <stage> --hours <h>`.
@@ -155,10 +175,44 @@ bash env/cloud_p5_setup.sh /data                         # torch 2.11.0 (Kaggle'
 source /data/venv/bin/activate
 export HF_HOME=/data/cache/hf TORCH_HOME=/data/cache/torch PIP_CACHE_DIR=/data/cache/pip
 export P5_VOLUME_CREATED=<YYYY-MM-DD> P5_STATE=/data/p5/session
-# backups (small files only): rclone from the Ubuntu archive (apt); its token stays in
-# ~/.config/rclone/rclone.conf (chmod 600) on the instance, deleted at teardown
+export P5_EBS_PER_DAY=<as prelaunch prints it>     # data + root volume
 export P5_BACKUP_CMD="rclone copy /data/p5/session gdrive:dbp-p5/session"
 ```
+
+**rclone (approved by the user, 2026-11-22). On the AWS instance only**, never on the PC or
+on Kaggle. Small backups only (session ledger, records, logs, at the end the models), into
+one dedicated Drive folder, `dbp-p5`.
+- **Hosts:**
+  - `archive.ubuntu.com` and `security.ubuntu.com`, for the package;
+  - `accounts.google.com`, for the sign-in, in the PC's browser;
+  - `oauth2.googleapis.com` and `www.googleapis.com`, from the instance.
+- **Scope `drive.file`:** rclone sees only the files it created itself.
+- **Install, once**, from the Ubuntu archive only. The AMI's own apt sources (the EC2
+  regional mirror, NVIDIA's) are switched off for this command:
+  ```bash
+  CODENAME="$(. /etc/os-release && echo "$VERSION_CODENAME")"
+  printf 'deb http://archive.ubuntu.com/ubuntu %s main universe\ndeb http://security.ubuntu.com/ubuntu %s-security main universe\n' \
+    "$CODENAME" "$CODENAME" | sudo tee /etc/apt/dbp-ubuntu-archive.list
+  ONLY_ARCHIVE="-o Dir::Etc::SourceList=/etc/apt/dbp-ubuntu-archive.list -o Dir::Etc::SourceParts=-"
+  sudo apt-get $ONLY_ARCHIVE update && sudo apt-get $ONLY_ARCHIVE install -y rclone
+  rclone version | head -1                            # recorded in the log
+  ```
+  apt checks the archive's signatures as usual.
+- **Sign-in, once:**
+  1. On the PC, open an SSH session with a tunnel for the sign-in's local redirect:
+     `ssh -i $HOME\.ssh\dbp-p5 -L 53682:127.0.0.1:53682 ubuntu@<public DNS>`.
+  2. In it, run:
+     ```bash
+     rclone config create gdrive drive scope drive.file
+     chmod 600 ~/.config/rclone/rclone.conf
+     rclone mkdir gdrive:dbp-p5 && rclone lsd gdrive:     # only dbp-p5 is visible
+     ```
+  3. Open the `http://127.0.0.1:53682/auth?...` link rclone prints in the PC's browser, and
+     sign in.
+  - The token stays in `~/.config/rclone/rclone.conf`, on the root volume (deleted at
+    termination). It is never printed, copied or committed.
+  - **NOT-VERIFIED:** that the Ubuntu archive's rclone version completes Google's sign-in this
+    way. If it does not, stop and tell the user; the ledger then comes by `scp` (section 5).
 
 ## 4. Jobs: each one through the session wrapper; the instance stops when it ends
 
@@ -196,14 +250,15 @@ bash env/aws_p5_session.sh --label recon --estimate-hours <projected> -- \
 
 ## 5. After every session (user's PC)
 
-```bash
-rclone copy gdrive:dbp-p5/session ./p5_session     # the ledger, written before the stop
-python scripts/p5_aws_check.py postsession --ledger ./p5_session/ledger.json --volume-created <YYYY-MM-DD>
+rclone does not run on the PC. The user downloads `dbp-p5/session/ledger.json` from Drive
+in the browser into `F:\thesis-2\kaggle_raw\p5_session\` (outside the repository, like every raw archive, §7b). Then:
+```powershell
+python scripts/p5_aws_check.py postsession --ledger F:\thesis-2\kaggle_raw\p5_session\ledger.json --volume-created <YYYY-MM-DD>
 ```
 
-**Until rclone is approved** there is no ledger copy on the PC. Then `postsession` takes the
-instance-hours with `--hours`. The agent sums them from each session's start and stop times
-in `describe-instances` (`LaunchTime`, `StateTransitionReason`); the ledger on `/data` is
+**If there is no ledger copy** (a failed backup), `postsession` takes the instance-hours with
+`--hours`. The agent sums them from each session's start and stop times in
+`describe-instances` (`LaunchTime`, `StateTransitionReason`). The ledger on `/data` is
 copied at the next start, with `scp`.
 
 It prints:
@@ -221,8 +276,11 @@ The spend goes into the log.
    the clips.**
 2. **Upload the models to the private Kaggle dataset**, with
    `KAGGLE_USERNAME`/`KAGGLE_KEY` entered by `read -rs`. Check their hashes on Kaggle.
-3. **Delete the secrets on the instance:** `rm ~/.config/rclone/rclone.conf`, then
-   `unset HF_TOKEN KAGGLE_KEY KAGGLE_USERNAME`.
+3. **Delete the secrets on the instance:**
+   - `rclone config delete gdrive && shred -u ~/.config/rclone/rclone.conf`;
+   - `unset HF_TOKEN KAGGLE_KEY KAGGLE_USERNAME`.
+   - The user then removes rclone's access in the Google account's third-party access page
+     (in the browser).
 4. `aws ec2 terminate-instances --instance-ids <ID>`, then
    `aws ec2 delete-volume --volume-id <VOL>` (the data volume does not go with the
    instance).

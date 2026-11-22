@@ -110,6 +110,18 @@ trains and after the test panel is frozen.
 >   smoke, about 2 h, about $2.40, once the IAM users exist; it doubles as the AWS test
 >   launch. The full reconstruction waits for the user's approval of the projection measured
 >   there.
+> - **Review of bf6837b (user, 2026-11-22):**
+>   - The dbp-launch policy is approved as written. The user creates it as the
+>     customer-managed `dbp-launch-policy`.
+>   - `dbp-agent` stays as the user made it: ReadOnlyAccess + `dbp-agent-stop`.
+>   - SSH is open only to the user's current IP as a /32. `prelaunch` refuses 0.0.0.0/0, ::/0,
+>     wider ranges, other ports and more than one address.
+>   - The root volume is gp3, set explicitly, at the AMI's size; `prelaunch` checks it.
+>   - The guard's rate is $1.217/h: the instance at $1.212, plus $0.005 for the public IPv4
+>     address.
+>   - rclone is approved, on the AWS instance only (CLAUDE.md §14).
+>   - Regression digests under 0.42.0: identical to 0.40.0.
+>   - Credits are USD 120; the hard stop stays at 75.
 
 **Method:** the image method on video, at reduced scale, without reduced rigour. The
 rules are the image module's: a frozen pre-registration pushed before training; a test

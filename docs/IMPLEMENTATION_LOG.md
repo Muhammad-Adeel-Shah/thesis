@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P5-C prep (2026-11-22)**: AWS access without the Agent Toolkit (two IAM users, policies in `env/aws_iam/`, env-only key helper `env/aws_p5_env.ps1`), prelaunch quota/zone/root/IOPS/spot checks, the first AWS session (setup + Pexels + A10G smoke, approved) written out; the reconstruction command lacked `--device cuda` (fixed, tested). Waiting for the IAM users and keys. **P5-B pilot results (2026-11-21, code `f8669b3`, Kaggle 2× T4)**: tracked under `reports/kaggle_20261121/`. wan21 / ltx090 reconstructed 200 clips; hunyuan OOM on the T4; cogvx nondeterministic by one grey level, a code defect (no determinism contract in the VAE phases), fixed with a test; Qwen-Image vs Wan2.1: decoders differ, the encoder is shared at bf16. The AWS reconstruction projection rests on an assumed T4 → A10G factor ($23–60), so an A10G smoke measures it first; no launch without the user's OK. **P5-B (2026-11-21, branch `p5-video`)**: A1–A8 approved with conditions; the compute plan changed (AWS g5.2xlarge, $80 budget). Built: the video bank (`configs/video_bank.yaml`, 6 bank + 1 reserve, Allegro excluded), the video reconstruction kinds, video I/O (`av==19.0.2`), the Pexels fetch, the pilot (`scripts/p5_pilot.py`) and its Kaggle runbook, the cloud runbook and guard. Hand-over of the Kaggle pilot. Nothing trained, no test data fetched. **P5-A (2026-11-20)**: the plan. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
+| Last prompt | **P5-C prep, user review (2026-11-22)**: SSH /32 + gp3-root prelaunch checks, $1.217/h, rclone (AWS only), 0.42.0 digests = 0.40.0. **P5-C prep (2026-11-22)**: AWS access without the Agent Toolkit (two IAM users, policies in `env/aws_iam/`, env-only key helper `env/aws_p5_env.ps1`), prelaunch quota/zone/root/IOPS/spot checks, the first AWS session (setup + Pexels + A10G smoke, approved) written out; the reconstruction command lacked `--device cuda` (fixed, tested). Waiting for the IAM users and keys. **P5-B pilot results (2026-11-21, code `f8669b3`, Kaggle 2× T4)**: tracked under `reports/kaggle_20261121/`. wan21 / ltx090 reconstructed 200 clips; hunyuan OOM on the T4; cogvx nondeterministic by one grey level, a code defect (no determinism contract in the VAE phases), fixed with a test; Qwen-Image vs Wan2.1: decoders differ, the encoder is shared at bf16. The AWS reconstruction projection rests on an assumed T4 → A10G factor ($23–60), so an A10G smoke measures it first; no launch without the user's OK. **P5-B (2026-11-21, branch `p5-video`)**: A1–A8 approved with conditions; the compute plan changed (AWS g5.2xlarge, $80 budget). Built: the video bank (`configs/video_bank.yaml`, 6 bank + 1 reserve, Allegro excluded), the video reconstruction kinds, video I/O (`av==19.0.2`), the Pexels fetch, the pilot (`scripts/p5_pilot.py`) and its Kaggle runbook, the cloud runbook and guard. Hand-over of the Kaggle pilot. Nothing trained, no test data fetched. **P5-A (2026-11-20)**: the plan. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -8956,3 +8956,70 @@ prelaunch checklist is **NOT-RUN**.
 - **NOT-VERIFIED:** whether CLI v2 already defaults to regional STS. The setting is harmless
   either way.
 - `tests/test_p5_cloud.py`: 25 passed; ruff clean.
+
+### P5-C prep (cont.) — the user's review of bf6837b: SSH /32, gp3 root, IPv4 rate, rclone, 0.42.0 digests (2026-11-22)
+
+**User decisions:**
+- The dbp-launch policy is approved as written. The user creates it as the customer-managed
+  `dbp-launch-policy`, with user `dbp-launch` and no console access.
+- `dbp-agent` stays as the user made it: ReadOnlyAccess + customer-managed `dbp-agent-stop`.
+  `env/aws_iam/dbp-agent-inline.json` is kept as a reference; it is not needed.
+- Credits are USD 120; the hard stop stays at 75. CLAUDE.md §14 records this.
+- rclone is approved (CLAUDE.md §14, hosts added).
+
+**Changed:**
+- **`scripts/p5_aws_check.py` prelaunch:**
+  - **The SSH group `dbp-p5`** (`--security-group`, default `dbp-p5`). It refuses:
+    - 0.0.0.0/0 or ::/0;
+    - any IPv6 range, or any IPv4 range wider than /32;
+    - more than one address, or none;
+    - any port but tcp 22;
+    - another group or a prefix list.
+    With `--instance-id`, it also refuses an instance whose security groups are not just
+    `dbp-p5`. It prints the prefix length only, never the address.
+  - **The root volume:** the fixed 60 GB is gone. The size is now the AMI's root snapshot
+    (its minimum), and the checklist prints the exact gp3 mapping to launch with. With
+    `--instance-id` it checks the root: gp3, at the AMI's size, DeleteOnTermination=true,
+    with no extra IOPS or throughput.
+  - **The rate is $1.217/h** (the instance at $1.212 plus the public IPv4 address at $0.005,
+    user-given). It is also the session wrapper's `P5_RATE` default.
+  - **EBS:** prelaunch prints the per-day cost of data + root, as `P5_EBS_PER_DAY` for the
+    guard. `postsession` now counts every volume's size (it counted the data volume only).
+- **`env/cloud_p5_runbook.md`:**
+  - the launch and dry-run commands now use `DeviceName=<ROOT_DEVICE>` and
+    `VolumeSize=<ROOT_GB>`, exactly as prelaunch prints them;
+  - an SSH /32 note;
+  - the rclone install: Ubuntu archive only, with the AMI's other apt sources switched off
+    for that command;
+  - the rclone sign-in through an SSH tunnel to the instance: no rclone on the PC;
+  - the token deleted at teardown;
+  - the ledger downloaded by the user from Drive to `F:\thesis-2\kaggle_raw\p5_session\`,
+    outside the repository (it was `./p5_session`, inside the repository tree).
+- **`tests/test_p5_cloud.py`** (now 40 tests, was 25):
+  - prelaunch refusals: 0.0.0.0/0, ::/0, /24, two /32, all ports, protocol -1, no rule, no
+    group, an extra instance group, a gp2 root, a wrong root size, a root with DoT=false;
+  - a root that follows the AMI's size passes;
+  - no address printed; the rate; the runbook's SSH and root commands.
+
+**Regression digests under diffusers 0.42.0 (user: capture and compare; stop if any
+differ):**
+- Captured locally, in the environment (0.42.0, 2.11.0+cpu, 4 threads), with the test's own
+  fixtures through `BankMember.reconstruct`. The capture script was in the scratchpad, read
+  only.
+- sd15 `4b07486d…a8a7`, sd35 `6ae52a2c…b551`, dcae `77a51a0d…8e42`: **all three are
+  byte-identical to the 0.40.0 capture.**
+- **Result: 0.40 = 0.42, no change.**
+- The environment is added to `GOLDEN_BY_ENVIRONMENT`, so the three tests now run instead of
+  skipping: 3 passed.
+
+**Still open:**
+- **NOT-VERIFIED:** rclone's sign-in through the tunnel, with the Ubuntu archive's rclone.
+- **For the user:** the approved policy has no `ec2:RevokeSecurityGroupIngress`. If the
+  user's public IP changes, the old /32 cannot be revoked with `dbp-launch`, and prelaunch
+  then refuses two addresses.
+- **Waiting for the user:** `dbp-launch`, and Claude Code restarted with the dbp-agent keys.
+  The prelaunch checklist is NOT-RUN.
+
+**Full suite, MEASURED** (`--durations=20 -rs`): **1,397 passed, 7 skipped, 0 failed, 1 warning,
+in 469.7 s.** The 7 skips are the GPU smoke tests (PENDING-GPU). The 3 regression-digest
+skips are gone. ruff: all checks passed.

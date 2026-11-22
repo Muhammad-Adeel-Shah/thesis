@@ -11,7 +11,7 @@
 #    written, then the instance stops (shutdown behaviour = stop, set at launch);
 # 4. everything is logged under $P5_STATE (the data volume), never in the repo tree.
 #
-# Settings (environment): P5_STATE (default /data/p5/session), P5_RATE (1.21),
+# Settings (environment): P5_STATE (default /data/p5/session), P5_RATE (1.217 = $1.212 instance + $0.005 public IPv4),
 # P5_VOLUME_CREATED (YYYY-MM-DD, required), P5_EBS_PER_DAY (0.5333 = 200 GB x $0.08/30),
 # P5_CAP_USD (75), P5_IDLE_MIN (20), P5_POLL (60), P5_SHUTDOWN (default "sudo shutdown -h";
 # the dry-run tests replace it with a recorder), P5_BACKUP_CMD (optional, run in the exit
@@ -66,7 +66,7 @@ $SHUTDOWN "+${CAP_MIN}"                     # 1. the hard cap, scheduled first
 "$@" >> "$LOG" 2>&1 &                       # the job
 JOB_PID=$!
 "$PY" "$REPO/scripts/p5_cloud_guard.py" --state "$STATE" --label "$LABEL" \
-  --rate "${P5_RATE:-1.21}" --volume-created "$P5_VOLUME_CREATED" \
+  --rate "${P5_RATE:-1.217}" --volume-created "$P5_VOLUME_CREATED" \
   --ebs-usd-per-day "${P5_EBS_PER_DAY:-0.5333}" --cap-usd "${P5_CAP_USD:-75}" \
   --watch-pid "$JOB_PID" --idle-minutes "${P5_IDLE_MIN:-20}" --poll "${P5_POLL:-60}" \
   --grace 5 --stop-command "$SHUTDOWN now" >> "$STATE/logs/guard_${STAMP}.log" 2>&1 &

@@ -69,6 +69,14 @@ GOLDEN_BY_ENVIRONMENT: dict[tuple[str, str, int], dict[str, str]] = {
         "sd35": "6ae52a2c64f94aeb0783daa72f1856ebfa6d136412c79045c3c494d75fb5b551",
         "dcae": "77a51a0d1547465689693dabad49e971dee70a305d474986e82e8e1a54f68e42",
     },
+    # Captured 2026-11-22 (P5, branch p5-video at 95b3a25) under diffusers 0.42.0, the P5
+    # pin, by running the same fixtures through ``BankMember.reconstruct``. All three are
+    # byte-identical to the 0.40.0 capture above: 0.40 = 0.42, no change.
+    ("0.42.0", "2.11.0+cpu", 4): {
+        "sd15": "4b07486d80ad0a805fc4c7327c618829b5fc2c82be13fe3db3e77dd66ac3a8a7",
+        "sd35": "6ae52a2c64f94aeb0783daa72f1856ebfa6d136412c79045c3c494d75fb5b551",
+        "dcae": "77a51a0d1547465689693dabad49e971dee70a305d474986e82e8e1a54f68e42",
+    },
 }
 
 #: The member keys the parametrisation runs over, and the digests used when the running

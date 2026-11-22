@@ -123,19 +123,46 @@ def fake_aws(responses):
     return call
 
 
+SSH_ONE_32 = [{"IpProtocol": "tcp", "FromPort": 22, "ToPort": 22,
+                "IpRanges": [{"CidrIp": "198.51.100.7/32"}], "Ipv6Ranges": []}]
+
+
 def base_responses(delete_on_termination=False, behaviour="stop", others=(), zone="us-east-2a",
-                   iops=3000, root_gb=60, lifecycle=None):
+                   iops=3000, root_gb=75, lifecycle=None, ingress=None, groups=1,
+                   instance_sgs=("sg-1",), root_type="gp3", root_size=None, root_dot=True):
+    volumes = {
+        "vol-data": {"VolumeId": "vol-data", "Size": 200, "VolumeType": "gp3", "State": "in-use",
+                     "AvailabilityZone": zone, "Iops": iops, "Throughput": 125},
+        "vol-root": {"VolumeId": "vol-root", "Size": root_size or root_gb,
+                     "VolumeType": root_type, "State": "in-use", "AvailabilityZone": zone,
+                     "Iops": 3000, "Throughput": 125},
+    }
+
     def instances(args):
         if "--instance-ids" in args:
-            ebs = {"VolumeId": "vol-data", "DeleteOnTermination": delete_on_termination}
+            blocks = [{"DeviceName": "/dev/sda1",
+                       "Ebs": {"VolumeId": "vol-root", "DeleteOnTermination": root_dot}},
+                      {"DeviceName": "/dev/sdf",
+                       "Ebs": {"VolumeId": "vol-data",
+                               "DeleteOnTermination": delete_on_termination}}]
             inst = {"InstanceId": "i-1", "InstanceType": "g5.2xlarge",
-                    "BlockDeviceMappings": [{"Ebs": ebs}]}
+                    "RootDeviceName": "/dev/sda1", "BlockDeviceMappings": blocks,
+                    "SecurityGroups": [{"GroupId": g} for g in instance_sgs]}
             if lifecycle:
                 inst["InstanceLifecycle"] = lifecycle
             return {"Reservations": [{"Instances": [inst]}]}
         return {"Reservations": [{"Instances": [{"InstanceId": i, "State": {"Name": "stopped"}}
                                                 for i in ("i-1", *others)]}]}
+
+    def describe_volumes(args):
+        if "--volume-ids" in args:
+            return {"Volumes": [volumes[args[args.index("--volume-ids") + 1]]]}
+        return {"Volumes": list(volumes.values())}
+
+    sg = {"GroupId": "sg-1", "GroupName": "dbp-p5",
+          "IpPermissions": SSH_ONE_32 if ingress is None else ingress}
     return {"describe-instances": instances,
+            "describe-security-groups": lambda a: {"SecurityGroups": [sg] * groups},
             "describe-images": lambda a: {"Images": [{
                 "ImageId": "ami-x", "RootDeviceName": "/dev/sda1",
                 "BlockDeviceMappings": [{"DeviceName": "/dev/sda1",
@@ -144,9 +171,7 @@ def base_responses(delete_on_termination=False, behaviour="stop", others=(), zon
                 {"Location": "us-east-2a"}, {"Location": "us-east-2b"}]},
             "describe-instance-types": lambda a: {"InstanceTypes": [
                 {"VCpuInfo": {"DefaultVCpus": 8}}]},
-            "describe-volumes": lambda a: {"Volumes": [{
-                "VolumeId": "vol-data", "Size": 200, "VolumeType": "gp3", "State": "in-use",
-                "AvailabilityZone": zone, "Iops": iops, "Throughput": 125}]},
+            "describe-volumes": describe_volumes,
             "describe-instance-attribute": lambda a: {
                 "InstanceInitiatedShutdownBehavior": {"Value": behaviour}},
             "describe-addresses": lambda a: {"Addresses": []},
@@ -158,13 +183,29 @@ def base_responses(delete_on_termination=False, behaviour="stop", others=(), zon
     ({"delete_on_termination": True}, 10.0, False),
     ({"behaviour": "terminate"}, 10.0, False),
     ({"others": ("i-2",)}, 10.0, False),
-    ({}, 40.0, False),                  # 40 h x $1.21 = $48.40 > the $45 share
+    ({}, 37.0, False),                  # 37 h x $1.217 = $45.03 > the $45 share
     ({"quota": 0.0}, 10.0, False),      # a new account's G/VT quota may be 0
     ({"quota": None}, 10.0, False),     # the quota could not be found
     ({"zone": "us-east-2c"}, 10.0, False),   # g5.2xlarge not offered where the volume is
     ({"iops": 6000}, 10.0, False),      # provisioned IOPS are billed extra
-    ({"root_gb": 75}, 10.0, False),     # the AMI does not fit the runbook's root volume
+    ({"root_gb": 120}, 10.0, True),     # the root follows the AMI's size, whatever it is
     ({"lifecycle": "spot"}, 10.0, False),
+    # the SSH group (user, 2026-11-22): tcp 22 from exactly one /32, nothing else
+    ({"ingress": [{**SSH_ONE_32[0], "IpRanges": [{"CidrIp": "0.0.0.0/0"}]}]}, 10.0, False),
+    ({"ingress": [{**SSH_ONE_32[0], "Ipv6Ranges": [{"CidrIpv6": "::/0"}]}]}, 10.0, False),
+    ({"ingress": [{**SSH_ONE_32[0], "IpRanges": [{"CidrIp": "198.51.100.0/24"}]}]}, 10.0, False),
+    ({"ingress": [{**SSH_ONE_32[0], "IpRanges": [{"CidrIp": "198.51.100.7/32"},
+                                                 {"CidrIp": "203.0.113.9/32"}]}]}, 10.0, False),
+    ({"ingress": [{**SSH_ONE_32[0], "FromPort": 0, "ToPort": 65535}]}, 10.0, False),
+    ({"ingress": [{"IpProtocol": "-1", "IpRanges": [{"CidrIp": "198.51.100.7/32"}]}]}, 10.0,
+     False),
+    ({"ingress": []}, 10.0, False),     # no SSH rule at all
+    ({"groups": 0}, 10.0, False),       # the group does not exist
+    ({"instance_sgs": ("sg-1", "sg-default")}, 10.0, False),
+    # the root volume (user, 2026-11-22): gp3 explicitly, at the AMI's size, deleted with it
+    ({"root_type": "gp2"}, 10.0, False),
+    ({"root_size": 100}, 10.0, False),
+    ({"root_dot": False}, 10.0, False),
 ])
 def test_prelaunch_refuses_every_unsafe_condition(monkeypatch, capsys, change, hours, ok):
     import argparse
@@ -176,8 +217,44 @@ def test_prelaunch_refuses_every_unsafe_condition(monkeypatch, capsys, change, h
     monkeypatch.setattr(C, "gvt_quota_vcpus", lambda: quota)
     monkeypatch.setattr(C, "aws", fake_aws(base_responses(**change)))
     args = argparse.Namespace(ami="ami-x", data_volume="vol-data", instance_id="i-1",
-                              stage="reconstruction", hours=hours)
+                              stage="reconstruction", hours=hours, security_group="dbp-p5")
     assert (C.prelaunch(args) == 0) is ok, capsys.readouterr().out
+
+
+def test_prelaunch_never_prints_the_ssh_address(monkeypatch, capsys):
+    import argparse
+
+    import p5_aws_check as C
+
+    monkeypatch.setattr(C, "gvt_quota_vcpus", lambda: 8.0)
+    monkeypatch.setattr(C, "aws", fake_aws(base_responses()))
+    args = argparse.Namespace(ami="ami-x", data_volume="vol-data", instance_id="i-1",
+                              stage="setup_pexels", hours=2.0, security_group="dbp-p5")
+    assert C.prelaunch(args) == 0
+    out = capsys.readouterr().out
+    assert "198.51.100.7" not in out and "tcp 22 from 1 IPv4 /32" in out
+    assert "VolumeSize=75,VolumeType=gp3" in out and "$1.217/h" in out
+
+
+def test_rate_includes_the_public_ipv4_address():
+    import p5_aws_check as C
+
+    assert pytest.approx(1.217) == C.RATE
+    session = (ROOT / "env" / "aws_p5_session.sh").read_text(encoding="utf-8")
+    assert '"${P5_RATE:-1.217}"' in session
+
+
+def test_runbook_ssh_is_one_32_and_root_is_gp3():
+    text = (ROOT / "env" / "cloud_p5_runbook.md").read_text(encoding="utf-8")
+    rules = [line for line in text.splitlines() if "authorize-security-group-ingress" in line]
+    assert rules, "no SSH rule in the runbook"
+    for line in rules:
+        assert "--port 22" in line and line.rstrip().endswith('/32"'), line
+        assert "0.0.0.0/0" not in line and "::/0" not in line and "ipv6" not in line.lower()
+    for start in [i for i in range(len(text)) if text.startswith("run-instances", i)]:
+        cmd = text[start:start + 700]
+        if "--image-id" in cmd[:80]:
+            assert "VolumeType=gp3" in cmd and "VolumeSize=<ROOT_GB>" in cmd, cmd[:200]
 
 
 def test_postsession_reports_clean_and_spend(monkeypatch, capsys, tmp_path):
@@ -192,7 +269,7 @@ def test_postsession_reports_clean_and_spend(monkeypatch, capsys, tmp_path):
                               hours=None)
     assert C.postsession(args) == 0
     out = capsys.readouterr().out
-    assert "running instances = 0" in out and "Elastic IPs = 0" in out and "$6.58" in out
+    assert "running instances = 0" in out and "Elastic IPs = 0" in out and "$6.82" in out
 
 
 def test_postsession_takes_hours_without_a_ledger(monkeypatch, capsys):
@@ -202,7 +279,7 @@ def test_postsession_takes_hours_without_a_ledger(monkeypatch, capsys):
 
     monkeypatch.setattr(C, "aws", fake_aws(base_responses()))
     args = argparse.Namespace(ledger="", volume_created=dt.date.today().isoformat(), hours=5.0)
-    assert C.postsession(args) == 0 and "$6.58" in capsys.readouterr().out
+    assert C.postsession(args) == 0 and "$6.82" in capsys.readouterr().out
 
 
 def test_runbook_gpu_jobs_name_the_device():
