@@ -123,19 +123,30 @@ def fake_aws(responses):
     return call
 
 
-def base_responses(delete_on_termination=False, behaviour="stop", others=()):
+def base_responses(delete_on_termination=False, behaviour="stop", others=(), zone="us-east-2a",
+                   iops=3000, root_gb=60, lifecycle=None):
     def instances(args):
         if "--instance-ids" in args:
             ebs = {"VolumeId": "vol-data", "DeleteOnTermination": delete_on_termination}
-            return {"Reservations": [{"Instances": [{
-                "InstanceId": "i-1", "InstanceType": "g5.2xlarge",
-                "BlockDeviceMappings": [{"Ebs": ebs}]}]}]}
+            inst = {"InstanceId": "i-1", "InstanceType": "g5.2xlarge",
+                    "BlockDeviceMappings": [{"Ebs": ebs}]}
+            if lifecycle:
+                inst["InstanceLifecycle"] = lifecycle
+            return {"Reservations": [{"Instances": [inst]}]}
         return {"Reservations": [{"Instances": [{"InstanceId": i, "State": {"Name": "stopped"}}
                                                 for i in ("i-1", *others)]}]}
     return {"describe-instances": instances,
-            "describe-images": lambda a: {"Images": [{"ImageId": "ami-x"}]},
-            "describe-volumes": lambda a: {"Volumes": [{"VolumeId": "vol-data", "Size": 200,
-                                                        "VolumeType": "gp3", "State": "in-use"}]},
+            "describe-images": lambda a: {"Images": [{
+                "ImageId": "ami-x", "RootDeviceName": "/dev/sda1",
+                "BlockDeviceMappings": [{"DeviceName": "/dev/sda1",
+                                         "Ebs": {"VolumeSize": root_gb}}]}]},
+            "describe-instance-type-offerings": lambda a: {"InstanceTypeOfferings": [
+                {"Location": "us-east-2a"}, {"Location": "us-east-2b"}]},
+            "describe-instance-types": lambda a: {"InstanceTypes": [
+                {"VCpuInfo": {"DefaultVCpus": 8}}]},
+            "describe-volumes": lambda a: {"Volumes": [{
+                "VolumeId": "vol-data", "Size": 200, "VolumeType": "gp3", "State": "in-use",
+                "AvailabilityZone": zone, "Iops": iops, "Throughput": 125}]},
             "describe-instance-attribute": lambda a: {
                 "InstanceInitiatedShutdownBehavior": {"Value": behaviour}},
             "describe-addresses": lambda a: {"Addresses": []},
@@ -148,12 +159,21 @@ def base_responses(delete_on_termination=False, behaviour="stop", others=()):
     ({"behaviour": "terminate"}, 10.0, False),
     ({"others": ("i-2",)}, 10.0, False),
     ({}, 40.0, False),                  # 40 h x $1.21 = $48.40 > the $45 share
+    ({"quota": 0.0}, 10.0, False),      # a new account's G/VT quota may be 0
+    ({"quota": None}, 10.0, False),     # the quota could not be found
+    ({"zone": "us-east-2c"}, 10.0, False),   # g5.2xlarge not offered where the volume is
+    ({"iops": 6000}, 10.0, False),      # provisioned IOPS are billed extra
+    ({"root_gb": 75}, 10.0, False),     # the AMI does not fit the runbook's root volume
+    ({"lifecycle": "spot"}, 10.0, False),
 ])
 def test_prelaunch_refuses_every_unsafe_condition(monkeypatch, capsys, change, hours, ok):
     import argparse
 
     import p5_aws_check as C
 
+    change = dict(change)
+    quota = change.pop("quota", 8.0)
+    monkeypatch.setattr(C, "gvt_quota_vcpus", lambda: quota)
     monkeypatch.setattr(C, "aws", fake_aws(base_responses(**change)))
     args = argparse.Namespace(ami="ami-x", data_volume="vol-data", instance_id="i-1",
                               stage="reconstruction", hours=hours)
@@ -168,10 +188,29 @@ def test_postsession_reports_clean_and_spend(monkeypatch, capsys, tmp_path):
     monkeypatch.setattr(C, "aws", fake_aws(base_responses()))
     ledger = tmp_path / "ledger.json"
     ledger.write_text(json.dumps({"hours": 5.0}))
-    args = argparse.Namespace(ledger=str(ledger), volume_created=dt.date.today().isoformat())
+    args = argparse.Namespace(ledger=str(ledger), volume_created=dt.date.today().isoformat(),
+                              hours=None)
     assert C.postsession(args) == 0
     out = capsys.readouterr().out
     assert "running instances = 0" in out and "Elastic IPs = 0" in out and "$6.58" in out
+
+
+def test_postsession_takes_hours_without_a_ledger(monkeypatch, capsys):
+    import argparse
+
+    import p5_aws_check as C
+
+    monkeypatch.setattr(C, "aws", fake_aws(base_responses()))
+    args = argparse.Namespace(ledger="", volume_created=dt.date.today().isoformat(), hours=5.0)
+    assert C.postsession(args) == 0 and "$6.58" in capsys.readouterr().out
+
+
+def test_runbook_gpu_jobs_name_the_device():
+    """The reconstruction command once lacked --device cuda: p5_pilot.py defaults to CPU."""
+    text = (ROOT / "env" / "cloud_p5_runbook.md").read_text(encoding="utf-8")
+    for phase in ("smoke", "reconstruct"):
+        start = text.index(f"--phase {phase} ")
+        assert "--device cuda" in text[start:start + 300], phase
 
 
 def test_check_script_only_describes():
@@ -179,3 +218,69 @@ def test_check_script_only_describes():
 
     with pytest.raises(SystemExit, match="only describes"):
         C.aws("run-instances")
+
+
+# ------------------------------------------------------- IAM policies and the key helper ---
+
+IAM = ROOT / "env" / "aws_iam"
+
+
+def statements(name):
+    return json.loads((IAM / name).read_text(encoding="utf-8"))["Statement"]
+
+
+def as_list(value):
+    return [value] if isinstance(value, str) else list(value)
+
+
+def test_agent_policy_allows_only_stop_and_terminate_in_us_east_2():
+    allows = [st for st in statements("dbp-agent-inline.json") if st["Effect"] == "Allow"]
+    assert [sorted(as_list(st["Action"])) for st in allows] == [
+        ["ec2:StopInstances", "ec2:TerminateInstances"]]
+    assert allows[0]["Resource"].startswith("arn:aws:ec2:us-east-2:")
+    denied = {a for st in statements("dbp-agent-inline.json") if st["Effect"] == "Deny"
+              for a in as_list(st["Action"])}
+    assert {"ec2:RunInstances", "ec2:StartInstances"} <= denied
+
+
+def test_launch_policy_is_closed_and_g5_2xlarge_only():
+    sts = statements("dbp-launch.json")
+    allowed = {a for st in sts if st["Effect"] == "Allow" for a in as_list(st["Action"])}
+    closed = next(st for st in sts if st["Sid"] == "DenyEverythingNotListed")
+    assert allowed | {"sts:GetCallerIdentity"} == set(closed["NotAction"])   # no gap either way
+    assert not any(a.startswith(("s3:", "iam:")) or a in ("ec2:AllocateAddress",
+                   "ec2:CreateSnapshot", "ec2:CreateSnapshots", "ec2:ModifyInstanceAttribute")
+                   for a in allowed)
+    by_sid = {st["Sid"]: st for st in sts}
+    assert by_sid["DenyOutsideUsEast2"]["Condition"] == {
+        "StringNotEquals": {"aws:RequestedRegion": "us-east-2"}}
+    assert by_sid["DenyAnyInstanceTypeButG52xlarge"]["Condition"] == {
+        "StringNotEquals": {"ec2:InstanceType": "g5.2xlarge"}}
+    for st in sts:
+        if st["Effect"] == "Allow" and st["Resource"] != "*":
+            assert all(r.startswith("arn:aws:ec2:us-east-2:") for r in as_list(st["Resource"]))
+
+
+needs_powershell = pytest.mark.skipif(shutil.which("powershell") is None,
+                                      reason="Windows PowerShell not on PATH")
+
+
+@needs_powershell
+def test_key_helper_parses_writes_no_file_and_clears():
+    script = ROOT / "env" / "aws_p5_env.ps1"
+    raw = script.read_bytes()
+    assert max(raw) < 128                      # Windows PowerShell 5.1 reads BOM-less files as ANSI
+    text = raw.decode("ascii")
+    for forbidden in ("Out-File", "Set-Content", "Add-Content", "Export-Clixml",
+                      "aws configure", "Start-Transcript", "Write-Host $env:AWS_SECRET"):
+        assert forbidden not in text
+    reads = [line for line in text.splitlines() if "= Read-Host" in line]
+    assert reads and all("-AsSecureString" in line for line in reads), reads
+    probe = ("$e=$null; [void][System.Management.Automation.Language.Parser]::ParseFile("
+             f"'{script}', [ref]$null, [ref]$e); 'errors=' + $e.Count; "
+             "$env:AWS_ACCESS_KEY_ID='x'; $env:AWS_SECRET_ACCESS_KEY='y'; "
+             f"& '{script}' -Clear | Out-Null; "
+             "'left=' + [bool]($env:AWS_ACCESS_KEY_ID -or $env:AWS_SECRET_ACCESS_KEY)")
+    done = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command",
+                           probe], capture_output=True, text=True, timeout=120, check=False)
+    assert "errors=0" in done.stdout and "left=False" in done.stdout, done.stdout + done.stderr

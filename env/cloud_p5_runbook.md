@@ -36,39 +36,109 @@ at once; the user is told afterwards.
    paid service.
 7. **RunPod only with the user's approval** (section 7).
 
-## 2. Once: the data volume and the launch (user's PC; AWS keys in env vars only)
+## 2. Once: IAM users, keys, the data volume and the launch (user's PC, PowerShell)
 
-```bash
-export AWS_ACCESS_KEY_ID=... AWS_SECRET_ACCESS_KEY=... AWS_DEFAULT_REGION=us-east-2   # typed, not saved
-# the AMI: the current Deep Learning Base (NVIDIA driver, Ubuntu 22.04) -- FILL, record it
-aws ssm get-parameters-by-path --path /aws/service/deeplearning/ami/x86_64 --recursive \
-  --query "Parameters[?contains(Name,'base-oss-nvidia-driver-gpu-ubuntu-22.04')].[Name,Value]" --output text
-# the data volume, ONCE (200 GB gp3, fixed size); AZ FILL (one where g5.2xlarge launches)
-aws ec2 create-volume --availability-zone us-east-2a --size 200 --volume-type gp3 \
-  --tag-specifications 'ResourceType=volume,Tags=[{Key=Name,Value=dbp-p5-data}]'
-# security group: SSH from your IP only
+**No AWS Agent Toolkit** (user, 2026-11-22): no MCP server, no `aws login`, no rules
+file, no uv. The AWS CLI v2 is installed by the user from the official `AWSCLIV2.msi`.
+
+**IAM, once, in the console:**
+- **`dbp-agent`**: the AWS managed policy `ReadOnlyAccess`, plus the inline policy
+  `env/aws_iam/dbp-agent-inline.json`. That adds Stop and Terminate in us-east-2 and an
+  explicit deny of every start or create action. Claude Code runs with these keys only.
+- **`dbp-launch`**: the customer-managed policy `env/aws_iam/dbp-launch.json`, attached to
+  the user. It is too large for a user's inline policy. Its scope:
+  - us-east-2 only, and g5.2xlarge only;
+  - gp3 volumes of at most 200 GB;
+  - only resources tagged `dbp-p5*` can be started, stopped, attached or torn down;
+  - an explicit deny of S3, EIPs, snapshots, images, NAT, load balancers and resizes, and of
+    every action not listed.
+
+  Its keys are typed by the user, only for a launch, a start or the teardown.
+- **Validation:** the console's policy editor must show 0 errors and 0 warnings for both
+  policies; it validates the action names and condition keys. Then run the `--dry-run`
+  tests below.
+- **Keys:** one access key per user, kept in a password manager. Never in a file, never in
+  `~/.aws`.
+
+**Keys in a shell** (`env/aws_p5_env.ps1`: no echo, no history, environment only, no file;
+it refuses keys that are not `dbp-<role>`'s):
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass     # this window only, if scripts are blocked
+.\env\aws_p5_env.ps1 -Role agent
+claude                                        # or close EVERY VS Code window, then: code F:\thesis-2\Implementation
+```
+A VS Code that is already running does not pick up a new environment, so it must be started
+from this shell.
+
+**For a launch or a start, open a second window.** Run `.\env\aws_p5_env.ps1 -Role launch`,
+then the commands below, then `.\env\aws_p5_env.ps1 -Clear`, then close the window.
+
+**Permission tests: `--dry-run` is free and creates nothing.**
+- In the `launch` window:
+  - expect `DryRunOperation` (allowed):
+    `aws ec2 run-instances --dry-run --image-id <AMI> --instance-type g5.2xlarge --block-device-mappings "DeviceName=/dev/sda1,Ebs={VolumeSize=60,VolumeType=gp3,DeleteOnTermination=true}" --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=dbp-p5}]"`
+    (the gp3 root mapping matters: the policy refuses any other volume type, and an AMI may
+    default to gp2)
+  - expect `UnauthorizedOperation`: the same with `--instance-type g5.4xlarge`;
+  - expect `UnauthorizedOperation`: `aws ec2 allocate-address --dry-run`.
+- In the `agent` window (Claude Code runs it): the g5.2xlarge `run-instances --dry-run`
+  above must give `UnauthorizedOperation`.
+
+**Done by the agent, read-only, with its results recorded in the log:**
+- the AMI, the current Deep Learning Base (NVIDIA driver, Ubuntu 22.04):
+  `aws ssm get-parameters-by-path --path /aws/service/deeplearning/ami/x86_64 --recursive --query "Parameters[?contains(Name,'base-oss-nvidia-driver-gpu-ubuntu-22.04')].[Name,Value]" --output text`;
+- the availability zones that offer g5.2xlarge:
+  `aws ec2 describe-instance-type-offerings --location-type availability-zone --filters Name=instance-type,Values=g5.2xlarge`.
+
+**Once, in the `launch` window** (`<AZ>` is one of those zones):
+```powershell
+ssh-keygen -t ed25519 -f $HOME\.ssh\dbp-p5          # the private key stays on this PC
+aws ec2 import-key-pair --key-name dbp-p5 --public-key-material fileb://$HOME/.ssh/dbp-p5.pub
 aws ec2 create-security-group --group-name dbp-p5 --description "dbp p5 ssh"
-aws ec2 authorize-security-group-ingress --group-name dbp-p5 --protocol tcp --port 22 \
-  --cidr "$(curl -s https://checkip.amazonaws.com)/32"
+aws ec2 authorize-security-group-ingress --group-name dbp-p5 --protocol tcp --port 22 --cidr "$((Invoke-RestMethod https://checkip.amazonaws.com).Trim())/32"
+aws ec2 create-volume --availability-zone <AZ> --size 200 --volume-type gp3 --tag-specifications "ResourceType=volume,Tags=[{Key=Name,Value=dbp-p5-data}]"
 ```
 
-**Launch, only after the user's OK, and only after `prelaunch` prints OK.**
+**Launch, only after the user's OK, and only after `prelaunch` prints OK.** The agent runs
+the check:
+```powershell
+python scripts/p5_aws_check.py prelaunch --ami <AMI> --data-volume <VOL> --stage setup_pexels --hours 2.0
+```
 
-```bash
-python scripts/p5_aws_check.py prelaunch --ami <AMI> --data-volume <VOL> --stage setup_pexels --hours 1.5
-aws ec2 run-instances --image-id <AMI> --instance-type g5.2xlarge --key-name <KEY> \
-  --security-groups dbp-p5 --placement AvailabilityZone=us-east-2a \
-  --instance-initiated-shutdown-behavior stop \
-  --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"VolumeSize":60,"VolumeType":"gp3","DeleteOnTermination":true}}]' \
-  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=dbp-p5}]'
+It checks:
+- region and type;
+- the on-demand G/VT vCPU quota against g5.2xlarge's vCPUs;
+- that g5.2xlarge is offered in the volume's zone;
+- the AMI's root snapshot ≤ 60 GB;
+- the volume: 200 GB gp3, with no extra IOPS or throughput;
+- that no other P5 instance exists;
+- the projection against the stage's share.
+
+Then the user, in the `launch` window:
+```powershell
+aws ec2 run-instances --image-id <AMI> --instance-type g5.2xlarge --key-name dbp-p5 `
+  --security-groups dbp-p5 --placement AvailabilityZone=<AZ> `
+  --instance-initiated-shutdown-behavior stop `
+  --block-device-mappings "DeviceName=/dev/sda1,Ebs={VolumeSize=60,VolumeType=gp3,DeleteOnTermination=true}" `
+  --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=dbp-p5}]" `
+  --user-data "#!/bin/bash`nshutdown -h +180"
 aws ec2 attach-volume --volume-id <VOL> --instance-id <ID> --device /dev/sdf
-# an attached volume defaults to DeleteOnTermination=false, so it survives a termination
-python scripts/p5_aws_check.py prelaunch --ami <AMI> --data-volume <VOL> --instance-id <ID> \
-  --stage setup_pexels --hours 1.5     # now also checks: shutdown=stop, attached, DoT=false
 ```
 
-**Each later START of the stopped instance** (`aws ec2 start-instances --instance-ids <ID>`)
-also needs the user's OK, after `prelaunch --instance-id <ID> --stage <stage> --hours <h>`.
+- **The boot cap:** the `--user-data` line schedules a stop at 180 min (2.0 h × 1.5) from
+  the first boot, before anyone logs in. The session wrapper's own cap replaces it when the
+  session starts.
+- **The root device:** `/dev/sda1` is what `prelaunch` prints as the AMI's root device name;
+  use that name if it differs.
+- **The data volume:** an attached volume defaults to DeleteOnTermination=false.
+
+After the launch, the agent runs `prelaunch` again with `--instance-id <ID>`. It now also
+checks shutdown = stop, that the volume is attached with DoT=false, and on-demand.
+
+**Each later START** (`aws ec2 start-instances --instance-ids <ID>`, in a `launch` window)
+needs the user's OK, after the agent's `prelaunch --instance-id <ID> --stage <stage> --hours <h>`.
+On a start the user-data boot cap does **not** run again, so start the session wrapper at
+once. The agent can stop the instance at any time (`dbp-agent` may stop and terminate).
 
 ## 3. On the instance (inside `tmux`)
 
@@ -93,31 +163,33 @@ export P5_BACKUP_CMD="rclone copy /data/p5/session gdrive:dbp-p5/session"
 ## 4. Jobs: each one through the session wrapper; the instance stops when it ends
 
 ```bash
+# FIRST SESSION (approved 2026-11-22, about 2 h; it is also the AWS test launch):
 # (a) the Pexels training pool -- downloaded ONCE (shards 4:35; no video id of the pilot pool)
-bash env/aws_p5_session.sh --label pexels --estimate-hours 1.5 -- \
+# (b) the A10G smoke (all six members; deterministic, fp32 without TF32): it measures the
+#     A10G s/clip that replaces the assumed T4 -> A10G factor. It writes to the same
+#     --reports as (c): the reconstruction runs only members whose smoke there is OK.
+# Both run in ONE wrapper call; the instance stops after (b). The reconstruction projection
+# is redone from (b) and sent to the user BEFORE (c) is started.
+bash env/aws_p5_session.sh --label setup_pexels --estimate-hours 2.0 -- bash -c '
   python scripts/p5_fetch_reals.py --source hub --pool train --shards 4:35 --n 2200 \
     --out-root /data/p5/reals --cache /data/cache/shards --reports reports/p5_train_reals \
-    --exclude-ids reports/kaggle_20261121/p5_reals/p5_reals_pilot_manifest.csv --workers 8
-# (b) the A10G smoke (all six members; deterministic, fp32 without TF32): it measures the
-#     A10G s/clip that replaces the assumed T4 -> A10G factor; the reconstruction projection
-#     is redone from it and sent to the user BEFORE (c) is started
-bash env/aws_p5_session.sh --label smoke --estimate-hours 0.5 -- \
+    --exclude-ids reports/kaggle_20261121/p5_reals/p5_reals_pilot_manifest.csv --workers 8 &&
   python scripts/p5_pilot.py --phase smoke --members wan21,hunyuan,cogvx,ltx090,mochi,sd15_pf \
     --device cuda --expect env/p5_pilot_expect.json --reals-root /data/p5/reals \
-    --manifest reports/p5_train_reals/p5_reals_train_manifest.csv --reports reports/p5_train_recon
-#     (the same --reports as (c): the reconstruction runs only members whose smoke there is OK)
+    --manifest reports/p5_train_reals/p5_reals_train_manifest.csv --reports reports/p5_train_recon'
 # (c) the reconstruction -- resumable per clip; a restart never redoes a finished clip
 #     (each clip is recorded in recon_<member>.jsonl)
 bash env/aws_p5_session.sh --label recon --estimate-hours <projected> -- \
   python scripts/p5_pilot.py --phase reconstruct --members wan21,hunyuan,cogvx,ltx090,mochi,sd15_pf \
-    --expect env/p5_pilot_expect.json --reals-root /data/p5/reals \
+    --device cuda --expect env/p5_pilot_expect.json --reals-root /data/p5/reals \
     --manifest reports/p5_train_reals/p5_reals_train_manifest.csv \
     --recon-root /data/p5/recon --reports reports/p5_train_recon
 ```
 
 - **The reconstruction is launched only after the user approves its projection** (P5-C).
-  The projection comes from the pilot's T4 s/clip × an A10G factor stated as an
-  assumption.
+  The projection comes from the A10G s/clip measured by (b).
+- **HunyuanVideo** (user, 2026-11-22, pre-declared) stays in the bank for (b). It is dropped
+  only if it fails technically on the A10G, or if it breaks the reconstruction's $45 share.
 - **Training (P5-D)** checkpoints every 500 steps on `/data` and resumes from the last one.
 - **Pexels is downloaded once.** If (a) stops midway it restarts after
   `rm -r /data/p5/reals/train`. The shard plan makes the result identical.
@@ -128,6 +200,11 @@ bash env/aws_p5_session.sh --label recon --estimate-hours <projected> -- \
 rclone copy gdrive:dbp-p5/session ./p5_session     # the ledger, written before the stop
 python scripts/p5_aws_check.py postsession --ledger ./p5_session/ledger.json --volume-created <YYYY-MM-DD>
 ```
+
+**Until rclone is approved** there is no ledger copy on the PC. Then `postsession` takes the
+instance-hours with `--hours`. The agent sums them from each session's start and stop times
+in `describe-instances` (`LaunchTime`, `StateTransitionReason`); the ledger on `/data` is
+copied at the next start, with `scp`.
 
 It prints:
 - running instances = 0;

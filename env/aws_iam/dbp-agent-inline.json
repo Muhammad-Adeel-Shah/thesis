@@ -1,0 +1,50 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "StopOrTerminateInUsEast2Only",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:StopInstances",
+        "ec2:TerminateInstances"
+      ],
+      "Resource": "arn:aws:ec2:us-east-2:*:instance/*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "us-east-2"
+        }
+      }
+    },
+    {
+      "Sid": "DenyAnythingThatStartsSpendingOrChangesState",
+      "Effect": "Deny",
+      "Action": [
+        "ec2:RunInstances",
+        "ec2:StartInstances",
+        "ec2:ModifyInstanceAttribute",
+        "ec2:ModifyVolume",
+        "ec2:Create*",
+        "ec2:Allocate*",
+        "ec2:Associate*",
+        "ec2:Attach*",
+        "ec2:Authorize*",
+        "ec2:Import*",
+        "ec2:Copy*",
+        "ec2:Request*",
+        "ec2:Purchase*",
+        "s3:Put*",
+        "s3:Create*",
+        "s3:Delete*",
+        "iam:Create*",
+        "iam:Put*",
+        "iam:Attach*",
+        "iam:Update*",
+        "iam:Delete*",
+        "iam:Add*",
+        "iam:PassRole",
+        "sts:AssumeRole"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

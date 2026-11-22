@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P5-B pilot results (2026-11-21, code `f8669b3`, Kaggle 2× T4)**: tracked under `reports/kaggle_20261121/`. wan21 / ltx090 reconstructed 200 clips; hunyuan OOM on the T4; cogvx nondeterministic by one grey level, a code defect (no determinism contract in the VAE phases), fixed with a test; Qwen-Image vs Wan2.1: decoders differ, the encoder is shared at bf16. The AWS reconstruction projection rests on an assumed T4 → A10G factor ($23–60), so an A10G smoke measures it first; no launch without the user's OK. **P5-B (2026-11-21, branch `p5-video`)**: A1–A8 approved with conditions; the compute plan changed (AWS g5.2xlarge, $80 budget). Built: the video bank (`configs/video_bank.yaml`, 6 bank + 1 reserve, Allegro excluded), the video reconstruction kinds, video I/O (`av==19.0.2`), the Pexels fetch, the pilot (`scripts/p5_pilot.py`) and its Kaggle runbook, the cloud runbook and guard. Hand-over of the Kaggle pilot. Nothing trained, no test data fetched. **P5-A (2026-11-20)**: the plan. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
+| Last prompt | **P5-C prep (2026-11-22)**: AWS access without the Agent Toolkit (two IAM users, policies in `env/aws_iam/`, env-only key helper `env/aws_p5_env.ps1`), prelaunch quota/zone/root/IOPS/spot checks, the first AWS session (setup + Pexels + A10G smoke, approved) written out; the reconstruction command lacked `--device cuda` (fixed, tested). Waiting for the IAM users and keys. **P5-B pilot results (2026-11-21, code `f8669b3`, Kaggle 2× T4)**: tracked under `reports/kaggle_20261121/`. wan21 / ltx090 reconstructed 200 clips; hunyuan OOM on the T4; cogvx nondeterministic by one grey level, a code defect (no determinism contract in the VAE phases), fixed with a test; Qwen-Image vs Wan2.1: decoders differ, the encoder is shared at bf16. The AWS reconstruction projection rests on an assumed T4 → A10G factor ($23–60), so an A10G smoke measures it first; no launch without the user's OK. **P5-B (2026-11-21, branch `p5-video`)**: A1–A8 approved with conditions; the compute plan changed (AWS g5.2xlarge, $80 budget). Built: the video bank (`configs/video_bank.yaml`, 6 bank + 1 reserve, Allegro excluded), the video reconstruction kinds, video I/O (`av==19.0.2`), the Pexels fetch, the pilot (`scripts/p5_pilot.py`) and its Kaggle runbook, the cloud runbook and guard. Hand-over of the Kaggle pilot. Nothing trained, no test data fetched. **P5-A (2026-11-20)**: the plan. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -8846,3 +8846,88 @@ $1.21/h; the T4 → A10G speed-up is an **ASSUMPTION**, given as 1.5 / 2.0 / 3.0
 - The skips are the same 7 GPU and 3 regression-digest skips as before.
 - The run took twice as long as at `16350ca`. Other local work ran alongside it, and the
   slowest test took 91.7 s against 34.7 s then.
+
+### P5-C prep — AWS access without the Agent Toolkit; first-session runbook (2026-11-22)
+
+**User decisions:**
+- **Skip the AWS Agent Toolkit entirely.** My conflict analysis (§3, §6, §14, §2c) was
+  accepted.
+- **Two IAM users and an environment-only key helper.**
+- **HunyuanVideo** stays for the A10G speed test, under the pre-declared drop rule.
+- **The first session is approved** once the IAM users exist: setup + Pexels + the A10G
+  smoke, about $2.40. It doubles as the AWS test launch.
+- The plan's decisions block records all of this.
+
+**Added (requested by the user):**
+- **`env/aws_iam/dbp-agent-inline.json`:**
+  - allows Stop/Terminate on `arn:aws:ec2:us-east-2:*:instance/*` only;
+  - explicitly denies the start, create, attach, IAM-write and S3-write actions.
+  - It is used with the managed `ReadOnlyAccess`. It is 730 characters minified.
+- **`env/aws_iam/dbp-launch.json`:**
+  - us-east-2 only and g5.2xlarge only;
+  - gp3 volumes of at most 200 GB;
+  - instance and data volume tagged at creation; start, stop, attach and teardown only on
+    `dbp-p5*` resources;
+  - explicit denies of S3, EIP, snapshots, images, NAT, load balancers, spot requests and
+    resizes;
+  - a `NotAction` deny of everything not listed. A test checks that the allow list and the
+    `NotAction` list are the same set.
+  - It is 3,243 characters minified (`json.dumps` with compact separators). So it is a
+    customer-managed policy: as I recall IAM's limits, about 2,048 for a user's inline
+    policies and 6,144 for a managed one. **NOT-VERIFIED**: the console enforces them.
+  - **The action names and condition keys were written from my knowledge of IAM,
+    NOT-VERIFIED by a command.** They count as verified only when the console's policy
+    editor shows 0 errors and 0 warnings and the runbook's `--dry-run` tests give the
+    expected results.
+- **`env/aws_p5_env.ps1`:**
+  - Read-Host -AsSecureString for both values;
+  - environment variables of the calling process only, with no file write;
+  - `AWS_CONFIG_FILE` and `AWS_SHARED_CREDENTIALS_FILE` point at a path that does not exist;
+  - it checks `sts get-caller-identity` and refuses keys that are not `dbp-<role>`'s;
+  - `-Clear` removes them.
+  - **Run locally (Windows PowerShell 5.1):** it parses with 0 errors and is ASCII only; the
+    `-Clear` path empties the variables; with no AWS CLI it refuses with a clear message.
+  - **NOT-RUN:** the prompt-and-verify path. It needs an interactive console, the AWS CLI
+    and real keys.
+
+**Changed:**
+- **`scripts/p5_aws_check.py` prelaunch now also checks** (still read-only):
+  - the applied "Running On-Demand G and VT instances" vCPU quota (`service-quotas
+    list-service-quotas`) against g5.2xlarge's vCPUs (`describe-instance-types`). New
+    accounts often start below what one g5.2xlarge needs, and this is the likeliest reason
+    a first launch fails.
+  - that g5.2xlarge is offered in the data volume's zone (`describe-instance-type-offerings`);
+  - the AMI's root snapshot ≤ the runbook's 60 GB, and it prints the root device name;
+  - the data volume's IOPS/throughput ≤ gp3's included 3,000 / 125. These two values come
+    from AWS's pricing page as I recall it, **NOT-VERIFIED**.
+  - with `--instance-id`, that the instance is on-demand (no `InstanceLifecycle`).
+- **`postsession --hours`:** for sessions whose ledger has not been copied to the PC; rclone
+  is still unapproved.
+- **`env/cloud_p5_runbook.md`, section 2 rewritten for PowerShell:**
+  - IAM setup and validation; the key helper; the `--dry-run` permission tests (free); the
+    AZ and AMI lookups done by the agent; the key pair, security group and data volume.
+  - The launch with `--user-data "shutdown -h +180"`: a hard cap from first boot, so there
+    is no uncapped window before the session wrapper arms.
+- **Section 4:**
+  - (a) Pexels and (b) the A10G smoke now run as ONE wrapper session (2.0 h estimate, cap
+    3.0 h).
+  - **Defect fixed:** the reconstruction command (c) lacked `--device cuda`. `p5_pilot.py`
+    defaults to CPU, so the full reconstruction would have run on the CPU. A regression test
+    checks every GPU phase in the runbook.
+- **Tests:** `tests/test_p5_cloud.py` has 25 tests (was 14):
+  - six new prelaunch refusals: quota 0, quota missing, zone, IOPS, root size, spot;
+  - two policy tests, the key-helper test, `--hours`, and the runbook device test.
+
+**Still open:**
+- rclone hosts (Drive backups);
+- the 0.42.0 regression digests;
+- a public IPv4 address is billed per hour while the instance runs. As far as I know this
+  has applied since 2024, at a fraction of a cent per hour, but it is **NOT-VERIFIED** and
+  not in the guard's $1.21/h.
+- **Runbook:** the `--dry-run` permission test now carries the same gp3 root mapping as the
+  launch. Without it, an AMI that defaults to gp2 would be refused by the policy and read as
+  a false denial.
+
+**Full suite, MEASURED** (`--durations=20 -rs`): **1,379 passed, 10 skipped (the same 7 GPU +
+3 regression-digest skips), 0 failed**, in 477.2 s; ruff clean. After the dry-run line was
+edited, `tests/test_p5_cloud.py` was run again: 25 passed.

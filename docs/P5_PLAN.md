@@ -92,6 +92,24 @@ trains and after the test panel is frozen.
 >   - **Backups:** Google Drive, small files only.
 >   - **Launches:** a launch only after the user's OK, behind `p5_aws_check.py prelaunch`.
 >   - The runbook is `env/cloud_p5_runbook.md`.
+> - **AWS access (user, 2026-11-22):**
+>   - **No AWS Agent Toolkit:** no MCP server, no `aws login`, no rules file, no uv. The
+>     AWS CLI v2 is installed by the user from the official `AWSCLIV2.msi`.
+>   - **Two IAM users** (policies in `env/aws_iam/`):
+>     - `dbp-agent`: ReadOnlyAccess, plus Stop and Terminate in us-east-2. Claude Code runs
+>       with these keys only.
+>     - `dbp-launch`: launch, start, attach and teardown of the `dbp-p5*` resources;
+>       g5.2xlarge and us-east-2 only; everything else denied. The user types these keys,
+>       only for a launch, a start or the teardown.
+>   - **Keys:** environment variables of one PowerShell session only, through
+>     `env/aws_p5_env.ps1`. No file, no `~/.aws`.
+> - **HunyuanVideo (user, 2026-11-22; pre-declared):** it stays in the bank for the A10G
+>   speed test. It is dropped only if it fails technically on the A10G, or if it breaks the
+>   reconstruction's $45 share.
+> - **The first AWS session is approved** (user, 2026-11-22): setup + Pexels + the A10G
+>   smoke, about 2 h, about $2.40, once the IAM users exist; it doubles as the AWS test
+>   launch. The full reconstruction waits for the user's approval of the projection measured
+>   there.
 
 **Method:** the image method on video, at reduced scale, without reduced rigour. The
 rules are the image module's: a frozen pre-registration pushed before training; a test
