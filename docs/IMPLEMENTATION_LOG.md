@@ -9287,3 +9287,65 @@ PENDING-GPU)**, in 1,033.2 s.
 - **Why:** the smoke records the projection needs would otherwise sit only on the stopped instance.
 - **Test:** `test_runbook_backup_carries_the_reports_off_the_instance`, which also checks that no clip directory is copied. 46 passed.
 - **The first-session dry run was redone on `19a4b9b`: PASSED.** smoke OK x6; `gpu_name` is recorded (None on CPU).
+
+### P5-C — F1 fired; g5.2xlarge has no capacity in us-east-2; g6.2xlarge fallback drafted (2026-11-24 01:05 PKT)
+
+**F1 FIRED at 2026-11-23 23:59 PKT** (P5_PLAN §5: "training data not complete by Mon 23 Nov,
+end of day"; logged at 01:05 PKT on the 24th, from `Get-Date` / the prelaunch timestamp).
+- The training data does not exist yet: the first AWS session has not launched.
+- **LOLO is now 3 folds.** Which three is pre-declared on both sides and depends only on the
+  open HunyuanVideo decision:
+  - **with HunyuanVideo:** wan21, hunyuan, ltx090 (as written);
+  - **without it:** wan21, ltx090, cogvx (user, 2026-11-23, before any result).
+- F2, F3 and F4: not fired.
+
+**Launch blocked (user):** `InsufficientInstanceCapacity` for g5.2xlarge in us-east-2a, 2b and
+2c, and with no zone given. The user is retrying.
+
+**g6.2xlarge fallback** (user, 2026-11-24; read-only; nothing changed in AWS):
+- **`describe-instance-types`:** g6.2xlarge has 8 vCPUs, 32,768 MiB, one **L4 with 22,888
+  MiB** (the same figure as g5's A10G), x86_64.
+- **`describe-instance-type-offerings`:** offered in us-east-2a, 2b and 2c.
+- **On-demand capacity cannot be checked read-only:** a dry-run does not test capacity.
+- **The AMI description** (`describe-images`, `ami-079e51febc2ff531b`): "Supported EC2
+  instances: G4dn, G5, **G6**, …".
+- **Prices** (`aws pricing get-products`, us-east-2, on-demand Linux, shared tenancy):
+  - g6.2xlarge **$0.9776/h**; g5.2xlarge $1.212/h, as used so far;
+  - an in-use public IPv4 address **$0.005/h** (AmazonVPC `USE2-PublicIPv4:InUseAddress`).
+  - This is the first command-sourced confirmation of the user-given $1.212 and $0.005.
+- **The quota:** g6 is a G instance, under the same "Running On-Demand G and VT instances" =
+  8.0.
+- **`env/aws_iam/dbp-launch-v2.json` (DRAFT, not applied):** v1 with only the two
+  instance-type conditions widened to [g5.2xlarge, g6.2xlarge]. It is 3,361 characters
+  minified. A test checks that every other statement is identical to v1.
+- **`scripts/p5_aws_check.py`:**
+  - `--instance-type` (g5.2xlarge | g6.2xlarge), and `INSTANCE_RATES` from the Pricing API;
+  - `rate_for()` adds the IPv4 charge;
+  - with `--instance-id`, the instance's type must equal `--instance-type`;
+  - `postsession --instance-type` too.
+  - Tests: 48 passed.
+- **The real prelaunch check for g6.2xlarge** (01:05 PKT): **OK to launch AFTER the user's
+  explicit OK**. $0.9826/h; the 2.0 h speed test is projected at $1.97; hard cap 3.0 h.
+- **The 2,000-clip reconstruction projection** (scratchpad `p5_projection2.py` over
+  `F:/thesis-2/kaggle_raw/p5_pilot_x/reports`):
+  - **The inputs:** the pilot's T4 fp32 s/clip.
+    - wan21 18.546 and ltx090 1.922 are reconstruct means over 200 clips.
+    - cogvx 27.718, mochi 29.777 and sd15_pf 14.972 are smoke warm times + 1.67 s of
+      measured write overhead.
+    - HunyuanVideo has no T4 time (OOM), so it is ASSUMED equal to the slowest (29.777).
+  - **The totals:** 5 members, 51.63 T4-h; 6 members, 68.17 T4-h.
+  - **The speed factors are ASSUMPTIONS, not measured:**
+    - L4 vs T4: 1.0 / 1.5 / 2.0. The user states the L4 has about half the A10G's memory
+      bandwidth; my figures for the L4 (about 300 GB/s) and the T4 (about 320 GB/s) are
+      NOT-VERIFIED. So a bandwidth-bound VAE could run near T4 speed on the L4, and a
+      compute-bound one faster.
+    - A10G vs T4: 1.5 / 2 / 3.
+  - **g6:**
+    - 5 members: $50.73 / $33.82 / $25.37;
+    - 6 members: $66.99 / $44.66 / $33.49.
+  - **g5:**
+    - 5 members: $41.89 / $31.42 / $20.94;
+    - 6 members: $55.31 / $41.48 / $27.66.
+  - **fp32 throughout:** an upper bound, since the fp16 members are not yet timed in fp16.
+  - Disk for 2,000 clips: 45.3 GB.
+  - **The smoke on whichever instance launches replaces every assumed factor.**

@@ -29,9 +29,19 @@ import sys
 from pathlib import Path
 from typing import Any
 
-# $1.212/h on-demand g5.2xlarge + $0.005/h for the public IPv4 address (user, 2026-11-22)
-INSTANCE_RATE, IPV4_RATE = 1.212, 0.005
-REGION, TYPE, RATE = "us-east-2", "g5.2xlarge", round(INSTANCE_RATE + IPV4_RATE, 3)
+# On-demand Linux, us-east-2, per hour (AWS Pricing API `get-products`, 2026-11-24): g5.2xlarge
+# $1.212, g6.2xlarge $0.9776; an in-use public IPv4 address $0.005 (AmazonVPC). g6.2xlarge is
+# the capacity fallback (user, 2026-11-24) and needs dbp-launch-policy v2.
+INSTANCE_RATES = {"g5.2xlarge": 1.212, "g6.2xlarge": 0.9776}
+IPV4_RATE = 0.005
+REGION, TYPE = "us-east-2", "g5.2xlarge"
+INSTANCE_RATE = INSTANCE_RATES[TYPE]
+RATE = round(INSTANCE_RATE + IPV4_RATE, 3)
+
+
+def rate_for(instance_type: str) -> float:
+    """USD per instance-hour, the public IPv4 address included."""
+    return round(INSTANCE_RATES[instance_type] + IPV4_RATE, 4)
 EBS_PER_GB_MONTH, DATA_GB = 0.08, 200          # user, 2026-11-21 (to be confirmed in console)
 SG_NAME = "dbp-p5"                              # the runbook's SSH security group
 # gp3's included performance (AWS pricing page; NOT-VERIFIED by a command): anything above it
@@ -131,6 +141,8 @@ def security_group_problems(name: str) -> tuple[list[str], str, str | None]:
 
 def prelaunch(args: argparse.Namespace) -> int:
     problems: list[str] = []
+    itype = args.instance_type
+    rate = rate_for(itype)
     others = [i["InstanceId"] for i in p5_instances() if i["InstanceId"] != args.instance_id]
     if others:
         problems.append(f"another P5 instance exists: {others} (one at a time)")
@@ -154,7 +166,7 @@ def prelaunch(args: argparse.Namespace) -> int:
                         f"after it is created (2026-11-23). Turn it off first")
     offered = sorted(o["Location"] for o in aws(
         "describe-instance-type-offerings", "--location-type", "availability-zone",
-        "--filters", f"Name=instance-type,Values={TYPE}").get("InstanceTypeOfferings", []))
+        "--filters", f"Name=instance-type,Values={itype}").get("InstanceTypeOfferings", []))
     vol = aws("describe-volumes", "--volume-ids", args.data_volume).get("Volumes", [])
     if not vol:
         problems.append(f"data volume {args.data_volume} not found")
@@ -164,20 +176,20 @@ def prelaunch(args: argparse.Namespace) -> int:
             problems.append(f"data volume is {v['Size']} GB {v['VolumeType']}, "
                             f"expected {DATA_GB} GB gp3")
         if v.get("AvailabilityZone") not in offered:
-            problems.append(f"data volume is in {v.get('AvailabilityZone')}; {TYPE} is offered "
+            problems.append(f"data volume is in {v.get('AvailabilityZone')}; {itype} is offered "
                             f"in {offered}")
         problems += gp3_extra_problem("data volume", v)
         if v.get("Encrypted") is not False:
             problems.append(f"data volume Encrypted={v.get('Encrypted')}, expected false")
     sg_problems, sg_summary, sg_id = security_group_problems(args.security_group)
     problems += sg_problems
-    vcpus = aws("describe-instance-types", "--instance-types", TYPE)["InstanceTypes"][0][
+    vcpus = aws("describe-instance-types", "--instance-types", itype)["InstanceTypes"][0][
         "VCpuInfo"]["DefaultVCpus"]
     quota = gvt_quota_vcpus()
     if quota is None:
         problems.append(f"no '{GVT_QUOTA_NAME}' vCPU quota listed: check Service Quotas")
     elif quota < vcpus:
-        problems.append(f"the on-demand G/VT vCPU quota is {quota:g} < the {vcpus} one {TYPE} "
+        problems.append(f"the on-demand G/VT vCPU quota is {quota:g} < the {vcpus} one {itype} "
                         f"needs: request an increase first")
     root_state = "checked after the launch (--instance-id)"
     if args.instance_id:
@@ -187,8 +199,8 @@ def prelaunch(args: argparse.Namespace) -> int:
             problems.append("shutdown behaviour is not 'stop'")
         mapping = aws("describe-instances", "--instance-ids", args.instance_id)
         inst = mapping["Reservations"][0]["Instances"][0]
-        if inst["InstanceType"] != TYPE:
-            problems.append(f"instance type {inst['InstanceType']}, expected {TYPE}")
+        if inst["InstanceType"] != itype:
+            problems.append(f"instance type {inst['InstanceType']}, expected {itype}")
         if inst.get("InstanceLifecycle"):
             problems.append(f"instance lifecycle is {inst['InstanceLifecycle']}, not on-demand")
         groups = sorted(g["GroupId"] for g in inst.get("SecurityGroups", []))
@@ -218,23 +230,23 @@ def prelaunch(args: argparse.Namespace) -> int:
             problems += gp3_extra_problem("root volume", rv)
             if rv.get("Encrypted") is not False:
                 problems.append(f"root volume Encrypted={rv.get('Encrypted')}, expected false")
-    cost = args.hours * RATE
+    cost = args.hours * rate
     share = BUDGET.get(args.stage)
     ebs_day = ebs_usd(1, DATA_GB + (root_gb or 0))
     print(f"PRE-LAUNCH CHECKLIST ({dt.datetime.now():%Y-%m-%d %H:%M})")
-    print(f"  region {REGION} | type {TYPE} ({vcpus} vCPU) on-demand | AMI {args.ami}")
+    print(f"  region {REGION} | type {itype} ({vcpus} vCPU) on-demand | AMI {args.ami}")
     print(f"  root volume: {root_device}, gp3, {root_gb} GB (the AMI's size) -- launch with "
           f"\"DeviceName={root_device},Ebs={{VolumeSize={root_gb},VolumeType=gp3,"
           f"DeleteOnTermination=true}}\" | now: {root_state}")
-    print(f"  data volume {args.data_volume} | {TYPE} offered in {offered} | on-demand G/VT "
+    print(f"  data volume {args.data_volume} | {itype} offered in {offered} | on-demand G/VT "
           f"vCPU quota: {quota}")
     print(f"  security group {args.security_group} ({sg_id}): {sg_summary}")
     print(f"  EBS encryption by default: {encryption_default} | data volume Encrypted="
           f"{vol[0].get('Encrypted') if vol else '?'} (root: checked after the launch)")
     print("  shutdown behaviour = stop | watchdog + hard cap: armed by env/aws_p5_session.sh")
-    print(f"  rate ${RATE}/h (instance ${INSTANCE_RATE} + public IPv4 ${IPV4_RATE}) | EBS "
+    print(f"  rate ${rate}/h (instance ${INSTANCE_RATES[itype]} + public IPv4 ${IPV4_RATE}) | EBS "
           f"{DATA_GB} + {root_gb} GB = ${ebs_day:.4f}/day (export P5_EBS_PER_DAY={ebs_day:.4f})")
-    print(f"  stage {args.stage}: projected {args.hours:.2f} h x ${RATE} = ${cost:.2f} "
+    print(f"  stage {args.stage}: projected {args.hours:.2f} h x ${rate} = ${cost:.2f} "
           f"(share ${share}); hard cap at launch: {args.hours * 1.5:.2f} h")
     if share is not None and cost > share:
         problems.append(f"projection ${cost:.2f} exceeds the {args.stage} share ${share}: ask")
@@ -255,15 +267,16 @@ def postsession(args: argparse.Namespace) -> int:
     if args.hours is not None and ledger:
         raise SystemExit("give --ledger or --hours, not both")
     hours = float(args.hours if args.hours is not None else ledger.get("hours", 0.0))
+    rate = rate_for(getattr(args, "instance_type", TYPE))
     days = (dt.date.today() - dt.date.fromisoformat(args.volume_created)).days + 1
     gb = sum(v["Size"] for v in vols)              # root + data, as they exist now
-    spend = hours * RATE + ebs_usd(days, gb)
+    spend = hours * rate + ebs_usd(days, gb)
     print(f"POST-SESSION ({dt.datetime.now():%Y-%m-%d %H:%M})")
     print(f"  running instances = {len(running)} {running}")
     print(f"  volumes = {len(vols)}: " + ", ".join(
         f"{v['VolumeId']} {v['Size']} GB {v['State']}" for v in vols))
     print(f"  Elastic IPs = {len(eips)} | snapshots = {len(snaps)}")
-    print(f"  spend so far: {hours:.2f} instance-h x ${RATE} + {days} d EBS of {gb} GB "
+    print(f"  spend so far: {hours:.2f} instance-h x ${rate} + {days} d EBS of {gb} GB "
           f"(${ebs_usd(days, gb):.2f}) = ${spend:.2f} of hard stop ${HARD_STOP} "
           f"(budget shares {BUDGET})")
     bad = running or len(vols) > 2 or eips or snaps or spend >= HARD_STOP
@@ -279,11 +292,13 @@ def main() -> int:
     pre.add_argument("--data-volume", required=True)
     pre.add_argument("--security-group", default=SG_NAME, help="the SSH group's name")
     pre.add_argument("--instance-id", default="", help="for a START of a stopped instance")
+    pre.add_argument("--instance-type", default=TYPE, choices=sorted(INSTANCE_RATES))
     pre.add_argument("--stage", required=True, choices=sorted(BUDGET))
     pre.add_argument("--hours", type=float, required=True)
     post = sub.add_parser("postsession")
     post.add_argument("--ledger", default="", help="ledger.json copied from the instance")
     post.add_argument("--volume-created", required=True)
+    post.add_argument("--instance-type", default=TYPE, choices=sorted(INSTANCE_RATES))
     post.add_argument("--hours", type=float, default=None,
                       help="instance-hours so far, when no ledger copy is on this PC")
     args = parser.parse_args()

@@ -229,7 +229,8 @@ def test_prelaunch_refuses_every_unsafe_condition(monkeypatch, capsys, change, h
     monkeypatch.setattr(C, "gvt_quota_vcpus", lambda: quota)
     monkeypatch.setattr(C, "aws", fake_aws(base_responses(**change)))
     args = argparse.Namespace(ami="ami-x", data_volume="vol-data", instance_id="i-1",
-                              stage="reconstruction", hours=hours, security_group="dbp-p5")
+                              stage="reconstruction", hours=hours, security_group="dbp-p5",
+                              instance_type="g5.2xlarge")
     assert (C.prelaunch(args) == 0) is ok, capsys.readouterr().out
 
 
@@ -241,7 +242,8 @@ def test_prelaunch_never_prints_the_ssh_address(monkeypatch, capsys):
     monkeypatch.setattr(C, "gvt_quota_vcpus", lambda: 8.0)
     monkeypatch.setattr(C, "aws", fake_aws(base_responses()))
     args = argparse.Namespace(ami="ami-x", data_volume="vol-data", instance_id="i-1",
-                              stage="setup_pexels", hours=2.0, security_group="dbp-p5")
+                              stage="setup_pexels", hours=2.0, security_group="dbp-p5",
+                              instance_type="g5.2xlarge")
     assert C.prelaunch(args) == 0
     out = capsys.readouterr().out
     assert "198.51.100.7" not in out and "tcp 22 from 1 IPv4 /32" in out
@@ -376,6 +378,41 @@ def test_launch_policy_is_closed_and_g5_2xlarge_only():
     for st in sts:
         if st["Effect"] == "Allow" and st["Resource"] != "*":
             assert all(r.startswith("arn:aws:ec2:us-east-2:") for r in as_list(st["Resource"]))
+
+
+def test_launch_policy_v2_draft_adds_g6_2xlarge_and_nothing_else():
+    """User, 2026-11-24: g5.2xlarge had no capacity in us-east-2; the fallback is g6.2xlarge.
+    v2 is a DRAFT: it differs from v1 only in the two instance-type conditions."""
+    v1, v2 = statements("dbp-launch.json"), statements("dbp-launch-v2.json")
+    types = ["g5.2xlarge", "g6.2xlarge"]
+    by1, by2 = {s["Sid"]: s for s in v1}, {s["Sid"]: s for s in v2}
+    assert by2["DenyAnyInstanceTypeButG52xlargeOrG62xlarge"]["Condition"] == {
+        "StringNotEquals": {"ec2:InstanceType": types}}
+    assert by2["RunOnlyTheTaggedG52xlargeOrG62xlarge"]["Condition"] == {
+        "StringEquals": {"ec2:InstanceType": types, "aws:RequestTag/Name": "dbp-p5"}}
+    same = set(by1) - {"DenyAnyInstanceTypeButG52xlarge", "RunOnlyTheTaggedG52xlarge"}
+    assert all(by1[sid] == by2[sid] for sid in same) and len(v1) == len(v2)
+
+
+def test_prelaunch_prices_and_checks_the_fallback_type(monkeypatch, capsys):
+    import argparse
+
+    import p5_aws_check as C
+
+    assert C.rate_for("g6.2xlarge") == pytest.approx(0.9826)
+    assert C.rate_for("g5.2xlarge") == pytest.approx(1.217)
+    monkeypatch.setattr(C, "gvt_quota_vcpus", lambda: 8.0)
+    monkeypatch.setattr(C, "aws", fake_aws(base_responses()))
+    args = argparse.Namespace(ami="ami-x", data_volume="vol-data", instance_id="",
+                              stage="setup_pexels", hours=2.0, security_group="dbp-p5",
+                              instance_type="g6.2xlarge")
+    monkeypatch.setattr(C, "p5_instances", lambda: [])
+    assert C.prelaunch(args) == 0
+    out = capsys.readouterr().out
+    assert "type g6.2xlarge" in out and "$0.9826/h" in out and "= $1.97" in out
+    # an instance of the other type is refused
+    args.instance_id = "i-1"
+    assert C.prelaunch(args) == 1 and "expected g6.2xlarge" in capsys.readouterr().out
 
 
 needs_powershell = pytest.mark.skipif(shutil.which("powershell") is None,
