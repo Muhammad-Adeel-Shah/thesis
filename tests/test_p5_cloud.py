@@ -319,9 +319,11 @@ def test_runbook_backup_carries_the_reports_off_the_instance():
     """2026-11-23: the smoke records the projection needs sat only on the stopped instance."""
     text = (ROOT / "env" / "cloud_p5_runbook.md").read_text(encoding="utf-8")
     line = next(x for x in text.splitlines() if x.startswith("export P5_BACKUP_CMD="))
+    assert line == 'export P5_BACKUP_CMD="bash env/aws_p5_backup.sh"'
+    script = (ROOT / "env" / "aws_p5_backup.sh").read_text(encoding="utf-8")
     for part in ("/data/p5/session", "reports/p5_train_recon", "reports/p5_train_reals"):
-        assert part in line, part
-    assert "/data/p5/reals" not in line and "/data/p5/recon" not in line   # never the clips
+        assert part in script, part
+    assert "/data/p5/reals" not in script and "/data/p5/recon" not in script   # never clips
 
 
 def test_check_script_only_describes():
@@ -438,3 +440,115 @@ def test_key_helper_parses_writes_no_file_and_clears():
     done = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command",
                            probe], capture_output=True, text=True, timeout=120, check=False)
     assert "errors=0" in done.stdout and "left=False" in done.stdout, done.stdout + done.stderr
+
+
+# ----------------------------------- the first AWS session's failures (2026-11-24) ---
+
+SETUP = ROOT / "env" / "cloud_p5_setup.sh"
+
+
+def test_cloud_setup_installs_kaggles_pyarrow_and_checks_parquet():
+    """The first session died at its first line: no pyarrow in the cloud venv (A3 uses
+    Kaggle's preinstalled one, so base.txt has none)."""
+    import re
+
+    text = SETUP.read_text(encoding="utf-8")
+    pinned = re.search(r'PYARROW="pyarrow==([0-9.]+)"', text).group(1)
+    preflight = json.loads((ROOT / "reports" / "kaggle_20261121" / "p5_pilot" / "preflight.json")
+                           .read_text(encoding="utf-8"))
+    assert pinned == preflight["imports"]["pyarrow"]
+    dry = text[text.index("--dry-run --report"):][:200]
+    install = [line for line in text.splitlines()
+               if "pip install --quiet -r" in line and "--dry-run" not in line]
+    assert '"$PYARROW"' in dry and install and all('"$PYARROW"' in line for line in install)
+    assert "import pyarrow.parquet" in text
+
+
+def test_every_third_party_import_of_the_aws_scripts_is_installed_by_the_setup():
+    """Direct imports of the scripts that run on the instance: each is the standard library,
+    our own code, or a package the cloud setup installs."""
+    import ast
+    import re
+    import sys as _sys
+
+    installed = {re.split(r"[<>=\[; ]", line.strip())[0].lower().replace("-", "_")
+                 for line in (ROOT / "requirements" / "base.txt").read_text().splitlines()
+                 if line.strip() and not line.lstrip().startswith("#")}
+    # the setup's own pins; numpy arrives with torchvision and the setup's protected-version
+    # check imports it (SETUP OK on the instance, 2026-11-23)
+    installed |= {"torch", "torchvision", "pyarrow", "numpy"}
+    alias = {"pil": "pillow", "yaml": "pyyaml", "sklearn": "scikit_learn"}
+    missing = []
+    for script in ("p5_fetch_reals.py", "p5_pilot.py", "p5_cloud_guard.py"):
+        tree = ast.parse((ROOT / "scripts" / script).read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            names = ([a.name for a in node.names] if isinstance(node, ast.Import) else
+                     [node.module] if isinstance(node, ast.ImportFrom) and node.module
+                     and not node.level else [])
+            for name in names:
+                top = name.split(".")[0]
+                if (top in _sys.stdlib_module_names or top == "dbp" or top == "__future__"
+                        or (ROOT / "scripts" / f"{top}.py").is_file()):
+                    continue
+                if alias.get(top.lower(), top.lower()) not in installed:
+                    missing.append(f"{script}: {name}")
+    assert not missing, missing
+
+
+def test_cloud_setup_refuses_a_python_below_3_11():
+    import re
+
+    text = SETUP.read_text(encoding="utf-8")
+    code = re.search(r"\"\$VENV_PYTHON\" -c '(.+?)'\n", text, re.S).group(1)
+    ok = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True)
+    assert ok.returncode == 0, ok.stderr
+    old = subprocess.run([sys.executable, "-c", code.replace("(3, 11)", "(99, 0)")],
+                         capture_output=True, text=True)
+    assert old.returncode != 0 and "FATAL" in old.stderr and "P5_VENV_PYTHON" in old.stderr
+
+
+def backup(tmp_path, existing, rclone_exit=0):
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    fake = tmp_path / "fake_rclone.sh"
+    calls = tmp_path / "rclone_calls.txt"
+    fake.write_text(f'#!/usr/bin/env bash\necho "$*" >> "{calls.as_posix()}"\nexit {rclone_exit}\n',
+                    encoding="utf-8", newline="\n")
+    work = tmp_path / "repo"
+    for rel in existing:
+        (work / rel).mkdir(parents=True)
+    env = {**os.environ, "P5_RCLONE": f"bash {fake.as_posix()}",
+           "P5_STATE": (work / "session").as_posix()}
+    done = subprocess.run(["bash", (ROOT / "env" / "aws_p5_backup.sh").as_posix()], cwd=work,
+                          env=env, capture_output=True, text=True)
+    return done, calls.read_text().splitlines() if calls.is_file() else []
+
+
+def test_backup_skips_folders_that_do_not_exist_yet(tmp_path):
+    """2026-11-24: the job failed at once, so its report folders never existed, and the
+    backup failed on them; a missing source is now skipped, never a failure."""
+    done, calls = backup(tmp_path, ["session"])
+    assert done.returncode == 0, done.stdout + done.stderr
+    assert len(calls) == 1 and calls[0].startswith("copy ") and "gdrive:dbp-p5/session" in calls[0]
+    assert done.stdout.count("skipped") == 4
+    done, calls = backup(tmp_path / "all", ["session", "reports/p5_train_recon",
+                                            "reports/p5_train_reals", "reports/p5_cloud",
+                                            "env/lock"])
+    assert done.returncode == 0 and len(calls) == 5
+    assert any("--include cloud_p5_*" in c for c in calls)        # only the cloud lock
+    assert not any("/data/p5/reals" in c or "/data/p5/recon" in c for c in calls)
+
+
+def test_backup_still_fails_when_a_copy_fails(tmp_path):
+    done, _ = backup(tmp_path, ["session"], rclone_exit=3)
+    assert done.returncode == 1 and "FAILED" in done.stdout
+
+
+def test_runbook_restart_caps_first_and_remounts():
+    text = (ROOT / "env" / "cloud_p5_runbook.md").read_text(encoding="utf-8")
+    restart = text[text.index("## 3a. Every RESTART"):text.index("## 4. Jobs")]
+    order = [restart.index(s) for s in ("sudo shutdown -h +60", "sudo mount LABEL=dbpdata",
+                                        "source /data/venv/bin/activate", "read -rs HF_TOKEN",
+                                        "P5_BACKUP_CMD")]
+    assert order == sorted(order)
+    assert "PublicDnsName" in restart and "prelaunch --instance-id" in restart
+    assert 'export P5_BACKUP_CMD="bash env/aws_p5_backup.sh"' in text

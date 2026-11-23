@@ -9425,3 +9425,77 @@ designed. The loop now stops before the last row, with a regression test.
   - Kaggle scoring runs **Python 3.13**: the pilot logs under `reports/kaggle_20261121/p5_pilot/logs/` show `/usr/local/lib/python3.13/dist-packages`.
   - torch 2.11.0 on both sides; the frozen model hashes are checked before scoring (CLAUDE.md §14).
 - **Follow-up for the repo (not changed now, so the instance code equals the committed zip):** `cloud_p5_setup.sh` should take the venv interpreter as a setting and refuse a Python below 3.11 before installing torch.
+
+### P5-C — the first AWS session failed at once (no pyarrow); fixes; postsession (2026-11-24)
+
+**Environment as built** (user report; this CORRECTS the 3.11 entry above):
+- **Python 3.13.18**, from the deadsnakes PPA that the AMI already configures (approved by
+  the user), through the python3 shim.
+  - Kaggle scoring runs Python 3.13 too (the pilot logs).
+  - The setup record is `reports/p5_cloud/env_20261123T214001Z.txt`, **SETUP OK**. It is on
+    `/data`; the new backup brings it back.
+- **rclone 1.53.3** from the Ubuntu archive.
+  - **The first rclone token was exposed in chat.** The user revoked it and re-authorised; the
+    new token is in `~/.config/rclone/rclone.conf` (chmod 600) on the instance.
+
+**The session** `setup_pexels` (i-02391bf7735fb8f83):
+- The job exited 1 seconds after the start, on the first line of the Pexels fetch.
+- **The traceback, pasted by the user:**
+  - the video pin check OK (10 pins, 0 fatal, 0 blocked);
+  - then `p5_fetch_reals.py` line 84, `read_manifest` → `import pyarrow.parquet as pq` →
+    **`ModuleNotFoundError: No module named 'pyarrow'`**.
+- **Then the backup failed** (`BACKUP FAILED`). `P5_BACKUP_CMD` chained `rclone copy` over
+  report folders the job had never created. The wrapper stopped the instance, as designed.
+- **The cause:**
+  - Approval A3 says "on Kaggle, the preinstalled pyarrow is used", so pyarrow is not in
+    `requirements/base.txt`. A fresh cloud venv has none.
+  - The local tests did not catch it: the dry-run fixture's Pexels manifest is CSV, because
+    the local venv has no pyarrow either, so the parquet path never runs locally.
+
+**The fixes:**
+- **`env/cloud_p5_setup.sh`:**
+  - installs **`pyarrow==23.0.1`**, the version the Kaggle pilot pre-flight measured
+    (`reports/kaggle_20261121/p5_pilot/preflight.json`). It is inside the existing
+    torch/torchvision/numpy dry-run guard.
+  - **The wheel was checked on PyPI:** `pip install --dry-run --only-binary=:all:
+    --python-version 3.13 --platform manylinux_2_28_x86_64` resolved
+    `pyarrow-23.0.1-cp313-cp313-manylinux_2_28_x86_64.whl`.
+  - The env record imports `pyarrow.parquet`, so the same gap now fails the SETUP, not the
+    session.
+  - The venv interpreter is `P5_VENV_PYTHON` (default `python3`), refused below 3.11. This
+    replaces the PATH shim.
+- **`env/aws_p5_backup.sh` (new):**
+  - Each source that exists is copied, and one that does not exist yet is skipped and
+    reported. A failed copy still fails.
+  - It also carries `reports/p5_cloud` and the cloud lock (`env/lock/cloud_p5_*`).
+  - `P5_BACKUP_CMD="bash env/aws_p5_backup.sh"`.
+- **`env/cloud_p5_runbook.md`:**
+  - **§3a, every restart** (user): there is no boot cap on a restart, so the first command
+    is `sudo shutdown -h +60`. Then the mount (no fstab), the venv, the env vars, the token,
+    the backup command.
+  - The public DNS name changes on every start.
+  - The setup line now takes `P5_VENV_PYTHON=python3.13`.
+- **Tests** (`tests/test_p5_cloud.py`, 54 passed):
+  - pyarrow pinned to Kaggle's measured version, in both the dry-run and the install;
+  - every third-party import of `p5_fetch_reals.py`, `p5_pilot.py` and `p5_cloud_guard.py`
+    is installed by the setup. numpy arrives with torchvision, and the setup imports it;
+  - the Python < 3.11 refusal;
+  - the backup: missing folders skipped (exit 0); all five present, with the lock filtered;
+    a failing copy gives exit 1;
+  - the restart order.
+
+**`postsession`** (`--instance-type g5.2xlarge --hours 1.42 --volume-created 2026-11-23`,
+03:21 PKT): **CLEAN.**
+- running 0; volumes 2 (data 200 GB + root 75 GB); EIPs 0; snapshots 0.
+- **Spend so far $3.19:** 1.42 h × $1.217 + 2 days of EBS at 275 GB = $1.47.
+- **The 1.42 h is an UPPER bound.**
+  - From LaunchTime 20:56:35Z to the check at 22:21:33Z.
+  - The OS-initiated stop leaves no time in `StateTransitionReason` ("User initiated") and no
+    StopInstances event in CloudTrail.
+  - The session record on Drive (`sessions.jsonl`) gives the true end time.
+- **Not in the ledger:** the deleted us-east-2a volume's 12 h, about $0.27 (see above).
+- **Full suite:** 1 failed, 1,445 passed, 7 skipped (GPU), 649.5 s. The one failure is the known libx265 determinism test (2026-11-23; waiting for the user). It is not touched here and not used by this session.
+- **First-session dry-run on the staged tree, now with the exit-trap backup** (fake rclone): **PASSED**.
+  - fetch 4 of 4; smoke OK x6;
+  - the backup copied session, p5_train_recon, p5_train_reals and env/lock (`--include cloud_p5_*`), and skipped `reports/p5_cloud` (absent in the fixture);
+  - the shutdown calls were `+180`, `now`, `now`.

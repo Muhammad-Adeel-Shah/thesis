@@ -179,7 +179,7 @@ sudo mkdir -p /data && sudo mount LABEL=dbpdata /data && sudo chown ubuntu /data
 mkdir -p /data/repo && cd /data/repo && unzip -q ~/dbp-code-<hash>.zip && cd thesis_dbp
 export HISTCONTROL=ignorespace
  read -rs HF_TOKEN && export HF_TOKEN                   # never written, never echoed
-bash env/cloud_p5_setup.sh /data                         # torch 2.11.0 (Kaggle's) cu130
+P5_VENV_PYTHON=python3.13 bash env/cloud_p5_setup.sh /data   # torch 2.11.0 (Kaggle's) cu130; Python >= 3.11 (the AMI's 3.10 is refused)
 # if it stops at "CUDA not available": TORCH_INDEX=cu128 bash env/cloud_p5_setup.sh /data
 #   -- record that training runs on cu128 (scoring on Kaggle is cu130; hashes are checked)
 source /data/venv/bin/activate
@@ -187,8 +187,9 @@ export HF_HOME=/data/cache/hf TORCH_HOME=/data/cache/torch PIP_CACHE_DIR=/data/c
 export P5_VOLUME_CREATED=<YYYY-MM-DD> P5_STATE=/data/p5/session
 export P5_EBS_PER_DAY=<as prelaunch prints it>     # data + root volume
 # the exit trap runs this from the repo checkout BEFORE the stop: the ledger AND the small
-# reports (smoke records, reals manifest), so a stopped instance never holds the only copy
-export P5_BACKUP_CMD="rclone copy /data/p5/session gdrive:dbp-p5/session && rclone copy reports/p5_train_recon gdrive:dbp-p5/reports/p5_train_recon && rclone copy reports/p5_train_reals gdrive:dbp-p5/reports/p5_train_reals"
+# reports (smoke records, reals manifest, cloud env record and lock), so a stopped instance
+# never holds the only copy; a folder that does not exist yet is skipped, never a failure
+export P5_BACKUP_CMD="bash env/aws_p5_backup.sh"
 ```
 
 **rclone (approved by the user, 2026-11-22). On the AWS instance only**, never on the PC or
@@ -225,6 +226,32 @@ one dedicated Drive folder, `dbp-p5`.
     termination). It is never printed, copied or committed.
   - **NOT-VERIFIED:** that the Ubuntu archive's rclone version completes Google's sign-in this
     way. If it does not, stop and tell the user; the ledger then comes by `scp` (section 5).
+
+## 3a. Every RESTART of the stopped instance (user, 2026-11-24)
+
+**A restart has NO boot cap:** the launch's user-data (`shutdown -h +180`) runs on the first
+boot only. So the first command after logging in, before anything else, is a cap of its own.
+The session wrapper replaces it with its own cap when it starts.
+
+1. **PC, agent window:** `p5_aws_check.py prelaunch --instance-id <ID> --stage <stage> --hours
+   <h>`. Then the user's explicit OK.
+2. **PC, launch window:** `aws ec2 start-instances --instance-ids <ID>`, then
+   `aws ec2 wait instance-running --instance-ids <ID>`.
+3. **The public DNS name changes on every start.** Read it again:
+   `aws ec2 describe-instances --instance-ids <ID> --query "Reservations[0].Instances[0].PublicDnsName" --output text`.
+   If the PC's public IP changed, revoke the old /32 and add the new one first.
+4. **Copy the code zip** with `scp` if the code changed, then log in with `ssh`.
+5. **On the instance, first:** `sudo shutdown -h +60`.
+6. `tmux new -s p5`, then `sudo mount LABEL=dbpdata /data` (there is no fstab entry) and
+   `df -h /data`.
+7. **New code only:** `cd /data/repo && unzip -oq ~/dbp-code-<hash>.zip`. Generated reports
+   stay.
+8. `cd /data/repo/thesis_dbp && source /data/venv/bin/activate`. If the setup script changed,
+   re-run the setup line above; it reuses the pip cache.
+9. **The environment, then the token:** the `export` lines of section 3, `export
+   HISTCONTROL=ignorespace`, ` read -rs HF_TOKEN && export HF_TOKEN`, and the
+   `P5_BACKUP_CMD` line.
+10. **The session wrapper** (section 4). Its own cap replaces the `+60`.
 
 ## 4. Jobs: each one through the session wrapper; the instance stops when it ends
 
