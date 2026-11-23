@@ -313,6 +313,15 @@ def test_runbook_reconstruction_skips_threshold_reals_and_uses_the_fp16_rule():
     assert (ROOT / "reports" / "kaggle_20261121" / "p5_pilot" / "smoke_wan21.json").is_file()
 
 
+def test_runbook_backup_carries_the_reports_off_the_instance():
+    """2026-11-23: the smoke records the projection needs sat only on the stopped instance."""
+    text = (ROOT / "env" / "cloud_p5_runbook.md").read_text(encoding="utf-8")
+    line = next(x for x in text.splitlines() if x.startswith("export P5_BACKUP_CMD="))
+    for part in ("/data/p5/session", "reports/p5_train_recon", "reports/p5_train_reals"):
+        assert part in line, part
+    assert "/data/p5/reals" not in line and "/data/p5/recon" not in line   # never the clips
+
+
 def test_check_script_only_describes():
     import p5_aws_check as C
 

@@ -9282,3 +9282,8 @@ PENDING-GPU)**, in 1,033.2 s.
     stopped and put to the user.** The test is left failing, not skipped or marked xfail.
 - **It does not affect the first AWS session:** no H.265 encode runs there. It does matter for
   the training recipe (H.265 with p = 0.3) and for V5's H.265 views.
+
+**Runbook fix (2026-11-23):** `P5_BACKUP_CMD` now also copies `reports/p5_train_recon` and `reports/p5_train_reals` (small files) to Drive before the stop.
+- **Why:** the smoke records the projection needs would otherwise sit only on the stopped instance.
+- **Test:** `test_runbook_backup_carries_the_reports_off_the_instance`, which also checks that no clip directory is copied. 46 passed.
+- **The first-session dry run was redone on `19a4b9b`: PASSED.** smoke OK x6; `gpu_name` is recorded (None on CPU).

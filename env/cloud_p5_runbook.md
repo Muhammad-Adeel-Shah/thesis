@@ -186,7 +186,9 @@ source /data/venv/bin/activate
 export HF_HOME=/data/cache/hf TORCH_HOME=/data/cache/torch PIP_CACHE_DIR=/data/cache/pip
 export P5_VOLUME_CREATED=<YYYY-MM-DD> P5_STATE=/data/p5/session
 export P5_EBS_PER_DAY=<as prelaunch prints it>     # data + root volume
-export P5_BACKUP_CMD="rclone copy /data/p5/session gdrive:dbp-p5/session"
+# the exit trap runs this from the repo checkout BEFORE the stop: the ledger AND the small
+# reports (smoke records, reals manifest), so a stopped instance never holds the only copy
+export P5_BACKUP_CMD="rclone copy /data/p5/session gdrive:dbp-p5/session && rclone copy reports/p5_train_recon gdrive:dbp-p5/reports/p5_train_recon && rclone copy reports/p5_train_reals gdrive:dbp-p5/reports/p5_train_reals"
 ```
 
 **rclone (approved by the user, 2026-11-22). On the AWS instance only**, never on the PC or
