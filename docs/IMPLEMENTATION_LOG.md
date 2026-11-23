@@ -9097,3 +9097,36 @@ skips are gone. ruff: all checks passed.
 PENDING-GPU), 0 failed, 1 warning, in 999.2 s.** That is twice the 469.7 s of the run before.
 The slowest test took 100.9 s, against 37.6 s then, so the machine was under other load; the
 tests' own runtimes did not change. ruff: all checks passed.
+
+### P5-C — first AWS read-only lookups with the dbp-agent keys (2026-11-23)
+
+Claude Code was restarted from a shell set by `env/aws_p5_env.ps1 -Role agent`.
+
+**Commands and results:**
+- **`aws sts get-caller-identity`:**
+  - IAM user `dbp-agent`, an IAM user (not root), region us-east-2.
+  - The account id is not logged.
+- **The agent cannot launch:** `aws ec2 run-instances --dry-run` (g5.2xlarge, the AMI below,
+  a gp3 root, tag `dbp-p5`) gave **UnauthorizedOperation**, exit 254.
+  - The root size in that dry-run (75) was typed before `describe-images` returned. It matches
+    the AMI; the call was refused anyway.
+- **The AMI** (`aws ssm get-parameters-by-path --path /aws/service/deeplearning/ami/x86_64`,
+  `base-oss-nvidia-driver-gpu-ubuntu-22.04/latest`): `ami-079e51febc2ff531b`.
+  - `describe-images`: "Deep Learning Base OSS Nvidia Driver GPU AMI (Ubuntu 22.04)
+    20261113", created 2026-11-13T15:43:19Z, x86_64, available.
+  - Root `/dev/sda1`, 75 GB gp3.
+- **Zones that offer g5.2xlarge** (`describe-instance-type-offerings`): us-east-2a, us-east-2b
+  and us-east-2c.
+- **The vCPU quota** (`service-quotas list-service-quotas`): "Running On-Demand G and VT
+  instances" (L-DB2E81BA) = **8.0 vCPUs**.
+  - `describe-instance-types` gives g5.2xlarge 8 vCPUs and one A10G with 22,888 MiB.
+  - The quota is exactly enough for one instance, so this is **not a stop**.
+- **What exists now:**
+  - key pair `dbp-p5`: 0; security group `dbp-p5`: 0;
+  - volumes: 0; instances not terminated: 0;
+  - Elastic IPs: 0; snapshots: 0; default VPC: 1.
+  - So there is **no AWS spend yet.**
+
+**Next:** the user creates the key pair and the security group now (free), and the data
+volume right before the speed-test launch. Then: prelaunch, the checklist to the user, and
+the launch only after the user's OK.
