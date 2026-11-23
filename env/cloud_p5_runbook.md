@@ -104,6 +104,16 @@ aws ec2 authorize-security-group-ingress --group-name dbp-p5 --protocol tcp --po
 aws ec2 create-volume --availability-zone <AZ> --size 200 --volume-type gp3 --tag-specifications "ResourceType=volume,Tags=[{Key=Name,Value=dbp-p5-data}]"
 ```
 
+**EBS encryption by default must be OFF** (2026-11-23).
+- **Why:** `dbp-launch` has no KMS permission. With encryption by default on, AWS creates
+  the volume encrypted, fails `kms:GenerateDataKeyWithoutPlaintext` (AccessDenied in
+  CloudTrail), and deletes the volume a moment later. The launch's root volume would go the
+  same way.
+- **The fix:** `aws ec2 get-ebs-encryption-by-default` must print `false`. The user turned it
+  off; the volumes hold public Pexels data and model outputs only.
+- **`prelaunch` checks it,** and also that the data and root volumes and the AMI's snapshot
+  are unencrypted.
+
 **SSH (user, 2026-11-22):** port 22 is opened **only to your current public IP as a /32**,
 never 0.0.0.0/0 and never IPv6. `prelaunch` refuses if the `dbp-p5` group allows 0.0.0.0/0
 or ::/0, any range wider than /32, more than one address, any port but tcp 22, or another

@@ -406,7 +406,15 @@ PASSING_SMOKE = {"status": "OK", "fp16_build_allowed": True, "fp16_reason": "ok"
     ("sd15_pf", PASSING_SMOKE, "fp16"),
     ("mochi", PASSING_SMOKE, "fp32"),     # user, 2026-11-22: its pilot fp16 check failed
     ("cogvx", PASSING_SMOKE, "fp32"),     # user, 2026-11-22: fp32 for determinism
-    ("hunyuan", PASSING_SMOKE, "fp32"),   # no pilot fp16 check (OOM on the T4)
+    ("hunyuan", PASSING_SMOKE, "fp32"),   # no pilot check (OOM on the T4), no A10G record
+    # user, 2026-11-23: hunyuan's fp16 check is the A10G smoke's, same rule
+    ("hunyuan", {**PASSING_SMOKE, "gpu_name": "NVIDIA A10G"}, "fp16"),
+    ("hunyuan", {**PASSING_SMOKE, "gpu_name": "Tesla T4"}, "fp32"),
+    ("hunyuan", {**PASSING_SMOKE, "gpu_name": "NVIDIA A10G", "fp16_build_allowed": False},
+     "fp32"),
+    ("hunyuan", {**PASSING_SMOKE, "gpu_name": "NVIDIA A10G",
+                 "fp16_determinism_max_abs_delta": 2}, "fp32"),
+    ("mochi", {**PASSING_SMOKE, "gpu_name": "NVIDIA A10G"}, "fp32"),
     ("wan21", {**PASSING_SMOKE, "fp16_build_allowed": False}, "fp32"),
     ("wan21", {**PASSING_SMOKE, "fp16_determinism_max_abs_delta": 1}, "fp32"),
     ("wan21", {**PASSING_SMOKE, "fp16_determinism_max_abs_delta": None}, "fp32"),
@@ -415,7 +423,8 @@ def test_recon_precision_follows_the_pilot_and_this_smoke(key, smoke, expected):
     import p5_pilot as P
 
     assert P.recon_precision(key, PILOT, smoke)[0] == expected
-    assert P.recon_precision(key, None, smoke)[0] == "fp32"
+    if key not in P.FP16_CHECK_ON_A10G:
+        assert P.recon_precision(key, None, smoke)[0] == "fp32"
 
 
 def test_reconstruct_skips_threshold_reals_and_never_mixes_precision(tmp_path, monkeypatch):

@@ -83,6 +83,14 @@ def peak_mb(device: str) -> float | None:
         if device == "cuda" and torch.cuda.is_available() else None
 
 
+def gpu_name(device: str) -> str | None:
+    """The CUDA device's name (recorded with every smoke), or None on CPU."""
+    import torch
+
+    return torch.cuda.get_device_name(0) \
+        if device == "cuda" and torch.cuda.is_available() else None
+
+
 def reset_peak(device: str) -> None:
     import torch
 
@@ -110,6 +118,7 @@ def phase_smoke(args: argparse.Namespace, bank: Any, clips: list[dict[str, str]]
     for key in args.members.split(","):
         spec, out = bank.by_key(key), args.reports / f"smoke_{key}.json"
         record: dict[str, Any] = {"member": key, "role": spec.role, "device": args.device,
+                                  "gpu_name": gpu_name(args.device),
                                   "clips": [c["sample_id"] for c in sample],
                                   "numerics": args.numerics}
         try:
@@ -223,11 +232,29 @@ FORCE_FP32 = {"mochi": "user, 2026-11-22: fp32 (its pilot fp16 parity check fail
               "cogvx": "user, 2026-11-22: fp32 (determinism)"}
 
 
+#: Members with no pilot fp16 check, whose check is the A10G smoke's (same rule: the PSNR
+#: threshold at every clip, finite, and a repeat run that matches).
+FP16_CHECK_ON_A10G = {"hunyuan": "user, 2026-11-23: no pilot fp16 check (OOM on the T4); "
+                                 "its check is the A10G smoke's, same rule"}
+
+
 def recon_precision(key: str, evidence: Path | None, smoke: dict[str, Any]) -> tuple[str, str]:
     """fp16 only for a member whose PILOT fp16 check passed and whose smoke in this run
-    passed it again, deterministically (CLAUDE.md 7; user, 2026-11-22). Else fp32."""
+    passed it again, deterministically (CLAUDE.md 7; user, 2026-11-22). Else fp32.
+    A member in :data:`FP16_CHECK_ON_A10G` needs the smoke's pass, recorded on an A10G."""
     if key in FORCE_FP32:
         return "fp32", FORCE_FP32[key]
+    if key in FP16_CHECK_ON_A10G:
+        gpu = smoke.get("gpu_name") or ""
+        if "A10G" not in gpu:
+            ran_on = gpu or "no GPU"
+            return "fp32", f"its fp16 check must run on an A10G; this smoke ran on {ran_on}"
+        if smoke.get("fp16_build_allowed") is not True:
+            return "fp32", f"A10G smoke fp16 check not passed ({smoke.get('fp16_reason')})"
+        if smoke.get("fp16_determinism_max_abs_delta") != 0:
+            return "fp32", "fp16 not deterministic in the A10G smoke"
+        return "fp16", f"fp16_build_allowed in the smoke on {gpu}, deterministic " \
+                       f"({FP16_CHECK_ON_A10G[key]})"
     if evidence is None:
         return "fp32", "no --fp16-evidence given"
     pilot_path = evidence / f"smoke_{key}.json"

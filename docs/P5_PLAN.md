@@ -141,6 +141,15 @@ trains and after the test panel is frozen.
 >   - **HunyuanVideo is decided after the speed test,** by the user, against the
 >     reconstruction's $45 share. If it does not fit, the numbers go to the user, who may
 >     re-allocate from the reserve. The agent neither drops nor keeps it alone.
+> - **User, 2026-11-23:**
+>   - **HunyuanVideo's fp16 check** runs in the A10G smoke, with the same rule as the others:
+>     the PSNR threshold at every clip, and a repeat run that matches. That it ran on an A10G
+>     is recorded (`gpu_name` in the smoke record).
+>   - **F1 without HunyuanVideo:** wan21, ltx090, cogvx (section 5).
+>   - **The training recipe's codec, CRF and share** are in section 3.4.
+>   - **EBS encryption by default is off.** The volumes hold public Pexels data and model
+>     outputs only; test data never leaves Kaggle. `dbp-launch` has no KMS permission, so an
+>     encrypted volume is deleted right after it is created.
 
 **Method:** the image method on video, at reduced scale, without reduced rigour. The
 rules are the image module's: a frozen pre-registration pushed before training; a test
@@ -420,9 +429,12 @@ separately, as E7 was for the images.
         format shortcut. The p = 0.80 re-encode comes on top of it, for both classes.
     - **Provenance:** fixed from training-domain pilot data only (Pexels reals and their
       reconstructions), never from test data. No test clip has been fetched.
-    - **OPEN (user):** the CRF range and the codec mix. The plan never fixed a numeric range
-      for training (A5 says only "a CRF range"). V5 tests H.264 CRF 23/28/35 and H.265
-      CRF 28/35.
+    - **Codec, CRF and share (user, 2026-11-23):**
+      - codec: H.264 with p = 0.7, H.265 with p = 0.3;
+      - CRF: an integer, uniform over 18–35;
+      - re-encode share: exactly p = 0.80, identical for both clips of a pair.
+    - **The thesis states** that V5 (H.264 CRF 23/28/35, H.265 CRF 28/35) tests robustness
+      inside the trained range, not outside it.
 
 ---
 
@@ -464,6 +476,9 @@ separately, as E7 was for the images.
 **Pre-declared fallback order (user's), with triggers:**
 1. **F1: LOLO 5 → 3 folds** (wan21, hunyuan, ltx090 — the three most different) if the
    training data is not complete by **Mon 23 Nov, end of day**.
+   - **If HunyuanVideo leaves the bank** (user, 2026-11-23, decided before any result): the
+     three folds are **wan21, ltx090, cogvx**.
+   - If it stays: F1 exactly as written.
 2. **F2: drop k-shot** if scoring has not started by **Wed 25 Nov, end of day**.
 3. **F3: robustness H.264 only** (CRF 28, with 23 and 35 descriptive) if clean scoring is not
    done by **Thu 26 Nov, 12:00**.

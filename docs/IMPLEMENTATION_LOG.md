@@ -8,7 +8,7 @@ Rule: this file is append-only below "Prompt entries"; the snapshot tables above
 
 | Item | Value |
 |---|---|
-| Last prompt | **P5-C prep, second review (2026-11-22)**: revoke rule; video training recipe (re-encode p = 0.80, pair-identical; CRF range OPEN); threshold reals not reconstructed; fp16 rule; x265 determinism fixed. **P5-C prep, user review (2026-11-22)**: SSH /32 + gp3-root prelaunch checks, $1.217/h, rclone (AWS only), 0.42.0 digests = 0.40.0. **P5-C prep (2026-11-22)**: AWS access without the Agent Toolkit (two IAM users, policies in `env/aws_iam/`, env-only key helper `env/aws_p5_env.ps1`), prelaunch quota/zone/root/IOPS/spot checks, the first AWS session (setup + Pexels + A10G smoke, approved) written out; the reconstruction command lacked `--device cuda` (fixed, tested). Waiting for the IAM users and keys. **P5-B pilot results (2026-11-21, code `f8669b3`, Kaggle 2× T4)**: tracked under `reports/kaggle_20261121/`. wan21 / ltx090 reconstructed 200 clips; hunyuan OOM on the T4; cogvx nondeterministic by one grey level, a code defect (no determinism contract in the VAE phases), fixed with a test; Qwen-Image vs Wan2.1: decoders differ, the encoder is shared at bf16. The AWS reconstruction projection rests on an assumed T4 → A10G factor ($23–60), so an A10G smoke measures it first; no launch without the user's OK. **P5-B (2026-11-21, branch `p5-video`)**: A1–A8 approved with conditions; the compute plan changed (AWS g5.2xlarge, $80 budget). Built: the video bank (`configs/video_bank.yaml`, 6 bank + 1 reserve, Allegro excluded), the video reconstruction kinds, video I/O (`av==19.0.2`), the Pexels fetch, the pilot (`scripts/p5_pilot.py`) and its Kaggle runbook, the cloud runbook and guard. Hand-over of the Kaggle pilot. Nothing trained, no test data fetched. **P5-A (2026-11-20)**: the plan. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
+| Last prompt | **P5-C (2026-11-23)**: volume lost to encryption-by-default + no KMS (CloudTrail-confirmed), fixed; prelaunch OK; F1-without-Hunyuan folds, training codec/CRF, Hunyuan fp16 on A10G recorded. **P5-C prep, second review (2026-11-22)**: revoke rule; video training recipe (re-encode p = 0.80, pair-identical; CRF range OPEN); threshold reals not reconstructed; fp16 rule; x265 determinism fixed. **P5-C prep, user review (2026-11-22)**: SSH /32 + gp3-root prelaunch checks, $1.217/h, rclone (AWS only), 0.42.0 digests = 0.40.0. **P5-C prep (2026-11-22)**: AWS access without the Agent Toolkit (two IAM users, policies in `env/aws_iam/`, env-only key helper `env/aws_p5_env.ps1`), prelaunch quota/zone/root/IOPS/spot checks, the first AWS session (setup + Pexels + A10G smoke, approved) written out; the reconstruction command lacked `--device cuda` (fixed, tested). Waiting for the IAM users and keys. **P5-B pilot results (2026-11-21, code `f8669b3`, Kaggle 2× T4)**: tracked under `reports/kaggle_20261121/`. wan21 / ltx090 reconstructed 200 clips; hunyuan OOM on the T4; cogvx nondeterministic by one grey level, a code defect (no determinism contract in the VAE phases), fixed with a test; Qwen-Image vs Wan2.1: decoders differ, the encoder is shared at bf16. The AWS reconstruction projection rests on an assumed T4 → A10G factor ($23–60), so an A10G smoke measures it first; no launch without the user's OK. **P5-B (2026-11-21, branch `p5-video`)**: A1–A8 approved with conditions; the compute plan changed (AWS g5.2xlarge, $80 budget). Built: the video bank (`configs/video_bank.yaml`, 6 bank + 1 reserve, Allegro excluded), the video reconstruction kinds, video I/O (`av==19.0.2`), the Pexels fetch, the pilot (`scripts/p5_pilot.py`) and its Kaggle runbook, the cloud runbook and guard. Hand-over of the Kaggle pilot. Nothing trained, no test data fetched. **P5-A (2026-11-20)**: the plan. **Before that, P3b CLOSED (2026-11-17)**: ViT-L S2-D seeds 0 and 1 trained, scored once (attempt 2, code `6c94252`) and analysed once. **Q1 (primary) PASS** (matches and beats DDA); Q2, Q3 and Q5 PASS; Q4 (k = 0 FPR) and Q6 (jpeg50) not passed. The thesis outputs are committed (`reports/p3b_results/`: Table 10, two figures). `master` is pushed; the `archive/pre-release` push (with the old tag as `archive/p3b-vitl-prereg-frozen`) is audited CLEAN and handed to the user. Kaggle is kept free for P5 (video) |
 | Runtime / GPU / driver | `local-dev+kaggle-gpu`. **Local:** Windows 11 Pro 10.0.26200, no NVIDIA GPU, 17.0 GB RAM. **Kaggle:** 2x Tesla T4, sm_75, driver 580.159.04, 14 912 MB each, 33.7 GB RAM (device 0 used) |
 | Python / torch / CUDA / cuDNN | **Local:** Python 3.13.1, torch 2.11.0+cpu, tv 0.26.0+cpu, CUDA None. **Kaggle:** Python 3.12.13, torch 2.10.0+cu128, tv 0.25.0+cu128, CUDA 12.8, cuDNN 91002 |
 | diffusers / transformers / peft / spandrel / lpips / Pillow(libjpeg) | **Local:** 0.40.0 / 5.17.0 / 0.21.0 / 0.4.2 / 0.1.4 / 12.3.0 (**libjpeg 8.0**). **Kaggle:** 0.37.1 / 5.0.0 / 0.19.1 / 0.4.2 / 0.1.4 / 11.3.0 (**libjpeg 6.2**) — the libjpeg difference matters for P1, see I-010. **Kaggle, S3 recovery session 2026-10-04** (pre-flight import check): diffusers 0.40.0, transformers 5.16.1, peft 0.20.0, spandrel 0.4.2; Python 3.13 per the site-packages path in the probe log |
@@ -9182,3 +9182,103 @@ the launch only after the user's OK.
     the speed test. If it leaves the bank, F1 as written cannot be applied exactly.
 - **F2** (Wed 25, end of day), **F3** (Thu 26, 12:00) and **F4** (with F3, or a failed
   DeCoF/DDA pre-flight): **not fired.**
+
+### P5-C — the missing volume explained (EBS encryption by default + no KMS); prelaunch OK; the user's answers (2026-11-23)
+
+**CloudTrail** (`aws cloudtrail lookup-events`, 08:45–09:00 UTC; read-only):
+- **08:51:14Z, `CreateVolume`** by `dbp-launch`: gp3, 200 GB, us-east-2a, no error. The
+  response has `encrypted: true`, `status: creating`. The request did not ask for encryption,
+  so it came from the account default.
+- **08:51:14Z, `kms:GenerateDataKeyWithoutPlaintext`** by `dbp-launch`, invoked by
+  `ec2-frontend-api.amazonaws.com`: **errorCode AccessDenied** ("…is not authorized to
+  perform: kms:GenerateDataKeyWithoutPlaintext…").
+- **This confirms the user's diagnosis:** the volume was encrypted by default, the policy has
+  no KMS action, and the volume was deleted. The later KMS `DescribeKey` / `ListAliases`
+  events (13:59–14:00 PKT) are the user's console as root.
+
+**The fix (user):** encryption by default is now off.
+- `aws ec2 get-ebs-encryption-by-default` prints `False`.
+- The new volume, from `describe-volumes`: `vol-0df4b413defb3421d`, us-east-2a, 200 GB gp3,
+  3000 IOPS / 125 MiB/s, **Encrypted False**, available, created 2026-11-23T09:00:25Z, tag
+  `dbp-p5-data`.
+
+**Changed:**
+- **`scripts/p5_aws_check.py` prelaunch refuses:**
+  - encryption by default not `False`;
+  - an encrypted data volume, an encrypted root volume (after the launch), or an encrypted
+    AMI snapshot.
+  - `get-ebs-encryption-by-default` is the one non-`describe-*` read it may call
+    (`READ_ONLY_GETS`). The enable and disable verbs are refused, and tested.
+- **The runbook §2** has a note on encryption by default.
+- **`scripts/p5_pilot.py`:**
+  - each smoke records `gpu_name`;
+  - `FP16_CHECK_ON_A10G = {hunyuan}`: hunyuan's fp16 needs the smoke's pass, recorded on an
+    A10G, deterministic (user, below).
+- **Tests:**
+  - `test_p5_cloud.py`: 45 passed, with 4 new encryption refusals;
+  - `test_p5_video.py`: 5 new hunyuan/mochi precision cases.
+
+**User decisions** (recorded in P5_PLAN):
+- **F1 without HunyuanVideo:** the folds are wan21, ltx090, cogvx, decided before any
+  result. With HunyuanVideo: F1 as written.
+- **The training recipe:**
+  - H.264 with p = 0.7, H.265 with p = 0.3;
+  - CRF uniform over 18–35;
+  - a re-encode share of exactly p = 0.80, pair-identical.
+  - The thesis states that V5 tests robustness inside the trained range.
+- **HunyuanVideo's fp16 check** runs in the A10G smoke, with the same rule; that it ran on an
+  A10G is recorded.
+- **The AIGVDBench zip listings may be read locally:** names and sizes only, through range
+  reads of the zip directories, no video bytes, and only the listing JSON is kept.
+
+**PRE-LAUNCH CHECKLIST, MEASURED (2026-11-23 14:04 PKT):**
+- The command: `p5_aws_check.py prelaunch --ami ami-079e51febc2ff531b --data-volume
+  vol-0df4b413defb3421d --stage setup_pexels --hours 2.0`.
+- **RESULT: OK to launch AFTER the user's explicit OK** (exit 0).
+- **What it showed:**
+  - root `/dev/sda1` gp3 75 GB;
+  - g5.2xlarge offered in us-east-2a/b/c; quota 8.0;
+  - `dbp-p5` (`sg-041d27c33dda50830`) "tcp 22 from 1 IPv4 /32, no IPv6";
+  - encryption by default False, data volume Encrypted False;
+  - EBS 275 GB = $0.7333/day;
+  - 2.00 h × $1.217 = $2.43 (share $5), hard cap 3.00 h.
+
+**AIGVDBench zip listings, read locally** (user approval 2026-11-23: names and sizes only):
+- **The new script** `scripts/p5_fetch_panel.py --phase list` does exact HTTP range reads:
+  the last 128 B of each zip, the ZIP64 end record, and then exactly the central directory.
+  - The reads go through `RangeReader`: one `_fetch_range` per read, no cache, and every
+    downloaded byte is counted.
+  - It refuses if the downloaded bytes ≠ the bytes asked for, or if the end read reaches before
+    the directory.
+  - Tests: `tests/test_p5_panel.py`, 4 passed. They check against `zipfile`, a ZIP64 zip of
+    65,600 entries, a zip comment, and a non-zip.
+- **Result:**
+  - 32 zips, **39,093,741 B read in total, all of it directory**; every zip has
+    `tail_in_directory` true and the downloaded bytes equal to the bytes asked for.
+  - The full listing is `F:/thesis-2/kaggle_raw/p5_panel/aigvdbench_listing.json`
+    (20,141,005 B, sha256 `a90056de53006c467fd6c50d2d0c8fe40dbbf9b80837efec01b53b0177bcf757`),
+    outside the repository because it is > 10 MB.
+  - The tracked summary is `reports/p5_panel/aigvdbench_listing_summary.json`, with per-zip
+    counts, bytes read and a `listing_sha256`.
+- **The layout found:**
+  - **The 11 ClosedSource zips:** 2,000 `.mp4` each, with numeric names (`1713.mp4`). The
+    same 2,000 names are in all 11, and none of them is in Real.
+  - **The 20 OpenSource zips:** 20,000 each. **Their name sets equal Real.zip's 20,000
+    names exactly**, so every open-source fake has a same-named real.
+  - **Real.zip:** 19,996 names match `<source>_<k>_<a>to<b>.mp4`, from 17,936 distinct source
+    videos, with at most 7 clips per source.
+  - Every member is deflate (method 8).
+- The draw rule was proposed to the user; it is waiting for approval.
+
+**Full suite, MEASURED** (`--durations=20 -rs`): **1 failed, 1,417 passed, 7 skipped (GPU,
+PENDING-GPU)**, in 1,033.2 s.
+- **The failure is `test_encode_roundtrip_keeps_frames_and_is_deterministic[libx265]`.**
+- **The fix of 2026-11-22 (single-threaded x265) does NOT make libx265 deterministic.**
+  - Diagnostic, 10 encodes of the test clip in one process: **3 distinct outputs alone**
+    (33,133 / 33,134 / 33,348 B), and 3 under CPU load (33,072 / 33,133 / 33,145 B).
+  - The 8-of-8 and 4-of-4 passes recorded on 2026-11-22 were chance.
+  - That is two fix attempts (`pools=1:frame-threads=1`, then
+    `pools=none:frame-threads=1:no-wpp=1:lookahead-slices=0`). **Per CLAUDE.md §10 it is
+    stopped and put to the user.** The test is left failing, not skipped or marked xfail.
+- **It does not affect the first AWS session:** no H.265 encode runs there. It does matter for
+  the training recipe (H.265 with p = 0.3) and for V5's H.265 views.

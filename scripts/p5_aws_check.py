@@ -4,15 +4,17 @@
                   type g5.2xlarge, the AMI id and its root size, the data volume (attached
                   at launch, DeleteOnTermination=false), the SSH security group (tcp 22 from
                   one /32 only; never 0.0.0.0/0 or ::/0), shutdown behaviour = stop, the
-                  root volume gp3 at the AMI's size, no other P5 instance, and the projected
-                  hours and cost against the stage's budget.
+                  root volume gp3 at the AMI's size, EBS encryption by default OFF and no
+                  encrypted volume or AMI snapshot (dbp-launch has no KMS permission: an
+                  encrypted volume is deleted right after it is created; 2026-11-23), no other
+                  P5 instance, and the projected hours and cost against the stage's budget.
                   Exit 1 if any check fails: do not launch.
 ``postsession`` -- after every session: running instances = 0, volumes = root + data only,
                   Elastic IPs = 0, snapshots = 0, and the spend so far (from the guard's
                   ledger, copied from the instance) against the budget.
 
-Read-only: it calls only ``aws ec2 describe-*`` and ``aws service-quotas
-list-service-quotas``. It never launches, starts or modifies.
+Read-only: it calls only ``aws ec2 describe-*``, ``aws ec2 get-ebs-encryption-by-default``
+and ``aws service-quotas list-service-quotas``. It never launches, starts or modifies.
 Credentials come from the shell's environment variables; nothing is printed of them, and
 the SSH rule's address is not printed either (only its prefix length).
 """
@@ -41,9 +43,13 @@ BUDGET = {"setup_pexels": 5, "reconstruction": 45, "training": 15, "features_hea
 HARD_STOP = 75
 
 
+#: The read-only ``aws ec2`` calls that are not ``describe-*``.
+READ_ONLY_GETS = frozenset({"get-ebs-encryption-by-default"})
+
+
 def aws(*args: str) -> Any:
-    """One read-only ``aws ec2 describe-*`` call, JSON out."""
-    if not args or not args[0].startswith("describe-"):
+    """One read-only ``aws ec2 describe-*`` (or :data:`READ_ONLY_GETS`) call, JSON out."""
+    if not args or not (args[0].startswith("describe-") or args[0] in READ_ONLY_GETS):
         raise SystemExit("p5_aws_check only describes; it never changes anything")
     done = subprocess.run(["aws", "ec2", *args, "--region", REGION, "--output", "json"],
                           capture_output=True, text=True, check=False)
@@ -138,6 +144,14 @@ def prelaunch(args: argparse.Namespace) -> int:
                         if b.get("DeviceName") == root_device and "Ebs" in b), None)
         if root_gb is None:
             problems.append(f"the AMI's root mapping {root_device} has no snapshot size")
+        if any(b.get("Ebs", {}).get("Encrypted") for b in image[0].get("BlockDeviceMappings", [])):
+            problems.append("the AMI has an encrypted snapshot: its volumes would need KMS, "
+                            "which dbp-launch does not have")
+    encryption_default = aws("get-ebs-encryption-by-default").get("EbsEncryptionByDefault")
+    if encryption_default is not False:
+        problems.append(f"EBS encryption by default is {encryption_default}: dbp-launch has no "
+                        f"KMS permission, so every new volume (the root too) is deleted right "
+                        f"after it is created (2026-11-23). Turn it off first")
     offered = sorted(o["Location"] for o in aws(
         "describe-instance-type-offerings", "--location-type", "availability-zone",
         "--filters", f"Name=instance-type,Values={TYPE}").get("InstanceTypeOfferings", []))
@@ -153,6 +167,8 @@ def prelaunch(args: argparse.Namespace) -> int:
             problems.append(f"data volume is in {v.get('AvailabilityZone')}; {TYPE} is offered "
                             f"in {offered}")
         problems += gp3_extra_problem("data volume", v)
+        if v.get("Encrypted") is not False:
+            problems.append(f"data volume Encrypted={v.get('Encrypted')}, expected false")
     sg_problems, sg_summary, sg_id = security_group_problems(args.security_group)
     problems += sg_problems
     vcpus = aws("describe-instance-types", "--instance-types", TYPE)["InstanceTypes"][0][
@@ -200,6 +216,8 @@ def prelaunch(args: argparse.Namespace) -> int:
                 problems.append("the root volume has DeleteOnTermination=false (it would be left "
                                 "behind, billed)")
             problems += gp3_extra_problem("root volume", rv)
+            if rv.get("Encrypted") is not False:
+                problems.append(f"root volume Encrypted={rv.get('Encrypted')}, expected false")
     cost = args.hours * RATE
     share = BUDGET.get(args.stage)
     ebs_day = ebs_usd(1, DATA_GB + (root_gb or 0))
@@ -211,6 +229,8 @@ def prelaunch(args: argparse.Namespace) -> int:
     print(f"  data volume {args.data_volume} | {TYPE} offered in {offered} | on-demand G/VT "
           f"vCPU quota: {quota}")
     print(f"  security group {args.security_group} ({sg_id}): {sg_summary}")
+    print(f"  EBS encryption by default: {encryption_default} | data volume Encrypted="
+          f"{vol[0].get('Encrypted') if vol else '?'} (root: checked after the launch)")
     print("  shutdown behaviour = stop | watchdog + hard cap: armed by env/aws_p5_session.sh")
     print(f"  rate ${RATE}/h (instance ${INSTANCE_RATE} + public IPv4 ${IPV4_RATE}) | EBS "
           f"{DATA_GB} + {root_gb} GB = ${ebs_day:.4f}/day (export P5_EBS_PER_DAY={ebs_day:.4f})")

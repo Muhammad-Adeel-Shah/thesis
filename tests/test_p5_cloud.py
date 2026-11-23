@@ -129,13 +129,16 @@ SSH_ONE_32 = [{"IpProtocol": "tcp", "FromPort": 22, "ToPort": 22,
 
 def base_responses(delete_on_termination=False, behaviour="stop", others=(), zone="us-east-2a",
                    iops=3000, root_gb=75, lifecycle=None, ingress=None, groups=1,
-                   instance_sgs=("sg-1",), root_type="gp3", root_size=None, root_dot=True):
+                   instance_sgs=("sg-1",), root_type="gp3", root_size=None, root_dot=True,
+                   encryption_default=False, data_encrypted=False, root_encrypted=False,
+                   ami_encrypted=False):
     volumes = {
         "vol-data": {"VolumeId": "vol-data", "Size": 200, "VolumeType": "gp3", "State": "in-use",
-                     "AvailabilityZone": zone, "Iops": iops, "Throughput": 125},
+                     "AvailabilityZone": zone, "Iops": iops, "Throughput": 125,
+                     "Encrypted": data_encrypted},
         "vol-root": {"VolumeId": "vol-root", "Size": root_size or root_gb,
                      "VolumeType": root_type, "State": "in-use", "AvailabilityZone": zone,
-                     "Iops": 3000, "Throughput": 125},
+                     "Iops": 3000, "Throughput": 125, "Encrypted": root_encrypted},
     }
 
     def instances(args):
@@ -166,7 +169,10 @@ def base_responses(delete_on_termination=False, behaviour="stop", others=(), zon
             "describe-images": lambda a: {"Images": [{
                 "ImageId": "ami-x", "RootDeviceName": "/dev/sda1",
                 "BlockDeviceMappings": [{"DeviceName": "/dev/sda1",
-                                         "Ebs": {"VolumeSize": root_gb}}]}]},
+                                         "Ebs": {"VolumeSize": root_gb,
+                                                 "Encrypted": ami_encrypted}}]}]},
+            "get-ebs-encryption-by-default": lambda a: {
+                "EbsEncryptionByDefault": encryption_default},
             "describe-instance-type-offerings": lambda a: {"InstanceTypeOfferings": [
                 {"Location": "us-east-2a"}, {"Location": "us-east-2b"}]},
             "describe-instance-types": lambda a: {"InstanceTypes": [
@@ -206,6 +212,12 @@ def base_responses(delete_on_termination=False, behaviour="stop", others=(), zon
     ({"root_type": "gp2"}, 10.0, False),
     ({"root_size": 100}, 10.0, False),
     ({"root_dot": False}, 10.0, False),
+    # 2026-11-23: encryption by default ON made AWS delete the data volume right after
+    # CreateVolume (kms:GenerateDataKeyWithoutPlaintext AccessDenied for dbp-launch)
+    ({"encryption_default": True}, 10.0, False),
+    ({"data_encrypted": True}, 10.0, False),
+    ({"root_encrypted": True}, 10.0, False),
+    ({"ami_encrypted": True}, 10.0, False),
 ])
 def test_prelaunch_refuses_every_unsafe_condition(monkeypatch, capsys, change, hours, ok):
     import argparse
@@ -306,6 +318,10 @@ def test_check_script_only_describes():
 
     with pytest.raises(SystemExit, match="only describes"):
         C.aws("run-instances")
+    assert {"get-ebs-encryption-by-default"} == C.READ_ONLY_GETS
+    for verb in ("enable-ebs-encryption-by-default", "disable-ebs-encryption-by-default"):
+        with pytest.raises(SystemExit, match="only describes"):
+            C.aws(verb)
 
 
 # ------------------------------------------------------- IAM policies and the key helper ---
