@@ -9413,3 +9413,15 @@ designed. The loop now stops before the last row, with a regression test.
 - data volume attached, DoT false, unencrypted;
 - on-demand; shutdown = stop; only `dbp-p5`;
 - quota 8.0.
+
+**Setup on the instance, first try: FAILED** (user report).
+- **What happened:** the AMI's Python is 3.10 (Ubuntu 22.04), and `diffusers==0.42.0` requires Python >= 3.11. The GPU was OK (A10G, driver 595 per the user), torch 2.11.0 cu130 installed fine, and HF_TOKEN was present.
+- **The fix:**
+  - The user installs `python3.11` + `python3.11-venv` from the Ubuntu archive only (the ONLY_ARCHIVE sources: jammy, jammy-updates, jammy-security).
+  - `/data/venv` (half-built with 3.10) is deleted.
+  - The setup is re-run with a one-file PATH shim, `/data/py311/python3 -> python3.11`. `env/cloud_p5_setup.sh` (unchanged, as in the zip `2b04754`) builds the venv with 3.11; everything after runs inside the venv.
+- **Environment note:**
+  - Training-side Python is **3.11** on the AWS instance. The exact patch version comes from the setup record `reports/p5_cloud/env_*.txt` (`python 3.11.x`).
+  - Kaggle scoring runs **Python 3.13**: the pilot logs under `reports/kaggle_20261121/p5_pilot/logs/` show `/usr/local/lib/python3.13/dist-packages`.
+  - torch 2.11.0 on both sides; the frozen model hashes are checked before scoring (CLAUDE.md §14).
+- **Follow-up for the repo (not changed now, so the instance code equals the committed zip):** `cloud_p5_setup.sh` should take the venv interpreter as a setting and refuse a Python below 3.11 before installing torch.
