@@ -9130,3 +9130,33 @@ Claude Code was restarted from a shell set by `env/aws_p5_env.ps1 -Role agent`.
 **Next:** the user creates the key pair and the security group now (free), and the data
 volume right before the speed-test launch. Then: prelaunch, the checklist to the user, and
 the launch only after the user's OK.
+
+**The key pair and the security group** (created by the user; checked by the agent):
+- `describe-key-pairs`: `dbp-p5`, ed25519, `key-056c408bbb8084c89`.
+- `describe-security-groups`: `sg-041d27c33dda50830`, in the default VPC, with 1 ingress and
+  1 egress rule.
+- `p5_aws_check.security_group_problems("dbp-p5")`: "tcp 22 from 1 IPv4 /32, no IPv6",
+  problems: none.
+- The user reports the launch-key dry-runs as g5.2xlarge allowed, g5.4xlarge blocked,
+  allocate-address blocked.
+
+**Local dry-run of the first AWS session (CLAUDE.md 12.3): PASSED.**
+- This command had never been dry-run.
+- **How it ran:**
+  - The driver (scratchpad, not committed) unpacked a code zip of HEAD `42bd217`.
+  - It cut the session block out of that tree's `env/cloud_p5_runbook.md` and ran it with
+    bash on CPU.
+  - Substitutions: `/data/` → a scratch dir; `--source hub` → the test suite's own fixture
+    (3 shards, 9 videos); `--shards 0:3`; `--n 4`; `--workers 2`; `--device cpu`.
+  - Environment: `P5_SHUTDOWN` a recorder, `DBP_DRYRUN=1` stand-ins.
+  - The pin check ran (no `--skip-pins`).
+- **Result:**
+  - exit 0, and the session record `ok`;
+  - the shutdown calls were `+180` (the cap, first), then `now` from the guard, then `now`
+    from the trap;
+  - the fetch kept 4 of 4, complete, with 1 `short_side` exclusion;
+  - the smoke was OK for all six members;
+  - the numerics record shows deterministic and TF32 off.
+- **Not covered:** the smoke's fp16 path (CUDA only, PENDING-GPU) and
+  `env/cloud_p5_setup.sh` (Linux + CUDA; it runs on the instance before the wrapper, under the
+  boot cap).
