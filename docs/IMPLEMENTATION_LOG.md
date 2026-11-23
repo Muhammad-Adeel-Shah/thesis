@@ -9395,3 +9395,21 @@ designed. The loop now stops before the last row, with a regression test.
 - **Fixed:** cell 8 is titled "report", and the marker `py("p5_fetch_panel.py", "--phase", "list"` is in `test_a_preflight_runs_before_any_long_job`.
 - `tests/test_runbook_tooling.py` + `tests/test_p5_panel.py`: 222 passed; ruff clean.
 - The libx265 test passed in this run. It is still nondeterministic (the diagnostic of 2026-11-23) and waits for the user.
+
+### P5-C — first AWS launch: g5.2xlarge i-02391bf7735fb8f83 in us-east-2c (2026-11-23 20:56 UTC)
+
+**The launch** (by the user, after the OK on the checklist; the g5 capacity came back):
+- `describe-instances`: running, LaunchTime 2026-11-23T20:56:35Z, us-east-2c, AMI `ami-079e51febc2ff531b`.
+- The boot cap (`shutdown -h +180`) stops it at about 23:56 UTC.
+
+**The data volume** (user):
+- The old `vol-0df4b413defb3421d` (us-east-2a) was deleted, because the zone with capacity was 2c.
+- `describe-volumes`: the new `vol-019fab5374a7733eb`, us-east-2c, 200 GB gp3, Encrypted False, in-use at `/dev/sdf`, DeleteOnTermination False, created 2026-11-23T20:57:59Z.
+- There are 2 volumes in the account (root + data).
+- **So `P5_VOLUME_CREATED` = 2026-11-23.** The deleted volume billed about 12 h, 09:00–21:00 UTC, which is NOT in the ledger: about $0.27 at $0.5333/day (arithmetic, not a bill).
+
+**`prelaunch --instance-id i-02391bf7735fb8f83`** (02:01 PKT): OK, no FAIL.
+- root gp3 75 GB, unencrypted, DoT true;
+- data volume attached, DoT false, unencrypted;
+- on-demand; shutdown = stop; only `dbp-p5`;
+- quota 8.0.
