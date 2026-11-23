@@ -9160,3 +9160,25 @@ the launch only after the user's OK.
 - **Not covered:** the smoke's fp16 path (CUDA only, PENDING-GPU) and
   `env/cloud_p5_setup.sh` (Linux + CUDA; it runs on the instance before the wrapper, under the
   boot cap).
+
+### P5-C — prelaunch blocked: the reported data volume does not exist; trigger status (2026-11-23 13:54 PKT)
+
+**The prelaunch check:**
+- The user reported `vol-000a5e47a2cda99e4` (us-east-2a, 200 GB gp3).
+- `p5_aws_check.py prelaunch --ami ami-079e51febc2ff531b --data-volume vol-000a5e47a2cda99e4
+  --stage setup_pexels --hours 2.0` stopped at `InvalidVolume.NotFound`.
+- `describe-volumes` in us-east-2 lists **0 volumes**. In every enabled region (19, from
+  `describe-regions`): **no volumes at all.**
+- **Nothing is billing.** The checklist is NOT-RUN until a volume exists.
+
+**Fallback triggers** (P5_PLAN §5, "each trigger is logged with its time"), checked at
+2026-11-23 13:54 PKT (08:54 UTC, from `Get-Date`):
+- **F1** (LOLO 5 → 3: wan21, hunyuan, ltx090) **has not fired.**
+  - It fires at the end of Mon 23 Nov if the training data is not complete. The decisions
+    block ties the same cut to a missed Mon 23 freeze.
+  - Neither the data nor the freeze can be done today. **So F1 will fire at 23:59 PKT
+    tonight**, and it is logged then.
+  - **Conflict for the user:** F1's fold list names hunyuan, and hunyuan is undecided until
+    the speed test. If it leaves the bank, F1 as written cannot be applied exactly.
+- **F2** (Wed 25, end of day), **F3** (Thu 26, 12:00) and **F4** (with F3, or a failed
+  DeCoF/DDA pre-flight): **not fired.**
