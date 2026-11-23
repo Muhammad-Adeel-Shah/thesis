@@ -1,0 +1,23 @@
+{
+  "stage": "p5_panel",
+  "gpus": 0,
+  "hf_token": true,
+  "imports": ["av", "numpy", "scipy", "PIL", "huggingface_hub"],
+  "aigv": {"repo": "AIGVDBench/AIGVDBench",
+           "revision": "bf48acaa4920990af3dd2a511ea88e63354df305",
+           "test_split": "Split/test.jsonl"},
+  "aegis": {"repo": "Clarifiedfish/AEGIS",
+            "revision": "d2ad8bd38def2945d5fb7d988f2fda0099953296",
+            "tar": "hard_test_set_video.tar", "mapping": "mapping_test_data.csv"},
+  "listing_reference": "reports/p5_panel/aigvdbench_listing_summary.json",
+  "draw": {"salt": "2026:p5-panel:", "calibration": 300, "closed_reals": 300,
+           "open_pool": 900, "per_slice": 150, "stop_after_ineligible": 50},
+  "clip": {"frames": 17, "min_short_side": 320, "phash_frames": [1, 8, 16]},
+  "phash_bits": 6,
+  "gate": {"auc_threshold": 0.70},
+  "fetch_workers": 8,
+  "slice_workers": 6,
+  "disk": {"working_gb": 16, "tmp_gb": 6},
+  "expected": {"wall": "ESTIMATE 2-4 h (CPU session; range reads of about 6,000-9,000 members, 17-frame decodes)",
+               "quota": "no GPU quota: run with Accelerator None"}
+}

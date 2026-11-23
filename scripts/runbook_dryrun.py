@@ -3373,8 +3373,179 @@ def fixture_p5_pilot(work: Path, ref: str) -> Fixture:
                             "summary")], check=check)
 
 
+P5_PANEL_DRAW = {"calibration": 2, "closed_reals": 2, "open_pool": 4, "per_slice": 2,
+                 "stop_after_ineligible": 3}
+
+
+def fixture_p5_panel(work: Path, ref: str) -> Fixture:
+    """The P5 panel session in miniature, every cell verbatim on CPU.
+
+    - **AIGVDBench** is a local directory laid out as the Hub repo (``AIGVDBench/Real/``,
+      ``AIGVDBench/OpenSource/{T2V,I2V}/``, ``AIGVDBench/ClosedSource/``, ``Split/test.jsonl``),
+      with DEFLATED zips so the range-read inflate and its CRC check run.
+      - Real.zip: 12 names from 9 source videos (three sources with two clips each), 10 of
+        them in the test split.
+      - OpenSource/T2V/Good.zip: the same 12 names, all eligible.
+      - OpenSource/I2V/Short.zip: the same names, 8 frames each, so every fake is
+        ``too_few_frames`` and the slice stops after 3.
+      - ClosedSource/A.zip and B.zip: 6 numeric names each; B's are 240 px tall
+        (``short_side``).
+    - **AEGIS** is a local directory with the tar and the mapping CSV (3 videos).
+    - The committed listing reference is replaced by the fixture's own, built with the
+      committed ``list_zips``; the pin check is skipped (``--skip-pins``, DBP_DRYRUN=1 only).
+    """
+    import importlib.util
+    import tarfile
+    import zipfile
+
+    inputs = work / "input"
+    code = inputs / "datasets/muhammadadeelshah/dbp-code-fixture/thesis_dbp"
+    commit = copy_code(code, ref)
+    sys.path.insert(0, str(code / "src"))
+    os.environ["DBP_DRYRUN"] = "1"
+
+    aigv = work / "aigv_source"
+    sources = [f"src{i:02d}xyzAB" for i in range(9)]
+    names = [f"{s}_0_0to100.mp4" for s in sources] + [f"{s}_1_100to200.mp4" for s in sources[:3]]
+    staging = work / "mp4s"
+    staging.mkdir(parents=True)
+
+    def clip(name: str, seed: int, size=(360, 640), frames=32) -> Path:
+        path = staging / f"{seed}_{Path(name).name}"
+        p5_mp4(path, seed, size, frames)
+        return path
+
+    def build_zip(rel: str, members: list[tuple[str, Path]]) -> None:
+        target = aigv / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as z:
+            for arcname, path in members:
+                z.write(path, arcname)
+
+    build_zip("AIGVDBench/Real/Real.zip",
+              [(f"videos/{n}", clip(n, 100 + i)) for i, n in enumerate(names)])
+    build_zip("AIGVDBench/OpenSource/T2V/Good.zip",
+              [(f"videos/{n}", clip(n, 200 + i)) for i, n in enumerate(names)])
+    build_zip("AIGVDBench/OpenSource/I2V/Short.zip",
+              [(f"videos/{n}", clip(n, 300 + i, frames=8)) for i, n in enumerate(names)])
+    numeric = [f"{k:04d}.mp4" for k in range(6)]
+    build_zip("AIGVDBench/ClosedSource/A.zip",
+              [(n, clip(n, 400 + i)) for i, n in enumerate(numeric)])
+    build_zip("AIGVDBench/ClosedSource/B.zip",
+              [(n, clip(n, 500 + i, size=(240, 320))) for i, n in enumerate(numeric)])
+    (aigv / "Split").mkdir(parents=True)
+    (aigv / "Split" / "test.jsonl").write_text(
+        "".join(json.dumps({"Video_id": n, "Prompt": "p"}) + "\n" for n in names[:10]),
+        encoding="utf-8")
+
+    aegis = work / "aegis_source"
+    aegis.mkdir()
+    with tarfile.open(aegis / "hard_test_set_video.tar", "w") as tar:
+        for i in range(3):
+            tar.add(clip(f"a{i}.mp4", 600 + i), arcname=f"hard_test/a{i}.mp4")
+    write_csv(aegis / "mapping_test_data.csv", ["video", "label"],
+              [{"video": f"a{i}.mp4", "label": "fake" if i else "real"} for i in range(3)])
+
+    spec = importlib.util.spec_from_file_location("p5_fetch_panel_fixture",
+                                                  code / "scripts" / "p5_fetch_panel.py")
+    panel = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(panel)
+    listing = panel.list_zips(panel.Source(str(aigv), panel.AIGV_REPO, panel.AIGV_REVISION),
+                              full=False)
+    reference = work / "aigvdbench_listing_summary.json"
+    reference.write_text(json.dumps({"zips": {z: {"listing_sha256": v["listing_sha256"]}
+                                              for z, v in listing["zips"].items()}}),
+                         encoding="utf-8")
+
+    expect = json.loads((code / "env" / "p5_panel_expect.json").read_text("utf-8"))
+    expect["draw"].update(P5_PANEL_DRAW)
+    expect.update({
+        "stage": "p5_panel (dry-run fixture)", "hf_token": False, "dryrun_fixture": True,
+        "imports": ["av", "numpy", "scipy", "PIL"],
+        "aigv_source": str(aigv), "aegis_source": str(aegis),
+        "listing_reference": str(reference), "fetch_workers": 2, "slice_workers": 2,
+        "disk": {"working_gb": 1, "tmp_gb": 1},
+        "expected": {"wall": "dry-run fixture", "quota": "none"},
+    })
+    expect_path = work / "p5_panel_expect.json"
+    expect_path.write_text(json.dumps(expect, indent=2) + "\n", encoding="utf-8")
+
+    def check(work_dir: Path) -> list[str]:
+        try:
+            return check_results(work_dir)
+        except (OSError, KeyError, ValueError, IndexError, TypeError, StopIteration) as exc:
+            return [f"the session did not leave the expected results: "
+                    f"{type(exc).__name__}: {exc}"]
+
+    def check_results(work_dir: Path) -> list[str]:
+        problems: list[str] = []
+        reports = work_dir / "working/Implementation/thesis_dbp/reports/p5_panel"
+        summary = json.loads((reports / "p5_panel_summary.json").read_text("utf-8"))
+        if "error" in summary:
+            return [f"summary error: {summary['error']}"]
+        draw = json.loads((reports / "p5_panel_draw.json").read_text("utf-8"))
+        pools = draw["pools"]
+        sets = {p: set(v) for p, v in pools.items()}
+        if sets["calibration"] & sets["closed_reals"] or sets["open"] & (
+                sets["calibration"] | sets["closed_reals"]):
+            problems.append(f"pools overlap: {pools}")
+        source = {p: {n.rsplit("_", 2)[0] for n in v} for p, v in pools.items()}
+        if source["calibration"] & source["closed_reals"] or source["open"] & (
+                source["calibration"] | source["closed_reals"]):
+            problems.append("a source video spans two pools")
+        if any(n not in names[:10] for v in pools.values() for n in v):
+            problems.append("a pooled name is not in the test split")
+        slices = summary["counts"]["slices"]
+        good = slices["AIGVDBench/OpenSource/T2V/Good.zip"]
+        short = slices["AIGVDBench/OpenSource/I2V/Short.zip"]
+        closed_b = slices["AIGVDBench/ClosedSource/B.zip"]
+        if good["kept"] != P5_PANEL_DRAW["per_slice"] or good["status"] != "complete":
+            problems.append(f"Good.zip {good}")
+        if short["kept"] != 0 or not short["status"].startswith("stopped"):
+            problems.append(f"Short.zip {short}")
+        if slices["AIGVDBench/ClosedSource/A.zip"]["kept"] != P5_PANEL_DRAW["per_slice"]:
+            problems.append(f"A.zip {slices['AIGVDBench/ClosedSource/A.zip']}")
+        if closed_b["kept"] != 0:
+            problems.append(f"B.zip {closed_b}")
+        excl = summary["exclusions"]
+        if excl.get("AIGVDBench/OpenSource/I2V/Short.zip", {}).get("too_few_frames") != 3:
+            problems.append(f"Short.zip exclusions {excl}")
+        if not excl.get("AIGVDBench/ClosedSource/B.zip", {}).get("short_side"):
+            problems.append(f"B.zip exclusions {excl}")
+        if summary["counts"]["pools"] != {"calibration": len(pools["calibration"]),
+                                          "closed_reals": len(pools["closed_reals"]),
+                                          "aegis": 3}:
+            problems.append(f"pool counts {summary['counts']['pools']}")
+        manifest = list(csv.DictReader((reports / "p5_panel_manifest.csv").open(
+            encoding="utf-8")))
+        good_rows = [m for m in manifest if m["slice"] == "AIGVDBench/OpenSource/T2V/Good.zip"]
+        if sorted(m["role"] for m in good_rows) != ["fake", "fake", "real", "real"] or len(
+                {Path(m["name"]).name for m in good_rows}) != 2:
+            problems.append(f"Good.zip pairs are not content-matched: {good_rows}")
+        for m in manifest:
+            if not (work_dir / "working/p5_panel" / m["path"]).is_file():
+                problems.append(f"missing clip file {m['path']}")
+                break
+        if len(summary["panel_digest"]) != 64 or "gate" not in summary:
+            problems.append("no digest or gate")
+        if not (reports / "aegis_mapping.csv").is_file():
+            problems.append("AEGIS mapping not archived")
+        if not (work_dir / "working/p5_panel_reports.zip").is_file():
+            problems.append("no archive")
+        print(f"  check: pools {draw['pool_sizes']}, slices "
+              f"{ {z.split('/')[-1]: s['kept'] for z, s in slices.items()} }, "
+              f"exclusions {excl}, {len(manifest)} manifest rows, "
+              f"{len(summary['gate_flags'])} gate flags")
+        return problems
+
+    return Fixture({"DBP_INPUT_ROOT": str(inputs), "DBP_EXPECT": str(expect_path)}, commit,
+                   [Session("session 1: pre-flight, list, draw, fetch, AEGIS, finalize")],
+                   check=check)
+
+
 FIXTURES: dict[str, Callable[[Path, str], Fixture]] = {
     "p5_pilot": fixture_p5_pilot,
+    "p5_panel": fixture_p5_panel,
     "p2_s3_recovery": fixture_p2_s3_recovery,
     "p2_s2": fixture_p2_s2,
     "x1_format": fixture_x1_format,

@@ -395,6 +395,60 @@ separately, as E7 was for the images.
 - **Matches** are removed from the draw and counted per view.
 - **Freeze:** the panel digest is committed before any P5 model trains.
 
+**The AIGVDBench draw and pairing rules.** These come from the user's principles of
+2026-11-23 and are implemented in `scripts/p5_fetch_panel.py` with
+`env/p5_panel_expect.json`. They are fixed before any panel video is fetched or scored, and
+they go into the pre-registration unchanged.
+- **The layout,** measured from the zip directories (`reports/p5_panel/
+  aigvdbench_listing_summary.json`):
+  - the 20 open-source zips hold exactly Real.zip's 20,000 names, so every open-source fake
+    has a same-named real;
+  - the 11 closed-source zips share 2,000 numeric names, none of them in Real.
+- **The universe:** the names in both `Split/test.jsonl` and Real.zip, which is the
+  benchmark's own test split.
+- **Grouping:** by source video, the part of `<source>_<k>_<a>to<b>.mp4` before `_<k>`.
+  This is stricter than by name: no scene is shared across pools.
+- **The pools.** Groups are ordered by `sha256("2026:p5-panel:" + source)`. Whole groups
+  fill, in order:
+  - the k-shot **calibration** pool, 300 names;
+  - the **closed-source real** pool, 300 names;
+  - the **open-source** pool, 900 names.
+  A name (its real and every fake made from it) is in exactly one pool, and only whole
+  groups are taken, so a pool may hold slightly more than its number.
+- **Open-source slices** (one per zip): the open pool is ranked by
+  `sha256("2026:p5-panel:" + zip + ":" + name)`.
+  - The slice keeps the first 150 names whose real AND that zip's fake are both eligible.
+  - These are **content-matched pairs**, reported as the content-matched view.
+- **Closed-source slices** (one per zip):
+  - One shared order, `sha256("2026:p5-panel:closed:" + name)`, so the closed generators
+    are compared on the same prompts.
+  - Each slice keeps its first 150 eligible fakes, scored against the closed-source real
+    pool (names used nowhere else).
+- **Eligibility** is the clip protocol of `src/dbp/data/video.py`:
+  - 8-bit, not rotated, short side ≥ 320;
+  - a seeded window of **17 frames** (scoring uses frames 1–16), centre crop 320, never
+    resized;
+  - not a still.
+  - A slice stops after 50 consecutive ineligible fakes.
+  - Every exclusion is counted per zip.
+- **Duplicates:**
+  - exact by sha256;
+  - near, when every keyframe pHash (frames 1, 8, 16 of the cropped window) is within 6
+    bits.
+  - A real and its own fake (which a V2V fake may be close to) are counted separately as
+    `own_pair`, not as duplicates.
+  - AIGVDBench is listed before AEGIS, so a cross-view match keeps the AIGVDBench copy.
+- **The metadata gate:** a direction-free single-feature AUC per slice (its fakes against
+  its reals) for fps, width, height, duration, bitrate, reported frames, codec, profile and
+  pix_fmt. Any value > 0.70 is flagged.
+  - **Rebalancing is decided by the user from the flags, before the freeze.** Nothing is
+    rebalanced or dropped automatically.
+- **Still to do before the freeze:**
+  - the training-side pHash cross-check (from the AWS fetch);
+  - the I2V conditioning-leak check;
+  - the AEGIS label join;
+  - the gate decisions.
+
 ### 3.4 Compression and format must not predict the label (§6b / §6d, extended to video)
 
 - **The table:** for every view, `label × (codec, profile, pix_fmt, fps, resolution class,

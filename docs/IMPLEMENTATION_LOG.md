@@ -9349,3 +9349,49 @@ end of day"; logged at 01:05 PKT on the 24th, from `Get-Date` / the prelaunch ti
   - **fp32 throughout:** an upper bound, since the fp16 members are not yet timed in fp16.
   - Disk for 2,000 clips: 45.3 GB.
   - **The smoke on whichever instance launches replaces every assumed factor.**
+
+### P5-C — the Kaggle test-panel session (draw + fetch + AEGIS + gate), dry-run PASSED (2026-11-24)
+
+**The draw rule** (the user's principles of 2026-11-23/24) is written into P5_PLAN §3.3: the
+universe, grouping by source video, the pools of 300 / 300 / 900, 150 per slice,
+content-matched open pairs, the shared closed order, 17-frame eligibility, duplicates, and the
+gate as flags only.
+
+**Added:**
+- **`scripts/p5_fetch_panel.py`**, an approved deliverable (P5_PLAN §9), with these phases:
+  - `preflight`: imports, disk, both dataset revisions, the committed reference, pins;
+  - `list`: now through `Source` (hub or a local copy). `--full` keeps offsets and CRCs;
+    `--reference` refuses unless every zip's `listing_sha256` equals the committed summary;
+  - `draw`: `draw_panel`, pure and tested;
+  - `fetch`: range reads of local header + data, inflated, CRC-32 and size checked;
+    `examine()` uses the protocol's own probe/exclusion/window/crop; resumable JSONL;
+    a real shared by several slices is fetched once; only eligible clips stay on disk;
+  - `aegis`: the tar and the mapping, whole; examined; labels are joined at the freeze;
+  - `finalize`: manifest, duplicates, the gate, the digest, the archive. It never fails.
+  - The pins are checked before `fetch` and `aegis` (CLAUDE.md 7a). `--skip-pins` is refused
+    outside DBP_DRYRUN=1.
+- **`env/p5_panel_expect.json`** and **`env/kaggle_run_p5_panel.py`** (9 thin cells; CPU
+  session).
+- **`scripts/runbook_dryrun.py`:** the fixture `p5_panel`, a miniature repository with
+  deflated zips; a slice of too-short fakes; a closed zip at 240 px; AEGIS tar + mapping.
+- **`tests/test_p5_panel.py`:** 12 tests. They cover the draw (pools disjoint by source,
+  whole groups, deterministic, open slices from the open pool only, one closed order, a
+  universe too small), test-id keys, `read_member` (deflate/stored, CRC refusal), the
+  gate AUC, and the near duplicates against brute force.
+
+**Local dry-run, the first try: FAILED.** `near_duplicates` crashed on its last row (an empty
+comparison, `cannot reshape array of size 0`). The verdict cell stopped the notebook, as
+designed. The loop now stops before the last row, with a regression test.
+
+**Local dry-run (`runbook_dryrun.py --fixture p5_panel --ref :`): PASSED** in 11 s.
+- The pools were {calibration 2, closed_reals 2, open 4}, disjoint by source video.
+- Good.zip 2 pairs (content-matched); Short.zip 0 (stopped: `too_few_frames` × 3); A.zip 2;
+  B.zip 0 (`short_side` × 3); AEGIS 3.
+- 13 manifest rows, every file present, 3 gate flags. The digest and the archive were
+  written, and the verdict passed.
+
+**The full suite on the panel work: 2 failed, 1,438 passed, 7 skipped, in 520.5 s.**
+- Both failures were the CLAUDE.md §12 runbook-rule tests on the new runbook: no cell titled "report", and no recognised long-job marker.
+- **Fixed:** cell 8 is titled "report", and the marker `py("p5_fetch_panel.py", "--phase", "list"` is in `test_a_preflight_runs_before_any_long_job`.
+- `tests/test_runbook_tooling.py` + `tests/test_p5_panel.py`: 222 passed; ruff clean.
+- The libx265 test passed in this run. It is still nondeterministic (the diagnostic of 2026-11-23) and waits for the user.
