@@ -575,6 +575,25 @@ def test_the_report_cell_cannot_raise(runbook: Path) -> None:
 
 
 @pytest.mark.parametrize("runbook", RUNBOOKS, ids=lambda p: p.stem)
+def test_a_cpu_runbook_tells_the_bootstrap_before_calling_it(runbook: Path) -> None:
+    """Kaggle 2026-11-24: the P5 panel runbook asked for Accelerator None but never set
+    DBP_CPU_SESSION, so the bootstrap stopped at "nvidia-smi not found". The local dry-run
+    could not see it: DBP_DRYRUN=1 skips the same GPU checks."""
+    text = runbook.read_text(encoding="utf-8")
+    header = text.split("# %% Cell 1", 1)[0]
+    import re
+
+    cpu = re.search(r"accelerator:?\s*\*{0,2}\s*none", header, re.IGNORECASE) is not None
+    code = _code(runbook)
+    flag = 'os.environ["DBP_CPU_SESSION"] = "1"'
+    if cpu:
+        assert flag in code, f"{runbook.name}: a CPU runbook without {flag}"
+        assert code.index(flag) < code.index("kaggle_bootstrap.sh"), runbook.name
+    else:
+        assert flag not in code, f"{runbook.name}: a GPU runbook skipping the GPU checks"
+
+
+@pytest.mark.parametrize("runbook", RUNBOOKS, ids=lambda p: p.stem)
 def test_a_preflight_runs_before_any_long_job(runbook: Path) -> None:
     code = _code(runbook)
     markers = ('py("p2_run_shards.py"', 'code = py("p2_run_queue.py"',

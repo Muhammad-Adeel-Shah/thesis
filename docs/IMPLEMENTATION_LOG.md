@@ -9522,3 +9522,22 @@ to about $0.60 of the reserve beyond the $5 setup share.
   - `test_h265_roundtrip_checks_settings_and_frames_not_bytes`: identical settings, the frame
     count, the shape and dtype. It checks no bytes, by the user's decision.
 - **Full suite:** **1,446 passed, 7 skipped (GPU, PENDING-GPU), 0 failed**, in 488.1 s. ruff clean.
+
+### P5-C — the Kaggle panel session stopped in its bootstrap: CPU session not declared (2026-11-24)
+
+**Kaggle** (code `2b04754`; the log pasted by the user):
+- Cell 2 ran `kaggle_bootstrap.sh` on Python 3.13.18 (4-core Xeon, no GPU).
+- It stopped with **"FATAL: nvidia-smi not found. Enable a GPU accelerator"**, then the `bootstrap FAILED` assert.
+- Nothing was fetched, so no data was written.
+
+**The cause:** a runbook mistake.
+- The runbook asks for Accelerator None, but it never set `DBP_CPU_SESSION=1`, the bootstrap's existing seam that skips only the GPU checks. Eight CPU runbooks (P3 Panel B and others) set it.
+- **The local dry-run could not see it:** `DBP_DRYRUN=1` skips the same GPU checks.
+
+**The fix:** `env/kaggle_run_p5_panel.py` cell 2 sets `os.environ["DBP_CPU_SESSION"] = "1"` before the bootstrap.
+
+**The regression test (CLAUDE.md 12.6):** `test_a_cpu_runbook_tells_the_bootstrap_before_calling_it`, over every runbook.
+- A runbook whose header says accelerator None must set the flag before `kaggle_bootstrap.sh`.
+- A GPU runbook must not set it.
+- Run against the committed failing version (`git show HEAD:env/kaggle_run_p5_panel.py`), it fails with "a CPU runbook without ...".
+- `tests/test_runbook_tooling.py`: 234 passed. ruff clean.

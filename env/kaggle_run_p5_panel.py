@@ -100,6 +100,9 @@ hardware(REPORTS / "hardware.txt")
 EXPECT_PATH = pathlib.Path(os.environ.get("DBP_EXPECT", DBP / "env" / "p5_panel_expect.json"))
 EXPECT = json.loads(EXPECT_PATH.read_text())
 print("expected:", json.dumps(EXPECT["expected"]))
+# a CPU session: the bootstrap skips only its GPU checks (Kaggle 2026-11-24: without this
+# flag it stopped at "nvidia-smi not found")
+os.environ["DBP_CPU_SESSION"] = "1"
 assert sh("bash", DBP / "env" / "kaggle_bootstrap.sh") == 0, "bootstrap FAILED"
 DRY = ["--skip-pins"] if os.environ.get("DBP_DRYRUN") == "1" else []
 SOURCES = ["--source", EXPECT.get("aigv_source", "hub"),
