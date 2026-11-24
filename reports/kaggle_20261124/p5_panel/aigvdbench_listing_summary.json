@@ -1,0 +1,466 @@
+{
+ "repo": "AIGVDBench/AIGVDBench",
+ "revision": "bf48acaa4920990af3dd2a511ea88e63354df305",
+ "generated_utc": "2026-11-23T09:13:10.155412+00:00",
+ "method": "exact range reads of each zip's end records and central directory; no member data",
+ "files": {
+  ".gitattributes": 2461,
+  "AIGVDBench/ClosedSource/Gen2.zip": 5901347143,
+  "AIGVDBench/ClosedSource/Gen3.zip": 19704410166,
+  "AIGVDBench/ClosedSource/Jimeng.zip": 15715797205,
+  "AIGVDBench/ClosedSource/Luma.zip": 3947127621,
+  "AIGVDBench/ClosedSource/Opensora.zip": 2051690737,
+  "AIGVDBench/ClosedSource/Sora.zip": 10214807516,
+  "AIGVDBench/ClosedSource/causvid_24fps.zip": 10483844167,
+  "AIGVDBench/ClosedSource/kling.zip": 11564889490,
+  "AIGVDBench/ClosedSource/pika.zip": 1211174730,
+  "AIGVDBench/ClosedSource/vidu.zip": 2315906178,
+  "AIGVDBench/ClosedSource/wan.zip": 11386193473,
+  "AIGVDBench/OpenSource/I2V/EasyAnimate.zip": 11120548085,
+  "AIGVDBench/OpenSource/I2V/LTX.zip": 3928004019,
+  "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip": 4202779218,
+  "AIGVDBench/OpenSource/I2V/SEINE.zip": 4437024215,
+  "AIGVDBench/OpenSource/I2V/SVD.zip": 2947917819,
+  "AIGVDBench/OpenSource/I2V/VideoCrafter.zip": 11376418023,
+  "AIGVDBench/OpenSource/T2V/AccVideo.zip": 4035317523,
+  "AIGVDBench/OpenSource/T2V/AnimateDiff.zip": 3252308937,
+  "AIGVDBench/OpenSource/T2V/Cogvideox1.5.zip": 2863215670,
+  "AIGVDBench/OpenSource/T2V/EasyAnimate.zip": 8872085379,
+  "AIGVDBench/OpenSource/T2V/HunyuanVideo.zip": 4044024724,
+  "AIGVDBench/OpenSource/T2V/IPOC.zip": 5582081254,
+  "AIGVDBench/OpenSource/T2V/LTX.zip": 5937421401,
+  "AIGVDBench/OpenSource/T2V/Open-Sora.zip": 1083099489,
+  "AIGVDBench/OpenSource/T2V/Pyramid-Flow.zip": 4144057847,
+  "AIGVDBench/OpenSource/T2V/RepVideo.zip": 7829234809,
+  "AIGVDBench/OpenSource/T2V/VideoCrafter.zip": 10812740482,
+  "AIGVDBench/OpenSource/T2V/Wan2.1.zip": 86046628245,
+  "AIGVDBench/OpenSource/V2V/Cogvideox1.5.zip": 3075689074,
+  "AIGVDBench/OpenSource/V2V/LTX.zip": 3996115206,
+  "AIGVDBench/Real/Real.zip": 94239925520,
+  "README.md": 30,
+  "Split/test.jsonl": 1860924,
+  "Split/train.jsonl": 8610190,
+  "Split/val.jsonl": 1846793,
+  "Weights/DeCoF.tar": 56815450
+ },
+ "zips": {
+  "AIGVDBench/ClosedSource/Gen2.zip": {
+   "zip_bytes": 5901347143,
+   "n_members": 2000,
+   "zip64": true,
+   "cd_size": 176653,
+   "bytes_read": 176837,
+   "range_requests": 3,
+   "bytes_downloaded": 176837,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "383e929e4fd85395efd8b36c44fcc1c3b9a9a386ba3136db7a9b145833b2fa7f"
+  },
+  "AIGVDBench/ClosedSource/Gen3.zip": {
+   "zip_bytes": 19704410166,
+   "n_members": 2000,
+   "zip64": true,
+   "cd_size": 189001,
+   "bytes_read": 189185,
+   "range_requests": 3,
+   "bytes_downloaded": 189185,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "1a013374468170444479f2c4ee98bba70ac4309ff94792a25344a7b69ac8d56e"
+  },
+  "AIGVDBench/ClosedSource/Jimeng.zip": {
+   "zip_bytes": 15715797205,
+   "n_members": 2000,
+   "zip64": true,
+   "cd_size": 187477,
+   "bytes_read": 187661,
+   "range_requests": 3,
+   "bytes_downloaded": 187661,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "852db3572a57b06891c81ed6d030e00c958ac7e790d8186e71a4e38fd02d64c6"
+  },
+  "AIGVDBench/ClosedSource/Luma.zip": {
+   "zip_bytes": 3947127621,
+   "n_members": 2000,
+   "zip64": false,
+   "cd_size": 118704,
+   "bytes_read": 118832,
+   "range_requests": 2,
+   "bytes_downloaded": 118832,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "3010e198ee5d21ae10daa37c2757dbe47081288b832eb431aac93fbf62374832"
+  },
+  "AIGVDBench/ClosedSource/Opensora.zip": {
+   "zip_bytes": 2051690737,
+   "n_members": 2000,
+   "zip64": false,
+   "cd_size": 108000,
+   "bytes_read": 108128,
+   "range_requests": 2,
+   "bytes_downloaded": 108128,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "9c20b72ce1cac8915d5206af8421af9e070e0416cee7c5561d5f1e6c8465ea52"
+  },
+  "AIGVDBench/ClosedSource/Sora.zip": {
+   "zip_bytes": 10214807516,
+   "n_members": 2000,
+   "zip64": true,
+   "cd_size": 127140,
+   "bytes_read": 127324,
+   "range_requests": 3,
+   "bytes_downloaded": 127324,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "9ae2c05bf4fcf5552636eab2f094f62ba283750b8e7b5dce1a48483c9553ab8d"
+  },
+  "AIGVDBench/ClosedSource/causvid_24fps.zip": {
+   "zip_bytes": 10483844167,
+   "n_members": 2000,
+   "zip64": true,
+   "cd_size": 127128,
+   "bytes_read": 127312,
+   "range_requests": 3,
+   "bytes_downloaded": 127312,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "e737d72bf52b04baf4007752a0d49fdd79d2a9e69938438c6c8bc82738a16267"
+  },
+  "AIGVDBench/ClosedSource/kling.zip": {
+   "zip_bytes": 11564889490,
+   "n_members": 2000,
+   "zip64": true,
+   "cd_size": 127656,
+   "bytes_read": 127840,
+   "range_requests": 3,
+   "bytes_downloaded": 127840,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "9400866f2219157c24eae367ece4f5556ed01beb2ea0d20b3c170e0fbea46f69"
+  },
+  "AIGVDBench/ClosedSource/pika.zip": {
+   "zip_bytes": 1211174730,
+   "n_members": 2000,
+   "zip64": false,
+   "cd_size": 108000,
+   "bytes_read": 108128,
+   "range_requests": 2,
+   "bytes_downloaded": 108128,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "7c0a757cc9cca2b9b85ed1290ddf1dcd56eedfeff00633c3169a921f8e8f4069"
+  },
+  "AIGVDBench/ClosedSource/vidu.zip": {
+   "zip_bytes": 2315906178,
+   "n_members": 2000,
+   "zip64": false,
+   "cd_size": 110148,
+   "bytes_read": 110276,
+   "range_requests": 2,
+   "bytes_downloaded": 110276,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "fc25c6a2e3c9b776e2e155f80da424a56bf87ed751469f90b85be3ea08e17136"
+  },
+  "AIGVDBench/ClosedSource/wan.zip": {
+   "zip_bytes": 11386193473,
+   "n_members": 2000,
+   "zip64": true,
+   "cd_size": 127416,
+   "bytes_read": 127600,
+   "range_requests": 3,
+   "bytes_downloaded": 127600,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "9e9cdf39dca0d6d4cf2e719bd3760b223742281915ef34905d77bdd4c2996033"
+  },
+  "AIGVDBench/OpenSource/I2V/EasyAnimate.zip": {
+   "zip_bytes": 11120548085,
+   "n_members": 20000,
+   "zip64": true,
+   "cd_size": 1759724,
+   "bytes_read": 1759908,
+   "range_requests": 3,
+   "bytes_downloaded": 1759908,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "c9d381c62a36024f23bd858f1f8fb01bac1e2b2617ee03d28e6d2abe83a6bb3d"
+  },
+  "AIGVDBench/OpenSource/I2V/LTX.zip": {
+   "zip_bytes": 3928004019,
+   "n_members": 20000,
+   "zip64": false,
+   "cd_size": 1674452,
+   "bytes_read": 1674580,
+   "range_requests": 2,
+   "bytes_downloaded": 1674580,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "86b2b7e2f5153906ea2c228f8e1c44fc4db687ed02c006b993e95c9ee8327398"
+  },
+  "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip": {
+   "zip_bytes": 4202779218,
+   "n_members": 20000,
+   "zip64": false,
+   "cd_size": 1683176,
+   "bytes_read": 1683304,
+   "range_requests": 2,
+   "bytes_downloaded": 1683304,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "374be67f04711f337ebf4e6789855b0f715b3224c4ac0f3a3c78ed0c3805d5e0"
+  },
+  "AIGVDBench/OpenSource/I2V/SEINE.zip": {
+   "zip_bytes": 4437024215,
+   "n_members": 20000,
+   "zip64": true,
+   "cd_size": 1689584,
+   "bytes_read": 1689768,
+   "range_requests": 3,
+   "bytes_downloaded": 1689768,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "088927b2c754af7fb9fdccc5dd3cd072135b5b4d8b5b6c7e3ae7099f753cd6dc"
+  },
+  "AIGVDBench/OpenSource/I2V/SVD.zip": {
+   "zip_bytes": 2947917819,
+   "n_members": 20000,
+   "zip64": false,
+   "cd_size": 1630388,
+   "bytes_read": 1630516,
+   "range_requests": 2,
+   "bytes_downloaded": 1630516,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "4b2137ca90007ac6dd48a4dbcb816705767a915946d83083799ea7689467baf3"
+  },
+  "AIGVDBench/OpenSource/I2V/VideoCrafter.zip": {
+   "zip_bytes": 11376418023,
+   "n_members": 20000,
+   "zip64": true,
+   "cd_size": 1760444,
+   "bytes_read": 1760628,
+   "range_requests": 3,
+   "bytes_downloaded": 1760628,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "76c050694cd787b942191844a140621981eebb7ffa827e7e36069bf5ef56f263"
+  },
+  "AIGVDBench/OpenSource/T2V/AccVideo.zip": {
+   "zip_bytes": 4035317523,
+   "n_members": 20000,
+   "zip64": false,
+   "cd_size": 1678748,
+   "bytes_read": 1678876,
+   "range_requests": 2,
+   "bytes_downloaded": 1678876,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "760733b04dcc42697d1587402f3d23dc4647e382be6ed83f4468f262236fb77c"
+  },
+  "AIGVDBench/OpenSource/T2V/AnimateDiff.zip": {
+   "zip_bytes": 3252308937,
+   "n_members": 20000,
+   "zip64": false,
+   "cd_size": 3086041,
+   "bytes_read": 3086169,
+   "range_requests": 2,
+   "bytes_downloaded": 3086169,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "dba6058eb6b4af49a7d45236ec93e0614028b05766020c109790347bef9ce707"
+  },
+  "AIGVDBench/OpenSource/T2V/Cogvideox1.5.zip": {
+   "zip_bytes": 2863215670,
+   "n_members": 20000,
+   "zip64": false,
+   "cd_size": 1625144,
+   "bytes_read": 1625272,
+   "range_requests": 2,
+   "bytes_downloaded": 1625272,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "ad6a7e390ec080f82911a31556d0ca02289f2c09158ce81d35f48973a4969429"
+  },
+  "AIGVDBench/OpenSource/T2V/EasyAnimate.zip": {
+   "zip_bytes": 8872085379,
+   "n_members": 20000,
+   "zip64": true,
+   "cd_size": 1748168,
+   "bytes_read": 1748352,
+   "range_requests": 3,
+   "bytes_downloaded": 1748352,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "1e8e099cea0c82b5cf45b42f5201d79fe5b2d06aa13e1f2e4a5ff43e5a15501b"
+  },
+  "AIGVDBench/OpenSource/T2V/HunyuanVideo.zip": {
+   "zip_bytes": 4044024724,
+   "n_members": 20000,
+   "zip64": false,
+   "cd_size": 1679036,
+   "bytes_read": 1679164,
+   "range_requests": 2,
+   "bytes_downloaded": 1679164,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "7e94ad858e538f2794b56709180357592e73ea9da6c18a8e9bdb30c649d75a97"
+  },
+  "AIGVDBench/OpenSource/T2V/IPOC.zip": {
+   "zip_bytes": 5582081254,
+   "n_members": 20000,
+   "zip64": true,
+   "cd_size": 1713344,
+   "bytes_read": 1713528,
+   "range_requests": 3,
+   "bytes_downloaded": 1713528,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "88aa4ae586858f2e254470da5172e620560bba07315bf8573c623d1e80b35246"
+  },
+  "AIGVDBench/OpenSource/T2V/LTX.zip": {
+   "zip_bytes": 5937421401,
+   "n_members": 20000,
+   "zip64": true,
+   "cd_size": 1718444,
+   "bytes_read": 1718628,
+   "range_requests": 3,
+   "bytes_downloaded": 1718628,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "24cb45e23cf696f8dd9070ceb51ea47c548dfda1da0c26e2cf51e22a921c6eb0"
+  },
+  "AIGVDBench/OpenSource/T2V/Open-Sora.zip": {
+   "zip_bytes": 1083099489,
+   "n_members": 20000,
+   "zip64": false,
+   "cd_size": 1565912,
+   "bytes_read": 1566040,
+   "range_requests": 2,
+   "bytes_downloaded": 1566040,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "ab15fe412f4bf5cf7497921c4fffbb214c05082e871aaeee5175803fce779b11"
+  },
+  "AIGVDBench/OpenSource/T2V/Pyramid-Flow.zip": {
+   "zip_bytes": 4144057847,
+   "n_members": 20000,
+   "zip64": false,
+   "cd_size": 1681700,
+   "bytes_read": 1681828,
+   "range_requests": 2,
+   "bytes_downloaded": 1681828,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "bb481743be57c2a6dcb58fd9a9be2e845ea37a817a4ce228c9ddd643aa31256f"
+  },
+  "AIGVDBench/OpenSource/T2V/RepVideo.zip": {
+   "zip_bytes": 7829234809,
+   "n_members": 20000,
+   "zip64": true,
+   "cd_size": 1740020,
+   "bytes_read": 1740204,
+   "range_requests": 3,
+   "bytes_downloaded": 1740204,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "bc7355d0ca1d4145f916788d1bbd7d110d6e0e1e670724ae7c56558d0ebaf6d9"
+  },
+  "AIGVDBench/OpenSource/T2V/VideoCrafter.zip": {
+   "zip_bytes": 10812740482,
+   "n_members": 20000,
+   "zip64": true,
+   "cd_size": 1758284,
+   "bytes_read": 1758468,
+   "range_requests": 3,
+   "bytes_downloaded": 1758468,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "cef5dc51a61eb610071d3a15255709f8d96d0c0a6bb770e1bbfd14c76be74133"
+  },
+  "AIGVDBench/OpenSource/T2V/Wan2.1.zip": {
+   "zip_bytes": 86046628245,
+   "n_members": 20000,
+   "zip64": true,
+   "cd_size": 1799876,
+   "bytes_read": 1800060,
+   "range_requests": 3,
+   "bytes_downloaded": 1800060,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "c9841d013fa72a0391ca0cbce381ad3e6afe74f888a7cda32dcf0b37972c2a9f"
+  },
+  "AIGVDBench/OpenSource/V2V/Cogvideox1.5.zip": {
+   "zip_bytes": 3075689074,
+   "n_members": 20000,
+   "zip64": false,
+   "cd_size": 1637828,
+   "bytes_read": 1637956,
+   "range_requests": 2,
+   "bytes_downloaded": 1637956,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "c94e7de03ab126161a4676d812931f72bb6649b7edce34656c0b76fe5e98831f"
+  },
+  "AIGVDBench/OpenSource/V2V/LTX.zip": {
+   "zip_bytes": 3996115206,
+   "n_members": 20000,
+   "zip64": false,
+   "cd_size": 1676696,
+   "bytes_read": 1676824,
+   "range_requests": 2,
+   "bytes_downloaded": 1676824,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "78f28f6c87a28981a44559232e4ca406511ec14a0e9ad04163f53372870647e7"
+  },
+  "AIGVDBench/Real/Real.zip": {
+   "zip_bytes": 94239925520,
+   "n_members": 20000,
+   "zip64": true,
+   "cd_size": 2274361,
+   "bytes_read": 2274545,
+   "range_requests": 3,
+   "bytes_downloaded": 2274545,
+   "extensions": [
+    ".mp4"
+   ],
+   "listing_sha256": "7537b1e099acb9baa94ee0f0a70968d0c2e11023bbfb61f2db40d5233fe661c1"
+  }
+ },
+ "listing_file": "aigvdbench_listing.json",
+ "bytes_read_total": 39093741
+}

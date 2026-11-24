@@ -9672,3 +9672,57 @@ pilot's T4 records as evidence):
 **Full suite: 1 failed, 1,476 passed, 7 skipped, 903.1 s.**
 - The failure was the backup test's old count: two folders were added to the backup. Updated: `test_p5_cloud.py` + `test_p5_train.py` 60 passed; ruff clean.
 - **The PROPOSED items it implements** (storage, frame sampling, temporal settings) still need the user's decision before the freeze. A change is a constant.
+
+### P5-C — the Kaggle test-panel session: results and review (2026-11-24)
+
+**Sources:**
+- `F:/thesis-2/kaggle_raw/p5_panel_reports.zip` (1,586,186 B, sha256
+  `d66fdcbf1627d735a29fc5476145a24e8002f98d5f9151b018a04e07a9c94b74`), extracted to
+  `F:/thesis-2/kaggle_raw/p5_panel_x1/`.
+- Tracked copy: `reports/kaggle_20261124/p5_panel/` (7.2 MB; manifests and records, no
+  video).
+- The code was `035e5d6`; a CPU session (4-core Xeon).
+- **Pre-flight OK:** /kaggle/working 20.9 GB free; the pins OK; 38 AIGVDBench and 10 AEGIS
+  files.
+
+**The draw** (`p5_panel_draw.json`):
+- the test split was read with key `Video_id` (sha256 `bab0fbe4…95a7`);
+- the pools were filled exactly: calibration 300, closed-source reals 300, open 900.
+- **The panel digest is `94705761e60ac25c55441c09175a78ff64e09067124be6d3e5d32538e2b4a62c`**
+  (as drawn, before the review decisions).
+
+**The fetch** (`p5_panel_summary.json`, `p5_panel_slices.json`):
+- 5,666 clip records, of which 5,178 are eligible; 5,591 files on disk.
+- **The pools as kept:** calibration 300, closed-source reals 297 (3 ineligible), AEGIS 431
+  of 436 (`short_side` 2, `static` 3).
+- **24 slices complete at 150:** all 11 closed-source zips, and 13 open-source zips.
+- **7 slices EMPTY,** by the pre-declared clip rules (the 17-frame window, short side ≥ 320):
+  - SEINE I2V, SVD I2V, VideoCrafter I2V, VideoCrafter T2V and AnimateDiff T2V:
+    `too_few_frames` × 50. Every probed video has 16 frames, at 8 or 10 fps, 512×320 or
+    512×512.
+  - Open-Sora T2V: `short_side` × 50 (336×192, 37 frames, 24 fps).
+- **The other exclusions:** `not_8bit` (closed: Gen3 8, Jimeng 4, Luma 6, Sora 10, kling 16,
+  pika 8, vidu 5, wan 20), `static` (various; Real.zip 9), kling `too_few_frames` 4.
+
+**Duplicates:**
+- **4 exact,** each within one slice: kling 0259 = 0260, kling 0804 = 0805, two AccVideo
+  fakes of different names, and two IPOC fakes of different names.
+- **3 near, none an own pair, all across slices of the same name:** EasyAnimate I2V vs
+  Pyramid-Flow I2V (2 names), and LTX I2V vs LTX V2V (1 name).
+
+**The metadata gate: 130 flags (> 0.70).**
+- **The cause:** **every AIGVDBench real is 1920×1080** (1,409 of 1,410 eligible reals) at
+  29.97 / 25 / 23.976 / 30 fps, and every generator outputs its own fixed resolution and fps.
+  For example Wan2.1 832×480 at 16 fps, 81 frames; Jimeng 1280×720 at 8 fps; Sora mostly
+  854×480 at 30 fps.
+- **So:** width/height AUC is 0.97–1.00 in every slice, and fps, bitrate and the reported
+  frame counts are mostly > 0.70. Codec, profile and pix_fmt are ≈ 0.50.
+- **Rebalancing by sub-sampling is impossible for resolution:** no AIGVDBench real has a
+  fake's resolution.
+
+**AEGIS:**
+- the mapping has `unified_index, video_path, source, generator`: kling 111, sora 107,
+  youtube 109, dvf 109;
+- it joins to the extracted files on the last two path parts for 436 of 436, uniquely.
+
+The review decisions go to the user (the message of this date).

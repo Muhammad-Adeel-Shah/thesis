@@ -1,0 +1,906 @@
+{
+ "stage": "p5_panel",
+ "generated_utc": "2026-11-24T05:41:25.793962+00:00",
+ "panel_digest": "94705761e60ac25c55441c09175a78ff64e09067124be6d3e5d32538e2b4a62c",
+ "counts": {
+  "pools": {
+   "calibration": 300,
+   "closed_reals": 297,
+   "aegis": 431
+  },
+  "slices": {
+   "AIGVDBench/ClosedSource/Gen2.zip": {
+    "kept": 150,
+    "tried": 150,
+    "status": "complete"
+   },
+   "AIGVDBench/ClosedSource/Gen3.zip": {
+    "kept": 150,
+    "tried": 158,
+    "status": "complete"
+   },
+   "AIGVDBench/ClosedSource/Jimeng.zip": {
+    "kept": 150,
+    "tried": 154,
+    "status": "complete"
+   },
+   "AIGVDBench/ClosedSource/Luma.zip": {
+    "kept": 150,
+    "tried": 156,
+    "status": "complete"
+   },
+   "AIGVDBench/ClosedSource/Opensora.zip": {
+    "kept": 150,
+    "tried": 169,
+    "status": "complete"
+   },
+   "AIGVDBench/ClosedSource/Sora.zip": {
+    "kept": 150,
+    "tried": 161,
+    "status": "complete"
+   },
+   "AIGVDBench/ClosedSource/causvid_24fps.zip": {
+    "kept": 150,
+    "tried": 150,
+    "status": "complete"
+   },
+   "AIGVDBench/ClosedSource/kling.zip": {
+    "kept": 150,
+    "tried": 172,
+    "status": "complete"
+   },
+   "AIGVDBench/ClosedSource/pika.zip": {
+    "kept": 150,
+    "tried": 171,
+    "status": "complete"
+   },
+   "AIGVDBench/ClosedSource/vidu.zip": {
+    "kept": 150,
+    "tried": 156,
+    "status": "complete"
+   },
+   "AIGVDBench/ClosedSource/wan.zip": {
+    "kept": 150,
+    "tried": 192,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/I2V/EasyAnimate.zip": {
+    "kept": 150,
+    "tried": 151,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/I2V/LTX.zip": {
+    "kept": 150,
+    "tried": 153,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip": {
+    "kept": 150,
+    "tried": 152,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/I2V/SEINE.zip": {
+    "kept": 0,
+    "tried": 50,
+    "status": "stopped: consecutive ineligible fakes"
+   },
+   "AIGVDBench/OpenSource/I2V/SVD.zip": {
+    "kept": 0,
+    "tried": 50,
+    "status": "stopped: consecutive ineligible fakes"
+   },
+   "AIGVDBench/OpenSource/I2V/VideoCrafter.zip": {
+    "kept": 0,
+    "tried": 50,
+    "status": "stopped: consecutive ineligible fakes"
+   },
+   "AIGVDBench/OpenSource/T2V/AccVideo.zip": {
+    "kept": 150,
+    "tried": 159,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/T2V/AnimateDiff.zip": {
+    "kept": 0,
+    "tried": 50,
+    "status": "stopped: consecutive ineligible fakes"
+   },
+   "AIGVDBench/OpenSource/T2V/Cogvideox1.5.zip": {
+    "kept": 150,
+    "tried": 159,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/T2V/EasyAnimate.zip": {
+    "kept": 150,
+    "tried": 150,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/T2V/HunyuanVideo.zip": {
+    "kept": 150,
+    "tried": 156,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/T2V/IPOC.zip": {
+    "kept": 150,
+    "tried": 157,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/T2V/LTX.zip": {
+    "kept": 150,
+    "tried": 160,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/T2V/Open-Sora.zip": {
+    "kept": 0,
+    "tried": 50,
+    "status": "stopped: consecutive ineligible fakes"
+   },
+   "AIGVDBench/OpenSource/T2V/Pyramid-Flow.zip": {
+    "kept": 150,
+    "tried": 151,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/T2V/RepVideo.zip": {
+    "kept": 150,
+    "tried": 153,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/T2V/VideoCrafter.zip": {
+    "kept": 0,
+    "tried": 50,
+    "status": "stopped: consecutive ineligible fakes"
+   },
+   "AIGVDBench/OpenSource/T2V/Wan2.1.zip": {
+    "kept": 150,
+    "tried": 150,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/V2V/Cogvideox1.5.zip": {
+    "kept": 150,
+    "tried": 153,
+    "status": "complete"
+   },
+   "AIGVDBench/OpenSource/V2V/LTX.zip": {
+    "kept": 150,
+    "tried": 154,
+    "status": "complete"
+   }
+  },
+  "test_clips": 5850,
+  "files_on_disk": 5591
+ },
+ "exclusions": {
+  "AIGVDBench/Real/Real.zip": {
+   "static": 9
+  },
+  "AIGVDBench/ClosedSource/Jimeng.zip": {
+   "not_8bit": 4
+  },
+  "AIGVDBench/ClosedSource/Opensora.zip": {
+   "static": 19
+  },
+  "AIGVDBench/ClosedSource/Gen3.zip": {
+   "not_8bit": 8
+  },
+  "AIGVDBench/ClosedSource/Luma.zip": {
+   "not_8bit": 6
+  },
+  "AIGVDBench/ClosedSource/Sora.zip": {
+   "not_8bit": 10,
+   "static": 1
+  },
+  "AIGVDBench/ClosedSource/kling.zip": {
+   "not_8bit": 16,
+   "static": 2,
+   "too_few_frames": 4
+  },
+  "AIGVDBench/ClosedSource/pika.zip": {
+   "static": 13,
+   "not_8bit": 8
+  },
+  "AIGVDBench/ClosedSource/wan.zip": {
+   "not_8bit": 20,
+   "static": 22
+  },
+  "AIGVDBench/ClosedSource/vidu.zip": {
+   "not_8bit": 5,
+   "static": 1
+  },
+  "AIGVDBench/OpenSource/I2V/SEINE.zip": {
+   "too_few_frames": 50
+  },
+  "AIGVDBench/OpenSource/I2V/SVD.zip": {
+   "too_few_frames": 50
+  },
+  "AIGVDBench/OpenSource/I2V/VideoCrafter.zip": {
+   "too_few_frames": 50
+  },
+  "AIGVDBench/OpenSource/T2V/AccVideo.zip": {
+   "static": 8
+  },
+  "AIGVDBench/OpenSource/T2V/AnimateDiff.zip": {
+   "too_few_frames": 50
+  },
+  "AIGVDBench/OpenSource/I2V/LTX.zip": {
+   "static": 2
+  },
+  "AIGVDBench/OpenSource/T2V/Cogvideox1.5.zip": {
+   "static": 6
+  },
+  "AIGVDBench/OpenSource/T2V/IPOC.zip": {
+   "static": 7
+  },
+  "AIGVDBench/OpenSource/T2V/LTX.zip": {
+   "static": 7
+  },
+  "AIGVDBench/OpenSource/T2V/HunyuanVideo.zip": {
+   "static": 4
+  },
+  "AIGVDBench/OpenSource/T2V/Open-Sora.zip": {
+   "short_side": 50
+  },
+  "AIGVDBench/OpenSource/T2V/RepVideo.zip": {
+   "static": 3
+  },
+  "AIGVDBench/OpenSource/T2V/VideoCrafter.zip": {
+   "too_few_frames": 50
+  },
+  "AIGVDBench/OpenSource/V2V/Cogvideox1.5.zip": {
+   "static": 3
+  },
+  "data/hard_test_set_video.tar": {
+   "short_side": 2,
+   "static": 3
+  }
+ },
+ "duplicates": {
+  "exact": [
+   [
+    "AIGVDBench/ClosedSource/kling.zip:0260.mp4",
+    "AIGVDBench/ClosedSource/kling.zip:0259.mp4"
+   ],
+   [
+    "AIGVDBench/ClosedSource/kling.zip:0805.mp4",
+    "AIGVDBench/ClosedSource/kling.zip:0804.mp4"
+   ],
+   [
+    "AIGVDBench/OpenSource/T2V/AccVideo.zip:XN7QafHTBHo_39_274to403.mp4",
+    "AIGVDBench/OpenSource/T2V/AccVideo.zip:oqqIbyCHsSE_23_0to529.mp4"
+   ],
+   [
+    "AIGVDBench/OpenSource/T2V/IPOC.zip:Z92LMTR0fhw_27_0to371.mp4",
+    "AIGVDBench/OpenSource/T2V/IPOC.zip:GlPr3im2Tk0_8_0to190.mp4"
+   ]
+  ],
+  "near": [
+   {
+    "a": "AIGVDBench/OpenSource/I2V/EasyAnimate.zip:pXHqtnmn3_o_12_27to134.mp4",
+    "b": "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip:pXHqtnmn3_o_12_27to134.mp4",
+    "own_pair": false
+   },
+   {
+    "a": "AIGVDBench/OpenSource/I2V/EasyAnimate.zip:ClOEC6PyC1k_2_0to341.mp4",
+    "b": "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip:ClOEC6PyC1k_2_0to341.mp4",
+    "own_pair": false
+   },
+   {
+    "a": "AIGVDBench/OpenSource/I2V/LTX.zip:kZLS0Ip0VYc_34_0to106.mp4",
+    "b": "AIGVDBench/OpenSource/V2V/LTX.zip:kZLS0Ip0VYc_34_0to106.mp4",
+    "own_pair": false
+   }
+  ],
+  "near_excluding_own_pairs": 3
+ },
+ "gate": {
+  "AIGVDBench/ClosedSource/Gen2.zip": {
+   "fakes": 150,
+   "reals": 297,
+   "auc": {
+    "fps": 0.771,
+    "width": 0.9733,
+    "height": 0.9733,
+    "duration_s": 0.8199,
+    "bit_rate": 0.657,
+    "frames_reported": 0.9074,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/ClosedSource/Gen3.zip": {
+   "fakes": 150,
+   "reals": 297,
+   "auc": {
+    "fps": 0.6631,
+    "width": 0.9567,
+    "height": 0.9,
+    "duration_s": 0.8588,
+    "bit_rate": 0.56,
+    "frames_reported": 0.8276,
+    "codec": 0.5,
+    "profile": 0.5167,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/ClosedSource/Jimeng.zip": {
+   "fakes": 150,
+   "reals": 297,
+   "auc": {
+    "fps": 1.0,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 0.8586,
+    "bit_rate": 0.7613,
+    "frames_reported": 0.9074,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/ClosedSource/Luma.zip": {
+   "fakes": 150,
+   "reals": 297,
+   "auc": {
+    "fps": 0.771,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 0.5791,
+    "bit_rate": 0.7276,
+    "frames_reported": 0.6852,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/ClosedSource/Opensora.zip": {
+   "fakes": 150,
+   "reals": 297,
+   "auc": {
+    "fps": 0.7455,
+    "width": 0.9967,
+    "height": 0.95,
+    "duration_s": 0.5347,
+    "bit_rate": 0.9284,
+    "frames_reported": 0.6082,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/ClosedSource/Sora.zip": {
+   "fakes": 150,
+   "reals": 297,
+   "auc": {
+    "fps": 0.9596,
+    "width": 0.9833,
+    "height": 0.98,
+    "duration_s": 0.5586,
+    "bit_rate": 0.8252,
+    "frames_reported": 0.5205,
+    "codec": 0.5,
+    "profile": 0.5133,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/ClosedSource/causvid_24fps.zip": {
+   "fakes": 150,
+   "reals": 297,
+   "auc": {
+    "fps": 0.771,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 0.532,
+    "bit_rate": 0.8767,
+    "frames_reported": 0.6145,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/ClosedSource/kling.zip": {
+   "fakes": 150,
+   "reals": 297,
+   "auc": {
+    "fps": 0.716,
+    "width": 0.97,
+    "height": 0.54,
+    "duration_s": 0.5481,
+    "bit_rate": 0.7215,
+    "frames_reported": 0.5281,
+    "codec": 0.5,
+    "profile": 0.7,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/ClosedSource/pika.zip": {
+   "fakes": 150,
+   "reals": 297,
+   "auc": {
+    "fps": 0.771,
+    "width": 1.0,
+    "height": 0.9933,
+    "duration_s": 0.9665,
+    "bit_rate": 0.9668,
+    "frames_reported": 0.9914,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/ClosedSource/vidu.zip": {
+   "fakes": 150,
+   "reals": 297,
+   "auc": {
+    "fps": 0.7263,
+    "width": 0.9733,
+    "height": 0.89,
+    "duration_s": 0.8055,
+    "bit_rate": 0.8573,
+    "frames_reported": 0.8325,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5033
+   }
+  },
+  "AIGVDBench/ClosedSource/wan.zip": {
+   "fakes": 150,
+   "reals": 297,
+   "auc": {
+    "fps": 0.8273,
+    "width": 1.0,
+    "height": 0.9133,
+    "duration_s": 0.5693,
+    "bit_rate": 0.7748,
+    "frames_reported": 0.8963,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/I2V/EasyAnimate.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 1.0,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 0.54,
+    "bit_rate": 0.9975,
+    "frames_reported": 1.0,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/I2V/LTX.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 0.7833,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 1.0,
+    "bit_rate": 0.9974,
+    "frames_reported": 1.0,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 0.7933,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 0.8933,
+    "bit_rate": 1.0,
+    "frames_reported": 0.9533,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/I2V/SEINE.zip": {
+   "fakes": 0,
+   "reals": 0,
+   "auc": {
+    "fps": null,
+    "width": null,
+    "height": null,
+    "duration_s": null,
+    "bit_rate": null,
+    "frames_reported": null,
+    "codec": null,
+    "profile": null,
+    "pix_fmt": null
+   }
+  },
+  "AIGVDBench/OpenSource/I2V/SVD.zip": {
+   "fakes": 0,
+   "reals": 0,
+   "auc": {
+    "fps": null,
+    "width": null,
+    "height": null,
+    "duration_s": null,
+    "bit_rate": null,
+    "frames_reported": null,
+    "codec": null,
+    "profile": null,
+    "pix_fmt": null
+   }
+  },
+  "AIGVDBench/OpenSource/I2V/VideoCrafter.zip": {
+   "fakes": 0,
+   "reals": 0,
+   "auc": {
+    "fps": null,
+    "width": null,
+    "height": null,
+    "duration_s": null,
+    "bit_rate": null,
+    "frames_reported": null,
+    "codec": null,
+    "profile": null,
+    "pix_fmt": null
+   }
+  },
+  "AIGVDBench/OpenSource/T2V/AccVideo.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 0.7833,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 1.0,
+    "bit_rate": 0.9326,
+    "frames_reported": 1.0,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/T2V/AnimateDiff.zip": {
+   "fakes": 0,
+   "reals": 0,
+   "auc": {
+    "fps": null,
+    "width": null,
+    "height": null,
+    "duration_s": null,
+    "bit_rate": null,
+    "frames_reported": null,
+    "codec": null,
+    "profile": null,
+    "pix_fmt": null
+   }
+  },
+  "AIGVDBench/OpenSource/T2V/Cogvideox1.5.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 1.0,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 1.0,
+    "bit_rate": 0.9999,
+    "frames_reported": 1.0,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/T2V/EasyAnimate.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 1.0,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 0.5533,
+    "bit_rate": 0.9984,
+    "frames_reported": 1.0,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/T2V/HunyuanVideo.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 0.73,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 1.0,
+    "bit_rate": 0.9782,
+    "frames_reported": 1.0,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/T2V/IPOC.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 1.0,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 0.6133,
+    "bit_rate": 1.0,
+    "frames_reported": 1.0,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/T2V/LTX.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 0.7933,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 0.8267,
+    "bit_rate": 0.9979,
+    "frames_reported": 0.8967,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/T2V/Open-Sora.zip": {
+   "fakes": 0,
+   "reals": 0,
+   "auc": {
+    "fps": null,
+    "width": null,
+    "height": null,
+    "duration_s": null,
+    "bit_rate": null,
+    "frames_reported": null,
+    "codec": null,
+    "profile": null,
+    "pix_fmt": null
+   }
+  },
+  "AIGVDBench/OpenSource/T2V/Pyramid-Flow.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 0.8233,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 0.8267,
+    "bit_rate": 1.0,
+    "frames_reported": 0.94,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/T2V/RepVideo.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 1.0,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 0.6,
+    "bit_rate": 0.9995,
+    "frames_reported": 1.0,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/T2V/VideoCrafter.zip": {
+   "fakes": 0,
+   "reals": 0,
+   "auc": {
+    "fps": null,
+    "width": null,
+    "height": null,
+    "duration_s": null,
+    "bit_rate": null,
+    "frames_reported": null,
+    "codec": null,
+    "profile": null,
+    "pix_fmt": null
+   }
+  },
+  "AIGVDBench/OpenSource/T2V/Wan2.1.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 1.0,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 0.5333,
+    "bit_rate": 0.7758,
+    "frames_reported": 0.9967,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/V2V/Cogvideox1.5.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 1.0,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 0.96,
+    "bit_rate": 0.9997,
+    "frames_reported": 1.0,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  },
+  "AIGVDBench/OpenSource/V2V/LTX.zip": {
+   "fakes": 150,
+   "reals": 150,
+   "auc": {
+    "fps": 0.8033,
+    "width": 1.0,
+    "height": 1.0,
+    "duration_s": 1.0,
+    "bit_rate": 0.9952,
+    "frames_reported": 1.0,
+    "codec": 0.5,
+    "profile": 0.5,
+    "pix_fmt": 0.5
+   }
+  }
+ },
+ "gate_flags": [
+  "AIGVDBench/ClosedSource/Gen2.zip:fps=0.771",
+  "AIGVDBench/ClosedSource/Gen2.zip:width=0.9733",
+  "AIGVDBench/ClosedSource/Gen2.zip:height=0.9733",
+  "AIGVDBench/ClosedSource/Gen2.zip:duration_s=0.8199",
+  "AIGVDBench/ClosedSource/Gen2.zip:frames_reported=0.9074",
+  "AIGVDBench/ClosedSource/Gen3.zip:width=0.9567",
+  "AIGVDBench/ClosedSource/Gen3.zip:height=0.9",
+  "AIGVDBench/ClosedSource/Gen3.zip:duration_s=0.8588",
+  "AIGVDBench/ClosedSource/Gen3.zip:frames_reported=0.8276",
+  "AIGVDBench/ClosedSource/Jimeng.zip:fps=1.0",
+  "AIGVDBench/ClosedSource/Jimeng.zip:width=1.0",
+  "AIGVDBench/ClosedSource/Jimeng.zip:height=1.0",
+  "AIGVDBench/ClosedSource/Jimeng.zip:duration_s=0.8586",
+  "AIGVDBench/ClosedSource/Jimeng.zip:bit_rate=0.7613",
+  "AIGVDBench/ClosedSource/Jimeng.zip:frames_reported=0.9074",
+  "AIGVDBench/ClosedSource/Luma.zip:fps=0.771",
+  "AIGVDBench/ClosedSource/Luma.zip:width=1.0",
+  "AIGVDBench/ClosedSource/Luma.zip:height=1.0",
+  "AIGVDBench/ClosedSource/Luma.zip:bit_rate=0.7276",
+  "AIGVDBench/ClosedSource/Opensora.zip:fps=0.7455",
+  "AIGVDBench/ClosedSource/Opensora.zip:width=0.9967",
+  "AIGVDBench/ClosedSource/Opensora.zip:height=0.95",
+  "AIGVDBench/ClosedSource/Opensora.zip:bit_rate=0.9284",
+  "AIGVDBench/ClosedSource/Sora.zip:fps=0.9596",
+  "AIGVDBench/ClosedSource/Sora.zip:width=0.9833",
+  "AIGVDBench/ClosedSource/Sora.zip:height=0.98",
+  "AIGVDBench/ClosedSource/Sora.zip:bit_rate=0.8252",
+  "AIGVDBench/ClosedSource/causvid_24fps.zip:fps=0.771",
+  "AIGVDBench/ClosedSource/causvid_24fps.zip:width=1.0",
+  "AIGVDBench/ClosedSource/causvid_24fps.zip:height=1.0",
+  "AIGVDBench/ClosedSource/causvid_24fps.zip:bit_rate=0.8767",
+  "AIGVDBench/ClosedSource/kling.zip:fps=0.716",
+  "AIGVDBench/ClosedSource/kling.zip:width=0.97",
+  "AIGVDBench/ClosedSource/kling.zip:bit_rate=0.7215",
+  "AIGVDBench/ClosedSource/pika.zip:fps=0.771",
+  "AIGVDBench/ClosedSource/pika.zip:width=1.0",
+  "AIGVDBench/ClosedSource/pika.zip:height=0.9933",
+  "AIGVDBench/ClosedSource/pika.zip:duration_s=0.9665",
+  "AIGVDBench/ClosedSource/pika.zip:bit_rate=0.9668",
+  "AIGVDBench/ClosedSource/pika.zip:frames_reported=0.9914",
+  "AIGVDBench/ClosedSource/vidu.zip:fps=0.7263",
+  "AIGVDBench/ClosedSource/vidu.zip:width=0.9733",
+  "AIGVDBench/ClosedSource/vidu.zip:height=0.89",
+  "AIGVDBench/ClosedSource/vidu.zip:duration_s=0.8055",
+  "AIGVDBench/ClosedSource/vidu.zip:bit_rate=0.8573",
+  "AIGVDBench/ClosedSource/vidu.zip:frames_reported=0.8325",
+  "AIGVDBench/ClosedSource/wan.zip:fps=0.8273",
+  "AIGVDBench/ClosedSource/wan.zip:width=1.0",
+  "AIGVDBench/ClosedSource/wan.zip:height=0.9133",
+  "AIGVDBench/ClosedSource/wan.zip:bit_rate=0.7748",
+  "AIGVDBench/ClosedSource/wan.zip:frames_reported=0.8963",
+  "AIGVDBench/OpenSource/I2V/EasyAnimate.zip:fps=1.0",
+  "AIGVDBench/OpenSource/I2V/EasyAnimate.zip:width=1.0",
+  "AIGVDBench/OpenSource/I2V/EasyAnimate.zip:height=1.0",
+  "AIGVDBench/OpenSource/I2V/EasyAnimate.zip:bit_rate=0.9975",
+  "AIGVDBench/OpenSource/I2V/EasyAnimate.zip:frames_reported=1.0",
+  "AIGVDBench/OpenSource/I2V/LTX.zip:fps=0.7833",
+  "AIGVDBench/OpenSource/I2V/LTX.zip:width=1.0",
+  "AIGVDBench/OpenSource/I2V/LTX.zip:height=1.0",
+  "AIGVDBench/OpenSource/I2V/LTX.zip:duration_s=1.0",
+  "AIGVDBench/OpenSource/I2V/LTX.zip:bit_rate=0.9974",
+  "AIGVDBench/OpenSource/I2V/LTX.zip:frames_reported=1.0",
+  "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip:fps=0.7933",
+  "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip:width=1.0",
+  "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip:height=1.0",
+  "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip:duration_s=0.8933",
+  "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip:bit_rate=1.0",
+  "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip:frames_reported=0.9533",
+  "AIGVDBench/OpenSource/T2V/AccVideo.zip:fps=0.7833",
+  "AIGVDBench/OpenSource/T2V/AccVideo.zip:width=1.0",
+  "AIGVDBench/OpenSource/T2V/AccVideo.zip:height=1.0",
+  "AIGVDBench/OpenSource/T2V/AccVideo.zip:duration_s=1.0",
+  "AIGVDBench/OpenSource/T2V/AccVideo.zip:bit_rate=0.9326",
+  "AIGVDBench/OpenSource/T2V/AccVideo.zip:frames_reported=1.0",
+  "AIGVDBench/OpenSource/T2V/Cogvideox1.5.zip:fps=1.0",
+  "AIGVDBench/OpenSource/T2V/Cogvideox1.5.zip:width=1.0",
+  "AIGVDBench/OpenSource/T2V/Cogvideox1.5.zip:height=1.0",
+  "AIGVDBench/OpenSource/T2V/Cogvideox1.5.zip:duration_s=1.0",
+  "AIGVDBench/OpenSource/T2V/Cogvideox1.5.zip:bit_rate=0.9999",
+  "AIGVDBench/OpenSource/T2V/Cogvideox1.5.zip:frames_reported=1.0",
+  "AIGVDBench/OpenSource/T2V/EasyAnimate.zip:fps=1.0",
+  "AIGVDBench/OpenSource/T2V/EasyAnimate.zip:width=1.0",
+  "AIGVDBench/OpenSource/T2V/EasyAnimate.zip:height=1.0",
+  "AIGVDBench/OpenSource/T2V/EasyAnimate.zip:bit_rate=0.9984",
+  "AIGVDBench/OpenSource/T2V/EasyAnimate.zip:frames_reported=1.0",
+  "AIGVDBench/OpenSource/T2V/HunyuanVideo.zip:fps=0.73",
+  "AIGVDBench/OpenSource/T2V/HunyuanVideo.zip:width=1.0",
+  "AIGVDBench/OpenSource/T2V/HunyuanVideo.zip:height=1.0",
+  "AIGVDBench/OpenSource/T2V/HunyuanVideo.zip:duration_s=1.0",
+  "AIGVDBench/OpenSource/T2V/HunyuanVideo.zip:bit_rate=0.9782",
+  "AIGVDBench/OpenSource/T2V/HunyuanVideo.zip:frames_reported=1.0",
+  "AIGVDBench/OpenSource/T2V/IPOC.zip:fps=1.0",
+  "AIGVDBench/OpenSource/T2V/IPOC.zip:width=1.0",
+  "AIGVDBench/OpenSource/T2V/IPOC.zip:height=1.0",
+  "AIGVDBench/OpenSource/T2V/IPOC.zip:bit_rate=1.0",
+  "AIGVDBench/OpenSource/T2V/IPOC.zip:frames_reported=1.0",
+  "AIGVDBench/OpenSource/T2V/LTX.zip:fps=0.7933",
+  "AIGVDBench/OpenSource/T2V/LTX.zip:width=1.0",
+  "AIGVDBench/OpenSource/T2V/LTX.zip:height=1.0",
+  "AIGVDBench/OpenSource/T2V/LTX.zip:duration_s=0.8267",
+  "AIGVDBench/OpenSource/T2V/LTX.zip:bit_rate=0.9979",
+  "AIGVDBench/OpenSource/T2V/LTX.zip:frames_reported=0.8967",
+  "AIGVDBench/OpenSource/T2V/Pyramid-Flow.zip:fps=0.8233",
+  "AIGVDBench/OpenSource/T2V/Pyramid-Flow.zip:width=1.0",
+  "AIGVDBench/OpenSource/T2V/Pyramid-Flow.zip:height=1.0",
+  "AIGVDBench/OpenSource/T2V/Pyramid-Flow.zip:duration_s=0.8267",
+  "AIGVDBench/OpenSource/T2V/Pyramid-Flow.zip:bit_rate=1.0",
+  "AIGVDBench/OpenSource/T2V/Pyramid-Flow.zip:frames_reported=0.94",
+  "AIGVDBench/OpenSource/T2V/RepVideo.zip:fps=1.0",
+  "AIGVDBench/OpenSource/T2V/RepVideo.zip:width=1.0",
+  "AIGVDBench/OpenSource/T2V/RepVideo.zip:height=1.0",
+  "AIGVDBench/OpenSource/T2V/RepVideo.zip:bit_rate=0.9995",
+  "AIGVDBench/OpenSource/T2V/RepVideo.zip:frames_reported=1.0",
+  "AIGVDBench/OpenSource/T2V/Wan2.1.zip:fps=1.0",
+  "AIGVDBench/OpenSource/T2V/Wan2.1.zip:width=1.0",
+  "AIGVDBench/OpenSource/T2V/Wan2.1.zip:height=1.0",
+  "AIGVDBench/OpenSource/T2V/Wan2.1.zip:bit_rate=0.7758",
+  "AIGVDBench/OpenSource/T2V/Wan2.1.zip:frames_reported=0.9967",
+  "AIGVDBench/OpenSource/V2V/Cogvideox1.5.zip:fps=1.0",
+  "AIGVDBench/OpenSource/V2V/Cogvideox1.5.zip:width=1.0",
+  "AIGVDBench/OpenSource/V2V/Cogvideox1.5.zip:height=1.0",
+  "AIGVDBench/OpenSource/V2V/Cogvideox1.5.zip:duration_s=0.96",
+  "AIGVDBench/OpenSource/V2V/Cogvideox1.5.zip:bit_rate=0.9997",
+  "AIGVDBench/OpenSource/V2V/Cogvideox1.5.zip:frames_reported=1.0",
+  "AIGVDBench/OpenSource/V2V/LTX.zip:fps=0.8033",
+  "AIGVDBench/OpenSource/V2V/LTX.zip:width=1.0",
+  "AIGVDBench/OpenSource/V2V/LTX.zip:height=1.0",
+  "AIGVDBench/OpenSource/V2V/LTX.zip:duration_s=1.0",
+  "AIGVDBench/OpenSource/V2V/LTX.zip:bit_rate=0.9952",
+  "AIGVDBench/OpenSource/V2V/LTX.zip:frames_reported=1.0"
+ ],
+ "draw_pool_sizes": {
+  "calibration": 300,
+  "closed_reals": 300,
+  "open": 900
+ },
+ "test_split_sha256": "bab0fbe4e482b92d841ade12e3b45c81843a84bcd8d8716e0ca8e8ddcfac95a7",
+ "test_id_key": "Video_id",
+ "manifest": "p5_panel_manifest.csv",
+ "not_done_here": [
+  "the training-side pHash cross-check (needs the AWS fetch's frame hashes)",
+  "the I2V conditioning-leak check against training reals",
+  "the AEGIS label join (from aegis_mapping.csv)",
+  "any rebalancing for gate flags (a user decision, before the freeze)"
+ ]
+}

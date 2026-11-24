@@ -1,0 +1,2 @@
+CPU: Intel(R) Xeon(R) CPU @ 2.20GHz | logical cores: 4
+nvidia-smi: not found (CPU session)
