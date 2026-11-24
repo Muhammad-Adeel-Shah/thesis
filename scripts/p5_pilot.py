@@ -276,9 +276,17 @@ def select_splits(args: argparse.Namespace, clips: list[dict[str, str]]) -> list
     split, ``dbp.data.video.p5_splits``); the table is written once and never changes."""
     if not args.splits:
         return clips
-    from dbp.data.video import p5_splits
+    from dbp.data import video
 
-    split_of = p5_splits([c["video_id"] for c in clips])
+    seam = os.environ.get("DBP_DRYRUN_SPLIT_SIZES", "")
+    if seam:   # "threshold:N,validation:M" -- the local dry-run's tiny pool only
+        if os.environ.get("DBP_DRYRUN") != "1":
+            raise SystemExit("DBP_DRYRUN_SPLIT_SIZES is a dry-run seam; refused outside "
+                             "DBP_DRYRUN=1")
+        video.P5_SPLIT_SIZES = tuple((name, int(n)) for name, n in
+                                     (item.split(":") for item in seam.split(",")))
+        print(f"DRY-RUN split sizes {video.P5_SPLIT_SIZES}", flush=True)
+    split_of = video.p5_splits([c["video_id"] for c in clips])
     wanted = set(args.splits.split(","))
     unknown = wanted - set(split_of.values())
     if unknown:

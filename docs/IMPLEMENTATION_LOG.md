@@ -9541,3 +9541,29 @@ to about $0.60 of the reserve beyond the $5 setup share.
 - A GPU runbook must not set it.
 - Run against the committed failing version (`git show HEAD:env/kaggle_run_p5_panel.py`), it fails with "a CPU runbook without ...".
 - `tests/test_runbook_tooling.py`: 234 passed. ruff clean.
+
+### P5-C — the pre-registration DRAFT; the reconstruction dry-run (2026-11-24)
+
+**`docs/P5_PREREGISTRATION.md`, DRAFT** (requested by the user; not frozen):
+- **Structure:** P3's.
+- **Content:** V1–V6 with P3's thresholds; V1 and V2 primary at 97.5%; the recipe; the bank and the HunyuanVideo rule; the panel rules; the k-shot pool; F1 fired (folds as decided); seeds; the once-only scoring rule.
+- **Placeholders `⟨…⟩`:** only for the panel-session and A10G-smoke numbers.
+- **Items marked PROPOSED,** for the user to set before the freeze:
+  - how the re-encodes are stored;
+  - `S2V-F` frame sampling and `S2V-T` training;
+  - the format-matched setting;
+  - V4's real pools;
+  - the composition of the V5 conditions.
+
+**`scripts/p5_pilot.py`:** a dry-run-only seam `DBP_DRYRUN_SPLIT_SIZES`. The fixture has 4 clips and the real split needs more than 400. It is refused outside DBP_DRYRUN=1, with a test.
+
+**The reconstruction dry-run: PASSED** (scratchpad driver `dry_recon.py`, code from the staged tree).
+- It cut the first-session block and the reconstruction block (c) from the runbook and ran them with bash on CPU.
+- Substitutions: `/data`, the source, shards 0:3, n 4, workers 2, cpu, `<approved members>` = wan21,ltx090, estimate 0.1 h.
+- **Result:**
+  - splits threshold 1 / validation 1 / train 2;
+  - each member built the 3 train + validation clips, **never the threshold clip**;
+  - precision fp32 ("this run's smoke fp16 check not passed (not measured (CPU))");
+  - **the resume added 0 rows**;
+  - the sessions ok, ok, ok;
+  - the shutdown calls `+180`, then `+10` per recon session: ceil(0.1 × 1.5 × 60) is 10 in floating point.

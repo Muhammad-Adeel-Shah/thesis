@@ -485,6 +485,20 @@ def test_reconstruct_skips_threshold_reals_and_never_mixes_precision(tmp_path, m
         P.phase_reconstruct(args, bank, clips)
 
 
+def test_split_size_seam_is_refused_outside_a_dry_run(monkeypatch, tmp_path):
+    import p5_pilot as P
+
+    monkeypatch.setenv("DBP_DRYRUN_SPLIT_SIZES", "threshold:1,validation:1")
+    monkeypatch.delenv("DBP_DRYRUN", raising=False)
+    args = SimpleNamespace(splits="train", reports=tmp_path)
+    clips = [{"sample_id": f"s{i}", "video_id": f"v{i}"} for i in range(4)]
+    with pytest.raises(SystemExit, match="dry-run seam"):
+        P.select_splits(args, clips)
+    monkeypatch.setenv("DBP_DRYRUN", "1")
+    monkeypatch.setattr(V, "P5_SPLIT_SIZES", V.P5_SPLIT_SIZES)       # restored afterwards
+    assert len(P.select_splits(args, clips)) == 2
+
+
 def test_requirements_pin_av_only():
     text = (ROOT / "requirements" / "base.txt").read_text(encoding="utf-8")
     lines = [line.split("#")[0].strip() for line in text.splitlines()]
