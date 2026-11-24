@@ -294,6 +294,23 @@ bash env/aws_p5_session.sh --label pairs --estimate-hours <projected> -- bash -c
   python scripts/p5_frame_hashes.py --manifest reports/p5_train_reals/p5_reals_train_manifest.csv \
     --splits-table reports/p5_train_recon/p5_train_splits.csv --reals-root /data/p5/reals \
     --out reports/p5_pairs/p5_train_frame_hashes.jsonl --workers 8'
+# (d+T1) APPROVED (user, 2026-11-24): ONE session after the reconstruction -- the pairs and
+#     the frame hashes, then S2V-F seed 0 (frame model, cache, temporal head). T1 is measured,
+#     then the remaining models (T2) are re-projected for the user's approval.
+bash env/aws_p5_session.sh --label pairs_t1 --estimate-hours 3.1 -- bash -c '
+  set -e
+  python scripts/p5_build_pairs.py --manifest reports/p5_train_reals/p5_reals_train_manifest.csv \
+    --splits-table reports/p5_train_recon/p5_train_splits.csv \
+    --members wan21,ltx090,sd15_pf,hunyuan,cogvx,mochi --reals-root /data/p5/reals \
+    --recon-root /data/p5/recon --out-root /data/p5/pairs --reports reports/p5_pairs --workers 8
+  python scripts/p5_frame_hashes.py --manifest reports/p5_train_reals/p5_reals_train_manifest.csv \
+    --splits-table reports/p5_train_recon/p5_train_splits.csv --reals-root /data/p5/reals \
+    --out reports/p5_pairs/p5_train_frame_hashes.jsonl --workers 8
+  for stage in frame cache temporal; do
+    python scripts/p5_train.py --stage $stage --run s2v_f --seed 0 --device cuda \
+      --pairs reports/p5_pairs/p5_pairs.jsonl --pairs-root /data/p5/pairs \
+      --reals-root /data/p5/reals --out-dir /data/p5/models --reports reports/p5_train
+  done'
 # (e) training (prereg section 3): per model, the frame model, its feature cache and its
 #     temporal head; every stage resumes (frame: checkpoint every 500 steps; cache: skipped
 #     when present). Order: S2V-F, S2V-1 (V2), then the F1 LOLO folds (V1).

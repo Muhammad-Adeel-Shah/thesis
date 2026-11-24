@@ -9813,3 +9813,26 @@ pins; no download):
   control), V1-b's slices per fold, V4's pools, V5's composition, the new fallback order.
 - **To be frozen and pushed on the user's go.**
 - **Full suite:** **1,477 passed, 7 skipped (GPU, PENDING-GPU), 0 failed**, 442.6 s. ruff clean.
+
+### P5 — PRE-REGISTRATION FROZEN (2026-11-24)
+
+**User:**
+- The repository `github.com/Muhammad-Adeel-Shah/thesis` is **private**, with no collaborators. **GO:** freeze, pre-push audit, tag `p5-prereg-frozen`, push `p5-video` + the tag, confirm with `git ls-remote`.
+- The F2–F4 reading is confirmed: F2 is Wed EOD, F3 is Thu 12:00, the cuts take the new order, and F4 fires with F3.
+- **Sessions P and T1 are APPROVED, chained in ONE session** after the reconstruction ends: estimate about 3.1 h, hard cap 1.5x. Then T1 is measured and T2 re-projected for approval.
+
+**`docs/P5_PREREGISTRATION.md`:**
+- **FROZEN:** the text of final-draft `1c37ab0`, unchanged except the status block and the §6.6 line recording the confirmed date reading.
+- It was frozen before any P5 model trained and before any panel clip was scored.
+- The panel digest `7f54123f…c471d8` was committed earlier, in `1c37ab0`.
+
+**`env/cloud_p5_runbook.md`:** block (d+T1), the approved combined session.
+- **Its dry-run** (scratchpad `dry_combined.py`; first session, recon, then pairs_t1; CPU stand-ins) was re-checked on its own outputs: **PASSED**.
+  - pairs 4 train + 2 validation; hashes 4 clips; frame 3 steps; the diagnostic AUC present;
+  - the session ok; the backup carried reports/p5_pairs and reports/p5_train.
+- **The first evaluation said FAILED,** only because the driver expected a cap of `+18`; ceil(0.2 x 1.5 x 60) in floating point is 19, which is what the wrapper scheduled.
+
+**The pre-push audit** (scratchpad `prepush_audit.py`, every blob added by the 29 commits not on `origin/master` = `54180d33…`): **CLEAN**.
+- 207 blobs, 33.0 MB in total; the largest is 3.6 MB (`p5_panel_clips.jsonl`);
+- no file over 10 MB; no image, video, archive or weights;
+- no secret-like content.

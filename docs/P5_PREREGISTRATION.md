@@ -1,15 +1,20 @@
-# P5 pre-registration — FINAL DRAFT (to be frozen)
+# P5 pre-registration — FROZEN
 
-**Status: FINAL DRAFT, 2026-11-24.** Every decision is in, and no placeholder is left.
-- **It is frozen,** tagged `p5-prereg-frozen`, audited and pushed on the user's go, **before
-  any P5 model trains and before any panel clip is scored**.
+**Status: FROZEN, 2026-11-24.**
+- **What is frozen:** the text of final-draft commit `1c37ab0`, unchanged except this status
+  block and one line in §6.6 recording the user's confirmation of the date reading.
+- **When:** frozen **before any P5 model was trained and before any panel clip was scored**.
+  The panel digest `7f54123f0a55b1211d1f3c0a8f07da962b42e772f5ad4742706efcd05fc471d8` was
+  committed before the freeze.
 - **Values:** every value was set by the user (*(user, date)*) or measured (with its source
-  file). The proposals of the draft were approved as proposed on 2026-11-24, with the
-  user's additions.
-- **Not yet available when this was written, and never chosen from panel data:**
+  file). The draft's proposals were approved as proposed on 2026-11-24, with the user's
+  additions.
+- **Not available at the freeze, and never chosen from panel data:**
   - the training-side leak checks (§2.5), run in parallel with training; any match is
-    reported separately;
-  - the fallback statuses F2–F4 (§6.6), which fire by date.
+    reported separately (P3's rule);
+  - the statuses of F2–F4 (§6.6), which fire by date.
+- **The repository** is private, with no collaborators (user, 2026-11-24). The tag is
+  `p5-prereg-frozen`.
 - **Changes after the freeze:** only as dated amendments, committed before any panel score
   exists. Nothing changes after a panel result has been seen.
 - **The plan behind it:** `docs/P5_PLAN.md` (approvals A1–A8 and every decision block since).
@@ -390,9 +395,9 @@ All outcomes are reported unchanged. A failed hypothesis is a finding.
 - **F3, baselines D3 + image S2-D per frame:** if clean scoring is not done by **Thu 26 Nov,
   12:00**, or if DeCoF or DDA fails its pre-flight.
 - **F4, k-shot → k = 0 only:** if F3 fires.
-- Nothing else may change. **The reading of "dates unchanged":** the original dates stay in
-  order (Wed EOD, Thu 12:00, then a trigger tied to the previous step), and the cuts take
-  the user's new order.
+- Nothing else may change. **The reading of "dates unchanged"** (confirmed by the user,
+  2026-11-24): F2 is Wed EOD and F3 is Thu 12:00, the cuts take the user's new order, and
+  F4 fires with F3.
 
 ### 6.7 DESCRIPTIVE V6 — baselines
 
