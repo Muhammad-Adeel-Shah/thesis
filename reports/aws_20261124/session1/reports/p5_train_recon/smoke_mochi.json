@@ -1,0 +1,78 @@
+{
+  "member": "mochi",
+  "role": "bank",
+  "device": "cuda",
+  "gpu_name": "NVIDIA A10G",
+  "clips": [
+    "5000_0_10057234",
+    "5000_0_10161880",
+    "5000_0_10244481"
+  ],
+  "numerics": {
+    "seed": 2026,
+    "deterministic": true,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "cudnn_allow_tf32": false,
+    "matmul_allow_tf32": false
+  },
+  "load_seconds": 18.26,
+  "dry_run_random_init": false,
+  "determinism_max_abs_delta": 0,
+  "fp16_seconds": [
+    2.249,
+    2.246,
+    2.246
+  ],
+  "fp16_warm_seconds_per_clip": 2.246,
+  "fp16_determinism_max_abs_delta": 0,
+  "status": "OK",
+  "per_clip": [
+    {
+      "sample_id": "5000_0_10057234",
+      "seconds": 14.042,
+      "psnr_db": 25.796,
+      "peak_mb": 10023.7,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    },
+    {
+      "sample_id": "5000_0_10161880",
+      "seconds": 13.895,
+      "psnr_db": 31.761,
+      "peak_mb": 10023.0,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    },
+    {
+      "sample_id": "5000_0_10244481",
+      "seconds": 13.906,
+      "psnr_db": 29.99,
+      "peak_mb": 10023.0,
+      "shape": [
+        25,
+        320,
+        320,
+        3
+      ]
+    }
+  ],
+  "fp16_psnr_db": {
+    "0": 51.929,
+    "1": 49.542,
+    "2": 47.796
+  },
+  "fp16_build_allowed": false,
+  "fp16_reason": "below 55.0 dB at 0: 51.93 dB, 1: 49.54 dB, 2: 47.80 dB",
+  "fp16_threshold_db": 55.0,
+  "warm_seconds_per_clip": 13.901,
+  "peak_mb_max": 10023.7
+}

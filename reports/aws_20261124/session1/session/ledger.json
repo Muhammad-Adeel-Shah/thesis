@@ -1,0 +1,16 @@
+{
+  "hours": 0.36693274915218355,
+  "sessions": [
+    {
+      "label": "setup_pexels",
+      "started": "Mon Nov 23 22:12:33 2026",
+      "rate": 1.217
+    },
+    {
+      "label": "setup_pexels",
+      "started": "Tue Nov 24 04:30:31 2026",
+      "rate": 1.217
+    }
+  ],
+  "spend_usd": 1.91
+}

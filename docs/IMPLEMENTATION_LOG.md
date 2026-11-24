@@ -9567,3 +9567,69 @@ to about $0.60 of the reserve beyond the $5 setup share.
   - **the resume added 0 rows**;
   - the sessions ok, ok, ok;
   - the shutdown calls `+180`, then `+10` per recon session: ceil(0.1 × 1.5 × 60) is 10 in floating point.
+
+### P5-C — AWS session 1 (restart) done: Pexels 2,200 kept, A10G smoke OK x6; the 2,000-clip projection (2026-11-24)
+
+**Sources:**
+- The Drive backup is `F:/thesis-2/kaggle_raw/p5_aws_session1/dbp-p5-20261124T050743Z-1-001.zip`
+  (sha256 `7dd9c1ce128701bdbe02a5e89f97171eda2745b65bde4c7d6d535533a1931f03`).
+- The tracked copy (872 KB, no clips) is `reports/aws_20261124/session1/`.
+
+**The session** (`sessions.jsonl`): `setup_pexels`, 2026-11-24T04:30:31Z → 04:53:32Z, exit 0,
+**ok**, cap 180 min. The failed first try (22:12:33Z → 22:12:36Z, exit 1) is recorded before
+it.
+
+**The environment** (`reports/p5_cloud/env_20261124T042711Z.txt`):
+- Python 3.13.18; torch 2.11.0+cu130, CUDA 13.0, cuDNN 92302;
+- NVIDIA A10G (8, 6), driver 595.112.07;
+- av 19.0.2, diffusers 0.42.0, transformers 5.24.0, peft 0.22.0, pyarrow 23.0.1; libx264 and
+  libx265 present.
+
+**The Pexels training pool** (`p5_reals_train_summary.json`):
+- 2,463 videos: **2,200 kept**, 235 spare, 28 excluded (`static`), complete.
+- 5,097,065,846 PNG bytes kept; 1,066.5 s.
+
+**The A10G smoke** (`smoke_*.json`, 3 clips each; all **OK**, gpu "NVIDIA A10G"):
+
+| member | fp32 warm s/clip | fp16 warm s/clip | fp16 min dB | fp16 re-run delta | peak MB |
+|---|---|---|---|---|---|
+| wan21 | 6.139 | 1.569 | 62.337 | 0 | 10,993.6 |
+| hunyuan | 14.541 | 2.336 | 60.536 | 0 | 12,438.4 |
+| cogvx | 11.327 | 2.227 | 62.989 | 0 | 9,831.4 |
+| ltx090 | 0.747 | 0.175 | 59.453 | 0 | 2,085.1 |
+| mochi | 13.901 | 2.246 | 47.796 | 0 | 10,023.7 |
+| sd15_pf | 2.370 | 1.310 | 60.972 | 0 | 2,770.2 |
+
+- **HunyuanVideo now fits and is deterministic on the A10G.** It ran out of memory on the T4.
+
+**Precision, from the committed rule** (`p5_pilot.recon_precision` on these records, with the
+pilot's T4 records as evidence):
+- **fp16:** wan21, ltx090, sd15_pf, and hunyuan (its check is the A10G's).
+- **fp32:** cogvx (the user's rule, although it passed) and mochi (47.796 dB < 55).
+
+**The projection** (scratchpad `p5_projection_a10g.py`; 2,000 clips; $1.217/h):
+- **The basis:** the measured A10G warm s/clip at the chosen precision, plus **an ASSUMED
+  1.670 s/clip** for the PNG write and PSNR. The smoke does not time those; the T4 pilot
+  measured 1.670 (wan21) and 0.128 (ltx090), and the larger is used.
+- **6 members:** 40.635 s/clip → **22.58 h → $27.47**.
+  - GPU time alone: 17.01 h, $20.70.
+  - Cap at 1.5× = 33.86 h, $41.21.
+  - All fp32 instead: 32.80 h, $39.92.
+- **5 members (no hunyuan):** 36.630 s/clip → **20.35 h → $24.77**.
+  - GPU time alone: 15.71 h.
+  - Cap: 30.52 h, $37.15.
+- **Disk:** 40.5 GB (6 members) / 33.7 GB (5 members). This ASSUMES every member's PNG size
+  equals the pilot's mean of wan21 and ltx090, 3,374,219 B per clip.
+- Both projections are inside the $45 reconstruction share, including at the cap.
+
+**Spend:**
+- `postsession --instance-type g5.2xlarge --hours 1.96 --volume-created 2026-11-23`: **CLEAN**,
+  **$3.85** of the $75 hard stop.
+- **The instance-hours** are 1.30 + 0.658 h:
+  - from LaunchTime 20:56:35Z and the restart's LaunchTime 04:16:03Z (CloudTrail
+    `StartInstances` 09:16:03 PKT);
+  - to each session's end + 2 min. The stop time itself is not recorded by an OS-initiated
+    stop: an ESTIMATE.
+- The guard's ledger counts only time inside the wrapper (0.367 h, $1.91).
+- Not in the ledger: the deleted us-east-2a volume, about $0.27.
+- **The pre-registration draft's bank table** now carries these fp16 results.

@@ -1,0 +1,59 @@
+session setup_pexels: estimate 2.0 h -> hard cap in 180 min
+job pid 2141, guard pid 2142; log /data/p5/session/logs/setup_pexels_20261124T043031Z.log
+HF_TOKEN present: True
+key             kind          pinned        result
+--------------------------------------------------------------------------------
+wan21           vae_video_kl  0fad780a534b  RESOLVES
+hunyuan         vae_video_kl  e8c2aaa66fe3  RESOLVES
+cogvx           vae_video_kl  1137dacfc2c9  RESOLVES
+ltx090          vae_video_kl  8984fa25007f  RESOLVES
+mochi           vae_video_kl  cd1d0fe89aa8  RESOLVES
+sd15_pf         vae_kl_per_frame451f4fe16113  RESOLVES
+wan22_5b        vae_video_kl  b8fff7315c76  RESOLVES
+dinov2-base     backbone      f9e44c814b77  RESOLVES
+dinov3-vitb16   backbone      5931719e67bb  RESOLVES
+dinov3-vitl16   backbone      ea8dc2863c51  RESOLVES
+--------------------------------------------------------------------------------
+video pin check OK: 10 pins, 0 fatal, 0 blocked
+videos/5000_1_shard_0007.tar: 75 videos, 74 eligible so far
+videos/5000_1_shard_0055.tar: 85 videos, 158 eligible so far
+videos/5000_1_shard_0038.tar: 78 videos, 234 eligible so far
+videos/5000_1_shard_0017.tar: 72 videos, 306 eligible so far
+videos/5000_1_shard_0040.tar: 61 videos, 367 eligible so far
+videos/5000_0_shard_0015.tar: 77 videos, 443 eligible so far
+videos/5000_0_shard_0026.tar: 68 videos, 510 eligible so far
+videos/5000_1_shard_0015.tar: 92 videos, 602 eligible so far
+videos/5000_0_shard_0031.tar: 90 videos, 690 eligible so far
+videos/5000_1_shard_0023.tar: 61 videos, 751 eligible so far
+videos/5000_0_shard_0062.tar: 23 videos, 774 eligible so far
+videos/5000_0_shard_0040.tar: 77 videos, 849 eligible so far
+videos/5000_0_shard_0027.tar: 107 videos, 956 eligible so far
+videos/5000_1_shard_0058.tar: 82 videos, 1035 eligible so far
+videos/5000_1_shard_0031.tar: 92 videos, 1125 eligible so far
+videos/5000_0_shard_0044.tar: 75 videos, 1200 eligible so far
+videos/5000_1_shard_0025.tar: 104 videos, 1302 eligible so far
+videos/5000_1_shard_0027.tar: 96 videos, 1397 eligible so far
+videos/5000_1_shard_0009.tar: 57 videos, 1453 eligible so far
+videos/5000_0_shard_0061.tar: 105 videos, 1557 eligible so far
+videos/5000_1_shard_0016.tar: 90 videos, 1646 eligible so far
+videos/5000_0_shard_0022.tar: 98 videos, 1744 eligible so far
+videos/5000_0_shard_0003.tar: 80 videos, 1823 eligible so far
+videos/5000_0_shard_0036.tar: 67 videos, 1889 eligible so far
+videos/5000_0_shard_0009.tar: 85 videos, 1973 eligible so far
+videos/5000_1_shard_0029.tar: 93 videos, 2065 eligible so far
+videos/5000_0_shard_0007.tar: 75 videos, 2139 eligible so far
+videos/5000_0_shard_0052.tar: 52 videos, 2191 eligible so far
+videos/5000_0_shard_0010.tar: 90 videos, 2280 eligible so far
+videos/5000_0_shard_0019.tar: 76 videos, 2356 eligible so far
+videos/5000_1_shard_0033.tar: 80 videos, 2435 eligible so far
+{"pool": "train", "videos": 2463, "status": {"kept": 2200, "spare": 235, "excluded": 28}, "exclusions": {"static": 28}, "kept": 2200, "complete": true, "seconds": 1066.5}
+diffusers 0.42.0 (pinned)
+numerics {"seed": 2026, "deterministic": true, "cudnn_benchmark": false, "cudnn_deterministic": true, "cudnn_allow_tf32": false, "matmul_allow_tf32": false}
+/data/venv/lib/python3.13/site-packages/huggingface_hub/utils/_validators.py:205: UserWarning: The `local_dir_use_symlinks` argument is deprecated and ignored in `hf_hub_download`. Downloading to a local directory does not use symlinks anymore.
+  warnings.warn(
+smoke wan21: OK
+smoke hunyuan: OK
+smoke cogvx: OK
+smoke ltx090: OK
+smoke mochi: OK
+smoke sd15_pf: OK

@@ -62,12 +62,12 @@ All outcomes are reported unchanged. A failed hypothesis is a finding.
 
 | key | lineage | precision for the bank (rule §2.3) |
 |---|---|---|
-| `wan21` | Wan2.1 VAE | fp16 if the A10G smoke passes it again: ⟨A10G result⟩ |
-| `hunyuan` | HunyuanVideo VAE | **the decision rule below**; its fp16 check is the A10G smoke's: ⟨A10G result⟩ |
+| `wan21` | Wan2.1 VAE | **fp16**: pilot passed; A10G min 62.337 dB, re-run delta 0 (A10G smoke, `reports/aws_20261124/session1/reports/p5_train_recon/`) |
+| `hunyuan` | HunyuanVideo VAE | **the decision rule below**; **fp16** if kept: A10G min 60.536 dB, re-run delta 0, run on NVIDIA A10G (A10G smoke, `reports/aws_20261124/session1/reports/p5_train_recon/`) |
 | `cogvx` | CogVideoX VAE | **fp32** *(user, 2026-11-22: determinism)* |
-| `ltx090` | LTX-Video 0.9 VAE | fp16 if the A10G smoke passes it again: ⟨A10G result⟩ |
-| `mochi` | Mochi VAE | **fp32** (its pilot fp16 check failed: 45.09 dB) |
-| `sd15_pf` | SD1.5 VAE per frame (the image lineage) | fp16 if the A10G smoke passes it again: ⟨A10G result⟩ |
+| `ltx090` | LTX-Video 0.9 VAE | **fp16**: pilot passed; A10G min 59.453 dB, re-run delta 0 (A10G smoke, `reports/aws_20261124/session1/reports/p5_train_recon/`) |
+| `mochi` | Mochi VAE | **fp32** (its fp16 check failed: pilot 45.09 dB, A10G min 47.796 dB) |
+| `sd15_pf` | SD1.5 VAE per frame (the image lineage) | **fp16**: pilot passed; A10G min 60.972 dB, re-run delta 0 (A10G smoke, `reports/aws_20261124/session1/reports/p5_train_recon/`) |
 | `wan22_5b` | reserve (descriptive only, V1-c) | — |
 | `allegro` | **excluded** (diffusers implements it only with tiling, which the protocol forbids) | — |
 

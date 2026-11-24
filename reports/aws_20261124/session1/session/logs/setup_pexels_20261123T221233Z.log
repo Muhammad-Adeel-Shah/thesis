@@ -1,0 +1,35 @@
+session setup_pexels: estimate 2.0 h -> hard cap in 180 min
+job pid 3864, guard pid 3865; log /data/p5/session/logs/setup_pexels_20261123T221233Z.log
+HF_TOKEN present: True
+key             kind          pinned        result
+--------------------------------------------------------------------------------
+wan21           vae_video_kl  0fad780a534b  RESOLVES
+hunyuan         vae_video_kl  e8c2aaa66fe3  RESOLVES
+cogvx           vae_video_kl  1137dacfc2c9  RESOLVES
+ltx090          vae_video_kl  8984fa25007f  RESOLVES
+mochi           vae_video_kl  cd1d0fe89aa8  RESOLVES
+sd15_pf         vae_kl_per_frame451f4fe16113  RESOLVES
+wan22_5b        vae_video_kl  b8fff7315c76  RESOLVES
+dinov2-base     backbone      f9e44c814b77  RESOLVES
+dinov3-vitb16   backbone      5931719e67bb  RESOLVES
+dinov3-vitl16   backbone      ea8dc2863c51  RESOLVES
+--------------------------------------------------------------------------------
+video pin check OK: 10 pins, 0 fatal, 0 blocked
+Traceback (most recent call last):
+  File "/data/repo/thesis_dbp/scripts/p5_fetch_reals.py", line 312, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/data/repo/thesis_dbp/scripts/p5_fetch_reals.py", line 211, in main
+    manifest = read_manifest(source.fetch(source.manifest_name()))
+  File "/data/repo/thesis_dbp/scripts/p5_fetch_reals.py", line 84, in read_manifest
+    import pyarrow.parquet as pq
+ModuleNotFoundError: No module named 'pyarrow'
+2026/11/23 22:12:41 ERROR : : error reading source directory: directory not found
+2026/11/23 22:12:41 ERROR : Attempt 1/3 failed with 1 errors and: directory not found
+2026/11/23 22:12:41 ERROR : : error reading source directory: directory not found
+2026/11/23 22:12:41 ERROR : Attempt 2/3 failed with 1 errors and: directory not found
+2026/11/23 22:12:41 ERROR : : error reading source directory: directory not found
+2026/11/23 22:12:41 ERROR : Attempt 3/3 failed with 1 errors and: directory not found
+2026/11/23 22:12:41 Failed to copy: directory not found
+BACKUP FAILED (see /data/p5/session/logs/setup_pexels_20261123T221233Z.log); stopping anyway
+session setup_pexels ended (exit 1, failed): stopping the instance

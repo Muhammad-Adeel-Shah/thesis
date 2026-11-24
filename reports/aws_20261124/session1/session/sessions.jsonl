@@ -1,0 +1,2 @@
+{"label":"setup_pexels","start":"20261123T221233Z","end":"20261123T221236Z","estimate_h":2.0,"cap_min":180,"exit":1,"status":"failed","log":"/data/p5/session/logs/setup_pexels_20261123T221233Z.log"}
+{"label":"setup_pexels","start":"20261124T043031Z","end":"20261124T045332Z","estimate_h":2.0,"cap_min":180,"exit":0,"status":"ok","log":"/data/p5/session/logs/setup_pexels_20261124T043031Z.log"}
