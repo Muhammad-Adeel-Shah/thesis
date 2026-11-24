@@ -285,11 +285,15 @@ bash env/aws_p5_session.sh --label recon --estimate-hours <projected> -- \
 
 # (d) the training pairs -- the format match, then the p = 0.80 pair re-encode (train only),
 #     each clip encoded ONCE, written and hashed (prereg section 2.4); CPU; resumable per pair
-bash env/aws_p5_session.sh --label pairs --estimate-hours <projected> -- \
+#     then the training-side frame hashes for the panel leak checks (only hashes leave)
+bash env/aws_p5_session.sh --label pairs --estimate-hours <projected> -- bash -c '
   python scripts/p5_build_pairs.py --manifest reports/p5_train_reals/p5_reals_train_manifest.csv \
     --splits-table reports/p5_train_recon/p5_train_splits.csv \
     --members wan21,ltx090,sd15_pf,hunyuan,cogvx,mochi --reals-root /data/p5/reals \
-    --recon-root /data/p5/recon --out-root /data/p5/pairs --reports reports/p5_pairs --workers 8
+    --recon-root /data/p5/recon --out-root /data/p5/pairs --reports reports/p5_pairs --workers 8 &&
+  python scripts/p5_frame_hashes.py --manifest reports/p5_train_reals/p5_reals_train_manifest.csv \
+    --splits-table reports/p5_train_recon/p5_train_splits.csv --reals-root /data/p5/reals \
+    --out reports/p5_pairs/p5_train_frame_hashes.jsonl --workers 8'
 # (e) training (prereg section 3): per model, the frame model, its feature cache and its
 #     temporal head; every stage resumes (frame: checkpoint every 500 steps; cache: skipped
 #     when present). Order: S2V-F, S2V-1 (V2), then the F1 LOLO folds (V1).

@@ -9726,3 +9726,90 @@ pilot's T4 records as evidence):
 - it joins to the extracted files on the last two path parts for 436 of 436, uniquely.
 
 The review decisions go to the user (the message of this date).
+
+### P5-C — the panel review and the pre-registration decisions applied; the final pre-registration text (2026-11-24)
+
+**A correction to the panel entry above:** the panel has **25 complete slices (11 closed +
+14 open) and 6 empty ones**, not 24 and 7. LTX V2V was miscounted. The empty ones are
+SEINE I2V, SVD I2V, VideoCrafter I2V, VideoCrafter T2V, AnimateDiff T2V and Open-Sora T2V.
+The counts below come from `p5_panel_final.json`.
+
+**User decisions** (panel review of `51cb27f`, and the pre-registration items):
+- **The gate:**
+  - the panel is kept as drawn, and the resolution/fps shortcut is stated beside every
+    AIGVDBench slice (upper bound);
+  - the resolution-matched SENSITIVITY view is reported for every hypothesis;
+  - a resampling-only control: the real pools native vs downscaled, the FPR shift at k = 0;
+  - V3 per fps stratum; no fps-matched view;
+  - the primary view stays the format-matched one;
+  - and a note: V1 and V2 are less exposed to the cue.
+- **Duplicates and slices:**
+  - exact duplicates: the later copy is dropped (4), no backfill;
+  - near matches: kept and recorded;
+  - the empty slices: accepted, a limitation.
+- **The strata:** checked locally from HF metadata.
+- **The training-side checks:** the hash export runs in the pairs session, the check on
+  Kaggle in parallel with training, and matches are reported separately.
+- **The pre-registration items, approved as proposed, with these additions:**
+  - (1) plus the validation diagnostic and an encoder-history limitation;
+  - (2) the clip score is the mean of the frame logits over frames 1–16 of the 17-frame
+    test window;
+  - (3) fixed; (4) CRF 23 medium yuv420p native fps; (5) AIGVDBench decides and AEGIS is
+    descriptive; (6) as proposed.
+- **The cut order, with the dates unchanged:**
+  - F1 LOLO 5 → 3: fired; the folds are wan21/hunyuan/ltx090;
+  - F2: robustness H.264 only;
+  - F3: baselines D3 + image S2-D per frame;
+  - F4: k-shot → k = 0 only.
+- The training code `11d8be5` is accepted.
+
+**The strata, from HF metadata** (`model_info(files_metadata=True)`; LFS sha256 against our
+pins; no download):
+- **Byte-identical to our pinned VAEs:**
+  - `Wan-AI/Wan2.1-T2V-14B-Diffusers` @ `38ec498c…` and `-1.3B-Diffusers` @ `0fad780a…`:
+    `vae/diffusion_pytorch_model.safetensors` 507,591,892 B `d6e524b3…` = wan21;
+  - `zai-org/CogVideoX1.5-5B` @ `fdc5267c…`: 862,388,596 B `a410e48d…` = cogvx;
+  - `hunyuanvideo-community/HunyuanVideo` @ `e8c2aaa6…` = hunyuan.
+- **`aejion/AccVideo` @ `c10d0cb5…`:**
+  - it ships `hunyuan-video-t2v-720p/vae/pytorch_model.pt` (986,000,558 B, `95d1fc70…`), a
+    `.pt`, so byte identity cannot be shown;
+  - **in-bank by provenance, and excluded from the unseen macros.**
+- **`Lightricks/LTX-Video` @ `8984fa25…`:**
+  - `vae/` = our ltx090 pin, but the repo also ships `ltx-video-2b-v0.9.1` and `-v0.9.5`
+    checkpoints, and AIGVDBench does not say which it used;
+  - **undetermined, descriptive only.**
+- **"Unseen":** 17 slices (6 out-of-bank, 11 closed).
+
+**Added:**
+- **`scripts/p5_fetch_panel.py --phase review`:** the decisions applied to the tracked Kaggle
+  reports, locally.
+  - It drops the later copy of each exact duplicate in the slice's draw order (kling 0259
+    and 0804; AccVideo `oqqIbyCHsSE_23_0to529`; IPOC `GlPr3im2Tk0_8_0to190`). An open pair goes
+    with its fake.
+  - Then the strata (`STRATA`), and the AEGIS label join: 214 real, 217 fake.
+  - **The FINAL panel digest is `7f54123f0a55b1211d1f3c0a8f07da962b42e772f5ad4742706efcd05fc471d8`**
+    (`reports/p5_panel/p5_panel_final.json`, `p5_panel_final_manifest.csv`). It is
+    reproducible from the tracked reports.
+  - **The panel as frozen:** fakes 3,746; paired reals 2,098; closed reals 297; calibration
+    300; AEGIS 214 + 217.
+- **`scripts/p5_build_pairs.py`:** the validation diagnostic copies (`real_diag` and
+  `recon_diag`, the pair's own codec/CRF; never trained on).
+- **`scripts/p5_train.py`:** the diagnostic is cached as split `validation_reencoded`, and
+  the temporal report has `reencoded_diagnostic` (in-protocol and held-out AUCs).
+- **`scripts/p5_frame_hashes.py`:** the pHash of every frame of every kept training-pool clip
+  (train, validation, threshold), run on AWS in the pairs session. Only the hashes leave.
+- **The runbook pairs session** (d) chains it.
+- **`tests/test_p5_train.py`:** the diagnostic files.
+
+**The training dry-run, again: PASSED.**
+- It now covers the frame hashes (4 clips × 25 frames, all splits) and the re-encode
+  diagnostic AUCs in both temporal reports.
+- The second training session resumed and skipped the caches.
+
+**`docs/P5_PREREGISTRATION.md`, FINAL DRAFT:**
+- every decision above is in;
+- 0 placeholders and 0 PROPOSED items left;
+- the final digest and counts, the strata, the views (primary, sensitivity, resampling
+  control), V1-b's slices per fold, V4's pools, V5's composition, the new fallback order.
+- **To be frozen and pushed on the user's go.**
+- **Full suite:** **1,477 passed, 7 skipped (GPU, PENDING-GPU), 0 failed**, 442.6 s. ruff clean.

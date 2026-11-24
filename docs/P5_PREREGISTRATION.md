@@ -1,14 +1,15 @@
-# P5 pre-registration — DRAFT (not frozen)
+# P5 pre-registration — FINAL DRAFT (to be frozen)
 
-**Status: DRAFT, 2026-11-24.**
-- **It is frozen,** tagged `p5-prereg-frozen`, audited and pushed right after the panel
-  review, and **before any P5 model trains and before any panel clip is scored**.
-- **Values:**
-  - Every value marked *(user, date)* was set by the user.
-  - Every value marked **PROPOSED** is the agent's proposal and needs the user's decision
-    before the freeze.
-  - Every `⟨…⟩` is a placeholder for a number that comes from the panel session or the
-    A10G smoke. Nothing else may be a placeholder.
+**Status: FINAL DRAFT, 2026-11-24.** Every decision is in, and no placeholder is left.
+- **It is frozen,** tagged `p5-prereg-frozen`, audited and pushed on the user's go, **before
+  any P5 model trains and before any panel clip is scored**.
+- **Values:** every value was set by the user (*(user, date)*) or measured (with its source
+  file). The proposals of the draft were approved as proposed on 2026-11-24, with the
+  user's additions.
+- **Not yet available when this was written, and never chosen from panel data:**
+  - the training-side leak checks (§2.5), run in parallel with training; any match is
+    reported separately;
+  - the fallback statuses F2–F4 (§6.6), which fire by date.
 - **Changes after the freeze:** only as dated amendments, committed before any panel score
   exists. Nothing changes after a panel result has been seen.
 - **The plan behind it:** `docs/P5_PLAN.md` (approvals A1–A8 and every decision block since).
@@ -119,10 +120,20 @@ All outcomes are reported unchanged. A failed hypothesis is a finding.
   - So every H.265-degraded clip is **encoded once, written and hashed**, and the hashes are
     the record *(user, 2026-11-24, option a)*. H.264 stays byte-checked.
   - **A limitation:** "x265 output is not byte-deterministic".
-- **PROPOSED, how it is stored:**
-  - The re-encoded bitstreams (mp4, about 50 KB per clip) are stored, not the decoded
-    frames, and are decoded at training time.
-  - Decoding a stored bitstream is exact, so the hashes fix the training data.
+- **How it is stored** *(user, 2026-11-24)*:
+  - The re-encoded bitstreams (mp4) are stored, not the decoded frames, and are decoded at
+    training time.
+  - Decoding a stored bitstream is exact, so the hashes in `p5_pairs.jsonl` fix the
+    training data (`scripts/p5_build_pairs.py`).
+- **A validation diagnostic** *(user, 2026-11-24)*:
+  - Every validation pair also gets a re-encoded copy with its own pre-declared codec and
+    CRF, and is never trained on.
+  - The in-protocol and held-out AUCs are reported on the plain and the re-encoded
+    validation pairs side by side.
+- **A limitation (encoder history):**
+  - The training reals carry Pexels' own upstream H.264 history before any re-encode.
+  - The reconstructions only get the format-matching encode and the drawn re-encode.
+  - The two classes' compression histories match in bitrate, not in generation count.
 - **The thesis states** that V5 tests robustness *inside* the trained range: CRF 23/28/35
   for H.264 and 28/35 for H.265 are all within 18–35.
 - **The provenance of the recipe:** it was fixed from training-domain pilot data only
@@ -137,55 +148,121 @@ All outcomes are reported unchanged. A failed hypothesis is a finding.
 - **The layout,** measured from the zip directories:
   - every open-source fake has a same-named real;
   - the 11 closed-source zips share 2,000 numeric names, none of them a real.
-- **The universe:** the official `Split/test.jsonl` ∩ Real.zip (⟨n⟩ names, ⟨g⟩ source
-  videos).
+- **The universe:** the official `Split/test.jsonl` ∩ Real.zip.
+  - The ids were read with key `Video_id`; the split's sha256 is `bab0fbe4…95a7`.
+  - The pools filled exactly from it (`reports/kaggle_20261124/p5_panel/p5_panel_draw.json`).
 - **Grouping:** by source video (stricter than by name). **A name, with its real and every
   fake made from it, is in exactly one pool**, and no source video spans two pools *(user,
   2026-11-23)*.
 - **The pools.** Whole groups, ordered by `sha256("2026:p5-panel:" + source)`:
-  - **k-shot calibration** 300 → ⟨n⟩;
-  - **closed-source reals** 300 → ⟨n⟩;
-  - **open-source pool** 900 → ⟨n⟩.
+  - **k-shot calibration:** 300 drawn, 300 eligible;
+  - **closed-source reals:** 300 drawn, **297** eligible;
+  - **open-source pool:** 900.
 - **Open-source slices** (20 zips): per zip, the first 150 names in
   `sha256("2026:p5-panel:" + zip + ":" + name)` order whose real **and** that zip's fake are
   both eligible.
   - These are **content-matched pairs**, reported as the content-matched view.
-  - Counts per slice: ⟨…⟩.
+  - **14 slices of 150:** EasyAnimate I2V/T2V, LTX I2V/T2V/V2V, Pyramid-Flow I2V/T2V,
+    AccVideo, Cogvideox1.5 T2V/V2V, HunyuanVideo, IPOC, RepVideo, Wan2.1.
+  - After the duplicate rule (below), AccVideo and IPOC have 149.
 - **Closed-source slices** (11 zips): one shared order, `sha256("2026:p5-panel:closed:" +
   name)`; each zip keeps its first 150 eligible fakes, against the closed-source real pool.
-  - Counts per slice: ⟨…⟩.
+  - **All 11 slices have 150:** Gen2, Gen3, Jimeng, Luma, Opensora, Sora, causvid_24fps,
+    kling, pika, vidu, wan.
+  - After the duplicate rule, kling has 148.
 - **Eligibility:**
   - 8-bit, not rotated, short side ≥ 320;
   - a seeded 17-frame window (scoring uses frames 1–16), centre crop 320, never resized;
   - not a still.
   - A slice stops after 50 consecutive ineligible fakes.
-  - The exclusions are counted per zip: ⟨…⟩.
+  - The exclusions per zip are in `p5_panel_summary.json`.
+  - **Six slices are EMPTY under these pre-declared rules** *(accepted, user 2026-11-24; a
+    limitation)*:
+    - SEINE I2V, SVD I2V, VideoCrafter I2V, VideoCrafter T2V and AnimateDiff T2V: all of
+      their probed videos have **16 frames**, and scoring needs frames 1–16 of a 17-frame
+      window;
+    - Open-Sora T2V is 336×192, below the 320 crop.
 - **Duplicates:**
   - sha256, plus pHash ≤ 6 bits on keyframes 1/8/16, within and across views;
   - also against every training, validation, threshold and pilot clip;
   - plus the I2V conditioning-leak check (each panel fake's frame 1 against every
     training-real frame).
-  - Matches are removed and counted per view: ⟨…⟩.
   - A real and its own fake are counted as `own_pair`, not as duplicates.
+  - **Within the panel** *(user, 2026-11-24)*:
+    - There were **4 exact duplicates,** all within one slice: kling 0259 = 0260, kling
+      0804 = 0805, and one pair each in AccVideo and IPOC. **The later copy in the slice's
+      draw order is dropped, with no backfill.**
+    - There were **3 near matches,** all one name across two slices (EasyAnimate I2V vs
+      Pyramid-Flow I2V ×2, LTX I2V vs LTX V2V). They are **kept and recorded**: the same
+      source, done by two generators.
+  - **Against the training side** *(user, 2026-11-24)*:
+    - The AWS pairs session exports the pHash of every training-pool frame
+      (`scripts/p5_frame_hashes.py`).
+    - The check, including the I2V conditioning leak, runs on Kaggle in parallel with
+      training.
+    - Any match is recorded and reported separately (P3's rule), never silently dropped.
 - **The metadata gate** (fps, width, height, duration, bitrate, reported frames, codec,
-  profile, pix_fmt):
-  - a direction-free single-feature AUC per slice, its fakes against its reals.
-  - The flags are ⟨…⟩, and the user's rebalancing decision, made before the freeze, is
-    ⟨…⟩. Nothing is dropped automatically.
-  - Wherever a slice is reported, its flags are stated with it.
+  profile, pix_fmt): a direction-free single-feature AUC per slice, its fakes against its
+  reals.
+  - **The result: 130 flags (> 0.70).** Every AIGVDBench real is 1920×1080 (1,409 of 1,410
+    eligible) at 23.976–30 fps, while every generator outputs its own fixed resolution and
+    fps.
+    - Width and height AUCs are 0.97–1.00 in every slice; fps, bitrate and reported frames
+      are mostly above 0.70; codec, profile and pix_fmt are about 0.50.
+    - No real has a fake's resolution, so sub-sampling cannot rebalance it.
+  - **The decision** *(user, 2026-11-24)*:
+    - the panel is kept as drawn;
+    - **the resolution/fps shortcut is stated beside every AIGVDBench slice**, and its
+      numbers carry the upper-bound caveat (§6d);
+    - the resolution-matched sensitivity view below is pre-declared;
+    - V3 is reported per fps stratum;
+    - there is no fps-matched view.
+  - **What the models can and cannot see:**
+    - Clips are centre-cropped to 320, never resized, so resolution is not seen directly.
+      Content scale and detail differ by class, and fps shows as motion per step.
+    - Every training pair is a real and its own reconstruction at the same resolution and
+      fps, so training carries no label-linked resolution or fps signal.
+    - V1 uses our own reconstructions, and V2 is a same-view paired comparison, so both are
+      less exposed to the cue than single-model panel AUCs.
 - **The views:**
-  - **The primary view is FORMAT-MATCHED:** reals and fakes are re-encoded identically.
-    **PROPOSED:** libx264 CRF 23, preset medium, yuv420p, native fps, the pilot's setting.
+  - **The primary view is FORMAT-MATCHED** *(user, 2026-11-24)*: reals and fakes are
+    re-encoded identically, with libx264 CRF 23, preset medium, yuv420p, native fps, the
+    pilot's setting. The encode is of the 17-frame, 320-cropped window.
   - **Raw** is secondary.
   - **The content-matched view** is the open-source slices' paired reals.
-- **The panel strata** (P5_PLAN §3.2):
-  - **in-bank VAE:** the generator's VAE is hash- or tensor-identical to a bank member;
-  - **out-of-bank VAE;**
-  - **closed / unknown.**
-  - "**Unseen**" means out-of-bank and closed.
-  - The tensor checks still open (AccVideo's Hunyuan VAE, LTX's version, the SD-family
-    generators) are resolved before the freeze: ⟨…⟩.
-- **The panel digest:** ⟨sha256⟩, committed before any P5 model trains.
+  - **The resolution-matched SENSITIVITY view** *(user, 2026-11-24)*, reported for **every**
+    hypothesis:
+    - each real is downscaled to its paired fake's resolution;
+    - for a closed-source slice, to the slice's modal fake resolution;
+    - per frame, with Pillow LANCZOS, then the same 17-frame window, crop 320 and
+      format-matching encode.
+  - **The resampling-only control** *(user, 2026-11-24)*:
+    - every AIGVDBench real-pool clip is scored native and downscaled;
+    - the shift in achieved FPR at the k = 0 threshold is reported, which separates
+      resampling effects from scale.
+- **The panel strata** (Hugging Face file metadata, 2026-11-24;
+  `p5_fetch_panel.py --phase review`, `STRATA`):
+  - **In-bank by sha256** (the VAE safetensors is byte-identical to our pin):
+    - Wan2.1 (`wan21`; T2V-1.3B and -14B);
+    - HunyuanVideo (`hunyuan`);
+    - Cogvideox1.5 T2V and V2V (`cogvx`; CogVideoX1.5-5B).
+  - **In-bank by provenance:** AccVideo. Its repo ships `hunyuan-video-t2v-720p/vae/
+    pytorch_model.pt`, a `.pt`, so byte identity cannot be shown from metadata. **It is
+    excluded from every unseen macro.**
+  - **Undetermined:** LTX I2V, T2V and V2V. The repo ships the 0.9 VAE (our pin) plus the 0.9.1
+    and 0.9.5 checkpoints, and AIGVDBench does not say which it used. **These are
+    descriptive only, in no macro and in no V1-b.**
+  - **Out-of-bank:** EasyAnimate I2V/T2V, Pyramid-Flow I2V/T2V, IPOC, RepVideo.
+  - **Closed:** the 11 closed-source zips.
+  - **"Unseen" means out-of-bank plus closed: 17 slices.**
+- **AEGIS:** the labels join from `mapping_test_data.csv` on generator + file (436 of 436).
+  The eligible clips are 214 real (youtube, dvf) and 217 fake (kling, sora).
+- **The panel digest (final, after the review):
+  `7f54123f0a55b1211d1f3c0a8f07da962b42e772f5ad4742706efcd05fc471d8`**
+  (`reports/p5_panel/p5_panel_final.json`; the session's own digest before the review was
+  `94705761…b4a62c`).
+  - **The panel as frozen:** 3,746 fakes in 25 slices, 2,098 paired reals, 297
+    closed-source reals, 300 calibration reals, and AEGIS 214 + 217.
 - **Scored once per frozen model.** A re-run is allowed only after a crash, logged with its
   reason.
 - **Licences (§6c):**
@@ -204,19 +281,21 @@ All outcomes are reported unchanged. A failed hypothesis is a finding.
 | `LOLO-v` | the same two stages, with lineage v's reconstructions held out; `sd15_pf` is always in. **F1 has fired:** 3 folds (§6.6) | 0 |
 | frozen comparators | image `S2-D` ViT-B s0/s1 (P3), per frame; DDA per frame (P4); D3 (training-free); DeCoF (`AIGVDBench/Weights/DeCoF.tar`, `weights_only=True`, sha256 recorded; dropped if unavailable, pre-declared) | — |
 
-**PROPOSED (not set by the user yet):**
+**Training details** *(user, 2026-11-24, as proposed)*:
 - **`S2V-F` frame sampling:** each step draws a pair and one frame index t ∈ 1..24, the same
   t for the real and the reconstruction, seeded. Frame 0 of a causal VAE is never used.
 - **`S2V-T` training:**
-  - features are cached once per pair, from the pair's stored degraded version;
-  - AdamW, LR 3e-4, wd 0.01, batch 64, 3,000 steps, seeded;
+  - features are cached once per pair, from the pair's stored (degraded where drawn)
+    version;
+  - AdamW, LR 3e-4, wd 0.01, batch 64, 3,000 steps, seeded, fixed;
   - no selection on any panel data.
+- **The code:** `scripts/p5_train.py` (accepted 11d8be5).
 - **Precision:** P3's S2 recipe (AMP as in P3) on the A10G.
   - Versions are recorded on both sides.
   - The frozen model hashes are checked before scoring, on the T4.
-- **Clip scores:**
+- **Clip scores** *(user, 2026-11-24)*:
   - **Frame models** (`S2V-F`, image S2-D, DDA per frame): the mean of the frame logits
-    over frames 1–16 of the clip's 17-frame window.
+    over frames 1–16 of the clip's 17-frame test window, consistent with the panel.
   - **`S2V-T`:** its clip logit.
 
 ## 4. Metrics
@@ -229,7 +308,13 @@ All outcomes are reported unchanged. A failed hypothesis is a finding.
   Kaggle (P5_PLAN §5).
 - **Achieved FPR and TPR** at that threshold; slice-calibrated TPR@5%FPR (descriptive); ECE
   (15 bins).
-- **Macro averages** are over the **unseen** slices (out-of-bank + closed) of AIGVDBench.
+- **Macro averages** are over the **17 unseen** slices (out-of-bank + closed) of
+  AIGVDBench.
+  - In-bank slices are reported separately.
+  - The undetermined LTX slices are descriptive.
+- **Every hypothesis** is reported in the primary (format-matched) view and in the
+  resolution-matched sensitivity view. The shortcut caveat stands beside every AIGVDBench
+  slice.
 - **Confidence intervals:**
   - bootstrap, **2,000 resamples, seed 2026**, paired for every comparison;
   - fakes resampled within slice, reals within their real set;
@@ -237,7 +322,7 @@ All outcomes are reported unchanged. A failed hypothesis is a finding.
 
 ## 5. Fixed before the panel is scored
 
-- The recipe of §2.4 and the models of §3 (including every PROPOSED value, once set).
+- The recipe of §2.4 and the models of §3, including the training details set on 2026-11-24.
 - The bank membership and precisions of §2.2 and §2.3.
 - The panel, its digest, the gate decisions and the strata.
 - `N*` = 5,000, inherited. **No value in this document is chosen from panel data.**
@@ -252,7 +337,12 @@ All outcomes are reported unchanged. A failed hypothesis is a finding.
 - **V1-b.** For each fold, the AUC on the panel's **in-bank** slices whose VAE is the held-out
   lineage, where a slice has ≥ 100 fakes.
   - **Success:** each such slice ≥ **0.85**.
-  - A fold with no qualifying slice is reported as "no panel slice".
+  - **The slices:**
+    - fold wan21: Wan2.1;
+    - fold hunyuan: HunyuanVideo, with AccVideo reported beside it, flagged "by
+      provenance";
+    - fold ltx090: **no qualifying slice**, because LTX is undetermined. It is reported
+      descriptively.
 - **V1-c (descriptive):** `wan22_5b` reconstructions of the validation reals.
 
 ### 6.2 PRIMARY V2 — the bank vs a single VAE on unseen generators (H1-c / H4 analogue)
@@ -268,12 +358,13 @@ All outcomes are reported unchanged. A failed hypothesis is a finding.
 
 ### 6.4 SECONDARY V4 — false alarms at k = 0, and k-shot (H3 / H3-k analogue)
 
-- **k = 0:**
-  - **PROPOSED real pools:** AIGVDBench test reals (open-source paired reals and
-    closed-source reals, each clip once) and the AEGIS reals (youtube, dvf), descriptive.
-  - **Success:** AIGVDBench's achieved FPR ≤ **15%**, and no AIGVDBench real set above
-    **25%**.
-- **k-shot** (if F2 has not fired):
+- **k = 0** *(user, 2026-11-24)*:
+  - Decided on the **AIGVDBench test reals**: the open-source paired reals and the
+    closed-source reals, each clip once.
+  - The AEGIS reals (youtube, dvf) are descriptive.
+  - **Success:** AIGVDBench's achieved FPR ≤ **15%**, and neither AIGVDBench real set
+    (paired, closed) above **25%**.
+- **k-shot** (if F4 has not fired):
   - k ∈ {0, 10, 50, 100}, drawn from the **300-name calibration pool**, 1,000 draws, seed
     2026.
   - Methods **(Q)** and **(S)** exactly as P3 §6.3, with the same binomial j values.
@@ -282,25 +373,26 @@ All outcomes are reported unchanged. A failed hypothesis is a finding.
 
 ### 6.5 SECONDARY V5 — robustness (H5 analogue; AIGVDBench only)
 
-- **PROPOSED:** each condition replaces the format-matching encode and is applied
-  identically to reals and fakes.
+- **The composition** *(user, 2026-11-24)*: each condition replaces the format-matching
+  encode and is applied identically to reals and fakes. Resize-and-restore is followed by
+  the format-matching encode.
 - **Success:** H.264 CRF 28, and resize-and-restore 0.5 (then the format-matching encode),
   each within **5 AUC points** of the format-matched clean view.
 - **Descriptive:** H.264 CRF 23/35, H.265 CRF 28/35 (encoded once and hashed, §2.4), and an
   fps change (every 2nd frame).
-- **If F3 fires:** H.264 only (CRF 28; 23 and 35 descriptive).
+- **If F2 fires:** H.264 only (CRF 28; 23 and 35 descriptive).
 
-### 6.6 Fallback status (pre-declared order; each trigger logged with its time)
+### 6.6 Fallback order (user, 2026-11-24; dates unchanged; each trigger logged with its time)
 
-- **F1 FIRED** at 2026-11-23 23:59 PKT: the training data were not complete. **LOLO has 3
-  folds:**
-  - with HunyuanVideo: **wan21, hunyuan, ltx090**;
-  - without it: **wan21, ltx090, cogvx** *(user, 2026-11-23)*.
-- **F2** (drop k-shot): if scoring has not started by Wed 25 Nov, end of day. ⟨fired / not⟩
-- **F3** (robustness H.264 only): if clean scoring is not done by Thu 26 Nov, 12:00.
-  ⟨fired / not⟩
-- **F4** (baselines D3 + S2-D per frame): if F3 fires, or if DeCoF or DDA fails its
-  pre-flight. ⟨fired / not⟩
+- **F1, LOLO 5 → 3: FIRED** at 2026-11-23 23:59 PKT (the training data were not complete).
+  **The folds are wan21, hunyuan, ltx090,** because HunyuanVideo stays.
+- **F2, robustness H.264 only:** if scoring has not started by **Wed 25 Nov, end of day**.
+- **F3, baselines D3 + image S2-D per frame:** if clean scoring is not done by **Thu 26 Nov,
+  12:00**, or if DeCoF or DDA fails its pre-flight.
+- **F4, k-shot → k = 0 only:** if F3 fires.
+- Nothing else may change. **The reading of "dates unchanged":** the original dates stay in
+  order (Wed EOD, Thu 12:00, then a trigger tied to the previous step), and the cuts take
+  the user's new order.
 
 ### 6.7 DESCRIPTIVE V6 — baselines
 
@@ -344,16 +436,10 @@ All outcomes are reported unchanged. A failed hypothesis is a finding.
 - libx265, option (a).
 - The thresholds are P3's.
 
-**PROPOSED, to be set before the freeze:**
-- the storage of the re-encodes (§2.4);
-- `S2V-F` frame sampling and `S2V-T` training (§3);
-- the format-matched setting (§2.5);
-- V4's real pools (§6.4);
-- the composition of the V5 conditions (§6.5).
-
-**Placeholders (`⟨…⟩`), from the panel session and the A10G smoke:**
-- the universe and pool counts; the slice counts and exclusions;
-- the gate flags and the rebalancing decision; the dedup counts; the strata checks; the
-  digest;
-- the fp16 results per member; the HunyuanVideo decision;
-- F2–F4 status.
+- *(user, 2026-11-24)*:
+  - the storage of the re-encodes and the validation diagnostic;
+  - frame sampling, the temporal settings and the clip score;
+  - the format-matched setting; V4's real pools; V5's composition;
+  - the panel review: the gate decision, the sensitivity view and the resampling-only
+    control, duplicates, near matches, empty slices, strata, the leak-check route;
+  - HunyuanVideo kept; the reconstruction approved; the new fallback order.

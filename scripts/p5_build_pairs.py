@@ -16,7 +16,10 @@ For every train/validation clip and every bank member that reconstructed it:
 
 The draw of a pair is ``default_rng(stable seed of "2026:p5-pairs:<sample_id>:<member>")``,
 three numbers always consumed, so it does not depend on order, workers or resumes.
-Validation pairs are never degraded: they are the V1-a held-out set.
+Validation pairs are never degraded: they are the V1-a held-out set. As a DIAGNOSTIC only
+(user, 2026-11-24), every validation pair also gets a re-encoded copy with its own draw's
+codec and CRF (``real_diag.mp4`` / ``recon_diag.mp4``); it is scored beside the plain one and
+never trained on.
 
 Resumable: one JSON line per pair in ``<reports>/p5_pairs.jsonl``; a pair whose record exists
 and whose files still hash to it is skipped.
@@ -143,6 +146,14 @@ def build_one(job: dict[str, Any]) -> dict[str, Any]:
             write_bytes(out / f"{name}.mp4", data)
             record[name] = {"path": f"{member}/{row['sample_id']}/{name}.mp4",
                             "sha256": sha256_bytes(data)}
+    if split == "validation":            # the diagnostic copy, never trained on
+        fm_frames = decode_clip(fm, expect_frames=len(recon))
+        for name, frames in (("real_diag", real), ("recon_diag", fm_frames)):
+            data = encode_clip(frames, draw["codec"], draw["crf"], fps)
+            decode_clip(data, expect_frames=len(real))
+            write_bytes(out / f"{name}.mp4", data)
+            record[name] = {"path": f"{member}/{row['sample_id']}/{name}.mp4",
+                            "sha256": sha256_bytes(data)}
     record["degraded"] = "real_deg" in record
     record["seconds"] = round(time.perf_counter() - started, 3)
     return record
@@ -178,8 +189,8 @@ def main() -> int:
         for line in records_path.read_text(encoding="utf-8").splitlines():
             if line.strip():
                 rec = json.loads(line)
-                if all(file_ok(args.out_root, rec[k]) for k in ("fm", "real_deg", "recon_deg")
-                       if k in rec):
+                if all(file_ok(args.out_root, rec[k]) for k in
+                       ("fm", "real_deg", "recon_deg", "real_diag", "recon_diag") if k in rec):
                     done[rec["pair_id"]] = rec
     jobs, missing = [], []
     for sample_id, split in sorted(split_of.items()):

@@ -68,6 +68,10 @@ def test_build_one_degrades_train_pairs_only_and_writes_hashed_files(tmp_path):
     assert rec["fm"]["source_bpp"] == pytest.approx(8e6 / (1920 * 1080 * 30), rel=1e-4)
     val = B.build_one({**job, "split": "validation"})
     assert not val["degraded"] and "real_deg" not in val      # V1-a's set is never degraded
+    # the diagnostic copy (user, 2026-11-24): re-encoded with the pair's own draw, never trained on
+    for key in ("real_diag", "recon_diag"):
+        assert B.file_ok(tmp_path / "pairs", val[key])
+        assert V.decode_clip((tmp_path / "pairs" / val[key]["path"]).read_bytes()).shape[0] == 25
 
 
 def test_runs_and_lolo_folds_follow_f1():

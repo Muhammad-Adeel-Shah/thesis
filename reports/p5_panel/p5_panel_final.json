@@ -1,0 +1,333 @@
+{
+ "stage": "p5_panel_review",
+ "source_digest": "94705761e60ac25c55441c09175a78ff64e09067124be6d3e5d32538e2b4a62c",
+ "panel_digest_final": "7f54123f0a55b1211d1f3c0a8f07da962b42e772f5ad4742706efcd05fc471d8",
+ "dropped_exact_duplicates": [
+  {
+   "zip": "AIGVDBench/ClosedSource/kling.zip",
+   "name": "0259.mp4",
+   "duplicate_of": "0260.mp4"
+  },
+  {
+   "zip": "AIGVDBench/ClosedSource/kling.zip",
+   "name": "0804.mp4",
+   "duplicate_of": "0805.mp4"
+  },
+  {
+   "zip": "AIGVDBench/OpenSource/T2V/AccVideo.zip",
+   "name": "oqqIbyCHsSE_23_0to529.mp4",
+   "duplicate_of": "XN7QafHTBHo_39_274to403.mp4"
+  },
+  {
+   "zip": "AIGVDBench/OpenSource/T2V/IPOC.zip",
+   "name": "GlPr3im2Tk0_8_0to190.mp4",
+   "duplicate_of": "Z92LMTR0fhw_27_0to371.mp4"
+  }
+ ],
+ "near_matches_kept": [
+  {
+   "a": "AIGVDBench/OpenSource/I2V/EasyAnimate.zip:pXHqtnmn3_o_12_27to134.mp4",
+   "b": "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip:pXHqtnmn3_o_12_27to134.mp4",
+   "own_pair": false
+  },
+  {
+   "a": "AIGVDBench/OpenSource/I2V/EasyAnimate.zip:ClOEC6PyC1k_2_0to341.mp4",
+   "b": "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip:ClOEC6PyC1k_2_0to341.mp4",
+   "own_pair": false
+  },
+  {
+   "a": "AIGVDBench/OpenSource/I2V/LTX.zip:kZLS0Ip0VYc_34_0to106.mp4",
+   "b": "AIGVDBench/OpenSource/V2V/LTX.zip:kZLS0Ip0VYc_34_0to106.mp4",
+   "own_pair": false
+  }
+ ],
+ "counts": {
+  "fakes": 3746,
+  "paired_reals": 2098,
+  "closed_reals": 297,
+  "calibration": 300,
+  "aegis": {
+   "real": 214,
+   "fake": 217
+  }
+ },
+ "slices": {
+  "AIGVDBench/ClosedSource/Gen2.zip": {
+   "kind": "closed",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "closed",
+   "stratum_member": "",
+   "stratum_basis": "no public weights"
+  },
+  "AIGVDBench/ClosedSource/Gen3.zip": {
+   "kind": "closed",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "closed",
+   "stratum_member": "",
+   "stratum_basis": "no public weights"
+  },
+  "AIGVDBench/ClosedSource/Jimeng.zip": {
+   "kind": "closed",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "closed",
+   "stratum_member": "",
+   "stratum_basis": "no public weights"
+  },
+  "AIGVDBench/ClosedSource/Luma.zip": {
+   "kind": "closed",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "closed",
+   "stratum_member": "",
+   "stratum_basis": "no public weights"
+  },
+  "AIGVDBench/ClosedSource/Opensora.zip": {
+   "kind": "closed",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "closed",
+   "stratum_member": "",
+   "stratum_basis": "no public weights"
+  },
+  "AIGVDBench/ClosedSource/Sora.zip": {
+   "kind": "closed",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "closed",
+   "stratum_member": "",
+   "stratum_basis": "no public weights"
+  },
+  "AIGVDBench/ClosedSource/causvid_24fps.zip": {
+   "kind": "closed",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "closed",
+   "stratum_member": "",
+   "stratum_basis": "no public weights"
+  },
+  "AIGVDBench/ClosedSource/kling.zip": {
+   "kind": "closed",
+   "kept": 148,
+   "status": "complete",
+   "stratum": "closed",
+   "stratum_member": "",
+   "stratum_basis": "no public weights"
+  },
+  "AIGVDBench/ClosedSource/pika.zip": {
+   "kind": "closed",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "closed",
+   "stratum_member": "",
+   "stratum_basis": "no public weights"
+  },
+  "AIGVDBench/ClosedSource/vidu.zip": {
+   "kind": "closed",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "closed",
+   "stratum_member": "",
+   "stratum_basis": "no public weights"
+  },
+  "AIGVDBench/ClosedSource/wan.zip": {
+   "kind": "closed",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "closed",
+   "stratum_member": "",
+   "stratum_basis": "no public weights"
+  },
+  "AIGVDBench/OpenSource/I2V/EasyAnimate.zip": {
+   "kind": "open",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "out_of_bank",
+   "stratum_member": "",
+   "stratum_basis": "VAE matches no bank member"
+  },
+  "AIGVDBench/OpenSource/I2V/LTX.zip": {
+   "kind": "open",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "undetermined",
+   "stratum_member": "ltx090?",
+   "stratum_basis": "LTX version not stated"
+  },
+  "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip": {
+   "kind": "open",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "out_of_bank",
+   "stratum_member": "",
+   "stratum_basis": "VAE matches no bank member"
+  },
+  "AIGVDBench/OpenSource/I2V/SEINE.zip": {
+   "kind": "open",
+   "kept": 0,
+   "status": "stopped: consecutive ineligible fakes",
+   "stratum": "out_of_bank",
+   "stratum_member": "",
+   "stratum_basis": "VAE matches no bank member"
+  },
+  "AIGVDBench/OpenSource/I2V/SVD.zip": {
+   "kind": "open",
+   "kept": 0,
+   "status": "stopped: consecutive ineligible fakes",
+   "stratum": "out_of_bank",
+   "stratum_member": "",
+   "stratum_basis": "VAE matches no bank member"
+  },
+  "AIGVDBench/OpenSource/I2V/VideoCrafter.zip": {
+   "kind": "open",
+   "kept": 0,
+   "status": "stopped: consecutive ineligible fakes",
+   "stratum": "out_of_bank",
+   "stratum_member": "",
+   "stratum_basis": "VAE matches no bank member"
+  },
+  "AIGVDBench/OpenSource/T2V/AccVideo.zip": {
+   "kind": "open",
+   "kept": 149,
+   "status": "complete",
+   "stratum": "in_bank",
+   "stratum_member": "hunyuan",
+   "stratum_basis": "provenance only (.pt; not verifiable from metadata)"
+  },
+  "AIGVDBench/OpenSource/T2V/AnimateDiff.zip": {
+   "kind": "open",
+   "kept": 0,
+   "status": "stopped: consecutive ineligible fakes",
+   "stratum": "out_of_bank",
+   "stratum_member": "",
+   "stratum_basis": "VAE matches no bank member"
+  },
+  "AIGVDBench/OpenSource/T2V/Cogvideox1.5.zip": {
+   "kind": "open",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "in_bank",
+   "stratum_member": "cogvx",
+   "stratum_basis": "sha256 match (CogVideoX1.5-5B)"
+  },
+  "AIGVDBench/OpenSource/T2V/EasyAnimate.zip": {
+   "kind": "open",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "out_of_bank",
+   "stratum_member": "",
+   "stratum_basis": "VAE matches no bank member"
+  },
+  "AIGVDBench/OpenSource/T2V/HunyuanVideo.zip": {
+   "kind": "open",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "in_bank",
+   "stratum_member": "hunyuan",
+   "stratum_basis": "sha256 match"
+  },
+  "AIGVDBench/OpenSource/T2V/IPOC.zip": {
+   "kind": "open",
+   "kept": 149,
+   "status": "complete",
+   "stratum": "out_of_bank",
+   "stratum_member": "",
+   "stratum_basis": "VAE matches no bank member"
+  },
+  "AIGVDBench/OpenSource/T2V/LTX.zip": {
+   "kind": "open",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "undetermined",
+   "stratum_member": "ltx090?",
+   "stratum_basis": "LTX version not stated"
+  },
+  "AIGVDBench/OpenSource/T2V/Open-Sora.zip": {
+   "kind": "open",
+   "kept": 0,
+   "status": "stopped: consecutive ineligible fakes",
+   "stratum": "out_of_bank",
+   "stratum_member": "",
+   "stratum_basis": "VAE matches no bank member"
+  },
+  "AIGVDBench/OpenSource/T2V/Pyramid-Flow.zip": {
+   "kind": "open",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "out_of_bank",
+   "stratum_member": "",
+   "stratum_basis": "VAE matches no bank member"
+  },
+  "AIGVDBench/OpenSource/T2V/RepVideo.zip": {
+   "kind": "open",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "out_of_bank",
+   "stratum_member": "",
+   "stratum_basis": "VAE matches no bank member"
+  },
+  "AIGVDBench/OpenSource/T2V/VideoCrafter.zip": {
+   "kind": "open",
+   "kept": 0,
+   "status": "stopped: consecutive ineligible fakes",
+   "stratum": "out_of_bank",
+   "stratum_member": "",
+   "stratum_basis": "VAE matches no bank member"
+  },
+  "AIGVDBench/OpenSource/T2V/Wan2.1.zip": {
+   "kind": "open",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "in_bank",
+   "stratum_member": "wan21",
+   "stratum_basis": "sha256 match"
+  },
+  "AIGVDBench/OpenSource/V2V/Cogvideox1.5.zip": {
+   "kind": "open",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "in_bank",
+   "stratum_member": "cogvx",
+   "stratum_basis": "sha256 match (CogVideoX1.5-5B)"
+  },
+  "AIGVDBench/OpenSource/V2V/LTX.zip": {
+   "kind": "open",
+   "kept": 150,
+   "status": "complete",
+   "stratum": "undetermined",
+   "stratum_member": "ltx090?",
+   "stratum_basis": "LTX version not stated"
+  }
+ },
+ "unseen_slices": [
+  "AIGVDBench/ClosedSource/Gen2.zip",
+  "AIGVDBench/ClosedSource/Gen3.zip",
+  "AIGVDBench/ClosedSource/Jimeng.zip",
+  "AIGVDBench/ClosedSource/Luma.zip",
+  "AIGVDBench/ClosedSource/Opensora.zip",
+  "AIGVDBench/ClosedSource/Sora.zip",
+  "AIGVDBench/ClosedSource/causvid_24fps.zip",
+  "AIGVDBench/ClosedSource/kling.zip",
+  "AIGVDBench/ClosedSource/pika.zip",
+  "AIGVDBench/ClosedSource/vidu.zip",
+  "AIGVDBench/ClosedSource/wan.zip",
+  "AIGVDBench/OpenSource/I2V/EasyAnimate.zip",
+  "AIGVDBench/OpenSource/I2V/Pyramid-Flow.zip",
+  "AIGVDBench/OpenSource/T2V/EasyAnimate.zip",
+  "AIGVDBench/OpenSource/T2V/IPOC.zip",
+  "AIGVDBench/OpenSource/T2V/Pyramid-Flow.zip",
+  "AIGVDBench/OpenSource/T2V/RepVideo.zip"
+ ],
+ "empty_slices": [
+  "AIGVDBench/OpenSource/I2V/SEINE.zip",
+  "AIGVDBench/OpenSource/I2V/SVD.zip",
+  "AIGVDBench/OpenSource/I2V/VideoCrafter.zip",
+  "AIGVDBench/OpenSource/T2V/AnimateDiff.zip",
+  "AIGVDBench/OpenSource/T2V/Open-Sora.zip",
+  "AIGVDBench/OpenSource/T2V/VideoCrafter.zip"
+ ],
+ "gate_flags": 130,
+ "decisions": "user, 2026-11-24 (panel review of 51cb27f)"
+}

@@ -100,10 +100,14 @@ class ClipStore:
             self._cache.popitem(last=False)
         return frames
 
-    def frames(self, rec: dict[str, Any], side: str, use_degraded: bool) -> np.ndarray:
-        """``side`` "real" or "fake"; the degraded files only when the pair has them."""
+    def frames(self, rec: dict[str, Any], side: str, use_degraded: bool,
+               diagnostic: bool = False) -> np.ndarray:
+        """``side`` "real" or "fake"; the degraded files only when the pair has them; the
+        validation diagnostic's re-encoded copy with ``diagnostic``."""
         from dbp.data.video import read_png_clip
 
+        if diagnostic:
+            return self._decoded(rec["real_diag" if side == "real" else "recon_diag"]["path"])
         if use_degraded and rec.get("degraded"):
             return self._decoded(rec["real_deg" if side == "real" else "recon_deg"]["path"])
         if side == "real":
@@ -262,6 +266,12 @@ def cache_items(args: argparse.Namespace) -> list[dict[str, Any]]:
             items.append({"key": f"val:{rec['pair_id']}:fake", "rec": rec, "side": "fake",
                           "degraded": False, "label": 1, "split": "validation",
                           "member": rec["member"]})
+            # the diagnostic: the same pair re-encoded (its own real copy per pair)
+            for side, label in (("real", 0), ("fake", 1)):
+                items.append({"key": f"valdiag:{rec['pair_id']}:{side}", "rec": rec,
+                              "side": side, "degraded": False, "diagnostic": True,
+                              "label": label, "split": "validation_reencoded",
+                              "member": rec["member"] if label else ""})
     return items
 
 
@@ -286,7 +296,8 @@ def stage_cache(args: argparse.Namespace) -> int:
     started = time.time()
     with torch.no_grad():
         for i, item in enumerate(items):
-            frames = store.frames(item["rec"], item["side"], item["degraded"])[:17]
+            frames = store.frames(item["rec"], item["side"], item["degraded"],
+                                  item.get("diagnostic", False))[:17]
             x = normalise_batch(frames, parts["norm"]["image_mean"],
                                 parts["norm"]["image_std"]).to(args.device)
             with torch.autocast("cuda", dtype=torch.float16, enabled=amp):
@@ -379,15 +390,17 @@ def stage_temporal(args: argparse.Namespace) -> int:
         temporal = head(x_all).tolist()
     frame = cached["logits"][:, 1:17].mean(dim=1).tolist()
     members = run_members(args.run)
-    val_real = [i for i, r in enumerate(index) if r["split"] == "validation" and r["label"] == 0]
-
-    def auc(scores: list[float], fake_members: set[str]) -> float | None:
-        fakes = [i for i, r in enumerate(index) if r["split"] == "validation"
+    def auc(scores: list[float], fake_members: set[str],
+            split: str = "validation") -> float | None:
+        reals = [i for i, r in enumerate(index) if r["split"] == split and r["label"] == 0]
+        fakes = [i for i, r in enumerate(index) if r["split"] == split
                  and r["label"] == 1 and r["member"] in fake_members]
-        if not fakes or not val_real:
+        if not fakes or not reals:
             return None
-        ids = val_real + fakes
+        ids = reals + fakes
         return round(roc_auc([index[i]["label"] for i in ids], [scores[i] for i in ids]), 4)
+
+    val_real = [i for i, r in enumerate(index) if r["split"] == "validation" and r["label"] == 0]
 
     held_out = set(BANK) - members
     report = {"run": args.run, "seed": args.seed, "members": sorted(members),
@@ -396,7 +409,13 @@ def stage_temporal(args: argparse.Namespace) -> int:
               "in_protocol_auc": {"frame": auc(frame, members), "temporal": auc(temporal, members)},
               "held_out_auc": {"frame": auc(frame, held_out), "temporal": auc(temporal, held_out)},
               "per_member_auc": {m: {"frame": auc(frame, {m}), "temporal": auc(temporal, {m})}
-                                 for m in BANK}}
+                                 for m in BANK},
+              # the diagnostic (user, 2026-11-24): the same validation pairs re-encoded
+              "reencoded_diagnostic": {
+                  "in_protocol_auc": {"frame": auc(frame, members, "validation_reencoded"),
+                                      "temporal": auc(temporal, members, "validation_reencoded")},
+                  "held_out_auc": {"frame": auc(frame, held_out, "validation_reencoded"),
+                                   "temporal": auc(temporal, held_out, "validation_reencoded")}}}
     write_json(args.reports / f"p5_temporal_{args.run}_seed{args.seed}.json", report)
     print(json.dumps({k: report[k] for k in ("run", "seed", "in_protocol_auc", "held_out_auc")}),
           flush=True)

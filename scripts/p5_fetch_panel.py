@@ -874,10 +874,129 @@ def phase_preflight(args: argparse.Namespace, expect: dict[str, Any]) -> int:
     return 0 if not problems else 1
 
 
+#: The panel strata (prereg section 2.5), from Hugging Face file metadata, 2026-11-24:
+#: byte-identical VAE safetensors (sha256 = our pin) for Wan2.1 (T2V-1.3B and -14B),
+#: HunyuanVideo and CogVideoX1.5-5B; AccVideo ships HunyuanVideo's VAE as a .pt (by provenance;
+#: byte identity cannot be shown from metadata); the LTX version AIGVDBench used is unknown.
+STRATA = {
+    "OpenSource/T2V/Wan2.1.zip": ("in_bank", "wan21", "sha256 match"),
+    "OpenSource/T2V/HunyuanVideo.zip": ("in_bank", "hunyuan", "sha256 match"),
+    "OpenSource/T2V/Cogvideox1.5.zip": ("in_bank", "cogvx", "sha256 match (CogVideoX1.5-5B)"),
+    "OpenSource/V2V/Cogvideox1.5.zip": ("in_bank", "cogvx", "sha256 match (CogVideoX1.5-5B)"),
+    "OpenSource/T2V/AccVideo.zip": ("in_bank", "hunyuan", "provenance only (.pt; not verifiable "
+                                                          "from metadata)"),
+    "OpenSource/I2V/LTX.zip": ("undetermined", "ltx090?", "LTX version not stated"),
+    "OpenSource/T2V/LTX.zip": ("undetermined", "ltx090?", "LTX version not stated"),
+    "OpenSource/V2V/LTX.zip": ("undetermined", "ltx090?", "LTX version not stated"),
+}
+
+
+def stratum_of(zip_path: str) -> tuple[str, str, str]:
+    """``(stratum, member, basis)``: in_bank / undetermined from :data:`STRATA`; every other
+    open-source zip is out_of_bank, every closed-source zip closed."""
+    short = zip_path.split("AIGVDBench/", 1)[-1]
+    if short in STRATA:
+        return STRATA[short]
+    if zip_kind(zip_path) == "closed":
+        return ("closed", "", "no public weights")
+    return ("out_of_bank", "", "VAE matches no bank member")
+
+
+def phase_review(args: argparse.Namespace, expect: dict[str, Any]) -> int:
+    """The user's panel review (2026-11-24) applied to the Kaggle reports, locally:
+    - each exact duplicate (same sha256 within a slice): the LATER copy in the slice's draw
+      order is dropped, with no backfill;
+    - near matches are kept and recorded;
+    - the strata (:data:`STRATA`);
+    - the AEGIS label join (last two path parts of the mapping's ``video_path``).
+    Writes ``p5_panel_final.json`` + ``p5_panel_final_manifest.csv`` and the FINAL digest."""
+    source = args.panel_reports
+    slices = json.loads((source / "p5_panel_slices.json").read_text(encoding="utf-8"))["slices"]
+    summary = json.loads((source / "p5_panel_summary.json").read_text(encoding="utf-8"))
+    with (source / "p5_panel_manifest.csv").open(encoding="utf-8", newline="") as handle:
+        manifest = list(csv.DictReader(handle))
+    dropped = []
+    for group in summary["duplicates"]["exact"]:
+        members = [tuple(item.rsplit(":", 1)) for item in group]
+        zips = {z for z, _ in members}
+        if len(zips) != 1:
+            raise SystemExit(f"an exact duplicate spans slices: {group}; the rule covers one slice")
+        (zip_path,) = zips
+        order = slices[zip_path]["kept"]
+        ranked = sorted(members, key=lambda zn: order.index(zn[1]))
+        dropped += [{"zip": z, "name": n, "duplicate_of": ranked[0][1]} for z, n in ranked[1:]]
+    drop = {(d["zip"], d["name"]) for d in dropped}
+    final = []
+    for m in manifest:
+        if m["role"] == "fake" and (m["zip"], m["name"]) in drop:
+            continue
+        if (m["role"] == "real" and m["slice"].startswith("AIGVDBench/")
+                and zip_kind(m["slice"]) == "open" and (m["slice"], m["name"]) in drop):
+            continue                     # an open pair goes with its fake
+        final.append(dict(m))
+    with (source / "aegis_mapping.csv").open(encoding="utf-8", newline="") as handle:
+        mapping = {"/".join(r["video_path"].replace(chr(92), "/").split("/")[-2:]): r
+                   for r in csv.DictReader(handle)}
+    unjoined = []
+    for m in final:
+        if m["view"] == "aegis":
+            hit = mapping.get("/".join(m["name"].split("/")[-2:]))
+            if hit is None:
+                unjoined.append(m["name"])
+                continue
+            m["role"] = "fake" if hit["source"] == "ai_gen" else "real"
+            m["slice"] = f"AEGIS/{hit['generator']}"
+        stratum, member, basis = (stratum_of(m["slice"]) if m["slice"].startswith("AIGVDBench/")
+                                  else ("", "", ""))
+        m.update({"stratum": stratum, "stratum_member": member})
+    if unjoined:
+        raise SystemExit(f"{len(unjoined)} AEGIS clips have no mapping row, e.g. {unjoined[:3]}")
+    lines = sorted(f"{m['view']},{m['pool']},{m['slice']},{m['role']},{m['zip']},{m['name']},"
+                   f"{m['sha256']}" for m in final)
+    digest = hashlib.sha256("\n".join(lines).encode("utf-8")).hexdigest()
+    slices_out = {}
+    for zip_path, result in sorted(slices.items()):
+        kept = [n for n in result["kept"] if (zip_path, n) not in drop]
+        stratum, member, basis = stratum_of(zip_path)
+        slices_out[zip_path] = {"kind": result["kind"], "kept": len(kept),
+                                "status": result["status"],
+                                "stratum": stratum, "stratum_member": member,
+                                "stratum_basis": basis}
+    counts = {"fakes": sum(m["role"] == "fake" and m["pool"] == "test" for m in final),
+              "paired_reals": sum(m["role"] == "real" and m["pool"] == "test" for m in final),
+              "closed_reals": sum(m["pool"] == "closed_reals" for m in final),
+              "calibration": sum(m["pool"] == "calibration" for m in final),
+              "aegis": {r: sum(m["view"] == "aegis" and m["role"] == r for m in final)
+                        for r in ("real", "fake")}}
+    unseen = sorted(z for z, v in slices_out.items() if v["kept"]
+                    and v["stratum"] in ("out_of_bank", "closed"))
+    out = {"stage": "p5_panel_review", "source_digest": summary["panel_digest"],
+           "panel_digest_final": digest, "dropped_exact_duplicates": dropped,
+           "near_matches_kept": summary["duplicates"]["near"], "counts": counts,
+           "slices": slices_out, "unseen_slices": unseen,
+           "empty_slices": sorted(z for z, v in slices_out.items() if not v["kept"]),
+           "gate_flags": len(summary["gate_flags"]),
+           "decisions": "user, 2026-11-24 (panel review of 51cb27f)"}
+    args.reports.mkdir(parents=True, exist_ok=True)
+    write_atomic(args.reports / "p5_panel_final.json", json.dumps(out, indent=1) + "\n")
+    columns = list(manifest[0].keys()) + ["stratum", "stratum_member"]
+    with (args.reports / "p5_panel_final_manifest.csv").open("w", encoding="utf-8",
+                                                             newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=columns, lineterminator="\n")
+        writer.writeheader()
+        for m in sorted(final, key=lambda m: (m["pool"], m["slice"], m["role"], m["name"])):
+            writer.writerow({c: m.get(c, "") for c in columns})
+    print(json.dumps({k: out[k] for k in ("panel_digest_final", "counts", "unseen_slices",
+                                          "empty_slices")}, indent=1), flush=True)
+    print("dropped:", dropped, flush=True)
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--phase", required=True,
-                        choices=["preflight", "list", "draw", "fetch", "aegis", "finalize"])
+                        choices=["preflight", "list", "draw", "fetch", "aegis", "finalize",
+                                 "review"])
     parser.add_argument("--source", default="hub", help="'hub' or a local AIGVDBench copy")
     parser.add_argument("--aegis-source", default="hub")
     parser.add_argument("--expect", type=Path, default=THESIS_DBP / "env" / "p5_panel_expect.json")
@@ -896,6 +1015,8 @@ def main() -> int:
     parser.add_argument("--keep-tar", action="store_true")
     parser.add_argument("--zip", type=Path, default=None, help="finalize: archive base name")
     parser.add_argument("--disk", action="append", default=[], metavar="PATH=GB")
+    parser.add_argument("--panel-reports", type=Path, default=None,
+                        help="review: the Kaggle session's reports folder")
     parser.add_argument("--skip-pins", action="store_true", help="dry-run only")
     args = parser.parse_args()
     if args.phase == "list":
@@ -906,6 +1027,8 @@ def main() -> int:
     args.reports.mkdir(parents=True, exist_ok=True)
     if args.phase == "preflight":
         return phase_preflight(args, expect)
+    if args.phase == "review":
+        return phase_review(args, expect)
     if args.phase == "draw":
         return phase_draw(args, expect)
     if args.phase == "fetch":
