@@ -234,17 +234,30 @@ def test_fetch_never_renames_a_clip_across_directories_directly():
     assert ".replace(final)" not in text and "move_clip_dir(" in text
 
 
-@pytest.mark.parametrize("codec", ["libx264", "libx265"])
-def test_encode_roundtrip_keeps_frames_and_is_deterministic(codec):
+def test_h264_roundtrip_keeps_frames_and_is_byte_deterministic():
     clip = np.random.default_rng(3).integers(0, 256, (25, 64, 64, 3), dtype=np.uint8)
-    # five calls, not two: with one pool thread, x265 still differed on some calls only
-    # (2026-11-22: 6 of 6 runs failed, after passing earlier the same day)
-    runs = [V.encode_roundtrip(clip, codec, 28, "30000/1001") for _ in range(5)]
+    runs = [V.encode_roundtrip(clip, "libx264", 28, "30000/1001") for _ in range(5)]
     a, size_a = runs[0]
     assert a.shape == clip.shape
     assert all(size == size_a and np.array_equal(frames, a) for frames, size in runs[1:])
     with pytest.raises(V.VideoError, match="only libx264"):
         V.encode_roundtrip(clip, "mpeg4", 28, 30)
+
+
+def test_h265_roundtrip_checks_settings_and_frames_not_bytes():
+    """User decision 2026-11-24 (option a): libx265 is NOT byte-deterministic (3 outputs in
+    10 encodes, 2026-11-23), so each H.265-degraded clip is encoded once and hashed. This
+    test checks what IS guaranteed: identical settings, the frame count and the shape."""
+    assert V.X265_BYTE_DETERMINISTIC is False
+    clip = np.random.default_rng(3).integers(0, 256, (25, 64, 64, 3), dtype=np.uint8)
+    settings = V.encoder_options("libx265", 28)
+    assert settings == V.encoder_options("libx265", 28)              # one pair, one setting
+    assert settings["crf"] == "28" and "frame-threads=1" in settings["x265-params"]
+    for _ in range(3):
+        frames, size = V.encode_roundtrip(clip, "libx265", 28, "30000/1001")
+        assert frames.shape == clip.shape and frames.dtype == np.uint8 and size > 0
+    with pytest.raises(V.VideoError, match="only libx264"):
+        V.encoder_options("mpeg4", 28)
 
 
 # ------------------------------------------------------------------ Pexels fetch ---

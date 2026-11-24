@@ -489,6 +489,15 @@ they go into the pre-registration unchanged.
       - re-encode share: exactly p = 0.80, identical for both clips of a pair.
     - **The thesis states** that V5 (H.264 CRF 23/28/35, H.265 CRF 28/35) tests robustness
       inside the trained range, not outside it.
+    - **H.265 encodes (user, 2026-11-24, option a):**
+      - libx265 is not byte-deterministic: 3 outputs in 10 encodes of one clip, even
+        single-threaded.
+      - So every H.265-degraded clip, for training and for the V5 H.265 views alike, is
+        **encoded once, written, and hashed**. The hashes are the record.
+      - Both clips of a pair get identical settings (`encoder_options`).
+      - H.264 stays byte-checked.
+      - **Limitation (thesis):** "x265 output is not byte-deterministic"; re-running an H.265
+        degradation gives a different, equally valid clip, so the written clips are the data.
 
 ---
 

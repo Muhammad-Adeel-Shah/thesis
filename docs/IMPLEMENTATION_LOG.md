@@ -9499,3 +9499,26 @@ designed. The loop now stops before the last row, with a regression test.
   - fetch 4 of 4; smoke OK x6;
   - the backup copied session, p5_train_recon, p5_train_reals and env/lock (`--include cloud_p5_*`), and skipped `reports/p5_cloud` (absent in the fixture);
   - the shutdown calls were `+180`, `now`, `now`.
+
+### P5-C — libx265 decision (user, 2026-11-24, final: option a); restart approved
+
+**The restart** (`137acd2`) is **APPROVED** by the user, including a worst case that uses up
+to about $0.60 of the reserve beyond the $5 setup share.
+
+**libx265, option (a), implemented:**
+- Every H.265-degraded clip is encoded once, written and hashed; the hashes are the record.
+  This covers training (P5-D) and the V5 H.265 views.
+- Both clips of a pair get identical settings. H.264 stays byte-checked.
+- **Limitation, recorded in P5_PLAN §3.4:** "x265 output is not byte-deterministic".
+- **`src/dbp/data/video.py`:**
+  - `encoder_options(codec, crf, preset)` is the one place the encoder settings come from;
+    `encode_roundtrip` uses it.
+  - `X265_BYTE_DETERMINISTIC = False`.
+  - The single-threaded x265 parameters stay, so every encode uses the same settings; the
+    comment no longer claims determinism.
+- **Tests:** the old parametrised test is split in two.
+  - `test_h264_roundtrip_keeps_frames_and_is_byte_deterministic`: 5 encodes, byte-equal, as
+    before.
+  - `test_h265_roundtrip_checks_settings_and_frames_not_bytes`: identical settings, the frame
+    count, the shape and dtype. It checks no bytes, by the user's decision.
+- **Full suite:** **1,446 passed, 7 skipped (GPU, PENDING-GPU), 0 failed**, in 488.1 s. ruff clean.

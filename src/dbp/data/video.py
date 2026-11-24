@@ -297,6 +297,32 @@ def read_png_clip(clip_dir: Path) -> np.ndarray:
     return np.stack(frames)
 
 
+#: libx265's output is NOT byte-deterministic, even single-threaded: 10 encodes of one
+#: clip in one process gave 3 different outputs (2026-11-23). User decision (2026-11-24,
+#: option a): every H.265-degraded clip is encoded ONCE, written and hashed, and the hashes
+#: are the record; both clips of a pair get identical settings (:func:`encoder_options`).
+#: H.264 (libx264) stays byte-checked. A thesis limitation.
+X265_BYTE_DETERMINISTIC = False
+
+
+def encoder_options(codec: str, crf: int, preset: str = "medium") -> dict[str, str]:
+    """The complete encoder options for one re-encode: the settings two clips of a pair
+    share, and the record of what was applied.
+
+    Raises:
+        VideoError: For a codec other than libx264 / libx265.
+    """
+    if codec not in ("libx264", "libx265"):
+        raise VideoError(f"codec {codec!r}: only libx264 and libx265 are used")
+    options = {"crf": str(int(crf)), "preset": preset}
+    if codec == "libx265":
+        # single-threaded: it narrows x265's run-to-run variation but does NOT remove it
+        # (X265_BYTE_DETERMINISTIC); kept so every encode uses the same settings
+        options["x265-params"] = ("log-level=error:pools=none:frame-threads=1:no-wpp=1:"
+                                  "lookahead-slices=0")
+    return options
+
+
 def encode_roundtrip(frames: np.ndarray, codec: str, crf: int, fps: float | str,
                      preset: str = "medium") -> tuple[np.ndarray, int]:
     """Encode ``(T, H, W, 3)`` uint8 frames with ``libx264``/``libx265`` and decode them back.
@@ -312,23 +338,14 @@ def encode_roundtrip(frames: np.ndarray, codec: str, crf: int, fps: float | str,
     """
     import av
 
-    if codec not in ("libx264", "libx265"):
-        raise VideoError(f"codec {codec!r}: only libx264 and libx265 are used")
+    options = encoder_options(codec, crf, preset)
     rate = Fraction(str(fps)).limit_denominator(1001)
     buffer = io.BytesIO()
     with av.open(buffer, mode="w", format="mp4") as container:
         stream = container.add_stream(codec, rate=rate)
         stream.width, stream.height = int(frames.shape[2]), int(frames.shape[1])
         stream.pix_fmt = "yuv420p"
-        stream.options = {"crf": str(int(crf)), "preset": preset}
-        if codec == "libx265":
-            # x265's thread pool and frame threading made two identical calls decode to
-            # different pixels (test_p5_video.py, 2026-11-21). One pool thread and one frame
-            # thread were not enough: the sizes still differed between two calls in one
-            # process (2026-11-22). No pool, no wavefront, one frame thread and no lookahead
-            # slicing: single-threaded, so the output cannot depend on thread timing.
-            stream.options["x265-params"] = ("log-level=error:pools=none:frame-threads=1:"
-                                             "no-wpp=1:lookahead-slices=0")
+        stream.options = options
         for frame in frames:
             for packet in stream.encode(av.VideoFrame.from_ndarray(frame, format="rgb24")):
                 container.mux(packet)
