@@ -529,11 +529,11 @@ def test_backup_skips_folders_that_do_not_exist_yet(tmp_path):
     done, calls = backup(tmp_path, ["session"])
     assert done.returncode == 0, done.stdout + done.stderr
     assert len(calls) == 1 and calls[0].startswith("copy ") and "gdrive:dbp-p5/session" in calls[0]
-    assert done.stdout.count("skipped") == 4
+    assert done.stdout.count("skipped") == 6
     done, calls = backup(tmp_path / "all", ["session", "reports/p5_train_recon",
                                             "reports/p5_train_reals", "reports/p5_cloud",
-                                            "env/lock"])
-    assert done.returncode == 0 and len(calls) == 5
+                                            "reports/p5_pairs", "reports/p5_train", "env/lock"])
+    assert done.returncode == 0 and len(calls) == 7
     assert any("--include cloud_p5_*" in c for c in calls)        # only the cloud lock
     assert not any("/data/p5/reals" in c or "/data/p5/recon" in c for c in calls)
 

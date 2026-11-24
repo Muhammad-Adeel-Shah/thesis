@@ -323,18 +323,17 @@ def encoder_options(codec: str, crf: int, preset: str = "medium") -> dict[str, s
     return options
 
 
-def encode_roundtrip(frames: np.ndarray, codec: str, crf: int, fps: float | str,
-                     preset: str = "medium") -> tuple[np.ndarray, int]:
-    """Encode ``(T, H, W, 3)`` uint8 frames with ``libx264``/``libx265`` and decode them back.
+def encode_clip(frames: np.ndarray, codec: str, crf: int, fps: float | str,
+                preset: str = "medium") -> bytes:
+    """Encode ``(T, H, W, 3)`` uint8 frames with ``libx264``/``libx265`` into mp4 bytes.
 
-    The settings are the arguments and nothing else (``yuv420p``, mp4 container, x264/x265
-    defaults otherwise), so applying the same call to two clips treats them identically.
-
-    Returns:
-        The decoded ``(T, H, W, 3)`` uint8 frames and the encoded size in bytes.
+    The settings are the arguments and nothing else (:func:`encoder_options`, ``yuv420p``,
+    mp4), so the same call on two clips treats them identically. libx264 output is
+    byte-deterministic; libx265 output is not (:data:`X265_BYTE_DETERMINISTIC`), so an
+    H.265 clip is encoded once, written and hashed, and the written bytes are the record.
 
     Raises:
-        VideoError: For an unknown codec, or if the decode does not return T frames.
+        VideoError: For an unknown codec.
     """
     import av
 
@@ -351,12 +350,40 @@ def encode_roundtrip(frames: np.ndarray, codec: str, crf: int, fps: float | str,
                 container.mux(packet)
         for packet in stream.encode():
             container.mux(packet)
-    data = buffer.getvalue()
+    return buffer.getvalue()
+
+
+def decode_clip(data: bytes, expect_frames: int | None = None) -> np.ndarray:
+    """Decode mp4 bytes to ``(T, H, W, 3)`` uint8 RGB. Decoding stored bytes is exact.
+
+    Raises:
+        VideoError: If ``expect_frames`` is given and the stream holds another count.
+    """
+    import av
+
     with av.open(io.BytesIO(data)) as container:
         decoded = [f.to_ndarray(format="rgb24") for f in container.decode(video=0)]
-    if len(decoded) != len(frames):
-        raise VideoError(f"{codec} crf {crf}: {len(decoded)} frames back from {len(frames)}")
-    return np.stack(decoded), len(data)
+    if expect_frames is not None and len(decoded) != expect_frames:
+        raise VideoError(f"{len(decoded)} frames decoded, expected {expect_frames}")
+    return np.stack(decoded)
+
+
+def encode_roundtrip(frames: np.ndarray, codec: str, crf: int, fps: float | str,
+                     preset: str = "medium") -> tuple[np.ndarray, int]:
+    """Encode ``(T, H, W, 3)`` uint8 frames (:func:`encode_clip`) and decode them back.
+
+    Returns:
+        The decoded ``(T, H, W, 3)`` uint8 frames and the encoded size in bytes.
+
+    Raises:
+        VideoError: For an unknown codec, or if the decode does not return T frames.
+    """
+    data = encode_clip(frames, codec, crf, fps, preset)
+    try:
+        decoded = decode_clip(data, expect_frames=len(frames))
+    except VideoError as exc:
+        raise VideoError(f"{codec} crf {crf}: {exc}") from exc
+    return decoded, len(data)
 
 
 def encoder_inventory() -> dict[str, Any]:

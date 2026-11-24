@@ -9633,3 +9633,42 @@ pilot's T4 records as evidence):
 - The guard's ledger counts only time inside the wrapper (0.367 h, $1.91).
 - Not in the ledger: the deleted us-east-2a volume, about $0.27.
 - **The pre-registration draft's bank table** now carries these fp16 results.
+
+**RECONSTRUCTION APPROVED (user, 2026-11-24):**
+- **6 VAEs, in this order:** wan21, ltx090, sd15_pf, hunyuan, cogvx, mochi.
+- **Times:** estimate 22.6 h, hard cap 33.9 h.
+- **Code:** `137acd2` as is.
+- **Precision** exactly as pre-declared: fp16 for wan21, hunyuan, ltx090 and sd15_pf; fp32 for
+  cogvx and mochi.
+- **No background-write speed-up:** no new code before a long unattended run.
+- **HunyuanVideo is KEPT**, so F1's folds are wan21, hunyuan, ltx090.
+- The user restarts the instance by runbook §3a.
+
+### P5-D prep — the training code and the training dry-run (2026-11-24; requested by the user while the reconstruction runs)
+
+**Added:**
+- **`scripts/p5_build_pairs.py`** (prereg §2.4):
+  - every reconstruction is format-matched with libx264 at the CRF closest in bpp to its real source clip (a bisection; x264 is deterministic);
+  - TRAIN pairs only: the pre-declared draw (`sha256("2026:p5-pairs:<sample>:<member>")`; exactly p = 0.80; H.264 0.7 / H.265 0.3; CRF 18–35) re-encodes both clips with one setting;
+  - each clip is encoded once, written and hashed (the x265 decision); validation pairs are never degraded;
+  - resumable per pair.
+- **`scripts/p5_train.py`** (prereg §3), three stages:
+  - `frame`: the S2 recipe per frame, reusing P3's building blocks unchanged. One t in 1..24 per pair, the same for both clips; degradation p = 0.35 on its own stream; checkpoint every 500; saved as P3 saves (`lora/` + weights-only `head.pt`).
+  - `cache`: pooled features + frame logits, frames 0–16, safetensors; skipped if present.
+  - `temporal`: the 2-layer transformer head (width 256), safetensors; then the in-protocol and held-out-lineage validation AUCs (V1-a).
+  - Runs: `s2v_f`, `s2v_1`, `lolo_{wan21,hunyuan,ltx090}` (F1, HunyuanVideo kept).
+- **`env/cloud_p5_runbook.md`:** blocks (d) pairs and (e) training (7 models x 3 stages); the backup now also carries `reports/p5_pairs` and `reports/p5_train`.
+- **`src/dbp/data/video.py`:** `encode_roundtrip` split into `encode_clip` + `decode_clip`, behaviour unchanged (the H.264 byte test passes).
+- **`tests/test_p5_train.py`:** 6 tests (the draw shares and range, the closest CRF, train-only degradation with hashed files, the F1 run memberships, the temporal shapes, last-record-wins).
+
+**The training dry-run: PASSED** (scratchpad `dry_train.py`; the runbook blocks cut from the staged tree; CPU stand-ins; tiny steps):
+- first session, recon, pairs, train, then train again;
+- pairs 4 train (all degraded, 1 H.265) + 2 validation (none degraded);
+- frame steps 3 per run; all model files written;
+- `lolo_wan21` holds out wan21;
+- the second train session: "resumed ... at step 3" and "cache ... present, skipped" for both runs;
+- the AUCs of 1.0 are stand-in artefacts and mean nothing.
+
+**Full suite: 1 failed, 1,476 passed, 7 skipped, 903.1 s.**
+- The failure was the backup test's old count: two folders were added to the backup. Updated: `test_p5_cloud.py` + `test_p5_train.py` 60 passed; ruff clean.
+- **The PROPOSED items it implements** (storage, frame sampling, temporal settings) still need the user's decision before the freeze. A change is a constant.

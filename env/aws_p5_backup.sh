@@ -26,5 +26,7 @@ copy "${P5_STATE:-/data/p5/session}" session
 copy reports/p5_train_recon reports/p5_train_recon
 copy reports/p5_train_reals reports/p5_train_reals
 copy reports/p5_cloud reports/p5_cloud
+copy reports/p5_pairs reports/p5_pairs
+copy reports/p5_train reports/p5_train
 copy env/lock env/lock --include "cloud_p5_*"
 exit "$status"

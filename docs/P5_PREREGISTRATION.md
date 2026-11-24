@@ -78,7 +78,9 @@ All outcomes are reported unchanged. A failed hypothesis is a finding.
   - **If it leaves the bank:**
     - F1's three folds are wan21, ltx090, cogvx (§6.6);
     - the HunyuanVideo and AccVideo panel slices move to the out-of-bank (unseen) stratum.
-  - **The decision:** ⟨kept / dropped, date⟩.
+  - **The decision: KEPT** *(user, 2026-11-24)*. It is deterministic on the A10G (peak
+    12.4 GB), and the projection is inside the share: 6 VAEs, 22.6 h, $27.47.
+  - So F1's folds are **wan21, hunyuan, ltx090**.
 - **Lineage caveat** (pilot): Qwen-Image's VAE shares Wan2.1's encoder (all 84 encoder
   tensors equal after bf16 rounding), but **the decoders differ** (0 of 106 tensors equal in
   fp32).
